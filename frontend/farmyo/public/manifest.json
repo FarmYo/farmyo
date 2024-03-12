@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "FarmYo",
+  "name": "FarmYo",
   "icons": [
     {
       "src": "favicon.ico",
@@ -8,18 +8,44 @@
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
-      "type": "image/png",
-      "sizes": "192x192"
+      "src": "icons/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
     },
     {
-      "src": "logo512.png",
-      "type": "image/png",
-      "sizes": "512x512"
+      "src": "icons/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/favicon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/favicon-128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/favicon-196x196.png",
+      "sizes": "196x196",
+      "type": "image/png"
     }
+    // apple-touch-icon은 하나 것으로 만들었는데 파일은 전체 다 있음
+    // {
+    //   "src": "icons/apple-touch-icon.png",
+    //   "sizes": "57x57 60x60 72x72 76x76 114x114 120x120 144x144 152x152",
+    //   "type": "image/png"
+    // }
   ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  // 앱 실행 주소
+  "start_url": "/",
+  // 새로고침 있는 키
+  "display": "minimal-ui",
+  // "display": "standalone",
+  // 툴바, 상단바
+  "theme_color": "#1B5E20",
+  // 앱 로딩 배경 색
+  "background_color": "#FFFFFF"
 }
