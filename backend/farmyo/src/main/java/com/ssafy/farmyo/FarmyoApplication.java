@@ -9,5 +9,4 @@ public class FarmyoApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(FarmyoApplication.class, args);
 	}
-
 }
