@@ -1,5 +1,3 @@
-import BottomBar from "../../component/common/bottombar"
-
 export default function Login() {
   return (
     <div>
