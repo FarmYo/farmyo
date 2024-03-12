@@ -1,4 +1,4 @@
-package com.ssafy.farmyo.common.entity;
+package com.ssafy.farmyo.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
