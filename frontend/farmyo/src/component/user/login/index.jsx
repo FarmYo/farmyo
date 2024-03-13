@@ -1,7 +1,9 @@
 import React from 'react'
+import { useNavigate, Link } from "react-router-dom";
 import Logo from '../../../image/component/user/logo.png';
 
-export default function Login() {
+export default function LoginInput() {
+  const navigate = useNavigate()
   return (
     // <div>
     //     <input type="text" placeholder="아이디" className="input input-bordered w-full max-w-xs" />
@@ -17,7 +19,7 @@ export default function Login() {
     </div>
 
     <div className="mt-0 sm:mx-auto sm:w-full sm:max-w-sm">
-      <form className="space-y-6" action="#" method="POST">
+      {/* <form className="space-y-6" action="#" method="POST"> */}
         <div>
           <label 
             htmlFor="id" className="block text-sm font-medium leading-6 text-gray-900"
@@ -38,7 +40,7 @@ export default function Login() {
         </div>
 
         <div>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mt-2">
             <label 
               htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900"
             >
@@ -60,17 +62,17 @@ export default function Login() {
 
         <div>
           <button
-            type="submit"
-            className="flex w-full justify-center rounded-md px-3 py-1 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-lime-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-950 h-10"
+            onClick={() => {navigate("/")}}
+            className="flex w-full justify-center rounded-md px-3 py-2 mt-3 text-sm font-bold leading-6 text-white shadow-sm hover:bg-lime-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-950 h-10"
             style={{backgroundColor:'#1B5E20'}}
           >
             로그인
           </button>
           <div className="ml-12 my-4">
-            <a href="/password" className="mr-3">비밀번호 찾기</a> | <a href="/signup" className="mx-3">회원가입</a>
+            <Link to="/password" className="mr-3">비밀번호 찾기</Link> | <Link to="/signup" className="mr-3">회원가입</Link>
           </div>
         </div>
-      </form>
+      {/* </form> */}
 
     </div>
   </div>
