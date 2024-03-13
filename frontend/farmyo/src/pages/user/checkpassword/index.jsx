@@ -1,4 +1,4 @@
-import CheckPassword from "../../../component/user/checkpassword/index"
+import CheckPassword from "component/user/checkpassword/index"
 
 export default function CheckPasswordPage () {
   return (
