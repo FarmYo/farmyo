@@ -7,8 +7,8 @@ export default function Login() {
     //     <input type="text" placeholder="아이디" className="input input-bordered w-full max-w-xs" />
     //     <input type="text" placeholder="비밀번호" className="input input-bordered w-full max-w-xs" />
     // </div>
-    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-    <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 mt-16">
+    <div className="sm:mx-auto sm:w-full sm:max-w-sm mb-0">
       <img
         className="mx-auto h-auto w-auto"
         src={Logo}
@@ -16,7 +16,7 @@ export default function Login() {
       />
     </div>
 
-    <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+    <div className="mt-0 sm:mx-auto sm:w-full sm:max-w-sm">
       <form className="space-y-6" action="#" method="POST">
         <div>
           <label 
@@ -31,7 +31,7 @@ export default function Login() {
               type="text"
               autoComplete="text"
               required
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6"
+              className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
               placeholder="아이디"
             />
           </div>
@@ -52,7 +52,7 @@ export default function Login() {
               type="password"
               autoComplete="current-password"
               required
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6"
+              className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
               placeholder="비밀번호"
             />
           </div>
@@ -61,10 +61,14 @@ export default function Login() {
         <div>
           <button
             type="submit"
-            className="flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm bg-lime-900 hover:bg-lime-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-950"
+            className="flex w-full justify-center rounded-md px-3 py-1 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-lime-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-950 h-10"
+            style={{backgroundColor:'#1B5E20'}}
           >
             로그인
           </button>
+          <div className="ml-12 my-4">
+            <a href="/password" className="mr-3">비밀번호 찾기</a> | <a href="/signup" className="mx-3">회원가입</a>
+          </div>
         </div>
       </form>
 
