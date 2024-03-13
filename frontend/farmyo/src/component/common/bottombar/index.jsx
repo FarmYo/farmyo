@@ -30,25 +30,25 @@ export default function BottomBar() {
       <nav className="bg-white border-t-2 border-gray-300 fixed bottom-0 w-full h-28">
         <div className='p-3'>
           <div className="flex justify-between">
-            <div className='flex flex-col items-center justify-center ml-2' onClick={() => handleImageClick(setHome, home)}>
+            <div className='flex flex-col items-center justify-center' onClick={() => handleImageClick(setHome, home)}>
               <img src={home.clicked ? HomeClick : home.image} className="size" alt="" />
               <p className='text-sm text-center font-bold mt-2'>홈</p>
             </div>
-            <div className='flex flex-col items-center justify-center ml-5' onClick={() => handleImageClick(setTrade, trade)}>
+            <div className='flex flex-col items-center justify-center' onClick={() => handleImageClick(setTrade, trade)}>
               <img src={trade.clicked ? TradeClick : trade.image} className="size" alt="" />
               <p className='text-sm text-center font-bold mt-2'>거래</p>
             </div>
-            <div className='flex flex-col items-center justify-center ml-5' onClick={() => handleImageClick(setBoard, board)}>
+            <div className='flex flex-col items-center justify-center' onClick={() => handleImageClick(setBoard, board)}>
               <img src={board.clicked ? BoardClick : board.image} className="size" alt="" />
               <p className='text-sm text-center font-bold mt-2'>팜&삼</p>
             </div>
-            <div className='flex flex-col items-center justify-center ml-5' onClick={() => handleImageClick(setChat, chat)}>
+            <div className='flex flex-col items-center justify-center' onClick={() => handleImageClick(setChat, chat)}>
               <img src={chat.clicked ? ChatClick : chat.image} className="size" alt="" />
               <p className='text-sm text-center font-bold mt-2'>채팅</p>
             </div>
             <div className='flex flex-col items-center justify-center' onClick={() => handleImageClick(setMypage, mypage)}>
               <img src={mypage.clicked ? MypageClick : mypage.image} className="size" alt="" />
-              <p className='text-sm text-center font-bold mt-2'>마이페이지</p>
+              <p className='text-sm text-center font-bold mt-2'>마이</p>
             </div>
           </div>
         </div>
