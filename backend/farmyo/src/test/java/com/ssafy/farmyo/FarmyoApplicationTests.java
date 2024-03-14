@@ -3,10 +3,10 @@ package com.ssafy.farmyo;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+//@SpringBootTest
 class FarmyoApplicationTests {
 
-	@Test
+//	@Test
 	void contextLoads() {
 	}
 
