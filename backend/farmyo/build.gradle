@@ -35,6 +35,11 @@ dependencies {
 
 	// Jasypt
 	implementation group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: '3.0.5'
+
+	// Swagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+	implementation 'io.swagger.core.v3:swagger-annotations:2.2.15'
+
 }
 
 tasks.named('test') {
