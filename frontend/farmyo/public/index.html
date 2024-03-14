@@ -2,16 +2,64 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <title>FarmYo</title>
+    <meta name="FarmYo">
+    <!-- 파비콘 지정(탭 이미지) - manifest.json 파일에 정의된 아이콘을 사용 -->
+    <!-- <link rel="icon" href="%PUBLIC_URL%/favicon.ico" /> -->
+    <!-- 뷰포트 반응형 레이아웃 100% 설정 -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="description" content="Web site created using create-react-app" />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <!-- 브라우저 주소창 및 웹 페이지 기본 색상 설정 -->
+    <meta name="theme-color" content="#1B5E20" />
+    <!-- 검색 엔진 및 웹 콘텐츠 색인용 설명 -->
+    <meta name="description" content="FarmYo is an agricultural product trading platform using blockchain." />
+    <!-- 웹 앱으로 정의하는 메타데이터를 포함한 -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <!-- 아래부터는 새로 삽입한 태그들 -->
+    <!-- IOS용 -->
+    <!-- 홈 화면에 보여지는 앱 이름 -->
+    <meta name="apple-mobile-web-app-title" content="FarmYo" />
+    <!-- 모바일에서 전체화면으로 보이게하기 -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- 상태 표시줄 배경 색상 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="#1B5E20" />
+    <!-- 아이콘 이미지 -->
+    <!-- 잼미니가 바꿔준 거 -->
+    <link rel="apple-touch-icon-precomposed" sizes="57x57 114x114 72x72 144x144 60x60 120x120 76x76 152x152" href="icons/apple-touch-icon.png" />
+
+    <!-- <link rel="apple-touch-icon-precomposed" sizes="57x57" href="icons/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="icons/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="icons/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="icons/apple-touch-icon-144x144.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="icons/apple-touch-icon-60x60.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="icons/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="icons/apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="icons/apple-touch-icon-152x152.png" /> -->
+
+    <!-- 타일 아이콘 이미지 -->
+    <link rel="icon" type="image/png" href="icons/favicon-196x196.png" sizes="196x196" />
+    <link rel="icon" type="image/png" href="icons/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/png" href="icons/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="icons/favicon-16x16.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="icons/favicon-128.png" sizes="128x128" />
+
+    <!-- windowPhone용 -->
+    <!-- 타일 아이콘 배경색(흰색) -->
+    <meta name="msapplication-TileColor" content="#FFFFFF" />
+    <!-- 타일 아이콘 이미지 -->
+    <!-- 기본 -->
+    <meta name="msapplication-TileImage" content="mstile-144x144.png" />
+    <!-- 사이즈별 -->
+    <meta name="msapplication-square70x70logo" content="mstile-70x70.png" />
+    <meta name="msapplication-square150x150logo" content="mstile-150x150.png" />
+    <meta name="msapplication-wide310x150logo" content="mstile-310x150.png" />
+    <meta name="msapplication-square310x310logo" content="mstile-310x310.png" />
+    <!-- 여기까지 -->
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -21,10 +69,8 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!--
       This HTML file is a template.
