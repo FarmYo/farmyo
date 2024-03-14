@@ -37,7 +37,7 @@ public class Crop extends BaseTime {
     private String cropName;
 
     //블록체인주소
-    @Column(name = "crop_address", nullable = false)
+    @Column(name = "crop_blockchain", nullable = false)
     private String cropBlockchainAddress;
 
     //작물대표이미지
