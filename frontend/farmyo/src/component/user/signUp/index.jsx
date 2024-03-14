@@ -1,26 +1,34 @@
 import React from 'react'
 import { useNavigate } from "react-router-dom";
 import 'css/signup.css';
+import Logo from '../../../image/component/user/logo.png';
 
 export default function SignUp() {
   const navigate = useNavigate()
   return(
-    <div>
-      회원가입 선택
-      <div className="flex">
+  <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 logo">
+    <div className="mx-auto w-full max-w-sm mb-0">
+      <img
+        className="mx-auto h-auto w-auto"
+        src={Logo}
+        alt="FarmYo"
+      />
+    </div>
+    <div className="flex mx-10 my-5">
       <button
-            onClick={() => {navigate("/signup/first")}}
-            className="buttonmain"
-          >
-            판매자
+        onClick={() => {navigate("/signup/first")}}
+        // 여기에 판매자인지 구매자인지 구분해서 넘겨보내기
+        className="buttonmain"
+      >
+        판매자
       </button>
       <button
-            onClick={() => {navigate("/signup/first")}}
-            className="buttonmain flex w-full justify-center rounded-md px-3 py-2 mt-3 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-lime-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-950 h-10"
-          >
-            구매자
-          </button>
-      </div>
+        onClick={() => {navigate("/signup/first")}}
+        className="buttonmain"
+      >
+        구매자
+      </button>
     </div>
+  </div>
   )
 }

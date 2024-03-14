@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from "react-router-dom";
 import Home from '../../../image/component/home.png';
 import Trade from '../../../image/component/trade.png';
 import Board from '../../../image/component/board.png';
@@ -30,9 +31,12 @@ export default function BottomBar() {
       <nav className="bg-white border-t-2 border-gray-300 fixed bottom-0 w-full h-28">
         <div className='p-3'>
           <div className="flex justify-between">
-            <div className='flex flex-col items-center justify-center' onClick={() => handleImageClick(setHome, home)}>
-              <img src={home.clicked ? HomeClick : home.image} className="size" alt="" />
-              <p className='text-sm text-center font-bold mt-2'>홈</p>
+            <div className='flex flex-col items-center justify-center'
+            onClick={() => handleImageClick(setHome, home)}>
+              <Link to="/">
+                <img src={home.clicked ? HomeClick : home.image} className="size" alt="" />
+                <p className='text-sm text-center font-bold mt-2'>홈</p>
+              </Link>
             </div>
             <div className='flex flex-col items-center justify-center' onClick={() => handleImageClick(setTrade, trade)}>
               <img src={trade.clicked ? TradeClick : trade.image} className="size" alt="" />
