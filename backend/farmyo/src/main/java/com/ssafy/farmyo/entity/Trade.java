@@ -68,6 +68,10 @@ public class Trade extends BaseTime {
     @Column(name = "trade_location")
     private String tradeLocation;
 
+    //블록체인주소
+    @Column(name = "trade_blockchain")
+    private String tradeBlockchain;
+
     //입금매핑
     @OneToOne(mappedBy = "trade", fetch = FetchType.LAZY)
     private TradeDeposit tradeDeposit;
@@ -81,7 +85,7 @@ public class Trade extends BaseTime {
     @Builder
     public Trade(Board board, Crop crop, Chat chat, User buyer, User seller,
                  Integer tradePrice, Integer tradeQuantity, Integer tradeStatus,
-                 String tradeShipment, String tradeShipcom, String tradeLocation) {
+                 String tradeShipment, String tradeShipcom, String tradeLocation, String tradeBlockchain) {
         this.board = board;
         this.crop = crop;
         this.chat = chat;
@@ -93,6 +97,7 @@ public class Trade extends BaseTime {
         this.tradeShipment = tradeShipment;
         this.tradeShipcom = tradeShipcom;
         this.tradeLocation = tradeLocation;
+        this.tradeBlockchain = tradeBlockchain;
     }
 
 
