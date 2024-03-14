@@ -1,6 +1,6 @@
-import LoginInput from "../../../component/user/login/index"
+import LoginInput from "component/user/login/index"
 
-export default function LoginMainPage () {
+export default function LoginPage () {
   return (
     <div>
       <LoginInput />
