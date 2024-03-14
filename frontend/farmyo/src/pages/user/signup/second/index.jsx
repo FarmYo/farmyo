@@ -1,4 +1,4 @@
-import SignUpSecond from "component/user/signup/second/index"
+import SignUpSecond from "../../../../component/user/signUp/second"
 
 export default function SignUpSecondPage () {
   return (
