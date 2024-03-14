@@ -1,5 +1,46 @@
-.buttonmain {
-  background-color: #F8FCF9;
-  border: #81C784 solid 2px;
+.logo {
+  margin-top: 35%;
+}
 
+.buttonmain {
+  margin: auto;
+  background-color: #F8FCF9;
+  border: #2E8B57 solid 2px;
+  padding: 15px 30px;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: 600;
+  /* 호버시 애니메이션 효과 */
+  /* transition: all 0.3s ease-in-out; */
+}
+
+.buttonmain:hover {
+  background-color: #2E8B57; /* hover 시 배경색 변경 */
+}
+
+
+/* 이번 */
+.buttonmain2 {
+  display: flex; /* flexbox 레이아웃 적용 */
+  width: 100%; /* 전체 너비 */
+  justify-content: center; /* 가운데 정렬 */
+  border-radius: 5px; /* 모서리 둥글림 */
+  padding: 12px 16px; /* 패딩 설정 */
+  margin-top: 12px; /* 상단 여백 */
+  font-size: 0.875rem; /* 글자 크기 */
+  font-weight: bold; /* 굵은 글씨체 */
+  line-height: 1.5; /* 라인 높이 */
+  color: #fff; /* 흰색 글자색 */
+  background-color: #00C783; /* 초록 배경색 */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25); /* 그림자 효과 */
+  transition: background-color 0.3s ease-in-out; /* hover 효과 transition */
+}
+
+.buttonmain2:hover {
+  background-color: #00A767; /* hover 시 배경색 변경 */
+}
+
+.buttonmain2:focus-visible {
+  outline: 2px solid #00D18F; /* focus 시 윤곽선 스타일 */
+  outline-offset: 2px; /* 윤곽선 여백 */
 }

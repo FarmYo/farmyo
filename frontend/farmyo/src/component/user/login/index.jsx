@@ -1,15 +1,12 @@
 import React from 'react'
 import { useNavigate, Link } from "react-router-dom";
 import Logo from '../../../image/component/user/logo.png';
+import 'css/login.css';
 
 export default function LoginInput() {
   const navigate = useNavigate()
   return (
-    // <div>
-    //     <input type="text" placeholder="아이디" className="input input-bordered w-full max-w-xs" />
-    //     <input type="text" placeholder="비밀번호" className="input input-bordered w-full max-w-xs" />
-    // </div>
-    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 mt-16">
+    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 main">
     <div className="sm:mx-auto sm:w-full sm:max-w-sm mb-0">
       <img
         className="mx-auto h-auto w-auto"
@@ -21,11 +18,11 @@ export default function LoginInput() {
     <div className="mt-0 sm:mx-auto sm:w-full sm:max-w-sm">
       {/* <form className="space-y-6" action="#" method="POST"> */}
         <div>
-          <label 
+          {/* <label 
             htmlFor="id" className="block text-sm font-medium leading-6 text-gray-900"
           >
             아이디
-          </label>
+          </label> */}
           <div className="mt-2">
             <input
               id="id"
@@ -40,13 +37,13 @@ export default function LoginInput() {
         </div>
 
         <div>
-          <div className="flex items-center justify-between mt-2">
+          {/* <div className="flex items-center justify-between mt-2">
             <label 
               htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900"
             >
               비밀번호
             </label>
-          </div>
+          </div> */}
           <div className="mt-2">
             <input
               id="password"
@@ -63,13 +60,13 @@ export default function LoginInput() {
         <div>
           <button
             onClick={() => {navigate("/")}}
-            className="flex w-full justify-center rounded-md px-3 py-2 mt-3 text-sm font-bold leading-6 text-white shadow-sm hover:bg-lime-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-950 h-10"
+            className="flex w-full justify-center rounded-md px-3 py-2 mt-5 text-sm font-bold leading-6 text-white shadow-sm hover:bg-lime-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-950 h-10"
             style={{backgroundColor:'#1B5E20'}}
           >
             로그인
           </button>
-          <div className="ml-12 my-4">
-            <Link to="/password" className="mr-3">비밀번호 찾기</Link> | <Link to="/signup" className="mr-3">회원가입</Link>
+          <div className="ml-14 my-4">
+            <Link to="/password" className="mr-3">비밀번호 찾기</Link> | <Link to="/signup" className="m-3">회원가입</Link>
           </div>
         </div>
       {/* </form> */}
