@@ -34,11 +34,11 @@ public class Farmer extends User{
 
 
     //빌더패턴
-    @Builder
-    public Farmer(LocalDateTime deletedAt, UserStatus status, String loginId, String password, String telephone,
-                  String nickname, String email, String profile, String comment, String farmerLicense) {
-        super(deletedAt, status, loginId, password, telephone, nickname, email, profile, comment);
-        this.farmerLicense = farmerLicense;
-    }
+//    @Builder
+//    public Farmer(LocalDateTime deletedAt, UserStatus status, String loginId, String password, String telephone,
+//                  String nickname, String email, String profile, String comment, String farmerLicense) {
+//        super(deletedAt, status, loginId, password, telephone, nickname, email, profile, comment);
+//        this.farmerLicense = farmerLicense;
+//    }
 
 }
