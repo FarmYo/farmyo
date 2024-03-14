@@ -1,4 +1,4 @@
-import SignUpThird from "component/user/signup/third/index"
+import SignUpThird from "../../../../component/user/signUp/third"
 
 export default function SignUpThirdPage () {
   return (
