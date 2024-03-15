@@ -1,9 +1,23 @@
-import React from 'react'
-// import { useNavigate } from "react-router-dom";
+import React, { useEffect } from 'react'
+import { useNavigate } from "react-router-dom";
 import 'css/signup.css';
 
 export default function SignUpFirst() {
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
+  useEffect(() => {
+    const allInputs = document.querySelectorAll('input');
+    const button = document.querySelector('.finishbutton');
+  
+    allInputs.forEach(input => {
+      input.addEventListener('focus', () => {
+        button.style.display = 'none';
+      });
+  
+      input.addEventListener('blur', () => {
+        button.style.display = 'block';
+      });
+    });
+  }, []);
   return(
     <div>
     <div className="main mx-auto w-auto max-w-sm p-10">
@@ -24,9 +38,10 @@ export default function SignUpFirst() {
           required
           className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
         />
+        <p className="warningmessage">중복된 아이디입니다.</p>
       </div>
 
-<div className="mt-10">
+<div className="mt-8">
       <label 
         htmlFor="email"
         className="block text-sm font-medium leading-6 text-gray-900 mt-4"
@@ -59,9 +74,10 @@ export default function SignUpFirst() {
         />
         <button className="checkbutton">인증번호 확인</button>
       </div>
+        <p className="warningmessage">잘못된 인증번호입니다.</p>
       </div>
 
-      <div className="mt-10">
+      <div className="mt-8">
       <label 
         htmlFor="password"
         className="block text-sm font-medium leading-6 text-gray-900 mt-2"
@@ -87,11 +103,17 @@ export default function SignUpFirst() {
           required
           className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3 mt-2"
         />
+        <p className="warningmessage">두 비밀번호가 일치하지 않습니다.</p>
       </div>
 
     </div>
-    <div>
-      <button className="finishbutton">추가정보입력(1/3)</button>
+    <div className="fixed-bottom">
+      <button 
+        className="finishbutton"
+        onClick={() => {navigate("/signup/second")}}
+      >
+        추가정보입력(1/3)
+      </button>
     </div>
     </div>
   )
