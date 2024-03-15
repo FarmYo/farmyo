@@ -97,6 +97,15 @@ public class User extends BaseTime {
     @OneToMany(mappedBy = "seller")
     private List<Trade> tradesAsSeller = new ArrayList<>();
 
+    //입금
+    @OneToMany(mappedBy = "buyer")
+    private List<TradeDeposit> tradeDeposits = new ArrayList<>();
+
+    //출금
+    @OneToMany(mappedBy = "seller")
+    private List<TradeWithdrawal> tradeWithdrawals = new ArrayList<>();
+
+
 
     // 빌더 패턴 적용
     @Builder
