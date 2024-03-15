@@ -24,6 +24,11 @@ public class TradeWithdrawal extends BaseTime {
     @JoinColumn(name = "trade_id", nullable = false)
     private Trade trade;
 
+    //유저매핑(출금자)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User seller;
+
     //출금자명
     @Column(name = "withdrawal_name", nullable = false)
     private String  withdrawalName;
@@ -46,9 +51,10 @@ public class TradeWithdrawal extends BaseTime {
 
     //빌더
     @Builder
-    public TradeWithdrawal(Trade trade, String withdrawalName, Integer withdrawalPrice,
+    public TradeWithdrawal(Trade trade, User seller, String withdrawalName, Integer withdrawalPrice,
                            String withdrawalAccount, String withdrawalBank, String withdrawalHolder) {
         this.trade = trade;
+        this.seller = seller;
         this.withdrawalName = withdrawalName;
         this.withdrawalPrice = withdrawalPrice;
         this.withdrawalAccount = withdrawalAccount;

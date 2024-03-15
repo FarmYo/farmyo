@@ -24,6 +24,12 @@ public class TradeDeposit extends BaseTime {
     @JoinColumn(name = "trade_id", nullable = false)
     private Trade trade;
 
+    //유저매핑(구매자)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User buyer;
+
+
     //입금자명
     @Column(name = "deposit_name")
     private String depositName;
