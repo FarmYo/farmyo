@@ -40,8 +40,9 @@ public class TradeDeposit extends BaseTime {
 
     //빌더
     @Builder
-    public TradeDeposit(Trade trade, String depositName, Integer depositPrice) {
+    public TradeDeposit(Trade trade, User buyer, String depositName, Integer depositPrice) {
         this.trade = trade;
+        this.buyer = buyer;
         this.depositName = depositName;
         this.depositPrice = depositPrice;
     }
