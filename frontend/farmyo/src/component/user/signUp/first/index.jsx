@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
-import 'css/signup.css';
+import '../../../../css/signup.css';
 
 export default function SignUpFirst() {
   const navigate = useNavigate()

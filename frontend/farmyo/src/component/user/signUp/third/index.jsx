@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
-import 'css/signup.css';
+import '../../../../css/signup.css';
 
 export default function SignUpSecond() {
   const navigate = useNavigate()
@@ -20,86 +20,54 @@ export default function SignUpSecond() {
   }, []);
   return(
     <div>
-    <div className="main mx-auto w-auto max-w-sm p-10">
+    <div className="main2 mx-auto w-auto max-w-sm p-10">
       <label 
-        htmlFor="nickname"
+        htmlFor="account"
         className="block text-sm font-medium leading-6 text-gray-900 mt-2"
       >
-        닉네임
+        계좌
       </label>
 
       <div>
         <input 
-          id="nickname" 
-          name="nickname" 
+          id="account" 
+          name="account" 
           type="text" 
-          placeholder="닉네임"
+          placeholder="예금주"
           autoComplete="text"
           required
           className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
         />
       </div>
-<div className="mt-10">
-      <label 
-        htmlFor="phonenumber"
-        className="block text-sm font-medium leading-6 text-gray-900 mt-2"
-      >
-        연락처
-      </label>
-
       <div>
         <input 
-          id="phonenumber" 
-          name="phonenumber" 
-          type="tel" 
-          placeholder="연락처"
-          autoComplete="tel"
-          required
-          className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-        />
-      </div>
-      </div>
-
-<div className="mt-10">
-      <label 
-        htmlFor="address"
-        className="block text-sm font-medium leading-6 text-gray-900 mt-4"
-      >
-        주소
-      </label>
-      <div className="flex">
-        <input 
-          id="address" 
-          name="address" 
-          type="text"
-          placeholder="주소"
-          autoComplete="address"
-          required
-          className="block h-10 w-50% rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-        />
-        <button className="checkbutton">주소검색</button>
-        {/* 주소검색 API 연결 로직 필요 */}
-      </div>
-      
-      <div>
-        <input 
-          id="detailaddress" 
-          name="detailaddress" 
+          id="accountnumber" 
+          name="accountnumber" 
           type="text" 
-          placeholder="상세주소"
+          placeholder="계좌번호"
           autoComplete="text"
           required
-          className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3 mt-2"
+          className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3 mt-4"
         />
       </div>
+      <div>
+        <input 
+          id="bank" 
+          name="bank" 
+          type="text" 
+          placeholder="은행명"
+          autoComplete="text"
+          required
+          className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3 mt-4"
+        />
       </div>
 
     </div>
     <div className="fixed-bottom">
       <button 
         className="finishbutton"
-        onClick={() => {navigate("/login")}}
-        // onClick={() => {navigate("/signup/business")}} 사업자등록(판매자용)
+        // onClick={() => {navigate("/login")}} // 구매자용
+        onClick={() => {navigate("/signup/business")}} // 사업자등록(판매자용)
       >
         회원 가입 완료(3/3)
       </button>
