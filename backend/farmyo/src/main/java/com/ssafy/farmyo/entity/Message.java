@@ -30,11 +30,11 @@ public class Message extends BaseTime {
 
     //발신자
     @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    private int userId;
 
     //빌더
     @Builder
-    public Message(Chat chat, String chatContent, Integer userId) {
+    public Message(Chat chat, String chatContent, int userId) {
         this.chat = chat;
         this.chatContent = chatContent;
         this.userId = userId;

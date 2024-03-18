@@ -46,15 +46,15 @@ public class Trade extends BaseTime {
 
     //거래가격
     @Column(name = "trade_price", nullable = false)
-    private Integer tradePrice;
+    private int tradePrice;
 
     //거래수량
     @Column(name = "trade_quantity", nullable = false)
-    private Integer tradeQuantity;
+    private int tradeQuantity;
 
     //거래상태
     @Column(name = "trade_status", nullable = false)
-    private Integer tradeStatus;
+    private int tradeStatus;
 
     //운송장번호
     @Column(name = "trade_shipment")
@@ -84,7 +84,7 @@ public class Trade extends BaseTime {
     //빌더형식
     @Builder
     public Trade(Board board, Crop crop, Chat chat, User buyer, User seller,
-                 Integer tradePrice, Integer tradeQuantity, Integer tradeStatus,
+                 int tradePrice, int tradeQuantity, int tradeStatus,
                  String tradeShipment, String tradeShipcom, String tradeLocation, String tradeBlockchain) {
         this.board = board;
         this.crop = crop;
