@@ -31,16 +31,16 @@ public class TradeDeposit extends BaseTime {
 
 
     //입금자명
-    @Column(name = "deposit_name")
+    @Column(name = "deposit_name", nullable = false)
     private String depositName;
 
     //입금금액
-    @Column(name = "deposit_price")
-    private Integer depositPrice;
+    @Column(name = "deposit_price", nullable = false)
+    private int depositPrice;
 
     //빌더
     @Builder
-    public TradeDeposit(Trade trade, User buyer, String depositName, Integer depositPrice) {
+    public TradeDeposit(Trade trade, User buyer, String depositName, int depositPrice) {
         this.trade = trade;
         this.buyer = buyer;
         this.depositName = depositName;
