@@ -1,12 +1,27 @@
+/* 공통 회원가입 */
+.main {
+  margin-top: 25%;
+}
+
+.main2 {
+  margin-top: 55%;
+}
+
 .logo {
-  margin-top: 35%;
+  margin-top: 37%;
+}
+
+.warningmessage {
+  color: red;
+  font-size: smaller;
+  padding-left: 2%;
 }
 
 .buttonmain {
   margin: auto;
   background-color: #F8FCF9;
-  border: #2E8B57 solid 2px;
-  padding: 15px 30px;
+  border: #2E8B57 solid 1px;
+  padding: 6vw 10vw;
   border-radius: 5px;
   font-size: 18px;
   font-weight: 600;
@@ -17,6 +32,41 @@
 .buttonmain:hover {
   background-color: #2E8B57; /* hover 시 배경색 변경 */
 }
+
+.checkbutton {
+  margin-top: auto;
+  padding-left: 2.5%;
+  padding-right: 2.5%;
+  height: 40px;
+  width: 100%;
+  font-size: 0.8rem;
+  margin-left: 0.75rem;
+  border: #81C784 solid 1px;
+  border-radius: 5px;
+  background-color: #81C784;
+  color : white;
+  font-weight: 600;
+}
+
+.fixed-bottom {
+  position: fixed;
+  bottom: 110px;
+  /* bottom: 0; 바닥에 붙여놓기(지금은 하단네브바있어서) */
+  width: 100%;
+  text-align: center; /* 버튼을 중앙에 배치하려면 */
+}
+
+.finishbutton {
+  width: 100%;
+  height: 70px;
+  font-size: x-large;
+  border: #1B5E20 solid 1px;
+  background-color: #1B5E20;
+  color : white;
+}
+
+/* 사업자 등록 */
+
 
 
 /* 이번 */
