@@ -1,0 +1,13 @@
+.buttonmain {
+  margin: auto;
+  background-color: #F8FCF9;
+  border: #2E8B57 solid 1px;
+  padding: 6vw 10vw;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+input {
+  border:#2E8B57 solid 2px;
+}
