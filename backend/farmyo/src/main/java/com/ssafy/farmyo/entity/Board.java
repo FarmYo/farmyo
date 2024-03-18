@@ -38,7 +38,7 @@ public class Board extends BaseTime {
 
     //타입 0이면 팜요 1이면 삼요
     @Column(name = "board_type", nullable = false)
-    private Integer boardType;
+    private int boardType;
 
     //제목
     @Column(name = "board_title", nullable = false)
@@ -50,11 +50,11 @@ public class Board extends BaseTime {
 
     //거래가능량
     @Column(name = "board_quantity", nullable = false)
-    private Integer boardQuantity;
+    private int boardQuantity;
 
     //kg당가격
     @Column(name = "board_price", nullable = false)
-    private Integer boardPrice;
+    private int boardPrice;
 
     //게시판이미지매핑
     @OneToMany(mappedBy = "board")
@@ -71,8 +71,8 @@ public class Board extends BaseTime {
 
     //빌더
     @Builder
-    public Board(User user, Crop crop, CropCategory cropCategory, Integer boardType, String boardTitle,
-                 String boardContent, Integer boardQuantity, Integer boardPrice) {
+    public Board(User user, Crop crop, CropCategory cropCategory, int boardType, String boardTitle,
+                 String boardContent, int boardQuantity, int boardPrice) {
         this.user = user;
         this.crop = crop;
         this.cropCategory = cropCategory;

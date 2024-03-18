@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from "react-router-dom";
-import 'css/signup.css';
+import '../../../css/signup.css';
 import Logo from '../../../image/component/user/logo.png';
 
 export default function SignUp() {
@@ -14,7 +14,7 @@ export default function SignUp() {
         alt="FarmYo"
       />
     </div>
-    <div className="flex mx-10 my-5">
+    <div className="flex mx-2 my-4">
       <button
         onClick={() => {navigate("/signup/first")}}
         // 여기에 판매자인지 구매자인지 구분해서 넘겨보내기

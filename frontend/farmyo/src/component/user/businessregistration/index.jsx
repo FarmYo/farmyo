@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
-import '../../../../css/signup.css';
+import '../../../css/signup.css';
 
-export default function SignUpSecond() {
+export default function Business() {
   const navigate = useNavigate()
   useEffect(() => {
     const allInputs = document.querySelectorAll('input');
@@ -22,18 +22,18 @@ export default function SignUpSecond() {
     <div>
     <div className="main2 mx-auto w-auto max-w-sm p-10">
       <label 
-        htmlFor="account"
-        className="block text-sm font-medium leading-6 text-gray-900 mt-2"
+        htmlFor="businessnumber"
+        className="block text-sm font-medium leading-6 text-gray-900"
       >
-        계좌
+        사업자등록
       </label>
 
       <div>
         <input 
-          id="account" 
-          name="account" 
+          id="businessnumber" 
+          name="businessnumber"
           type="text" 
-          placeholder="예금주"
+          placeholder="사업자 등록번호"
           autoComplete="text"
           required
           className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
@@ -41,22 +41,28 @@ export default function SignUpSecond() {
       </div>
       <div>
         <input 
-          id="accountnumber" 
-          name="accountnumber" 
+          id="businessname" 
+          name="businessname" 
           type="text" 
-          placeholder="계좌번호"
+          placeholder="대표자 성명"
           autoComplete="text"
           required
           className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3 mt-4"
         />
       </div>
+      <label 
+        htmlFor="businessopenday"
+        className="block text-sm font-medium leading-6 text-gray-900 mt-2"
+      >
+        개업일자
+      </label>
       <div>
         <input 
-          id="bank" 
-          name="bank" 
-          type="text" 
-          placeholder="은행명"
-          autoComplete="text"
+          id="businessopenday" 
+          name="businessopenday" 
+          type="date" 
+          placeholder="개업일자"
+          autoComplete="date"
           required
           className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3 mt-4"
         />
@@ -66,10 +72,9 @@ export default function SignUpSecond() {
     <div className="fixed-bottom">
       <button 
         className="finishbutton"
-        // onClick={() => {navigate("/login")}} // 구매자용
-        onClick={() => {navigate("/signup/business")}} // 사업자등록(판매자용)
+        onClick={() => {navigate("/login")}} // 사업자등록확인 API 돌리기
       >
-        회원 가입 완료(3/3)
+        사업자 인증
       </button>
     </div>
     </div>
