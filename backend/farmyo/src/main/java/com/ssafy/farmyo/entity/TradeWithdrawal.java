@@ -35,7 +35,7 @@ public class TradeWithdrawal extends BaseTime {
 
     //출금액
     @Column(name = "withdrawal_price", nullable = false)
-    private Integer withdrawalPrice;
+    private int withdrawalPrice;
 
     //계좌번호
     @Column(name = "withdrawal_account", nullable = false)
@@ -51,7 +51,7 @@ public class TradeWithdrawal extends BaseTime {
 
     //빌더
     @Builder
-    public TradeWithdrawal(Trade trade, User seller, String withdrawalName, Integer withdrawalPrice,
+    public TradeWithdrawal(Trade trade, User seller, String withdrawalName, int withdrawalPrice,
                            String withdrawalAccount, String withdrawalBank, String withdrawalHolder) {
         this.trade = trade;
         this.seller = seller;
