@@ -31,7 +31,7 @@ public class CropCert extends BaseTime {
 
     //인증/표시번호
     @Column(name = "cert_num", nullable = false)
-    private Integer certNumber;
+    private String certNumber;
 
     //인증기관명
     @Column(name = "cert_corp", nullable = false)
@@ -43,7 +43,7 @@ public class CropCert extends BaseTime {
 
     //빌더
     @Builder
-    public CropCert(Crop crop, String certName, Integer certNumber, String certCorp, LocalDate certDate) {
+    public CropCert(Crop crop, String certName, String certNumber, String certCorp, LocalDate certDate) {
         this.crop = crop;
         this.certName = certName;
         this.certNumber = certNumber;
