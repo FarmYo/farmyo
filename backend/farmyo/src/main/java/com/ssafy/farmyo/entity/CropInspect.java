@@ -32,7 +32,7 @@ public class CropInspect extends BaseTime {
 
     //검사번호
     @Column(name = "inspect_num", nullable = false)
-    private Integer inspectNumber;
+    private String inspectNumber;
 
     //검사결과
     @Column(name = "inspect_res", nullable = false)
@@ -48,7 +48,7 @@ public class CropInspect extends BaseTime {
 
     //빌더
     @Builder
-    public CropInspect(Crop crop, String inspectName, Integer inspectNumber, String inspectResult, String inspectCorp, LocalDate inspectDate) {
+    public CropInspect(Crop crop, String inspectName, String inspectNumber, String inspectResult, String inspectCorp, LocalDate inspectDate) {
         this.crop = crop;
         this.inspectName = inspectName;
         this.inspectNumber = inspectNumber;

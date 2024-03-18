@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate, Link } from "react-router-dom";
 import Logo from '../../../image/component/user/logo.png';
-import 'css/login.css';
+import '../../../css/signup.css';
 
 export default function LoginInput() {
   const navigate = useNavigate()

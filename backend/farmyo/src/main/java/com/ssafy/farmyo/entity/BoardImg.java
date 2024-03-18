@@ -25,8 +25,8 @@ public class BoardImg extends BaseTime {
     private Board board;
 
     //이미지순서
-    @Column(name = "img_order")
-    private Integer imgOrder;
+    @Column(name = "img_order", nullable = false)
+    private int imgOrder;
 
     //이미지경로
     @Column(name = "img_url", nullable = false)
@@ -34,7 +34,7 @@ public class BoardImg extends BaseTime {
 
     //빌더
     @Builder
-    public BoardImg(Board board, Integer imgOrder, String imgUrl) {
+    public BoardImg(Board board, int imgOrder, String imgUrl) {
         this.board = board;
         this.imgOrder = imgOrder;
         this.imgUrl = imgUrl;

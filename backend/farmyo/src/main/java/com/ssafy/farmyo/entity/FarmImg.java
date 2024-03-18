@@ -24,9 +24,9 @@ public class FarmImg extends BaseTime {
     @JoinColumn(name = "farm_id", nullable = false)
     private Farm farm;
 
-    //이미지 순서 (Integer? Long)
-    @Column(name = "img_order")
-    private Integer imgOrder;
+    //이미지 순서
+    @Column(name = "img_order", nullable = false)
+    private int imgOrder;
 
     //이미지 경로
     @Column(name = "img_url", nullable = false)
@@ -34,7 +34,7 @@ public class FarmImg extends BaseTime {
 
     //빌더
     @Builder
-    public FarmImg(Farm farm, Integer imgOrder, String imgUrl) {
+    public FarmImg(Farm farm, int imgOrder, String imgUrl) {
         this.farm = farm;
         this.imgOrder = imgOrder;
         this.imgUrl = imgUrl;
