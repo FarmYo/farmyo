@@ -1,4 +1,4 @@
-import SignUpFirst from "../../.././../component/user/signUp/first"
+import SignUpFirst from "../../../../component/user/signUp/first"
 
 export default function SignUpFirstPage () {
   return (
