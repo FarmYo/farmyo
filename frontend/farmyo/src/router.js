@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import MainPage from "./pages/user/mainpage";
 import LoginPage from "./pages/user/login/index";
 import CheckPasswordPage from "./pages/user/checkpassword/index";
 import SignUpPage from "./pages/user/signup/index"
@@ -14,7 +15,7 @@ export default function Router (){
   return(
     <Routes>
       {/* 메인화면 - 이거 만들고 링크 바꾸기*/}
-      <Route path='/' element={<LoginPage />} />
+      <Route path='/' element={<MainPage />} />
       {/* 로그인페이지 */}
       <Route path='/login' element={<LoginPage />} />
       {/* 비밀번호페이지 */}
