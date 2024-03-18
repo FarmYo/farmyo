@@ -38,9 +38,14 @@ export default function BottomBar() {
                 <p className='text-sm text-center font-bold mt-2'>홈</p>
               </Link>
             </div>
-            <div className='flex flex-col items-center justify-center' onClick={() => handleImageClick(setTrade, trade)}>
-              <img src={trade.clicked ? TradeClick : trade.image} className="size" alt="" />
-              <p className='text-sm text-center font-bold mt-2'>거래</p>
+            <div 
+              className='flex flex-col items-center justify-center' 
+              onClick={() => handleImageClick(setTrade, trade)}
+            >
+              <Link to="/trade">
+                <img src={trade.clicked ? TradeClick : trade.image} className="size" alt="" />
+                <p className='text-sm text-center font-bold mt-2'>거래</p>
+              </Link>
             </div>
             <div className='flex flex-col items-center justify-center' onClick={() => handleImageClick(setBoard, board)}>
               <img src={board.clicked ? BoardClick : board.image} className="size" alt="" />
