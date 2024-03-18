@@ -23,7 +23,7 @@ export default function Business() {
     <div className="main2 mx-auto w-auto max-w-sm p-10">
       <label 
         htmlFor="businessnumber"
-        className="block text-sm font-medium leading-6 text-gray-900 mt-2"
+        className="block text-sm font-medium leading-6 text-gray-900"
       >
         사업자등록
       </label>
