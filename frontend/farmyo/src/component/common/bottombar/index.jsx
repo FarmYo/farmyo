@@ -50,9 +50,14 @@ export default function BottomBar() {
               <img src={chat.clicked ? ChatClick : chat.image} className="size" alt="" />
               <p className='text-sm text-center font-bold mt-2'>채팅</p>
             </div>
-            <div className='flex flex-col items-center justify-center' onClick={() => handleImageClick(setMypage, mypage)}>
-              <img src={mypage.clicked ? MypageClick : mypage.image} className="size" alt="" />
-              <p className='text-sm text-center font-bold mt-2'>마이</p>
+            <div 
+              className='flex flex-col items-center justify-center' 
+              onClick={() => handleImageClick(setMypage, mypage)}
+            >
+              <Link to="/login">
+                <img src={mypage.clicked ? MypageClick : mypage.image} className="size" alt="" />
+                <p className='text-sm text-center font-bold mt-2'>마이</p>
+              </Link>
             </div>
           </div>
         </div>
