@@ -50,11 +50,7 @@ public class TradeController {
 
         Map<String, Object> resultMap = new HashMap<>();
 
-        List<TradeDto> tradeDtoList = tradeService.getTradeList(userId);
-        List<TradeDto> tradeDtoListFinish = tradeService.getTradeList(userId);
-
-        resultMap.put("진행중인 거래", tradeDtoList);
-        resultMap.put("완료된 거래", tradeDtoListFinish);
+        resultMap.put("tradeList", tradeService.getTrades(userId));
 
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, resultMap));
     }
