@@ -36,8 +36,8 @@ public class Farmer extends User{
     //빌더패턴
     @Builder(builderMethodName = "farmerBuilder") // user랑 빌더 겹쳐서 따로 이름 설정해줘야함
     public Farmer(LocalDateTime deletedAt, UserStatus status, String loginId, String password, String telephone,
-                  String nickname, String email, String profile, String comment, String farmerLicense) {
-        super(deletedAt, status, loginId, password, telephone, nickname, email, profile, comment);
+                  String nickname, String email, String profile, String comment, String farmerLicense, Account account) {
+        super(deletedAt, status, loginId, password, telephone, nickname, email, profile, comment, account);
         this.farmerLicense = farmerLicense;
     }
 
