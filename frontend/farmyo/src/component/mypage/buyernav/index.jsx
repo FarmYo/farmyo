@@ -1,6 +1,7 @@
 import React, { useState,useEffect } from 'react'
 import Me from '../../../image/component/me.png'
 import Next from '../../../image/component/next.png'
+import ArticleList from '../articlelist'
 
 export default function MypageNavbar() {
   const [selected,setSelected] = useState(null)
@@ -37,6 +38,7 @@ export default function MypageNavbar() {
         <h1 className='font-bold' style={{ color: selected === 0 ? 'black' : 'gray' }} onClick={()=>{handleClick(0)}}>게시글</h1>
         <h1 className='font-bold' style={{ color: selected === 1 ? 'black' : 'gray' }} onClick={()=>{handleClick(1)}}>즐겨찾는 농부</h1>
       </div>
+      {selected === 0 && <ArticleList />}
     </div>
   )
 }
