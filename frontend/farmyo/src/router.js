@@ -36,9 +36,9 @@ export default function Router (){
       {/* 거래 메인페이지 */}
       <Route path='/trade' element={<TradePage />} />
       {/* 거래상세 판매자페이지 */}
-      <Route path='/trade/seller' element={<SellerTradePage />} />
+      <Route path='/trade/seller/:cropId' element={<SellerTradePage />} />
       {/* 거래상세 구매자페이지 */}
-      <Route path='/trade/buyer' element={<BuyerTradePage />} />
+      <Route path='/trade/buyer/:cropId' element={<BuyerTradePage />} />
       {/* 판매자마이페이지 */}
       <Route path='/mypage/seller' element={<SellerMypage />} /> 
       {/* 구매자마이페이지 */}
