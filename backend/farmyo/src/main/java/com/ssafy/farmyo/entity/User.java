@@ -1,43 +1,35 @@
 package com.ssafy.farmyo.entity;
 
+import com.ssafy.farmyo.common.entity.BaseTime;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "user")
-public class User {
+@Inheritance(strategy = InheritanceType.JOINED)//조인전략으로 상속
+public class User extends BaseTime {
 
     //회원식별ID
     @Id
-    @Column(name = "id", nullable = false, unique = true)
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY) // GenerationType.IDENTITY DB(SQL)에 위임
-    private Long id;
-
-    // 생성일
-    @CreationTimestamp
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    //수정일
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    private Integer id;
 
     //탈퇴일
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    //회원상태
-    @Enumerated(EnumType.ORDINAL)
+    //회원상태 초기값 액티브설정
+    @Enumerated(EnumType.STRING)
     @Column(name = "user_status", nullable = false)
     private UserStatus status = UserStatus.ACTIVE;
 
@@ -69,11 +61,58 @@ public class User {
     @Column(name = "user_comment")
     private String comment;
 
+    //즐겨찾기
+    @OneToMany(mappedBy = "user")
+    private List<Favorite> favoritesAsBuyer = new ArrayList<>();
+
+    //계좌
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private Account account;
+
+    //주소
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private Address address;
+
+    //지갑
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private Wallet wallet;
+
+    //게시글
+    @OneToMany(mappedBy = "user")
+    private List<Board> boards = new ArrayList<>();
+
+    //채팅방(구매자로)
+    @OneToMany(mappedBy = "buyer")
+    private List<Chat> chatsAsBuyer = new ArrayList<>();
+
+    //채팅방(판매자로)
+    @OneToMany(mappedBy = "seller")
+    private List<Chat> chatsAsSeller = new ArrayList<>();
+
+    //거래(구매자)
+    @OneToMany(mappedBy = "buyer")
+    private List<Trade> tradesAsBuyer = new ArrayList<>();
+
+    //거래(판매자)
+    @OneToMany(mappedBy = "seller")
+    private List<Trade> tradesAsSeller = new ArrayList<>();
+
+    //입금
+    @OneToMany(mappedBy = "buyer")
+    private List<TradeDeposit> tradeDeposits = new ArrayList<>();
+
+    //출금
+    @OneToMany(mappedBy = "seller")
+    private List<TradeWithdrawal> tradeWithdrawals = new ArrayList<>();
+
+
+
     // 빌더 패턴 적용
     @Builder
-    public User( LocalDateTime deletedAt,
+    public User(LocalDateTime deletedAt,
                 UserStatus status, String loginId, String password, String telephone, String nickname,
                 String email, String profile, String comment) {
+
         this.deletedAt = deletedAt;
         this.status = status;
         this.loginId = loginId;
