@@ -4,13 +4,16 @@ import com.ssafy.farmyo.entity.Board;
 import com.ssafy.farmyo.entity.Chat;
 import com.ssafy.farmyo.entity.User;
 import com.ssafy.farmyo.trade.dto.TradeDto;
+import com.ssafy.farmyo.trade.dto.TradeReqDto;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public interface TradeService {
 
-    int createTrade(int sellerId, int buyerId, int boardId, int chatId, TradeDto tradeDto);
-    List<TradeDto> getTradeList(int userId);
+    int createTrade(TradeReqDto tradeReqDto);
+    Map<String, Object> getTrades(int userId);
     TradeDto getTrade(int id);
     void updateTrade(TradeDto tradeDto);
 

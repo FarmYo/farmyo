@@ -44,7 +44,7 @@ export default function MyFarm() {
 
 
  return(
-  <div style={{ position:'relative' }}>
+  <div style={{ position:'relative',height:'400px' }}>
     <div className='flex justify-end mr-5'>
      <Menu as="div" className="relative inline-block text-left">
       <div>
@@ -99,15 +99,14 @@ export default function MyFarm() {
     </Menu>
     </div>
 
-    <div style={{height:'360px'}}>
-      <div style={{ position: 'absolute', bottom: 0, right: 10}}>
-        <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
-          <div style={{ position: 'absolute', top: '44%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}
-          onClick={onOpenModal}>+
-          </div>
+    <div style={{ position: 'absolute', bottom: 0, right: 10}}>
+      <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
+        <div style={{ position: 'absolute', top: '44%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}
+        onClick={onOpenModal}>+
         </div>
       </div>
     </div>
+ 
 
     {/* ******모달창들******** */}
     {/* 마이팜게시글등록 모달창 */}
@@ -161,7 +160,7 @@ export default function MyFarm() {
       </div>
     </div>
     {/* 사진등록모달창 */}
-
+        
 
 
 

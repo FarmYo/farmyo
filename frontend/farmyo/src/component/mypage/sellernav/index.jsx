@@ -6,6 +6,7 @@ import SaeClick from '../../../image/component/saeclick.png'
 import Myfarm from '../myfarm'
 import Mycrops from '../mycrops'
 import ArticleList from '../articlelist'
+// import SwipeableViews from 'react-swipeable-views';
 
 export default function MypageNavbar() {
   const [selected,setSelected] = useState(null)
@@ -57,6 +58,11 @@ export default function MypageNavbar() {
       {selected === 0 && <Myfarm />}
       {selected === 1 && <Mycrops />}
       {selected === 2 && <ArticleList />}
+      {/* <SwipeableViews index={selected} onChangeIndex={handleClick}>
+        <Myfarm />
+        <Mycrops />
+        <ArticleList />
+      </SwipeableViews> */}
     </div>
   )
 }
