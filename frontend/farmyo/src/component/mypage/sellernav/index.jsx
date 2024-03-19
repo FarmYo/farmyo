@@ -6,7 +6,7 @@ import SaeClick from '../../../image/component/saeclick.png'
 import Myfarm from '../myfarm'
 import Mycrops from '../mycrops'
 import ArticleList from '../articlelist'
-import SwipeableViews from 'react-swipeable-views';
+// import SwipeableViews from 'react-swipeable-views';
 
 export default function MypageNavbar() {
   const [selected,setSelected] = useState(null)
@@ -55,14 +55,14 @@ export default function MypageNavbar() {
         <h1 className='font-bold' style={{ color: selected === 2 ? 'black' : 'gray' }} onClick={()=>{handleClick(2)}}>게시글</h1>
       </div>
       {/* 선택된 컴포넌트 조건부 렌더링 */}
-      {/* {selected === 0 && <Myfarm />}
+      {selected === 0 && <Myfarm />}
       {selected === 1 && <Mycrops />}
-      {selected === 2 && <ArticleList />} */}
-      <SwipeableViews index={selected} onChangeIndex={handleClick}>
+      {selected === 2 && <ArticleList />}
+      {/* <SwipeableViews index={selected} onChangeIndex={handleClick}>
         <Myfarm />
         <Mycrops />
         <ArticleList />
-      </SwipeableViews>
+      </SwipeableViews> */}
     </div>
   )
 }
