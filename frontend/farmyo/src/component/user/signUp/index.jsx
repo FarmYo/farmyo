@@ -1,10 +1,18 @@
 import React from 'react'
+// import React, { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
 import '../../../css/signup.css';
 import Logo from '../../../image/component/user/logo.png';
 
 export default function SignUp() {
   const navigate = useNavigate()
+  // const [selected,setSelected] = useState(null)
+  // useEffect(()=>{
+  //   setSelected(0);
+  // },[])
+  // const handleClick = (index) => {
+  //   setSelected(index)
+  // }
   return(
   <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 logo">
     <div className="mx-auto w-full max-w-sm mb-0">
