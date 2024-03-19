@@ -8,9 +8,9 @@ import '../../../css/trade.css'
 
 // 상품을 받아올테니까 대충 있다고 치고
 const ListData = [
-  { id: 1, name: "딸기", seller: "조현제", photo: strawberry, status: "입금 대기중" },
-  { id: 2, name: "밤", seller: "조현제", photo: bam, status: "입금 완료" },
-  { id: 3, name: "고구마", seller: "조현제", photo: sweetpotato, status: "거래중" },
+  { id: 1, name: "딸기딸기딸기딸기", seller: "조현제", photo: strawberry, status: "입금 대기중" },
+  { id: 2, name: "달고달고 달디단 밤", seller: "조현제", photo: bam, status: "입금 완료" },
+  { id: 3, name: "호박고구마호박고구마!", seller: "조현제", photo: sweetpotato, status: "거래중" },
   { id: 4, name: "테스트", seller: "테스트", photo: "기본 이미지", status: "거래중" },
   { id: 5, name: "거래", seller: "완료", photo: "불러오면 넣을 거", status: "거래완료" },
   { id: 6, name: "거래완료", seller: "거래완료", photo: "대충 이미지", status: "거래완료" },
@@ -57,11 +57,13 @@ export default function OngoingTrade() {
         {getVisibleList().map(item => (
           <div key={item.id} className="item p-2 border rounded-md" onClick={() => {navigate(`/trade/seller/${item.id}`)}}>
             <img src={item.photo} alt={item.name} />
-            <div className="">
-              {item.name}
-              {item.seller}
+            <div>
+              <div>{item.name}</div>
+              <div>{item.seller}</div>
+              
             </div>
-            ({item.status})
+            <span className="item-status">({item.status})</span>
+             
           </div>
         ))}
       </div>
