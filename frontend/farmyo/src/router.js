@@ -13,6 +13,9 @@ import BuyerTradePage from "./pages/trade/buyerTradeDetail";
 import SellerMypage from "./pages/mypage/seller/index"
 import BuyerMypage from "./pages/mypage/buyer/index"
 import MyFarmDetail from "./pages/mypage/myfarm/detail/index"
+import BoardNav from "./pages/board/navbar/index"
+import SellDetail from "./pages/board/selldetail/index"
+import BuyDetail from "./pages/board/buydetail/index"
 
 export default function Router (){
   return(
@@ -45,6 +48,12 @@ export default function Router (){
       <Route path='/mypage/buyer' element={<BuyerMypage />} />
       {/* 마이팜디테일페이지 */}
       <Route path='/mypage/:myfarmId/detail' element={<MyFarmDetail />} />
+      {/* 팜&삼 게시판페이지 */}
+      <Route path='/board' element={<BoardNav />} />
+      {/* 팝니다상세페이지 */}
+      <Route path='/board/sell/:boardId/detail' element={<SellDetail />} />
+      {/* 삽니다상세페이지 */}
+      <Route path='/board/buy/:boardId/detail' element={<BuyDetail />} />
     </Routes>
   )
 }
