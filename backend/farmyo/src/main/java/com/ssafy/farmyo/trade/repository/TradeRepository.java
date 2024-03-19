@@ -11,9 +11,8 @@ import java.util.List;
 @Repository
 public interface TradeRepository extends JpaRepository<Trade, String> {
 
-
     TradeDto findByTrade(int id);
-    List<TradeDto> findByIdAndTradeState(int id, int tradeState);
+    List<TradeDto> findByIdAndTradeStatus(int id, int tradeState);
 
     // 영한's talk : jpql이랑 밑에 함수랑 겹쳐서 하나만 써야될걸??
     // getTradeListNotFinished, findByIdAndTradeStateNot

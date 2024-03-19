@@ -2,10 +2,8 @@ package com.ssafy.farmyo.trade.service;
 
 import com.ssafy.farmyo.board.repository.BoardRepository;
 import com.ssafy.farmyo.chat.repository.ChatRepository;
-import com.ssafy.farmyo.entity.Board;
-import com.ssafy.farmyo.entity.Chat;
-import com.ssafy.farmyo.entity.Trade;
-import com.ssafy.farmyo.entity.User;
+import com.ssafy.farmyo.crop.repository.CropRepository;
+import com.ssafy.farmyo.entity.*;
 import com.ssafy.farmyo.trade.dto.TradeDto;
 import com.ssafy.farmyo.trade.dto.TradeReqDto;
 import com.ssafy.farmyo.trade.repository.TradeRepository;
@@ -16,9 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Slf4j
 @Service
@@ -30,16 +26,10 @@ public class TradeServiceImpl implements TradeService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final ChatRepository chatRepository;
+    private final CropRepository cropRepository;
 
     @Override
-    public int createTrade(TradeReqDto tradeReqDto) {
-
-        // trade 생성
-        Trade trade = Trade.builder()
-                .tradePrice(tradeReqDto.getTradePrice())
-                .tradeQuantity(tradeReqDto.getTradeQuantity())
-                .build();
-
+    public void createTrade(TradeReqDto tradeReqDto) {
 
         // seller 가져오기
         User seller = userRepository.findById(tradeReqDto.getSeller());
@@ -50,12 +40,20 @@ public class TradeServiceImpl implements TradeService {
         // chatId 가져오기
         Chat chatId = chatRepository.findById(tradeReqDto.getChat());
         // cropId 가져오기
+        Crop cropId = cropRepository.findById(tradeReqDto.getCrop());
 
+        // trade 생성
+        Trade trade = Trade.builder()
+                .tradePrice(tradeReqDto.getTradePrice())
+                .tradeQuantity(tradeReqDto.getTradeQuantity())
+                .buyer(buyer)
+                .seller(seller)
+                .chat(chatId)
+                .crop(cropId)
+                .board(boardId)
+                .build();
 
-
-        Trade saveTrade = tradeRepository.save(trade);
-
-        return 0;
+        tradeRepository.save(trade);
     }
 
 
@@ -63,8 +61,11 @@ public class TradeServiceImpl implements TradeService {
     public Map<String, Object> getTrades(int userId) {
         Map<String, Object> resultMap = new HashMap<>();
 
+        // 우선 user가 판매자인지 구매자인지 확인이 필요 -> 내일 해야지 응애
+
+        // 진행중인 거래와 완료된 거래를 각각 resultMap에 넣음
         resultMap.put("진행중인 거래", tradeRepository.getTradeListNotFinished(userId, 5));
-        resultMap.put("완료된 거래", tradeRepository.findByIdAndTradeState(userId, 5));
+        resultMap.put("완료된 거래", tradeRepository.findByIdAndTradeStatus(userId, 5));
 
         return resultMap;
     }
