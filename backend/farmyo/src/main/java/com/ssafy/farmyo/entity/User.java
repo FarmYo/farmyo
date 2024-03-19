@@ -66,7 +66,7 @@ public class User extends BaseTime {
     private List<Favorite> favoritesAsBuyer = new ArrayList<>();
 
     //계좌
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    @Embedded
     private Account account;
 
     //주소
@@ -102,7 +102,7 @@ public class User extends BaseTime {
     @Builder
     public User(LocalDateTime deletedAt,
                 UserStatus status, String loginId, String password, String telephone, String nickname,
-                String email, String profile, String comment) {
+                String email, String profile, String comment, Account account) {
 
         this.deletedAt = deletedAt;
         this.status = status;
@@ -113,6 +113,7 @@ public class User extends BaseTime {
         this.email = email;
         this.profile = profile;
         this.comment = comment;
+        this.account = account;
     }
 
     public void updateDeletedAt(LocalDateTime deletedAt) {
