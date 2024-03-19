@@ -138,27 +138,27 @@ export default function MyCrops() {
 
   return(
     // "작물없으면 등록한 작물이 없습니다"노출
-    <div style={{ position:'relative'}}>
+    <div style={{ position:'relative',height:'400px'}}>
       {/* 아래의 디브가 작물이 추가될 때마다 반복됨  */}
       <div className="flex">
         <div style={{backgroundColor:'#bbbbbb',width:80,height:80}}></div>
         <div className="p-5">
           <h1 className="font-bold">감자</h1>
         </div>
-        <div className="ml-auto flex items-center p-5" onClick={info2OpenModal}>
+        <div className="ml-auto flex items-center p-5" onClick={infoOpenModal}>
           <img src={Next} alt="" style={{width:30}}/>
         </div>
       </div>
       
-      <div style={{height:'316px'}}>
-        <div style={{ position: 'absolute', bottom: 0, right: 10}}>
-          <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
-            <div style={{ position: 'absolute', top: '43%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}
-            onClick={onOpenModal}>
-              +</div>
-          </div>
+  
+      <div style={{ position: 'absolute', bottom: 0, right: 10}}>
+        <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
+          <div style={{ position: 'absolute', top: '43%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}
+          onClick={onOpenModal}>
+            +</div>
         </div>
       </div>
+     
 
       {/* ********모달모음************ */}
       {/* ******농산물 등록모달창***** */}
@@ -288,15 +288,18 @@ export default function MyCrops() {
       <Modal open={lifeRecordOpen} onClose={LifeRecordCloseModal} styles={styles}>
         <div class="timeline">
           <div class="event">
-          <div class="">2023-05-10</div>
-          <div class="event-circle"></div>
-          <div>
-          <div>심은날짜</div>
-          <div>2022-10-2</div>
-          <div>경상북도 고령군 대가야읍</div>
+            <div class="text-lg font-bold">2023-05-10</div>
+            <div class="event-circle"></div>
+            <div className="flex justify-between">
+              <div className="font-bold">심은날짜</div>    
+              <div>2022-10-2</div>
+            </div> 
+            <div className="font-bold">재배지</div>    
+            <div>경상북도 고령군 대가야읍</div>
           </div>
-          </div>
-        </div>                    
+        </div>    
+            
+                    
       </Modal>
 
 
