@@ -1,0 +1,23 @@
+server:
+  servlet:
+    context-path: '/api'
+
+spring:
+  # database
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ENC(cea2CRLrJp9s4h+qmGMGvzyVDxgbhj8AiOYaKKm44bJKN0VCOmMivD/JkVegNQE+sogvQVuDyg9FINmCdQ4fkHM+xzR3Mm5BPacoLY8ZCVHTU779wkqX/sNO4JdHl/zl+mHOpblkSm/kh0+VZp+wt9H9t3ixfcgP)
+    username: ENC(wQizRoyOr2aNgbgU6TsdGA==)
+    password: ENC(ySIkbHXT3WrPI0iFMuATcGL/cYT30gSl)
+
+  # jpa
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: Asia/Seoul
+        format_sql: true
+        show_sql: true;
+    open-in-view: false
