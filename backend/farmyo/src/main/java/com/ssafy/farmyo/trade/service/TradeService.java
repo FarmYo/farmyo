@@ -12,7 +12,7 @@ import java.util.Objects;
 
 public interface TradeService {
 
-    int createTrade(TradeReqDto tradeReqDto);
+    void createTrade(TradeReqDto tradeReqDto);
     Map<String, Object> getTrades(int userId);
     TradeDto getTrade(int id);
     void updateTrade(TradeDto tradeDto);

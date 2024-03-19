@@ -4,6 +4,7 @@ package com.ssafy.farmyo.trade.controller;
 import com.ssafy.farmyo.common.response.BaseResponseBody;
 import com.ssafy.farmyo.entity.Trade;
 import com.ssafy.farmyo.trade.dto.TradeDto;
+import com.ssafy.farmyo.trade.dto.TradeReqDto;
 import com.ssafy.farmyo.trade.service.TradeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -30,13 +31,12 @@ public class TradeController {
 
     @PostMapping("")
     @Operation(summary = "거래 생성하기", description = "chat 또는 board를 통해서 얻은 정보로 거래를 생성한다.")
-    public ResponseEntity<? extends BaseResponseBody> createTrade() {
-        log.info("{} : createTrade 실행");
+    public ResponseEntity<? extends BaseResponseBody> createTrade(@RequestParam(name = "tradeDto")TradeReqDto tradeReqDto) {
+        log.info("{} : createTrade 실행", tradeReqDto);
 
-        int tradeId = 0;
-//        tradeService.createTrade()
+        tradeService.createTrade(tradeReqDto);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, tradeId));
+        return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, 1));
     }
 
 
