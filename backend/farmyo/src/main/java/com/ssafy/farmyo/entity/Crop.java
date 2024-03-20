@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +45,18 @@ public class Crop extends BaseTime {
     @Column(name = "crop_img")
     private String cropImgUrl;
 
+    //심은 날짜
+    @Column(name = "crop_pld", nullable = false)
+    private LocalDate cropPlantingDate;
+
+    //수확 날짜
+    @Column(name = "crop_hvd")
+    private LocalDate cropHarvestDate;
+
+    //재배지
+    @Column(name = "crop_cult", nullable = false)
+    private String cropCultivationSite;
+
     //작물검사매핑
     @OneToMany(mappedBy = "crop")
     private List<CropInspect> cropInspectList = new ArrayList<>();
@@ -58,14 +71,22 @@ public class Crop extends BaseTime {
 
     //빌더
     @Builder
-    public Crop(Farmer farmer, String cropName, CropCategory cropCategory, String cropBlockchainAddress, String cropImgUrl) {
+    public Crop(Farmer farmer, String cropName, CropCategory cropCategory, String cropBlockchainAddress, String cropImgUrl, LocalDate cropPlantingDate, String cropCultivationSite) {
 
         this.farmer = farmer;
         this.cropCategory = cropCategory;
         this.cropName = cropName;
         this.cropBlockchainAddress = cropBlockchainAddress;
         this.cropImgUrl = cropImgUrl;
+        this.cropPlantingDate = cropPlantingDate;
+        this.cropCultivationSite = cropCultivationSite;
     }
 
+
+
+    //나중에 수확날짜 넣는 메소드
+    public void updateCropHarvestDate(LocalDate cropHarvestDate) {
+        this.cropHarvestDate = cropHarvestDate;
+    }
 
 }
