@@ -1,5 +1,4 @@
 import { Menu, Transition } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { Fragment } from 'react'
 import Dropdown from '../../../image/component/dropdown.png'
 import Search from '../../../image/component/search.png'
@@ -8,6 +7,7 @@ import SellBoardList from '../../../component/board/sellboard'
 import BuyBoardList from '../../../component/board/buyboard'
 
 export default function BoardNav(){
+
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
@@ -25,7 +25,7 @@ export default function BoardNav(){
 
   return(
     <div>
-      <div style={{height:50,backgroundColor:'#1B5E20'}} className="p-2">
+      <div style={{height:50,backgroundColor:'#1B5E20'}} className="p-2 flex items-center">
         <h1 className="text-xl font-bold" style={{color:"white"}}>팜&삼</h1> 
       </div>
       <div className='p-5 flex justify-between'>
@@ -34,7 +34,7 @@ export default function BoardNav(){
           <Menu.Button className="inline-flex w-32 h-12 justify-between items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50"
           style={{ border: '3px solid #81C784', backgroundColor: 'transparent'}}>
             <div className='pl-3'>{selectedItem}</div>
-            <img src={Dropdown} alt=""/>
+            <img src={Dropdown} alt="" style={{width:15,height:10}}/>
           </Menu.Button>
         </div>
         <Transition
@@ -48,7 +48,7 @@ export default function BoardNav(){
         >
           <Menu.Items className="absolute left-0 z-10 mt-2 w-28 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
             <div className="py-1">
-              {['농산물', '제목', '작성자'].map((item) => (
+              {['전체','농산물', '제목', '작성자'].map((item) => (
                 <Menu.Item key={item}>
                   {({ active }) => (
                     <a
@@ -69,7 +69,7 @@ export default function BoardNav(){
       </Menu>
       <div style={{ position:'relative' }}>
         <input type="text" className="input w-44" style={{ border:'3px solid #81C784',backgroundColor: 'transparent'}} />
-        <img src={Search} alt="" style={{ position: 'absolute', right: '13px', top: '25%'}} />
+        <img src={Search} alt="" style={{ position: 'absolute', right: '13px', top: '25%',width:25,height:25}} />
       </div>
     </div>
     <div className='flex justify-around border-b-2 border-t-2 border-gray-300 p-2' style={{height:50}} >

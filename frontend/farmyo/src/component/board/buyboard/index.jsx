@@ -38,7 +38,7 @@ export default function BuyBoardList(){
           <h1 style={{ color:'#1B5E20' }} className="font-bold">1kg</h1>
           <div className='flex justify-between'>
             <h1 style={{ color:'#1B5E20' }} className="font-bold">10000원/kg</h1>
-            <img src={Chatting} alt="" /> 
+            <img src={Chatting} alt="" style={{width:30}}/> 
           </div>     
         </div>
       </div>
@@ -50,7 +50,7 @@ export default function BuyBoardList(){
           <h1 style={{ color:'#1B5E20' }} className="font-bold">1kg</h1>
           <div className='flex justify-between'>
             <h1 style={{ color:'#1B5E20' }} className="font-bold">10000원/kg</h1>
-            <img src={Chatting} alt="" /> 
+            <img src={Chatting} alt="" style={{width:30}}/> 
           </div>     
         </div>
       </div>
