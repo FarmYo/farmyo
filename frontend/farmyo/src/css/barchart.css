@@ -1,0 +1,13 @@
+.custom-progress::-webkit-progress-bar {
+  background-color: #eee; /* 배경색 변경 */
+}
+
+.custom-progress::-webkit-progress-value {
+  background-color: #1B5E20; /* 진행 막대 색상 변경 */
+}
+
+.custom-progress::-moz-progress-bar { 
+  background-color: #1B5E20; /* 파이어폭스용 진행 막대 색상 변경 */
+}
+
+/* IE 10+, Edge (구버전)에 대한 추가 스타일이 필요할 수 있음 */

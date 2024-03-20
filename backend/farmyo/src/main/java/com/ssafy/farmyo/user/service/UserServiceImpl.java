@@ -8,7 +8,7 @@ import com.ssafy.farmyo.user.dto.JoinReqDto;
 import com.ssafy.farmyo.user.repository.AddressRepository;
 import com.ssafy.farmyo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,7 +17,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final AddressRepository addressRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+//    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     @Override
     public int join(JoinReqDto joinReqDto) {
         // 계좌 생성
@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
         // 유저 생성
         User user = User.builder()
                 .loginId(joinReqDto.getLoginId())
-                .password(bCryptPasswordEncoder.encode(joinReqDto.getPassword()))
+                .password(joinReqDto.getPassword())
                 .telephone(joinReqDto.getTelephone())
                 .nickname(joinReqDto.getNickname())
                 .email(joinReqDto.getEmail())
