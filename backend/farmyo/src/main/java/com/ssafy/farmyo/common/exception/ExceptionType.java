@@ -8,7 +8,10 @@ public enum ExceptionType {
     // 에러 열거
 
     // 회원
-    USER_NOT_EXIST(HttpStatus.UNAUTHORIZED, "U-001", "존재하지 않는 회원입니다.");
+    USER_NOT_EXIST(HttpStatus.UNAUTHORIZED, "U-001", "존재하지 않는 회원입니다."),
+
+    // 작물
+    CROP_NOT_EXIST(HttpStatus.BAD_REQUEST, "C-001", "존재하지 않는 작물입니다.");
 
     // 상태, 에러 코드, 메시지
     private final HttpStatus httpStatus;
