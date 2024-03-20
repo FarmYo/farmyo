@@ -54,6 +54,7 @@ public class TradeServiceImpl implements TradeService {
                 .board(boardId)
                 .build();
 
+        // trade 저장
         tradeRepository.save(trade);
     }
 
@@ -61,14 +62,21 @@ public class TradeServiceImpl implements TradeService {
     @Override
     public Map<String, Object> getTrades(int userId) {
         Map<String, Object> resultMap = new HashMap<>();
+        User user = userRepository.findById(userId);
 
-        // 우선 user가 판매자인지 구매자인지 확인이 필요 -> 내일 해야지 응애
-        // user entity에 판매자 or 구매자를 나누는 컬럼 필요 + 잔액 컬럼도 필요
+        // user가 판매자인지 구매자인지 확인
+        int job = user.getJob();
 
+        if (job == 0) { // user가 판매자라면
+            // 진행중인 거래와 완료된 거래를 각각 resultMap에 넣음
+            resultMap.put("진행중인 거래", tradeRepository.getSellerTradeListNotFinished(userId, 3));
+            resultMap.put("완료된 거래", tradeRepository.getSellerTradeListFinished(userId, 3));
+        } else { // user가 구매자라면
+            // 진행중인 거래와 완료된 거래를 각각 resultMap에 넣음
+            resultMap.put("진행중인 거래", tradeRepository.getBuyerTradeListNotFinished(userId, 3));
+            resultMap.put("완료된 거래", tradeRepository.getBuyerTradeListFinished(userId, 3));
 
-        // 진행중인 거래와 완료된 거래를 각각 resultMap에 넣음
-        resultMap.put("진행중인 거래", tradeRepository.getTradeListNotFinished(userId, 5));
-        resultMap.put("완료된 거래", tradeRepository.getTradeListFinished(userId, 5));
+        }
 
         return resultMap;
     }
