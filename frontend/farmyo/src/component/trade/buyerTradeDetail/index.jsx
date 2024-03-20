@@ -6,7 +6,7 @@ import { Modal } from "react-responsive-modal"
 import "../../../css/trade.css";
 
 export default function BuyerTrade() {
-  const { id } = useParams(); // URL 파라미터에서 `id` 추출
+  const { cropId } = useParams(); // URL 파라미터에서 `id` 추출
   const [item, setItem] = useState(null);
   // useEffect(() => {
   //   // 전달받은 id값을 사용하여 데이터 불러오기
@@ -120,7 +120,7 @@ export default function BuyerTrade() {
 
       <div className="flex flex-row">
         {/* {item.name} */}
-        {id}
+        {cropId}
         {/* <div>
           {item.status}
           {item.createdAt}
@@ -128,39 +128,44 @@ export default function BuyerTrade() {
         </div> */}
       </div>
       <div>
-        <h2>농산물</h2>
+      <div className="p-2">
+        <div className="h2">농산물</div>
         작물명 들고오기
-
-        <h2>거래 수량</h2>
+      </div>
+      <div className="p-2">
+        <div className="h2">거래 수량</div>
         거래수량 들고오기
-
-        <h2>거래 가격</h2>
+      </div>
+      <div className="p-2">
+        <div className="h2">거래 가격</div>
         거래가격 들고오기
-
-        <div className="flex flex-row justify-between">
+      </div>
+        <div className="flex flex-row justify-between p-2">
           <div>
-            <h2>구매자</h2>
+            <div className="h2">구매자</div>
             구매자명 들고오기
-          </div>
+            </div>
           <div>
-            <h2>판매자</h2>
+            <div className="h2">판매자</div>
             판매자명 들고오기
           </div>
         </div>
-
-        <h2>배송지</h2>
+        <div className="p-2">
+        <div className="h2">배송지</div>
         <button
-          className="btn"
+          className="addressbutton btn"
           onClick={onOpenModal}
         >
           주소선택
         </button>
-        
-        <h2>송장번호</h2>
+        </div>
+        <div className="p-2">
+        <div className="h2">송장번호</div>
         <p>배송대기중</p>
+        </div>
+        </div>
         <div className="fixed-bottom">
           <button className="finishbutton">결제</button>
-        </div>
       </div>
 
       <Modal

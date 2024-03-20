@@ -4,7 +4,7 @@ export default function Pesticide({ onRegister }){
      <div style={{border:'1px solid gray'}} className="rounded-md">
         <div className="p-6">
           <label className="form-control w-full max-w-xs">
-          <div className="label">
+          <div className="label"> 
             <span className="text-md">사용날짜</span>
           </div>
           <input type="text" placeholder="날짜를 입력해주세요" className="input input-bordered w-full max-w-xs" />
