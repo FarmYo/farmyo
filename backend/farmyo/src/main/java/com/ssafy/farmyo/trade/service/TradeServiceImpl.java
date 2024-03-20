@@ -2,6 +2,8 @@ package com.ssafy.farmyo.trade.service;
 
 import com.ssafy.farmyo.board.repository.BoardRepository;
 import com.ssafy.farmyo.chat.repository.ChatRepository;
+import com.ssafy.farmyo.common.exception.CustomException;
+import com.ssafy.farmyo.common.exception.ExceptionType;
 import com.ssafy.farmyo.crop.repository.CropRepository;
 import com.ssafy.farmyo.entity.*;
 import com.ssafy.farmyo.trade.dto.TradeDto;
@@ -34,9 +36,9 @@ public class TradeServiceImpl implements TradeService {
     public void createTrade(TradeReqDto tradeReqDto) {
 
         // seller 가져오기
-        User seller = userRepository.findById(tradeReqDto.getSeller());
+        User seller = userRepository.findById(tradeReqDto.getSeller()).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
         // buyer 가져오기
-        User buyer = userRepository.findById(tradeReqDto.getBuyer());
+        User buyer = userRepository.findById(tradeReqDto.getBuyer()).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
         // boardId 가져오기
         Board boardId = boardRepository.findById(tradeReqDto.getBoard());
         // chatId 가져오기
@@ -62,7 +64,7 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     public TradeListReqDto getTrades(int userId) {
-        User user = userRepository.findById(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
         TradeListReqDto tradeListReqDto = new TradeListReqDto();
 
         // user가 판매자인지 구매자인지 확인
