@@ -14,19 +14,18 @@ import "react-datepicker/dist/react-datepicker.css"
 import ko from 'date-fns/locale/ko'
 import Pesticide from '../../form/pesticide'
 import Award from '../../form/award'
-import Etc from '../../form/etc'
 import '../../../css/liferecord.css'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
- 
-
 export default function MyCrops() {
   const [startDate,setStartDate] = useState(null)
- const [endDate, setEndDate] = useState(null);
+  const [endDate, setEndDate] = useState(null)
   const [selected,setSelected] = useState('')
+  const cropList = ['감자','호박','고추','오이','사과']  // 작물등록시 작물 리스트
+  const [selectedCrop, setSelectedCrop] = useState('작물을 선택하세요')
 
   useEffect(()=>{
     setSelected('구분')
@@ -141,19 +140,20 @@ export default function MyCrops() {
     <div style={{ position:'relative',height:'400px'}}>
       {/* 아래의 디브가 작물이 추가될 때마다 반복됨  */}
       <div className="flex">
-        <div style={{backgroundColor:'#bbbbbb',width:80,height:80}}></div>
+        <div style={{backgroundColor:'#bbbbbb',width:80}}></div>
         <div className="p-5">
-          <h1 className="font-bold">감자</h1>
+          <h1 className="font-bold">작물명</h1>
+          <h1 className="text-sm">심은날짜-2024/05/05</h1>
         </div>
         <div className="ml-auto flex items-center p-5" onClick={infoOpenModal}>
-          <img src={Next} alt="" style={{width:30}}/>
+          <img src={Next} alt="" style={{width:30,height:30}}/>
         </div>
       </div>
       
   
       <div style={{ position: 'absolute', bottom: 0, right: 10}}>
         <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
-          <div style={{ position: 'absolute', top: '43%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}
+          <div style={{ position: 'absolute', top: '44%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}
           onClick={onOpenModal}>
             +</div>
         </div>
@@ -168,7 +168,7 @@ export default function MyCrops() {
           <Menu.Button className="inline-flex w-full justify-center items-center gap-x-1.5 rounded-md
           bg-white px-12 py-3 text-xl text-gray-900 font-semibold
             ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-            작물을 선택하세요
+            {selectedCrop}
             <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
           </Menu.Button>
   
@@ -184,32 +184,22 @@ export default function MyCrops() {
           <Menu.Items className="absolute right-0 z-10 w-full px-4 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
           style={{width:'16rem'}}>
             <div className="py-1">
-              <Menu.Item>
+              {cropList.map((crop,index)=>(
+              <Menu.Item onClick={() => setSelectedCrop(crop)}> 
                 {({ active }) => (
-                  <a
+                  <button
                     href="#"
                     className={classNames(
                       active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                       'block px-12 py-2 text-xl'
+                      
                     )}
                   >
-                    농작물1
-                  </a>
+                    {crop}
+                  </button>
                 )}
                 </Menu.Item>
-                <Menu.Item>
-                  {({ active }) => (
-                    <a
-                      href="#"
-                      className={classNames(
-                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                        'block px-12 py-2 text-xl'
-                      )}
-                    >
-                      농작물2
-                    </a>
-                  )}
-                </Menu.Item>
+                ))}
                 </div>
               </Menu.Items>
             </Transition>   
@@ -268,7 +258,7 @@ export default function MyCrops() {
         </div>
         <div className="px-8 mt-10">
           <button className="btn w-full flex justify-around" style={{ border:'3px solid #81C784',backgroundColor: 'transparent'}}>
-            <img src={Vet} alt=""/>
+            <img src={Vet} alt="" style={{width:40,height:30}}/>
             <div className="font-bold" onClick={LifeRecordOpenModal}>농산물 생애기록 보기</div>
           </button>
         </div>
@@ -278,7 +268,7 @@ export default function MyCrops() {
         </div>
         <div className="px-8 mt-10" onClick={harvestOpenModal}>
           <button className="btn w-full flex justify-around" style={{ border:'3px solid #81C784',backgroundColor: 'transparent'}}>
-            <img src={Harvest} alt="" />
+            <img src={Harvest} alt="" style={{width:40,height:30}}/>
             <div className="mr-5 font-bold">수확하기</div>
           </button>
         </div>
@@ -288,40 +278,15 @@ export default function MyCrops() {
       <Modal open={lifeRecordOpen} onClose={LifeRecordCloseModal} styles={styles}>
         <div class="timeline">
           <div class="event">
-            <div class="text-lg font-bold">2023-05-10</div>
+            <div class="text-xl font-bold">2023-05-10</div>
             <div class="event-circle"></div>
-            <div className="flex justify-between">
-              <div className="font-bold">심은날짜</div>    
-              <div>2022-10-2</div>
-            </div> 
-            <div className="font-bold">재배지</div>    
+            <div className="font-bold mt-5">심은날짜</div>    
+            <div>2022-10-2</div>
+            <div className="font-bold mt-5">재배지</div>    
             <div>경상북도 고령군 대가야읍</div>
           </div>
-        </div>    
-            
-                    
+        </div>               
       </Modal>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
        {/* *******농산물정보보기모달(수확후)****** */} 
        <Modal open={info2Open} onClose={info2CloseModal} styles={styles}>
@@ -357,22 +322,22 @@ export default function MyCrops() {
           </div>
           <div className="px-8 mt-10 flex justify-center">
             <button className="btn w-56 flex justify-around" style={{ border:'3px solid #81C784',backgroundColor: 'transparent'}}>
-              <img src={Vet} alt=""/>
+              <img src={Vet} alt="" style={{width:40,height:30}}/>
               <div className="font-bold" onClick={LifeRecordOpenModal}>농산물 생애기록 보기</div>
             </button>
           </div>
           <div className="px-8 mt-5 flex justify-center">
             <button className="btn w-56 flex justify-around" style={{ border:'3px solid #81C784',backgroundColor: 'transparent'}}
             onClick={TestOpenModal}>
-              <img src={Gumsa} alt=""/>
+              <img src={Gumsa} alt="" style={{width:40,height:30}}/>
               <div className="font-bold">농산물 검사정보 확인</div>
             </button>
           </div>
           <div className="px-8 mt-5 flex justify-center">
             <button className="btn w-56 flex justify-around" style={{ border:'3px solid #81C784',backgroundColor: 'transparent'}}
             onClick={CertificationOpenModal}>
-              <img src={Inz} alt=""/>
-              <div className="font-bold">농산물 인증정보 확인</div>
+              <img src={Inz} alt="" style={{width:40,height:30}}/>
+              <div className="font-bold" >농산물 인증정보 확인</div>
             </button>
           </div>
         </div>
@@ -499,19 +464,6 @@ export default function MyCrops() {
                     </a>
                   )}
                 </Menu.Item>
-                <Menu.Item onClick={()=>setSelected('기타')}>
-                  {({ active }) => (
-                    <a
-                      href="#"
-                      className={classNames(
-                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                        'block px-10 py-2 text-lg'
-                      )}
-                    >
-                    기타
-                    </a>
-                  )}
-                </Menu.Item>
                 </div>
               </Menu.Items>
             </Transition>   
@@ -520,7 +472,6 @@ export default function MyCrops() {
           {/* 추가모달폼 */}
           { selected ==='농약사용' && <Pesticide onRegister={addRecordCloseModal}/>}
           { selected ==='지역대회수상' && <Award onRegister={addRecordCloseModal}/>}
-          { selected ==='기타' && <Etc onRegister={addRecordCloseModal}/>}
           </Modal>
           
           {/* 수확하기모달폼 */}
