@@ -53,6 +53,10 @@ public class User extends BaseTime {
     @Column(name = "user_email", nullable = false)
     private String email;
 
+    // 유저 직업 job=0 -> 판매자(seller), job=1 -> 구매자(buyer)
+    @Column(name ="user_job", nullable = false)
+    private int job;
+
     //프로필이미지
     @Column(name = "user_profile")
     private String profile;
