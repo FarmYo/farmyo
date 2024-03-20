@@ -44,7 +44,7 @@ export default function MyFarm() {
 
 
  return(
-  <div style={{ position:'relative' }}>
+  <div style={{ position:'relative',height:'400px' }}>
     <div className='flex justify-end mr-5'>
      <Menu as="div" className="relative inline-block text-left">
       <div>
@@ -98,21 +98,24 @@ export default function MyFarm() {
       </Transition>
     </Menu>
     </div>
+    <div>
+     
+  
+    </div>
 
-    <div style={{height:'360px'}}>
-      <div style={{ position: 'absolute', bottom: 0, right: 10}}>
-        <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
-          <div style={{ position: 'absolute', top: '44%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}
-          onClick={onOpenModal}>+
-          </div>
-        </div>
+    <div style={{ position: 'absolute', bottom: 0, right: 10}}>
+      <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
+        <div style={{ position: 'absolute', top: '44%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}
+        onClick={onOpenModal}>
+          +</div>
       </div>
     </div>
+ 
 
     {/* ******모달창들******** */}
     {/* 마이팜게시글등록 모달창 */}
     <Modal open={open} onClose={onCloseModal} styles={styles}>
-    <div className='pt-52'>
+    <div className='pt-60'>
       <div >
         {/* 사진위치 */}
       </div>
@@ -161,7 +164,7 @@ export default function MyFarm() {
       </div>
     </div>
     {/* 사진등록모달창 */}
-
+        
 
 
 
@@ -177,12 +180,11 @@ export default function MyFarm() {
 
 
       </div>
-      <textarea className="textarea w-full textarea-bordered mt-10" placeholder="내용을 입력하세요"></textarea>    
-      <div  style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '75px', backgroundColor: '#1B5E20' }}
-          className="flex justify-center items-center"
-          onClick={onCloseModal}>
-        <h1 style={{color:'white'}} className="text-2xl">등록</h1>
-      </div>
+      <textarea className="textarea w-full h-28 textarea-bordered mt-10" placeholder="내용을 입력하세요"></textarea>    
+      <button class="btn h-10 w-full rounded-md mt-5" style={{ backgroundColor:'#1B5E20'}}
+      onClick={onCloseModal}>
+        <h1 style={{ color:'white' }} className="text-lg">등록</h1>
+      </button>
       </div>
     </Modal>
   </div>
