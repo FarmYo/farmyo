@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class AddCropReqDto {
 
     //유저는 어떻게 받을지 모르겠음
-    private Farmer farmer;
+    private Integer farmer_id;
 
     @NotEmpty(message = "카테고리 골라주세요")
     private Integer cropCategoryId;
@@ -26,8 +26,8 @@ public class AddCropReqDto {
     private String cropImgUrl;
 
     @Builder
-    public AddCropReqDto(Farmer farmer, Integer cropCategoryId, String cropName, String cropBlockchainAddress, String cropImgUrl) {
-        this.farmer = farmer;
+    public AddCropReqDto(Integer farmer_id, Integer cropCategoryId, String cropName, String cropBlockchainAddress, String cropImgUrl) {
+        this.farmer_id = farmer_id;
         this.cropCategoryId = cropCategoryId;
         this.cropName = cropName;
         this.cropBlockchainAddress = cropBlockchainAddress;

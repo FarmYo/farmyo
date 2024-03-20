@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +65,12 @@ public class Crop extends BaseTime {
         this.cropCategory = cropCategory;
         this.cropName = cropName;
         this.cropBlockchainAddress = cropBlockchainAddress;
+        this.cropImgUrl = cropImgUrl;
+    }
+
+
+    //imgUrl 변경
+    public void updateCropImgUrl(String  cropImgUrl) {
         this.cropImgUrl = cropImgUrl;
     }
 
