@@ -84,19 +84,18 @@ public class Crop extends BaseTime {
     }
 
 
-<<<<<<< HEAD
+
     //imgUrl 변경
     public void updateCropImgUrl(String  cropImgUrl) {
         this.cropImgUrl = cropImgUrl;
     }
 
 
-=======
 
     //나중에 수확날짜 넣는 메소드
     public void updateCropHarvestDate(LocalDate cropHarvestDate) {
         this.cropHarvestDate = cropHarvestDate;
     }
 
->>>>>>> 51fe4774a87227438576d7fbd76b5ea23482ef73
+
 }
