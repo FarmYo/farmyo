@@ -25,3 +25,10 @@ spring:
   # JWT secret key
   jwt:
     secret: ENC(Ma6wBcbnJ2Al1vgLcuT+Ku0SCOthE2YIn5IlAI/tWdlHZRN7F5fUc384vU8nv3541VjG0eaM6yFtyD8hQgXyGBNHaSfSZj/A8SrH/Wht8YI=)
+
+  #Redis
+  data:
+    redis:
+      host: ENC(XVDRASgwuk00feBvY/Ta1gwgJ+n7IbCyhjpj0ykJEe4=)
+      port: ENC(mHAvIKkcjL19aJn3d6+jgw==)
+      password: ENC(7ReurrhfXLRM+oOUeAE1UA==)
