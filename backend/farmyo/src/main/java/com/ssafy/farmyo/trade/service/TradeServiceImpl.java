@@ -6,6 +6,7 @@ import com.ssafy.farmyo.crop.repository.CropRepository;
 import com.ssafy.farmyo.entity.*;
 import com.ssafy.farmyo.trade.dto.TradeDto;
 import com.ssafy.farmyo.trade.dto.TradeReqDto;
+import com.ssafy.farmyo.trade.dto.TradeResDto;
 import com.ssafy.farmyo.trade.repository.TradeRepository;
 import com.ssafy.farmyo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -62,18 +63,40 @@ public class TradeServiceImpl implements TradeService {
         Map<String, Object> resultMap = new HashMap<>();
 
         // 우선 user가 판매자인지 구매자인지 확인이 필요 -> 내일 해야지 응애
+        // user entity에 판매자 or 구매자를 나누는 컬럼 필요 + 잔액 컬럼도 필요
+
 
         // 진행중인 거래와 완료된 거래를 각각 resultMap에 넣음
         resultMap.put("진행중인 거래", tradeRepository.getTradeListNotFinished(userId, 5));
-        resultMap.put("완료된 거래", tradeRepository.findByIdAndTradeStatus(userId, 5));
+        resultMap.put("완료된 거래", tradeRepository.getTradeListFinished(userId, 5));
 
         return resultMap;
     }
 
     @Override
-    public TradeDto getTrade(int id) {
+    public TradeResDto getTrade(int id) {
+        Trade trade = tradeRepository.findById(id);
 
-        return tradeRepository.findByTrade(id);
+        TradeResDto tradeResDto = new TradeResDto();
+
+        // seller, buyer, crop, board id로 string값 받아오기
+        tradeResDto.setSeller(trade.getSeller().getNickname());
+        tradeResDto.setBuyer(trade.getBuyer().getNickname());
+        tradeResDto.setCrop(trade.getCrop().getCropName());
+        tradeResDto.setBoard(trade.getBoard().getBoardTitle());
+
+        // trade entity에서 나머지 정보 받아오기
+        tradeResDto.setId(trade.getId());
+        tradeResDto.setTradePrice(trade.getTradePrice());
+        tradeResDto.setTradeQuantity(trade.getTradeQuantity());
+        tradeResDto.setChatId(trade.getChat().getId());
+        tradeResDto.setTradeStatus(trade.getTradeStatus());
+        tradeResDto.setTradeShipcom(trade.getTradeShipcom());
+        tradeResDto.setTradeShipment(trade.getTradeShipment());
+        tradeResDto.setTradeLocation(trade.getTradeLocation());
+        tradeResDto.setTradeBlockchain(trade.getTradeBlockchain());
+
+        return tradeResDto;
     }
 
     @Override
