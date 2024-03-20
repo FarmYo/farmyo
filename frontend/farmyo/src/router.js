@@ -16,6 +16,9 @@ import MyFarmDetail from "./pages/mypage/myfarm/detail/index"
 import BoardNav from "./pages/board/navbar/index"
 import SellDetail from "./pages/board/selldetail/index"
 import BuyDetail from "./pages/board/buydetail/index"
+import MypageEdit from "./pages/mypage/edit/index"
+import Chatting from "./pages/chat/index"
+import ChattingRoom from "./pages/chat/room/index"
 
 export default function Router (){
   return(
@@ -54,6 +57,12 @@ export default function Router (){
       <Route path='/board/sell/:boardId/detail' element={<SellDetail />} />
       {/* 삽니다상세페이지 */}
       <Route path='/board/buy/:boardId/detail' element={<BuyDetail />} />
+      {/* 회원정보수정페이지 */}
+      <Route path='/mypage/edit' element={<MypageEdit />} />
+      {/* 채팅목록페이지 */}
+      <Route path='/chat' element={<Chatting />} />
+      {/* 채팅방페이지 */}
+      <Route path='/chat/:chatId' element={<ChattingRoom />} />
     </Routes>
   )
 }

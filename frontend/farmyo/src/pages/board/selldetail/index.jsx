@@ -4,6 +4,7 @@ import Edit from "../../../image/component/edit.PNG"
 import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import '../../../css/barchart.css'
+import Back from '../../../image/component/leftarrow.png'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -13,7 +14,10 @@ export default function SellDetail(){
   return(
     <div>
        {/* 팝니다 상세게시글사진 */}
-       <div style={{height:240,backgroundColor:'#bbbbbb'}}></div>
+       <div style={{height:240,backgroundColor:'#bbbbbb'}}>
+        {/* 뒤로가기버튼 */}
+        <img src={Back} alt="" style={{ width:40,height:40 }} className="p-2"/>
+       </div>
       <div className="p-5 flex justify-between">
         <div>
           <h1 className='font-bold text-lg'>감자감자왕감자</h1>
