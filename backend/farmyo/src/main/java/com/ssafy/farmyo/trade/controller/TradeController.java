@@ -4,6 +4,7 @@ package com.ssafy.farmyo.trade.controller;
 import com.ssafy.farmyo.common.response.BaseResponseBody;
 import com.ssafy.farmyo.entity.Trade;
 import com.ssafy.farmyo.trade.dto.TradeDto;
+import com.ssafy.farmyo.trade.dto.TradeListReqDto;
 import com.ssafy.farmyo.trade.dto.TradeReqDto;
 import com.ssafy.farmyo.trade.dto.TradeResDto;
 import com.ssafy.farmyo.trade.service.TradeService;
@@ -52,9 +53,9 @@ public class TradeController {
             int userId) {
         log.info("{} : getTradeList 실행", userId);
 
-        Map<String, Object> resultMap = tradeService.getTrades(userId);
+        TradeListReqDto tradeListReqDto = tradeService.getTrades(userId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, resultMap));
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, tradeListReqDto));
     }
 
     @GetMapping("/{id}")
