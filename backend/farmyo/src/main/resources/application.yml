@@ -13,7 +13,7 @@ spring:
   # jpa
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         jdbc:
@@ -21,3 +21,7 @@ spring:
         format_sql: true
         show_sql: true;
     open-in-view: false
+
+  # JWT secret key
+  jwt:
+    secret: ENC(Ma6wBcbnJ2Al1vgLcuT+Ku0SCOthE2YIn5IlAI/tWdlHZRN7F5fUc384vU8nv3541VjG0eaM6yFtyD8hQgXyGBNHaSfSZj/A8SrH/Wht8YI=)
