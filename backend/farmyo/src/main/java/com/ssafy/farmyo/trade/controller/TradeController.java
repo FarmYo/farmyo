@@ -5,6 +5,7 @@ import com.ssafy.farmyo.common.response.BaseResponseBody;
 import com.ssafy.farmyo.entity.Trade;
 import com.ssafy.farmyo.trade.dto.TradeDto;
 import com.ssafy.farmyo.trade.dto.TradeReqDto;
+import com.ssafy.farmyo.trade.dto.TradeResDto;
 import com.ssafy.farmyo.trade.service.TradeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -31,7 +32,7 @@ public class TradeController {
 
     @PostMapping("")
     @Operation(summary = "거래 생성하기", description = "chat 또는 board를 통해서 얻은 정보로 거래를 생성한다.")
-    public ResponseEntity<? extends BaseResponseBody> createTrade(@RequestParam(name = "tradeDto")TradeReqDto tradeReqDto) {
+    public ResponseEntity<? extends BaseResponseBody> createTrade(@RequestParam(name = "tradeReqDto")TradeReqDto tradeReqDto) {
         log.info("{} : createTrade 실행", tradeReqDto);
 
         tradeService.createTrade(tradeReqDto);
@@ -43,14 +44,12 @@ public class TradeController {
     @GetMapping("")
     @Operation(summary = "유저별 거래 목록 조회", description = "유저 id를 통해 해당 유저의 거래 목록을 조회한다.")
     public ResponseEntity<? extends BaseResponseBody> getTradeList(
-            @RequestParam("id")
+            @RequestParam(name = "userId")
             @Parameter(description = "거래 목록을 조회할 유저의 아이디")
             int userId) {
         log.info("{} : getTradeList 실행", userId);
 
-        Map<String, Object> resultMap = new HashMap<>();
-
-        resultMap.put("tradeList", tradeService.getTrades(userId));
+        Map<String, Object> resultMap = tradeService.getTrades(userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, resultMap));
     }
@@ -63,9 +62,9 @@ public class TradeController {
             int id) {
         log.info("{} : getTrade 실행", id);
 
-        TradeDto tradeDto = tradeService.getTrade(id);
+        TradeResDto tradeResDto = tradeService.getTrade(id);
 
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, tradeDto));
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, tradeResDto));
     }
 
 }
