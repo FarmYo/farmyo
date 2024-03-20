@@ -5,6 +5,7 @@ import com.ssafy.farmyo.chat.repository.ChatRepository;
 import com.ssafy.farmyo.crop.repository.CropRepository;
 import com.ssafy.farmyo.entity.*;
 import com.ssafy.farmyo.trade.dto.TradeDto;
+import com.ssafy.farmyo.trade.dto.TradeListReqDto;
 import com.ssafy.farmyo.trade.dto.TradeReqDto;
 import com.ssafy.farmyo.trade.dto.TradeResDto;
 import com.ssafy.farmyo.trade.repository.TradeRepository;
@@ -54,23 +55,31 @@ public class TradeServiceImpl implements TradeService {
                 .board(boardId)
                 .build();
 
+        // trade 저장
         tradeRepository.save(trade);
     }
 
 
     @Override
-    public Map<String, Object> getTrades(int userId) {
-        Map<String, Object> resultMap = new HashMap<>();
+    public TradeListReqDto getTrades(int userId) {
+        User user = userRepository.findById(userId);
+        TradeListReqDto tradeListReqDto = new TradeListReqDto();
 
-        // 우선 user가 판매자인지 구매자인지 확인이 필요 -> 내일 해야지 응애
-        // user entity에 판매자 or 구매자를 나누는 컬럼 필요 + 잔액 컬럼도 필요
+        // user가 판매자인지 구매자인지 확인
+        int job = user.getJob();
 
+        if (job == 0) { // user가 판매자라면
+            // 진행중인 거래와 완료된 거래를 각각 tradeListReqDto에 넣음
+            tradeListReqDto.setNotFinishedList(tradeRepository.getSellerTradeListNotFinished(userId));
+            tradeListReqDto.setFinishedList(tradeRepository.getSellerTradeListFinished(userId));
+        } else { // user가 구매자라면
+            // 진행중인 거래와 완료된 거래를 각각 tradeListReqDto에 넣음
+            tradeListReqDto.setNotFinishedList(tradeRepository.getBuyerTradeListNotFinished(userId));
+            tradeListReqDto.setFinishedList(tradeRepository.getBuyerTradeListFinished(userId));
 
-        // 진행중인 거래와 완료된 거래를 각각 resultMap에 넣음
-        resultMap.put("진행중인 거래", tradeRepository.getTradeListNotFinished(userId, 5));
-        resultMap.put("완료된 거래", tradeRepository.getTradeListFinished(userId, 5));
+        }
 
-        return resultMap;
+        return tradeListReqDto;
     }
 
     @Override

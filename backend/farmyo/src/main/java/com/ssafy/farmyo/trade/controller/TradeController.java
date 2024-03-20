@@ -4,6 +4,7 @@ package com.ssafy.farmyo.trade.controller;
 import com.ssafy.farmyo.common.response.BaseResponseBody;
 import com.ssafy.farmyo.entity.Trade;
 import com.ssafy.farmyo.trade.dto.TradeDto;
+import com.ssafy.farmyo.trade.dto.TradeListReqDto;
 import com.ssafy.farmyo.trade.dto.TradeReqDto;
 import com.ssafy.farmyo.trade.dto.TradeResDto;
 import com.ssafy.farmyo.trade.service.TradeService;
@@ -30,9 +31,12 @@ public class TradeController {
 
     private final TradeService tradeService;
 
-    @PostMapping("")
+    @PostMapping("/")
     @Operation(summary = "거래 생성하기", description = "chat 또는 board를 통해서 얻은 정보로 거래를 생성한다.")
-    public ResponseEntity<? extends BaseResponseBody> createTrade(@RequestParam(name = "tradeReqDto")TradeReqDto tradeReqDto) {
+    public ResponseEntity<? extends BaseResponseBody> createTrade(
+            @RequestParam(name = "tradeReqDto")
+            @Parameter(description = "거래 생성을 위한 dto 정보 입력")
+            TradeReqDto tradeReqDto) {
         log.info("{} : createTrade 실행", tradeReqDto);
 
         tradeService.createTrade(tradeReqDto);
@@ -49,9 +53,9 @@ public class TradeController {
             int userId) {
         log.info("{} : getTradeList 실행", userId);
 
-        Map<String, Object> resultMap = tradeService.getTrades(userId);
+        TradeListReqDto tradeListReqDto = tradeService.getTrades(userId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, resultMap));
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, tradeListReqDto));
     }
 
     @GetMapping("/{id}")
