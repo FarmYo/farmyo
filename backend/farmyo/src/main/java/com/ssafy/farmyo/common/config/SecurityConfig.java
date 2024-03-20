@@ -1,8 +1,16 @@
 package com.ssafy.farmyo.common.config;
 
+import com.ssafy.farmyo.common.auth.CustomAccessDeniedHandler;
+import com.ssafy.farmyo.common.auth.CustomAuthenticationEntryPoint;
+import com.ssafy.farmyo.common.auth.JWTFilter;
+import com.ssafy.farmyo.common.auth.LoginFilter;
+import com.ssafy.farmyo.common.jwt.JWTUtil;
+import com.ssafy.farmyo.common.redis.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -27,8 +35,30 @@ public class SecurityConfig {
             "/v3/api-docs/**",
             "/swagger-ui/**",
             /* image */
-            "/image/**"
+            "/image/**",
+            /* 회원가입 */
+            "/user",
+            /* 로그인 */
+            "/user/login/**",
+            /* 비밀번호 찾기 */
+            "user/findPassword/**",
+            /* 토큰 재발급 */
+            "/refresh/reissue"
     };
+
+    //AuthenticationManager가 인자로 받을 AuthenticationConfiguraion 객체 생성자 주입
+    private final AuthenticationConfiguration authenticationConfiguration;
+    private final JWTUtil jwtUtil;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+
+    //AuthenticationManager Bean 등록
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+
+        return configuration.getAuthenticationManager();
+    }
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
@@ -48,11 +78,17 @@ public class SecurityConfig {
 
         // 경로별 인가 작업
         http.authorizeHttpRequests(auth -> auth
-                        .requestMatchers("*").permitAll());
-//                .requestMatchers(PERMIT_URL_ARRAY).permitAll()
-//                .anyRequest().authenticated());
+//                        .requestMatchers(PERMIT_URL_ARRAY).permitAll()
+//                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
+                .exceptionHandling((exceptionConfig) -> exceptionConfig.authenticationEntryPoint(customAuthenticationEntryPoint).accessDeniedHandler(customAccessDeniedHandler));
 
         // 필터 등록
+        http
+                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
+        http
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshTokenRepository), UsernamePasswordAuthenticationFilter.class);
+
 
         // CORS 설정
         http.cors(cors -> cors.configurationSource(request -> {
