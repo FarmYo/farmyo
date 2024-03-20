@@ -7,7 +7,7 @@ import SaeClick from '../../../image/component/saeclick.png'
 import Myfarm from '../myfarm'
 import Mycrops from '../mycrops'
 import ArticleList from '../articlelist'
-import SwipeableViews from 'react-swipeable-views';
+
 
 export default function MypageNavbar() {
   const [selected,setSelected] = useState(null)
@@ -64,12 +64,7 @@ export default function MypageNavbar() {
       {/* 선택된 컴포넌트 조건부 렌더링 */}
       {selected === 0 && <Myfarm />}
       {selected === 1 && <Mycrops />}
-      {selected === 2 && <ArticleList />} */}
-      <SwipeableViews index={selected} onChangeIndex={handleClick}>
-        <Myfarm />
-        <Mycrops />
-        <ArticleList />
-      </SwipeableViews>
+      {selected === 2 && <ArticleList />} 
     </div>
   )
 }
