@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface FarmerRepository extends JpaRepository<Farmer, Integer> {
-    Optional<Farmer> findByUserId(Integer userID);
+    Optional<Farmer> findById(Integer id);
 }

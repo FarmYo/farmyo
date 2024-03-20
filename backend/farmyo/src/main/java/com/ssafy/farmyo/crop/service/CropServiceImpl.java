@@ -2,6 +2,7 @@ package com.ssafy.farmyo.crop.service;
 
 
 import com.ssafy.farmyo.blockchain.service.CropContractService;
+import com.ssafy.farmyo.common.auth.CustomUserDetails;
 import com.ssafy.farmyo.common.exception.CustomException;
 import com.ssafy.farmyo.common.exception.ExceptionType;
 import com.ssafy.farmyo.crop.dto.AddCropReqDto;
@@ -10,13 +11,12 @@ import com.ssafy.farmyo.crop.repository.CropCategoryRepository;
 import com.ssafy.farmyo.crop.repository.CropRepository;
 import com.ssafy.farmyo.entity.Crop;
 import com.ssafy.farmyo.entity.CropCategory;
-import com.ssafy.farmyo.entity.Farm;
 import com.ssafy.farmyo.entity.Farmer;
 import com.ssafy.farmyo.user.repository.FarmerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,10 +33,15 @@ public class CropServiceImpl implements CropService {
 
     //작물 등록
     @Override
-    public Integer addCrop(AddCropReqDto addCropReqDto) {
+    public Integer addCrop(AddCropReqDto addCropReqDto, Authentication authentication) {
 
         //농부 조회(아직 모름
-        Optional<Farmer> optionalFarmer = farmerRepository.findByUserId(addCropReqDto.getFarmer_id());
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        if (userDetails.getJob() == 1) {
+            throw new CustomException(ExceptionType.USER_NOT_EXIST);
+        }
+
+        Optional<Farmer> optionalFarmer = farmerRepository.findById(userDetails.getId());
         if (optionalFarmer.isEmpty()) {
             throw new CustomException(ExceptionType.USER_NOT_EXIST);
         }
