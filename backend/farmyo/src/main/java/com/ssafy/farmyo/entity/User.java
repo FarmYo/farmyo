@@ -42,7 +42,7 @@ public class User extends BaseTime {
     private String password;
 
     //전화번호
-    @Column(name = "user_teletphone", nullable = false)
+    @Column(name = "user_telephone", nullable = false)
     private String telephone;
 
     //닉네임
