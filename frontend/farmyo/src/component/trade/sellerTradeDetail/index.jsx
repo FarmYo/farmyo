@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+// import axios from "axios";
 import "react-responsive-modal/styles.css"
 import { Modal } from "react-responsive-modal"
 import Swal from "sweetalert2";
 import "../../../css/trade.css";
 
 export default function SellerTrade() {
-  const { id } = useParams(); // URL 파라미터에서 `id` 추출
-  const [item, setItem] = useState(null);
+  const { cropId } = useParams(); // URL 파라미터에서 `cropId` 추출
+  // 받아온 거 그대로 적어주기
+  // const [item, setItem] = useState(null);
   // useEffect(() => {
   //   // 전달받은 id값을 사용하여 데이터 불러오기
   //   axios.get(`/api/trades/${id}`)
@@ -42,7 +43,7 @@ export default function SellerTrade() {
 
       <div className="flex flex-row">
         {/* {item.name} */}
-        {id}
+        {cropId}
         {/* <div>
           {item.status}
           {item.createdAt}
@@ -50,33 +51,36 @@ export default function SellerTrade() {
         </div> */}
       </div>
       <div>
-        <h2>농산물</h2>
+      <div className="p-2">
+        <h2 className="h2">농산물</h2>
         작물명
-
-        <h2>거래 수량</h2>
+      </div>
+      <div className="p-2">
+        <h2 className="h2">거래 수량</h2>
         20kg
+        </div>
 
-        <h2>거래 가격</h2>
+        <h2 className="h2">거래 가격</h2>
         220,000원
 
         <div className="flex flex-row justify-between">
           <div>
-            <h2>구매자</h2>
+            <h2 className="h2">구매자</h2>
             구매자명
           </div>
           <div>
-            <h2>판매자</h2>
+            <h2 className="h2">판매자</h2>
             판매자명
           </div>
         </div>
 
-        <h2>배송지</h2>
+        <h2 className="h2">배송지</h2>
         경상북도 구미시 여현로 7길
         
-        <h2>송장번호</h2>
+        <h2 className="h2">송장번호</h2>
         <button
           onClick={onOpenModal}
-          className="btn"
+          className="addressbutton btn"
         >
           송장번호 입력
         </button>

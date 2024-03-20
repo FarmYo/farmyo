@@ -7,7 +7,7 @@ img {
 
 .item {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   padding: 2px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -22,6 +22,14 @@ img {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+.item-status {
+  position: relative;
+  bottom: 0;
+  right: 0;
+  margin-top: auto;
+  /* padding: 2px 5px; 패딩 조정 */
 }
 
 /* .fruitlist {
@@ -74,6 +82,12 @@ img {
   color : white;
 }
 
+.addressbutton {
+  background-color: #1B5E20;
+  color : white;
+  border: #1B5E20 solid 1px;
+}
+
 .pagination {
   position: fixed;
   bottom: 7.5rem;
@@ -102,4 +116,9 @@ img {
 
 .inputstyle {
   width: 18rem;
+}
+
+.h2 {
+  font-size:larger;
+  font-weight: 600;
 }

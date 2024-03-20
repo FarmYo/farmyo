@@ -1,5 +1,6 @@
 package com.ssafy.farmyo.user.controller;
 
+import com.ssafy.farmyo.common.auth.CustomUserDetails;
 import com.ssafy.farmyo.common.response.BaseResponseBody;
 import com.ssafy.farmyo.user.dto.JoinReqDto;
 import com.ssafy.farmyo.user.service.UserService;
@@ -11,11 +12,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
@@ -39,4 +38,17 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, savedUserId));
     }
+
+    @GetMapping("/test")
+    public ResponseEntity<? extends BaseResponseBody> tokenTest(Authentication authentication) {
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        log.info("User 식별 ID : {}", userDetails.getId());
+        log.info("User LoginId : {}", userDetails.getUsername());
+        log.info("User 직업 : {}", userDetails.getJob());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, "경로별 인가 성공"));
+    }
+
+
 }

@@ -1,5 +1,6 @@
 package com.ssafy.farmyo.crop.controller;
 
+
 import com.ssafy.farmyo.common.response.BaseResponseBody;
 import com.ssafy.farmyo.crop.dto.AddCropReqDto;
 import com.ssafy.farmyo.crop.dto.UpdateImgReqDto;
@@ -33,9 +34,9 @@ public class CropController {
     @PostMapping("")
     @ApiResponse(responseCode = "201", description = "성공 \n\n Success 반환")
     public ResponseEntity<? extends BaseResponseBody> addCrop(@RequestBody @Valid AddCropReqDto addCropReqDto) {
-        log.info("{}", addCropReqDto.getFarmer());
+//        log.info("{}", addCropReqDto.getFarmer());
 
-        int savedCropId =  cropService.addCrop(addCropReqDto);
+        int savedCropId = cropService.addCrop(addCropReqDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, savedCropId));
 
@@ -48,27 +49,17 @@ public class CropController {
     @ApiResponse(responseCode = "204", description = "성공 \n\n Success 반환")
     public ResponseEntity<? extends BaseResponseBody> updateCropImg(@PathVariable Integer cropId, @RequestBody UpdateImgReqDto updateImgReqDto) {
         cropService.updateCropImgUrl(cropId, updateImgReqDto.getCropImgUrl());
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0,"성공적으로 변경되었습니다."));
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "성공적으로 변경되었습니다."));
     }
 
 
-
-
-
-
-
-
-
-
     //작물카테고리 조회
-    @Operation(summary = "작물카테고리조회", description = "/crops/category\n\n 작물카테고리를 전부 불러온다." )
+    @Operation(summary = "작물카테고리조회", description = "/crops/category\n\n 작물카테고리를 전부 불러온다.")
     @GetMapping("/category")
     @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환")
     public ResponseEntity<? extends BaseResponseBody> getAllCropCategories() {
         List<FindCropCategoryDto> categories = cropService.findAllCropCategories();
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, categories));
     }
-
-
-
 }
+

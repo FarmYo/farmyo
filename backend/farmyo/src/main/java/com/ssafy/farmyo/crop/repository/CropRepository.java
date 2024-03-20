@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CropRepository extends JpaRepository<Crop, Integer> {
     Crop findById(int id);
+
 }
