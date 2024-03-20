@@ -21,9 +21,9 @@ public interface TradeRepository extends JpaRepository<Trade, String> {
                     "JOIN t.board b " +
                     "JOIN t.seller s " +
                     "JOIN t.buyer buy " +
-                    "WHERE t.seller = :id AND t.tradeStatus = :tradeStatus"
+                    "WHERE t.seller = :id AND t.tradeStatus = 3"
     )
-    List<TradeListDto> getSellerTradeListFinished(int id, int tradeStatus);
+    List<TradeListDto> getSellerTradeListFinished(int id);
 
 
     // 판매자의 아이디를 통해 거래완료가 안된 거래 목록 가져오기
@@ -33,9 +33,9 @@ public interface TradeRepository extends JpaRepository<Trade, String> {
             "JOIN t.board b " +
             "JOIN t.seller s " +
             "JOIN t.buyer buy " +
-            "WHERE t.seller = :id AND t.tradeStatus != :tradeStatus"
+            "WHERE t.seller = :id AND t.tradeStatus != 3"
     )
-    List<TradeListDto> getSellerTradeListNotFinished(int id, int tradeStatus);
+    List<TradeListDto> getSellerTradeListNotFinished(int id);
 
     // 구매자의 아이디를 통해 거래완료된 거래 목록 가져오기
     @Query(value =
@@ -44,9 +44,9 @@ public interface TradeRepository extends JpaRepository<Trade, String> {
                     "JOIN t.board b " +
                     "JOIN t.seller s " +
                     "JOIN t.buyer buy " +
-                    "WHERE t.buyer = :id AND t.tradeStatus = :tradeStatus"
+                    "WHERE t.buyer = :id AND t.tradeStatus = 3"
     )
-    List<TradeListDto> getBuyerTradeListFinished(int id, int tradeStatus);
+    List<TradeListDto> getBuyerTradeListFinished(int id);
 
 
     // 구매자의 아이디를 통해 거래완료가 안된 거래 목록 가져오기
@@ -56,8 +56,8 @@ public interface TradeRepository extends JpaRepository<Trade, String> {
                     "JOIN t.board b " +
                     "JOIN t.seller s " +
                     "JOIN t.buyer buy " +
-                    "WHERE t.buyer = :id AND t.tradeStatus != :tradeStatus"
+                    "WHERE t.buyer = :id AND t.tradeStatus != 3"
     )
-    List<TradeListDto> getBuyerTradeListNotFinished(int id, int tradeStatus);
+    List<TradeListDto> getBuyerTradeListNotFinished(int id);
 
 }
