@@ -1,5 +1,7 @@
 import React from 'react'
 import { useLocation } from 'react-router-dom';
+import { Provider } from "react-redux"
+import { store } from '../src/store/store';
 import Router from './router'
 import BottomBar from './component/common/bottombar'
 
@@ -16,8 +18,10 @@ function App() {
 
   return (
     <div >
-      <Router />
-      {!shouldHideBottomBar() && <BottomBar />}
+      <Provider store={store}>
+        <Router />
+        {!shouldHideBottomBar() && <BottomBar />}
+      </Provider>
     </div>
   );
 }
