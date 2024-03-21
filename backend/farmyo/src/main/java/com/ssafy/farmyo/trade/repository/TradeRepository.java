@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface TradeRepository extends JpaRepository<Trade, String> {
+public interface TradeRepository extends JpaRepository<Trade, Integer> {
 
-    Trade findById(int id);
+//    Trade findById(int id);
 
     // 판매자의 아이디를 통해 거래완료된 거래 목록 가져오기
     @Query(value =
