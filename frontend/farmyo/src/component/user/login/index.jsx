@@ -9,6 +9,7 @@ export default function LoginInput() {
   const [id, setId] = useState("")
   const [password, setPassword] = useState("")
   const goLogin = () => {
+    console.log("loginId :", id, "password :", password)
     if (id === "" || password === "") {
       if (id === "") {
         console.log('아이디가 비었다')
@@ -27,7 +28,6 @@ export default function LoginInput() {
       console.log('로그인 완료')
       if (res.dataHeader.successCode === 0) {
         navigate("/")
-        // 여기서 토큰 받아오기..?
       } else {
         console.log('로그인 완료지만 문제가 있어요')
       }
