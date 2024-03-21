@@ -6,9 +6,11 @@ import com.ssafy.farmyo.common.auth.CustomUserDetails;
 import com.ssafy.farmyo.common.exception.CustomException;
 import com.ssafy.farmyo.common.exception.ExceptionType;
 import com.ssafy.farmyo.crop.dto.AddCropReqDto;
+import com.ssafy.farmyo.crop.dto.CropListDto;
 import com.ssafy.farmyo.crop.dto.FindCropCategoryDto;
 import com.ssafy.farmyo.crop.repository.CropCategoryRepository;
 import com.ssafy.farmyo.crop.repository.CropRepository;
+import com.ssafy.farmyo.entity.Chat;
 import com.ssafy.farmyo.entity.Crop;
 import com.ssafy.farmyo.entity.CropCategory;
 import com.ssafy.farmyo.entity.Farmer;
@@ -58,6 +60,8 @@ public class CropServiceImpl implements CropService {
                 .orElseThrow(() -> new CustomException(ExceptionType.CATEGORY_NOT_EXIST));
 
 
+
+
         Crop crop = Crop.builder()
                 .farmer(farmer)
                 .cropCategory(cropCategory)
@@ -71,7 +75,6 @@ public class CropServiceImpl implements CropService {
 
         //블록체인기능 다듬어서 넣을곳
 //        cropContractService.addBasicInfo(BigInteger.valueOf(crop.getId()), crop.getCropName());
-
 
         return crop.getId();
     }
@@ -91,6 +94,27 @@ public class CropServiceImpl implements CropService {
 
     }
 
+
+    //농부 작물 리스트 조회
+    @Override
+    public List<CropListDto> getCropsByFarmerLoginId(String loginId) {
+        Optional<Farmer> farmerOptional = farmerRepository.findByLoginId(loginId);
+        if (farmerOptional.isEmpty()) {
+            throw new CustomException(ExceptionType.USER_NOT_EXIST);
+        } else {
+            Farmer farmer = farmerOptional.get();
+            List<Crop> crops = cropRepository.findByFarmerId(farmer.getId());
+            return crops.stream()
+                    .map(crop -> CropListDto.builder()
+                            .id(crop.getId())
+                            .cropStatus(crop.getCropStatus())
+                            .cropHarvestDate(crop.getCropHarvestDate())
+                            .cropImgUrl(crop.getCropImgUrl())
+                            .cropName(crop.getCropName())
+                            .build())
+                    .collect(Collectors.toList());
+        }
+    }
 
 
 
