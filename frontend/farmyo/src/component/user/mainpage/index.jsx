@@ -1,10 +1,12 @@
 import React from 'react'
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { logout } from '../../../feature/login/accessSlice';
 import '../../../css/mainpage.css'
 import Logo from '../../../image/component/user/logo.png';
 
 export default function Mainpage() {
-//  const navigate = useNavigate()
+  const navigate = useNavigate()
+
   return(
   <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 logo">
     <div className="mx-auto w-full max-w-sm mb-0">
@@ -24,13 +26,18 @@ export default function Mainpage() {
     <div className="flex mx-2 my-4">
       <button
 //        onClick={() => {navigate("/signup/first")}}
+        onClick={() => {
+        logout()
+        navigate("/board",{state:{selected:0}}
+        )}}
+
         // 판매글 게시판으로 보내기
         className="buttonmain"
       >
         팔아Yo
       </button>
       <button
-//        onClick={() => {navigate("/signup/first")}}
+        onClick={() => navigate("/board",{state:{selected:1}})}
         // 구매글 게시판으로 보내기
         className="buttonmain"
       >

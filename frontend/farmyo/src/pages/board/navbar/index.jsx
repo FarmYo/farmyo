@@ -5,23 +5,31 @@ import Search from '../../../image/component/search.png'
 import { useState,useEffect } from 'react'
 import SellBoardList from '../../../component/board/sellboard'
 import BuyBoardList from '../../../component/board/buyboard'
+import { useLocation } from 'react-router-dom'
 
 export default function BoardNav(){
-
+  const location = useLocation()
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
 
   const [selectedItem, setSelectedItem] = useState('전체');
-  const [selected,setSelected] = useState(null)
+  const [selected,setSelected] = useState(null) // 팝니다클릭 or 삽니다클릭
 
   const handleClick = (index) => {
     setSelected(index)
   }
 
   useEffect(()=>{
-    setSelected(0)
-  },[])
+    // url의 상태확인하고 selected상태 설정
+    const stateSelected = location.state?.selected;
+    if(stateSelected !== undefined) {
+      setSelected(stateSelected);
+    } else {
+      setSelected(0); // 기본값
+    }
+  }, [location])
+
 
   return(
     <div>
