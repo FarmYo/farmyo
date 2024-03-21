@@ -1,6 +1,7 @@
 package com.ssafy.farmyo.trade.controller;
 
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import com.ssafy.farmyo.common.response.BaseResponseBody;
 import com.ssafy.farmyo.entity.Trade;
 import com.ssafy.farmyo.trade.dto.TradeDto;
@@ -69,6 +70,71 @@ public class TradeController {
         TradeResDto tradeResDto = tradeService.getTrade(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, tradeResDto));
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "주소등록", description = "주소를 받아 거래 테이블에 추가한다.")
+    public ResponseEntity<? extends BaseResponseBody> updateTradeLocation(
+            @PathVariable(name = "id")
+            @Parameter(description = "거래 아이디")
+            int id,
+            @RequestParam(name = "location")
+            @Parameter(description = "주소")
+            String location
+    ) {
+        log.info("{}, {} : updateTradeLocation 실행", id, location);
+
+        tradeService.updateTradeLocation(id, location);
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, 0));
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "거래 입금완료", description = "입금대기중이던 상태를 입금완료 상태로 변경하고 입금 테이블이 생성된다.")
+    public ResponseEntity<? extends BaseResponseBody> updateTradeDeposit(
+            @PathVariable(name = "id")
+            @Parameter(description = "거래 아이디")
+            int id,
+            @RequestParam(name = "depositName")
+            @Parameter(description = "입금자")
+            String depositName) {
+        log.info("{}, {} : updateTradeDeposit 실행" , id, depositName);
+
+        tradeService.updateTradeDeposit(id, depositName);
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, 0));
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "거래 거래중", description = "입금완료이던 상태를 거래중 상태로 변경하고 택배사와 송장번호 컬럼을 추가한다.")
+    public ResponseEntity<? extends BaseResponseBody> updateTradeDeal(
+            @PathVariable(name = "id")
+            @Parameter(description = "거래 아이디")
+            int id,
+            @RequestParam(name = "tradeShipment")
+            @Parameter(description = "송장번호")
+            String tradeShipment,
+            @RequestParam(name = "tradeShipcom")
+            @Parameter(description = "택배사")
+            String tradeShipcom) {
+        log.info("{} : updateTradeDeal 실행" , id);
+
+        tradeService.updateTradeDeal(id, tradeShipment, tradeShipcom);
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0 , 0));
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "거래 거래완료", description = "거래중 상태를 거래완료 상태로 변경하고 출금 테이블 생성")
+    public ResponseEntity<? extends BaseResponseBody> updateTradeFinish(
+            @PathVariable(name = "id")
+            @Parameter(description = "거래 아이디")
+            int id) {
+        log.info("{} : updateTradeFinish 실행" , id);
+
+        tradeService.updateTradeFinish(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, 0));
     }
 
 }

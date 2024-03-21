@@ -4,8 +4,10 @@ import com.ssafy.farmyo.entity.Trade;
 import com.ssafy.farmyo.trade.dto.TradeDto;
 import com.ssafy.farmyo.trade.dto.TradeListDto;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -60,4 +62,18 @@ public interface TradeRepository extends JpaRepository<Trade, Integer> {
     )
     List<TradeListDto> getBuyerTradeListNotFinished(int id);
 
+    @Transactional
+    @Modifying
+    @Query("UPDATE Trade t SET t.tradeStatus = :status WHERE t.id = :id")
+    void updateTradeStatusById(int id, int status);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Trade t SET t.tradeLocation = :location WHERE t.id = :id")
+    void updateTradeLocationById(int id, String location);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Trade t SET t.tradeShipment = :tradeShipment, t.tradeShipcom = :tradeShipcom WHERE t.id = :id")
+    void updateTradeShipmentAndShipcomById(int id, String tradeShipment, String tradeShipcom);
 }
