@@ -11,8 +11,14 @@ export const accessSlice = createSlice({
   },
   reducers: {
     setAccessToken: (state, action) => {
+      // console.log(state)
+      // console.log(action)
       // 전달된 값을 access token에 저장
       state.accessToken = action.payload
+    },
+    logout: () =>{
+      console.log('로그아웃가라')
+      return { accessToken: null };
     }
   }
 })
@@ -22,4 +28,4 @@ export const accessSlice = createSlice({
   
   // setAccessToken reducer를 export함
   // setAccessToken = access token 설정 reducer(상태 관리 함수)
-  export const { setAccessToken } = accessSlice.actions
+  export const { setAccessToken, logout } = accessSlice.actions

@@ -24,7 +24,10 @@ export default function MyFarm() {
   
   const [open,setOpen] = useState(false)
   const [photoOpen,setPhotoOpen] = useState(false)
-
+  const resigtercrops = ['전체','감자','딸기','오이']
+  const [selectCrop,setSelectCrop] = useState('전체')
+  const writeCropList = ['감자','딸기','오이']
+  const [writeCrop,setWriteCrop] = useState('작물명을 선택하세요')
 
   const onOpenModal = () => {
     setOpen(true);
@@ -42,6 +45,13 @@ export default function MyFarm() {
     setPhotoOpen(false);
   };
 
+  const handleSelectCrop = (e) => {
+    setSelectCrop(e)
+  }
+
+  const handleWriteCrop = (e) => {
+    setWriteCrop(e)
+  }
 
  return(
   <div style={{ position:'relative',height:'400px' }}>
@@ -49,7 +59,7 @@ export default function MyFarm() {
      <Menu as="div" className="relative inline-block text-left">
       <div>
         <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-          전체
+          {selectCrop}
           <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
         </Menu.Button>
       </div>
@@ -66,7 +76,8 @@ export default function MyFarm() {
         {/* 농부가 등록한 농작물이 보여지게 */}
         <Menu.Items className="absolute right-0 z-10 mt-2 w-28 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
-            <Menu.Item>
+            {resigtercrops.map((crop)=>(
+            <Menu.Item key={crop} onClick={() => handleSelectCrop(crop)}>
               {({ active }) => (
                 <a
                   href="#"
@@ -75,24 +86,11 @@ export default function MyFarm() {
                     'block px-4 py-2 text-sm'
                   )}
                 >
-                  감자
+                {crop}
                 </a>
               )}
             </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'block px-4 py-2 text-sm'
-                  )}
-                >
-                  딸기
-                </a>
-              )}
-            </Menu.Item>
-            
+            ))}
           </div>
         </Menu.Items>
       </Transition>
@@ -124,7 +122,7 @@ export default function MyFarm() {
       <Menu as="div" className="relative inline-block text-left">
       <div>
         <Menu.Button className="inline-flex w-44 justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-          작물명을 선택하세요
+          {writeCrop}
           <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
         </Menu.Button>
       </div>
@@ -139,7 +137,8 @@ export default function MyFarm() {
       >
       <Menu.Items className="absolute right-0 z-10 mt-2 w-30 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
         <div className="py-1">
-          <Menu.Item>
+          {writeCropList.map(crop=>(
+          <Menu.Item key={crop} onClick={() => handleWriteCrop(crop)}>
             {({ active }) => (
               <a
                 href="#"
@@ -148,10 +147,11 @@ export default function MyFarm() {
                   'block px-16 py-1 text-sm'
                 )}
               >
-                작물명
+                {crop}
               </a>
             )}
           </Menu.Item>
+          ))}
           </div>
         </Menu.Items>
       </Transition>
@@ -180,7 +180,8 @@ export default function MyFarm() {
 
 
       </div>
-      <textarea className="textarea w-full h-28 textarea-bordered mt-10" placeholder="내용을 입력하세요"></textarea>    
+      <textarea className="textarea w-full h-28 textarea-bordered mt-10" 
+      placeholder="내용을 입력하세요"></textarea>    
       <button class="btn h-10 w-full rounded-md mt-5" style={{ backgroundColor:'#1B5E20'}}
       onClick={onCloseModal}>
         <h1 style={{ color:'white' }} className="text-lg">등록</h1>

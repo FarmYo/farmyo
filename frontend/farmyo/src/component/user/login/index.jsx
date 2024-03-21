@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { setAccessToken } from '../../../feature/login/accessSlice';
 import axios from 'axios';
 import Logo from '../../../image/component/user/logo.png';
 import '../../../css/signup.css';
 
 export default function LoginInput() {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  // const [accessToken, setAccessToken] = useState("")
+
   const [id, setId] = useState("")
   const [password, setPassword] = useState("")
   const goLogin = () => {
-    console.log("loginId :", id, "password :", password)
+    // console.log("loginId :", id, "password :", password)
     if (id === "" || password === "") {
       if (id === "") {
         console.log('아이디가 비었다')
@@ -19,6 +25,7 @@ export default function LoginInput() {
     } else {
     axios({
       url : 'https://j10d209.p.ssafy.io/api/user/login',
+      // url : 'http://localhost:8080/api/user/login',
       method:'post',
       data:{
         loginId:id, password
@@ -26,15 +33,24 @@ export default function LoginInput() {
     })
     .then((res) => {
       console.log('로그인 완료')
-      const headerValue = res.headers['access']; // 스프링에서 설정한 응답 헤더 이름을 여기에 입력
-      console.log('헤더 값:', headerValue);
-      navigate("/")  
+      // console.log('accessToken :', res.headers.access)
+      const accessToken = res.headers.access
+      dispatch(setAccessToken(accessToken))
+      navigate("/", { replace : true })
     })
     .catch((err) => {
       console.log('로그인 실패', err)
-      navigate("/login")
+      setId("")
+      setPassword("")
+      alert('로그인에 실패하셨습니다.')
     })
   }}
+
+
+  useEffect(()=>{
+
+  },[])
+
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 main">
     <div className="sm:mx-auto sm:w-full sm:max-w-sm mb-0">
