@@ -45,11 +45,11 @@ public class CropController {
     }
 
 //    작물 리스트 조회
-    @Operation(summary = "작물리스트조회", description = "/crops/{farmer_loginId}\n\n 해당 유저의 작물 리스트를 반환한다.")
-    @GetMapping("/{farmer_loginId}")
+    @Operation(summary = "작물리스트조회", description = "/crops/{farmerLoginId}\n\n 해당 유저의 작물 리스트를 반환한다.")
+    @GetMapping("/{farmerLoginId}")
     @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환")
-    public ResponseEntity<? extends BaseResponseBody> getCropList(@PathVariable String farmer_loginId) {
-        List<CropListDto> cropsByFarmerLoginId = cropService.getCropsByFarmerLoginId(farmer_loginId);
+    public ResponseEntity<? extends BaseResponseBody> getCropList(@PathVariable String farmerLoginId) {
+        List<CropListDto> cropsByFarmerLoginId = cropService.getCropsByFarmerLoginId(farmerLoginId);
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, cropsByFarmerLoginId));
     }
 

@@ -34,7 +34,6 @@ public class CropServiceImpl implements CropService {
     private final UserRepository userRepository;
 
 
-
     //작물 등록
     @Override
     public Integer addCrop(AddCropReqDto addCropReqDto, Authentication authentication) {
@@ -58,8 +57,6 @@ public class CropServiceImpl implements CropService {
         //작물 카테고리 조회
         CropCategory cropCategory = cropCategoryRepository.findById(addCropReqDto.getCropCategoryId())
                 .orElseThrow(() -> new CustomException(ExceptionType.CATEGORY_NOT_EXIST));
-
-
 
 
         Crop crop = Crop.builder()
@@ -115,12 +112,6 @@ public class CropServiceImpl implements CropService {
                     .collect(Collectors.toList());
         }
     }
-
-
-
-
-
-
 
 
     //모든 카테고리 조회
