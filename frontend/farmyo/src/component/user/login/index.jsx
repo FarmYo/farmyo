@@ -15,7 +15,7 @@ export default function LoginInput() {
   const [id, setId] = useState("")
   const [password, setPassword] = useState("")
   const goLogin = () => {
-    console.log("loginId :", id, "password :", password)
+    // console.log("loginId :", id, "password :", password)
     if (id === "" || password === "") {
       if (id === "") {
         console.log('아이디가 비었다')
@@ -32,7 +32,8 @@ export default function LoginInput() {
       }
     })
     .then((res) => {
-      console.log('로그인 완료', 'accessToken :', res.headers.access)
+      console.log('로그인 완료')
+      // console.log('accessToken :', res.headers.access)
       const accessToken = res.headers.access
       dispatch(setAccessToken(accessToken))
       navigate("/", { replace : true })

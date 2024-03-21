@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from "react-router-dom";
 import { Modal } from "react-responsive-modal"
-import axios from 'axios';
+// import axios from 'axios';
 import Swal from "sweetalert2";
 import '../../../../css/signup.css';
 
@@ -19,24 +19,26 @@ export default function SignUpFirst() {
   const checkId = (id) => {
     if (id && typeof id === 'string') {
       if (id.split(' ').length < 2 && id.length > 5 && id.length < 21) {
-        axios({
-          url:`https://j10d209.p.ssafy.io/api/user/join/id-check?id=${id}`,
-          method:'get'
-        })
-        .then((res) => {
-          console.log('아이디 중복검사 완료', res)
-          if (res.dataHeader.successCode === 0) {
-            setCheckIsId(true)
-            setCheckIdMessage("")
-          } else {
-            setCheckIsId(false)
-            setCheckIdMessage('이미 사용중인 아이디입니다.')
-          }
-        })
-        .catch((err) => {
-          console.log('아이디 중복검사 실패', err)
-          navigate('/signup')
-        })
+        setCheckIsId(true)
+        setCheckIdMessage("")
+        // axios({
+        //   url:`https://j10d209.p.ssafy.io/api/user/join/id-check?id=${id}`,
+        //   method:'get'
+        // })
+        // .then((res) => {
+        //   console.log('아이디 중복검사 완료', res)
+        //   if (res.dataHeader.successCode === 0) {
+        //     setCheckIsId(true)
+        //     setCheckIdMessage("")
+        //   } else {
+        //     setCheckIsId(false)
+        //     setCheckIdMessage('이미 사용중인 아이디입니다.')
+        //   }
+        // })
+        // .catch((err) => {
+        //   console.log('아이디 중복검사 실패', err)
+        //   navigate('/signup')
+        // })
       } else {
         setCheckIsId(false)
         if (id.length < 6 || id.length > 20) {
@@ -65,60 +67,65 @@ export default function SignUpFirst() {
     if (isValid === false) {
       setCheckEmailMessage('형식에 맞지 않는 이메일입니다.')
     } else {
-      axios({
-        url:'https://j10d209.p.ssafy.io/api/user/auth/email-check',
-        method: 'post',
-        data:{
-          email:email
-        }
-      })
-      .then((res) => {
-        console.log('이메일 중복 검사 및 인증번호 발송 완료')
-        if (res.dataHeader.successCode === 1) {
-          if (res.dataHeader.resultCode === "이메일 중복") {
-            setCheckEmailMessage('중복된 이메일입니다.')
-          } else if (res.dataHeader.resultCode === "인증번호 발송 실패") {
-            setCheckEmailMessage('인증번호 발송을 다시 눌러주세요.')
-          }
-        } else if (res.dataHeader.successCode === 0) {
-          setCheckEmailMessage("")
-          onOpenModal();
-        }
-      })
+      setCheckEmailMessage("")
+      onOpenModal();
+      // axios({
+      //   url:'https://j10d209.p.ssafy.io/api/user/auth/email-check',
+      //   method: 'post',
+      //   data:{
+      //     email:email
+      //   }
+      // })
+      // .then((res) => {
+      //   console.log('이메일 중복 검사 및 인증번호 발송 완료')
+      //   if (res.dataHeader.successCode === 1) {
+      //     if (res.dataHeader.resultCode === "이메일 중복") {
+      //       setCheckEmailMessage('중복된 이메일입니다.')
+      //     } else if (res.dataHeader.resultCode === "인증번호 발송 실패") {
+      //       setCheckEmailMessage('인증번호 발송을 다시 눌러주세요.')
+      //     }
+      //   } else if (res.dataHeader.successCode === 0) {
+      //     setCheckEmailMessage("")
+      //     onOpenModal();
+      //   }
+      // })
     }
   }
   
   const [code, setCode] = useState("")
-  const alerter = () => {
-    Swal.fire({
-      html: '<h2>작성한 이메일로 발송된<br>인증코드를 입력해주세요</h2>',
-      confirmButtonColor: '#1B5E20',
-    });
-  };
+  // const alerter = () => {
+  //   Swal.fire({
+  //     html: '<h2>작성한 이메일로 발송된<br>인증코드를 입력해주세요</h2>',
+  //     confirmButtonColor: '#1B5E20',
+  //   });
+  // };
   const checkCode = (code) => {
     if (code.length < 1) {
-      Swal.fire('인증번호를 입력하세요')
+      Swal.fire('인증번호를 입력하세요.')
     } else {
-      axios({
-        url:`https://j10d209.p.ssafy.io/api/user/auth/check?code=${code}`,
-        method:'get'
-      })
-      .then((res) => {
-        console.log('인증번호 확인 성공')
-        if (res.dataHeader.successCode === 0) {
-          setCheckIsEmail(true)
-          onCloseModal();
-        } else {
-          setCheckIsEmail(false)
-          alerter()
-          setEmail("")
-          onCloseModal();
-          setCheckEmailMessage('이메일 입력 후 전송 버튼 눌러주세요')
-        }
-      })
-      .catch((err) => {
-        console.log('인증번호 확인 실패')
-      })
+      Swal.fire('인증되었습니다.')
+      setCheckIsEmail(true)
+      onCloseModal();
+      // axios({
+      //   url:`https://j10d209.p.ssafy.io/api/user/auth/check?code=${code}`,
+      //   method:'get'
+      // })
+      // .then((res) => {
+      //   console.log('인증번호 확인 성공')
+      //   if (res.dataHeader.successCode === 0) {
+      //     setCheckIsEmail(true)
+      //     onCloseModal();
+      //   } else {
+      //     setCheckIsEmail(false)
+      //     alerter()
+      //     setEmail("")
+      //     onCloseModal();
+      //     setCheckEmailMessage('이메일 입력 후 전송 버튼 눌러주세요')
+      //   }
+      // })
+      // .catch((err) => {
+      //   console.log('인증번호 확인 실패')
+      // })
     }
   }
   
@@ -126,7 +133,7 @@ export default function SignUpFirst() {
   const [realPassword, setRealPassword] = useState("")
   const [checkPasswordMessage, setCheckPasswordMessage] = useState("")
   const [checkIsPassword, setCheckIsPassword] = useState(false)
-  const checkPassword = () => {
+  const checkPassword = (password) => {
     if (password.length > 0) {
       if (password === realPassword) {
         setTimeout(() => {
@@ -169,7 +176,7 @@ export default function SignUpFirst() {
           />
       </div>
         <button
-          disabled={checkIsEmail}
+          // disabled={checkIsEmail}
           onClick={(event) => {
             event.preventDefault();
             checkCode(code)
@@ -207,7 +214,7 @@ export default function SignUpFirst() {
           button.style.display = 'block';
         });
       });
-      checkPassword();
+      checkPassword(password);
       checkId(id);
     }, [id, password, realPassword]);
     
@@ -297,7 +304,7 @@ export default function SignUpFirst() {
         <input
           value={realPassword}
           onChange={(event) => {setRealPassword(event.target.value)}}
-          onBlur={() => {checkPassword()}}
+          onBlur={(password) => {checkPassword(password)}}
           id="passwordcheck"
           name="passwordcheck"
           type="password" 
