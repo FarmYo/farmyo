@@ -3,6 +3,7 @@ package com.ssafy.farmyo.crop.controller;
 
 import com.ssafy.farmyo.common.response.BaseResponseBody;
 import com.ssafy.farmyo.crop.dto.AddCropReqDto;
+import com.ssafy.farmyo.crop.dto.CropListDto;
 import com.ssafy.farmyo.crop.dto.UpdateImgReqDto;
 import com.ssafy.farmyo.crop.dto.FindCropCategoryDto;
 import com.ssafy.farmyo.crop.service.CropService;
@@ -42,6 +43,18 @@ public class CropController {
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, savedCropId));
 
     }
+
+//    작물 리스트 조회
+    @Operation(summary = "작물리스트조회", description = "/crops/{farmer_loginId}\n\n 해당 유저의 작물 리스트를 반환한다.")
+    @GetMapping("/{farmer_loginId}")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환")
+    public ResponseEntity<? extends BaseResponseBody> getCropList(@PathVariable String farmer_loginId) {
+        List<CropListDto> cropsByFarmerLoginId = cropService.getCropsByFarmerLoginId(farmer_loginId);
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, cropsByFarmerLoginId));
+    }
+
+
+
 
 
     //대표사진수정  사진 넣는걸로 바꿔야한다 url이 아니라 수정해야함 임시용
