@@ -1,10 +1,6 @@
 package com.ssafy.farmyo.trade.controller;
 
-
-import com.fasterxml.jackson.databind.ser.Serializers;
 import com.ssafy.farmyo.common.response.BaseResponseBody;
-import com.ssafy.farmyo.entity.Trade;
-import com.ssafy.farmyo.trade.dto.TradeDto;
 import com.ssafy.farmyo.trade.dto.TradeListReqDto;
 import com.ssafy.farmyo.trade.dto.TradeReqDto;
 import com.ssafy.farmyo.trade.dto.TradeResDto;
@@ -17,11 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 @Slf4j
 @RestController
@@ -44,7 +35,6 @@ public class TradeController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, 1));
     }
-
 
     @GetMapping("")
     @Operation(summary = "유저별 거래 목록 조회", description = "유저 id를 통해 해당 유저의 거래 목록을 조회한다.")
@@ -138,3 +128,4 @@ public class TradeController {
     }
 
 }
+

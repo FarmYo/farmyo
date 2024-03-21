@@ -169,14 +169,11 @@ export default function BuyerTrade() {
       </div>
 
       <Modal
-      open={open}
-      onClose={onCloseModal}
-      // showCloseIcon={false}
-      // center
-      classNames={{
-        // overlay: 'customOverlay', // 뒷 배경 설정할 때 커스텀 할 것
-        modal: 'customModal', // 모달 커스텀 할 것
-      }}
+        open={open}
+        onClose={onCloseModal}
+        classNames={{
+          modal: 'customModal', // 모달 커스텀 할 것
+        }}
     >
       <FirstModal />
     </Modal>
