@@ -1,18 +1,19 @@
-import React from 'react'
-// import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import '../../../css/signup.css';
 import Logo from '../../../image/component/user/logo.png';
 
 export default function SignUp() {
   const navigate = useNavigate()
-  // const [selected,setSelected] = useState(null)
-  // useEffect(()=>{
-  //   setSelected(0);
-  // },[])
-  // const handleClick = (index) => {
-  //   setSelected(index)
-  // }
+  const [seller, setSeller] = useState(null);
+  const handleSellerClick = () => {
+    setSeller(true);
+    navigate("/signup/first", { state: { seller } });
+  };
+  const handleBuyerClick = () => {
+    setSeller(false);
+    navigate("/signup/first", { state: { seller } });
+  };
   return(
   <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 logo">
     <div className="mx-auto w-full max-w-sm mb-0">
@@ -24,14 +25,13 @@ export default function SignUp() {
     </div>
     <div className="flex mx-2 my-4">
       <button
-        onClick={() => {navigate("/signup/first")}}
-        // 여기에 판매자인지 구매자인지 구분해서 넘겨보내기
+        onClick={() => {handleSellerClick()}}
         className="buttonmain"
       >
         판매자
       </button>
       <button
-        onClick={() => {navigate("/signup/first")}}
+        onClick={() => {handleBuyerClick()}}
         className="buttonmain"
       >
         구매자
