@@ -17,7 +17,16 @@ function App() {
 
   const shouldHideBottomBar = () => {
     // 숨겨야 하는 경로를 정규 표현식으로 정의합니다.
-    const hidePatterns = [/^\/mypage\/edit$/, /^\/chat\/\d+$/];
+    const hidePatterns = [/^\/mypage\/edit$/,
+     /^\/chat\/\d+$/,
+    /^\/signup\/first$/, 
+    /^\/signup\/second$/, 
+    /^\/signup\/third$/, 
+    /^\/signup\/business$/, 
+    /^\/signup$/,
+    /^\/login$/, // '/login' 경로 추가
+    /^\/$/ 
+  ];
 
     // 현재 경로가 숨겨야 하는 경로 중 하나와 일치하는지 확인합니다.
     return hidePatterns.some(pattern => pattern.test(location.pathname));
