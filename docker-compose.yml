@@ -8,8 +8,6 @@ services:                           # 서비스 목록
     ports:                          # host와 공유할 포트 목록
       - "80:80"                     # host:container
       - "443:443"
-    environment:                    # 환경변수 설정
-      VITE_APP_API_URL: "http://mefi-backend:8080"
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
       - /var/lib/letsencrypt:/var/lib/letsencrypt
