@@ -1,0 +1,36 @@
+version: '3.8'                      # docker-compose 버전
+services:                           # 서비스 목록
+  farmyo-frontend:                         # 서비스 이름
+    container_name: farmyo-frontend      # 컨테이너
+    build:                          # 이미지 Build 옵션
+      context: ./frontend/farmyo          # Build될 프로젝트가 위치한 경로
+      dockerfile: Dockerfile        # 프로젝트 폴더의 dockerfile 이름
+    ports:                          # host와 공유할 포트 목록
+      - "80:80"                     # host:container
+      - "443:443"
+    environment:                    # 환경변수 설정
+      VITE_APP_API_URL: "http://mefi-backend:8080"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /var/lib/letsencrypt:/var/lib/letsencrypt
+      - /home/ubuntu/conf:/etc/nginx/conf.d
+#      - /home/ubuntu/nginx/sites/sites-enabled:/etc/nginx/sites-enabled
+    networks:
+      - farmyo_network
+
+  farmyo-backend:
+    container_name: farmyo-backend
+    build:
+      context: ./backend/farmyo
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:                    # 환경변수 설정
+      JASYPT_KEY: abc
+        - TZ=Asia/Seoul
+    networks:
+      - farmyo_network
+
+networks:
+  farmyo_network:
+    driver: bridge
