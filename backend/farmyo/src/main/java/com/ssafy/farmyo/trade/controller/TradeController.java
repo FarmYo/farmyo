@@ -36,7 +36,7 @@ public class TradeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, 1));
     }
 
-    @GetMapping("")
+    @GetMapping("/list")
     @Operation(summary = "유저별 거래 목록 조회", description = "유저 id를 통해 해당 유저의 거래 목록을 조회한다.")
     public ResponseEntity<? extends BaseResponseBody> getTradeList(
             @RequestParam(name = "userId")
@@ -49,7 +49,7 @@ public class TradeController {
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, tradeListReqDto));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/detail/{id}")
     @Operation(summary = "상세 거래 조회", description = "거래 id를 받아 상세 거래 페이지를 조회한다.")
     public ResponseEntity<? extends BaseResponseBody> getTrade(
             @PathVariable(name = "id")
@@ -62,7 +62,7 @@ public class TradeController {
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, tradeResDto));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/location/{id}")
     @Operation(summary = "주소등록", description = "주소를 받아 거래 테이블에 추가한다.")
     public ResponseEntity<? extends BaseResponseBody> updateTradeLocation(
             @PathVariable(name = "id")
@@ -79,7 +79,7 @@ public class TradeController {
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, 0));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/deopsit/{id}")
     @Operation(summary = "거래 입금완료", description = "입금대기중이던 상태를 입금완료 상태로 변경하고 입금 테이블이 생성된다.")
     public ResponseEntity<? extends BaseResponseBody> updateTradeDeposit(
             @PathVariable(name = "id")
@@ -95,7 +95,7 @@ public class TradeController {
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, 0));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/deal/{id}")
     @Operation(summary = "거래 거래중", description = "입금완료이던 상태를 거래중 상태로 변경하고 택배사와 송장번호 컬럼을 추가한다.")
     public ResponseEntity<? extends BaseResponseBody> updateTradeDeal(
             @PathVariable(name = "id")
@@ -114,7 +114,7 @@ public class TradeController {
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0 , 0));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/final/{id}")
     @Operation(summary = "거래 거래완료", description = "거래중 상태를 거래완료 상태로 변경하고 출금 테이블 생성")
     public ResponseEntity<? extends BaseResponseBody> updateTradeFinish(
             @PathVariable(name = "id")
