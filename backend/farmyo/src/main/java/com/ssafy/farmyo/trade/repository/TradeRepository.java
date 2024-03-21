@@ -14,8 +14,6 @@ import java.util.List;
 @Repository
 public interface TradeRepository extends JpaRepository<Trade, Integer> {
 
-//    Trade findById(int id);
-
     // 판매자의 아이디를 통해 거래완료된 거래 목록 가져오기
     @Query(value =
             "SELECT t.id, s.nickname, buy.nickname, t.tradeStatus, t.tradePrice, t.tradeQuantity " +
@@ -65,15 +63,15 @@ public interface TradeRepository extends JpaRepository<Trade, Integer> {
     @Transactional
     @Modifying
     @Query("UPDATE Trade t SET t.tradeStatus = :status WHERE t.id = :id")
-    void updateTradeStatusById(int id, int status);
+    void updateStatus(int id, int status);
 
     @Transactional
     @Modifying
     @Query("UPDATE Trade t SET t.tradeLocation = :location WHERE t.id = :id")
-    void updateTradeLocationById(int id, String location);
+    void updateLocation(int id, String location);
 
     @Transactional
     @Modifying
     @Query("UPDATE Trade t SET t.tradeShipment = :tradeShipment, t.tradeShipcom = :tradeShipcom WHERE t.id = :id")
-    void updateTradeShipmentAndShipcomById(int id, String tradeShipment, String tradeShipcom);
+    void updateShip(int id, String tradeShipment, String tradeShipcom);
 }

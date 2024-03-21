@@ -113,7 +113,7 @@ public class TradeServiceImpl implements TradeService {
     @Override
     public void updateTradeLocation(int id, String location) {
         // 거래 테이블 주소 업데이트
-        tradeRepository.updateTradeLocationById(id, location);
+        tradeRepository.updateLocation(id, location);
     }
 
     @Override
@@ -131,15 +131,15 @@ public class TradeServiceImpl implements TradeService {
         // 입금 테이블 저장
         tradeDepositRepository.save(tradeDeposit);
         // 거래 테이블 상태 업데이트
-        tradeRepository.updateTradeStatusById(id, 1);
+        tradeRepository.updateStatus(id, 1);
     }
 
     @Override
     public void updateTradeDeal(int id, String tradeShipment, String tradeShipcom) {
         // 거래 테이블 송장번호, 택배사 업데이트
-        tradeRepository.updateTradeShipmentAndShipcomById(id, tradeShipment, tradeShipcom);
+        tradeRepository.updateShip(id, tradeShipment, tradeShipcom);
         // 거래 테이블 상태 업데이트
-        tradeRepository.updateTradeStatusById(id, 2);
+        tradeRepository.updateStatus(id, 2);
     }
 
     @Override
@@ -161,7 +161,7 @@ public class TradeServiceImpl implements TradeService {
         // 출금 테이블 저장
         tradeWithdrawalRepository.save(tradeWithdrawal);
         // 거래 테이블 상태 업데이트
-        tradeRepository.updateTradeStatusById(id, 3);
+        tradeRepository.updateStatus(id, 3);
     }
 
 
