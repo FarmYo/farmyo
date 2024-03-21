@@ -6,11 +6,12 @@ import com.ssafy.farmyo.common.exception.CustomException;
 import com.ssafy.farmyo.common.exception.ExceptionType;
 import com.ssafy.farmyo.crop.repository.CropRepository;
 import com.ssafy.farmyo.entity.*;
-import com.ssafy.farmyo.trade.dto.TradeDto;
 import com.ssafy.farmyo.trade.dto.TradeListReqDto;
 import com.ssafy.farmyo.trade.dto.TradeReqDto;
 import com.ssafy.farmyo.trade.dto.TradeResDto;
+import com.ssafy.farmyo.trade.repository.TradeDepositRepository;
 import com.ssafy.farmyo.trade.repository.TradeRepository;
+import com.ssafy.farmyo.trade.repository.TradeWithdrawalRepository;
 import com.ssafy.farmyo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,8 @@ public class TradeServiceImpl implements TradeService {
     private final BoardRepository boardRepository;
     private final ChatRepository chatRepository;
     private final CropRepository cropRepository;
+    private final TradeDepositRepository tradeDepositRepository;
+    private final TradeWithdrawalRepository tradeWithdrawalRepository;
 
     @Override
     public void createTrade(TradeReqDto tradeReqDto) {
@@ -108,10 +111,58 @@ public class TradeServiceImpl implements TradeService {
     }
 
     @Override
-    public void updateTrade(TradeDto tradeDto) {
-
+    public void updateTradeLocation(int id, String location) {
+        // 거래 테이블 주소 업데이트
+        tradeRepository.updateTradeLocationById(id, location);
     }
 
+    @Override
+    public void updateTradeDeposit(int id, String depositName) {
+        Trade trade = tradeRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.TRADE_NOT_EXIST));
+
+        // 입금 테이블 생성
+        TradeDeposit tradeDeposit = TradeDeposit.builder()
+                .depositPrice(trade.getTradePrice())
+                .depositName(depositName)
+                .buyer(trade.getBuyer())
+                .trade(trade)
+                .build();
+
+        // 입금 테이블 저장
+        tradeDepositRepository.save(tradeDeposit);
+        // 거래 테이블 상태 업데이트
+        tradeRepository.updateTradeStatusById(id, 1);
+    }
+
+    @Override
+    public void updateTradeDeal(int id, String tradeShipment, String tradeShipcom) {
+        // 거래 테이블 송장번호, 택배사 업데이트
+        tradeRepository.updateTradeShipmentAndShipcomById(id, tradeShipment, tradeShipcom);
+        // 거래 테이블 상태 업데이트
+        tradeRepository.updateTradeStatusById(id, 2);
+    }
+
+    @Override
+    public void updateTradeFinish(int id) {
+        Trade trade = tradeRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.TRADE_NOT_EXIST));
+        User seller = userRepository.findById(trade.getSeller().getId()).orElseThrow(() -> new CustomException((ExceptionType.USER_LOGIN_REQUIRED)));
+
+        // 출금 테이블 생성
+        TradeWithdrawal tradeWithdrawal = TradeWithdrawal.builder()
+                .trade(trade)
+                .seller(trade.getSeller())
+                .withdrawalPrice(trade.getTradePrice())
+                .withdrawalHolder(seller.getAccount().getDepositor())
+                .withdrawalAccount(seller.getAccount().getAccountNumber())
+                .withdrawalBank(seller.getAccount().getBankName())
+                .withdrawalName(seller.getAccount().getDepositor())
+                .build();
+
+        // 출금 테이블 저장
+        tradeWithdrawalRepository.save(tradeWithdrawal);
+        // 거래 테이블 상태 업데이트
+        tradeRepository.updateTradeStatusById(id, 3);
+    }
 
 
 }
