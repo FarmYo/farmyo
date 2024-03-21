@@ -1,10 +1,42 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate, Link } from "react-router-dom";
+import axios from 'axios';
 import Logo from '../../../image/component/user/logo.png';
 import '../../../css/signup.css';
 
 export default function LoginInput() {
   const navigate = useNavigate()
+  const [id, setId] = useState("")
+  const [password, setPassword] = useState("")
+  const goLogin = () => {
+    if (id === "" || password === "") {
+      if (id === "") {
+        console.log('아이디가 비었다')
+      } else {
+        console.log('비밀번호가 비었다')
+      }
+    } else {
+    axios({
+      url : 'https://j10d209.p.ssafy.io/api/user/login',
+      method:'post',
+      data:{
+        loginId:id, password
+      }
+    })
+    .then((res) => {
+      console.log('로그인 완료')
+      if (res.dataHeader.successCode === 0) {
+        navigate("/")
+        // 여기서 토큰 받아오기..?
+      } else {
+        console.log('로그인 완료지만 문제가 있어요')
+      }
+    })
+    .catch((err) => {
+      console.log('로그인 실패', err)
+      navigate("/login")
+    })
+  }}
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 main">
     <div className="sm:mx-auto sm:w-full sm:max-w-sm mb-0">
@@ -16,15 +48,11 @@ export default function LoginInput() {
     </div>
 
     <div className="mt-0 sm:mx-auto sm:w-full sm:max-w-sm">
-      {/* <form className="space-y-6" action="#" method="POST"> */}
         <div>
-          {/* <label 
-            htmlFor="id" className="block text-sm font-medium leading-6 text-gray-900"
-          >
-            아이디
-          </label> */}
           <div className="mt-2">
             <input
+              value={id}
+              onChange={(event) => {setId(event.target.value)}}
               id="id"
               name="id"
               type="text"
@@ -37,15 +65,10 @@ export default function LoginInput() {
         </div>
 
         <div>
-          {/* <div className="flex items-center justify-between mt-2">
-            <label 
-              htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900"
-            >
-              비밀번호
-            </label>
-          </div> */}
           <div className="mt-2">
             <input
+              value={password}
+              onChange={(event) => {setPassword(event.target.value)}}
               id="password"
               name="password"
               type="password"
@@ -59,7 +82,7 @@ export default function LoginInput() {
 
         <div>
           <button
-            onClick={() => {navigate("/")}}
+            onClick={() => goLogin()}
             className="flex w-full justify-center rounded-md px-3 py-2 mt-5 text-sm font-bold leading-6 text-white shadow-sm hover:bg-lime-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-950 h-10"
             style={{backgroundColor:'#1B5E20'}}
           >
@@ -69,8 +92,6 @@ export default function LoginInput() {
             <Link to="/password" className="mr-3">비밀번호 찾기</Link> | <Link to="/signup" className="m-3">회원가입</Link>
           </div>
         </div>
-      {/* </form> */}
-
     </div>
   </div>
   )

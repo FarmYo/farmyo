@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from "react-router-dom";
 import { Modal } from "react-responsive-modal"
-import '../../../../css/signup.css';
 import axios from 'axios';
 import Swal from "sweetalert2";
+import '../../../../css/signup.css';
 
 export default function SignUpFirst() {
   const navigate = useNavigate()
@@ -20,7 +20,7 @@ export default function SignUpFirst() {
     if (id && typeof id === 'string') {
       if (id.split(' ').length < 2 && id.length > 5 && id.length < 21) {
         axios({
-          url:`https://j10d209.p.ssafy.io/api/users/join/id-check?id=${id}`,
+          url:`https://j10d209.p.ssafy.io/api/user/join/id-check?id=${id}`,
           method:'get'
         })
         .then((res) => {
@@ -39,9 +39,10 @@ export default function SignUpFirst() {
         })
       } else {
         setCheckIsId(false)
-        if (id.length < 5 || id.length > 21) {
+        if (id.length < 6 || id.length > 20) {
           setCheckIdMessage('6글자 이상 20글자 이하로 작성해주세요.')
         } else {
+          console.log(id.length)
         setCheckIdMessage('공백을 제거해주세요.')
         }
       }
@@ -65,7 +66,7 @@ export default function SignUpFirst() {
       setCheckEmailMessage('형식에 맞지 않는 이메일입니다.')
     } else {
       axios({
-        url:'https://j10d209.p.ssafy.io/api/users/auth/email-check',
+        url:'https://j10d209.p.ssafy.io/api/user/auth/email-check',
         method: 'post',
         data:{
           email:email
@@ -99,7 +100,7 @@ export default function SignUpFirst() {
       Swal.fire('인증번호를 입력하세요')
     } else {
       axios({
-        url:`https://j10d209.p.ssafy.io/api/users/auth/check?code=${code}`,
+        url:`https://j10d209.p.ssafy.io/api/user/auth/check?code=${code}`,
         method:'get'
       })
       .then((res) => {
@@ -183,10 +184,13 @@ export default function SignUpFirst() {
 
   const changePage = () => {
     if (checkIsId === true && checkIsEmail === true && checkIsPassword === true) {
-      navigate("/signup/second", { state: { isSeller, id, email, password } })
+      navigate("/signup/second", { state: { isSeller, id, email, password } }, { replace: true })
     } else {
       console.log('로그인 실패 화면 확인해보기')
-      Swal.fire('입력 정보를 확인해주세요.')
+      Swal.fire({
+        html: '<br>입력 정보를<br>확인해주세요',
+        confirmButtonColor: '#1B5E20',
+      })
     }
   }
 
