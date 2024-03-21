@@ -1,5 +1,6 @@
 import React from 'react'
 // import { useNavigate } from "react-router-dom";
+import { logout } from '../../../feature/login/accessSlice';
 import '../../../css/mainpage.css'
 import Logo from '../../../image/component/user/logo.png';
 
@@ -23,6 +24,7 @@ export default function Mainpage() {
     </div>
     <div className="flex mx-2 my-4">
       <button
+        onClick={() => logout()}
 //        onClick={() => {navigate("/signup/first")}}
         // 판매글 게시판으로 보내기
         className="buttonmain"

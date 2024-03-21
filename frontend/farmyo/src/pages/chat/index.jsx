@@ -1,7 +1,9 @@
+// import { useTokenCheck } from '../../feature/login/receiveToken';
 import Photo from '../../image/component/me.png'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function Chatting(){
+  // const isAuthed = useTokenCheck();
   const [chattingList, setChattingList] = useState([
     {
       id: 1,
@@ -17,6 +19,11 @@ export default function Chatting(){
     },
   ]);
 
+useEffect(() => {
+  // if (isAuthed) {
+
+  // }
+})
 
   return(
     <div>
@@ -36,21 +43,6 @@ export default function Chatting(){
           </div> 
         </div>
       ))}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </div>
   )
 }

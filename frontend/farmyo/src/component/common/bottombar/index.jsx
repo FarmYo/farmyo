@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import Home from '../../../image/component/home.png';
 import Trade from '../../../image/component/trade.png';
@@ -26,6 +26,9 @@ export default function BottomBar() {
     otherStates.forEach(setStateFunc => setStateFunc(prevState => ({ ...prevState, clicked: false })));
   };
 
+  useEffect(()=>{
+    // access token 확인하기
+  },[])
   return (
     <div>
       <nav className="bg-white border-t-2 border-gray-300 fixed bottom-0 w-full h-28">
