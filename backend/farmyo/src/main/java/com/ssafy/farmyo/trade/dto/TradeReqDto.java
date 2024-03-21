@@ -15,7 +15,6 @@ public class TradeReqDto {
     private int crop;
     @NotBlank
     private int board;
-    @NotBlank
     private int chat;
     @NotBlank
     private int tradePrice;

@@ -12,6 +12,9 @@ public interface TradeService {
     void createTrade(TradeReqDto tradeReqDto);
     TradeListReqDto getTrades(int userId);
     TradeResDto getTrade(int id);
-    void updateTrade(TradeDto tradeDto);
+    void updateTradeLocation(int id, String location);
+    void updateTradeDeposit(int id, String depositName);
+    void updateTradeDeal(int id, String tradeShipment, String tradeShipcom);
+    void updateTradeFinish(int id);
 
 }
