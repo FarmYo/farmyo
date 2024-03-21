@@ -11,6 +11,8 @@ export const accessSlice = createSlice({
   },
   reducers: {
     setAccessToken: (state, action) => {
+      // console.log(state)
+      // console.log(action)
       // 전달된 값을 access token에 저장
       state.accessToken = action.payload
     },

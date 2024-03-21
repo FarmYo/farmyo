@@ -13,24 +13,14 @@ export default function SignUpSecond() {
 
   const [address, setAddress] = useState("")
   const [detailAddress, setDetailAddress] = useState("")
-
   const [isOpen, setIsOpen] = useState(false);
-
-  const searchOpen = () => {
-    setIsOpen(true);
-  }
-
-  const searchClose = () => {
+  const addressSearch = (data) => {
+    console.log(data)
+    setAddress(data.roadAddress);
+    setDetailAddress('');
     setIsOpen(false)
   }
 
-  const addressSearch = (data) => {
-
-    setAddress(data.roadAddress);
-    setDetailAddress('');
-    // setAddress(responseData.address);
-    // setDetailAddress(responseData.detailAddress);
-  }
   useEffect(() => {
     const allInputs = document.querySelectorAll('input');
     const button = document.querySelector('.finishbutton');
@@ -111,7 +101,7 @@ export default function SignUpSecond() {
         />
         <button 
           className="checkbutton"
-          onClick={searchOpen}
+          onClick={() => setIsOpen(true)}
         >
           주소검색
         </button>
@@ -131,14 +121,20 @@ export default function SignUpSecond() {
         />
       </div>
 
-      {isOpen && (
+      <Modal
+        open={isOpen}
+        showCloseIcon={false}
+        classNames={{
+          modal: 'customModal',
+        }}
+      >
         <DaumPostcode
-          onAddressSearch={addressSearch}
-          onClose={searchClose}
+          onComplete={addressSearch}
+          autoClose
           width="100%"
           height="100%"
         />
-      )}
+      </Modal>
       </div>
 
     </div>

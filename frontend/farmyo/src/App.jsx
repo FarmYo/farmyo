@@ -4,9 +4,16 @@ import { Provider } from "react-redux"
 import { store } from '../src/store/store';
 import Router from './router'
 import BottomBar from './component/common/bottombar'
+// import { useHistory } from 'react-router-dom'
 
 function App() {
   const location = useLocation()
+
+  // let history = useHistory();
+  
+  // useEffect(() => {
+  //   history.push('/login');
+  // }, [history]);
 
   const shouldHideBottomBar = () => {
     // 숨겨야 하는 경로를 정규 표현식으로 정의합니다.

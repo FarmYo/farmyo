@@ -10,6 +10,7 @@ export function useTokenCheck() {
   const dispatch = useDispatch();
   // const cookies = new Cookies();
   // const accessToken = useSelector((store) => store.access.accessToken);
+  console.log('여기왔어요')
   const accessToken = useSelector((store) => store.access);
   
   // accessToken 상태 판단
