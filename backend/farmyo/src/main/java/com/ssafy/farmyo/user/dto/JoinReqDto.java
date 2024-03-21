@@ -23,6 +23,10 @@ public class JoinReqDto {
     @NotBlank
     private String telephone;
 
+    // 직업
+    @NotBlank
+    private int job;
+
     // 이메일
     @Email
     @NotBlank
