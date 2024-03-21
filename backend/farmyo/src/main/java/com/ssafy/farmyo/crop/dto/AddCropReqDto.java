@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Getter
 @NoArgsConstructor
 public class AddCropReqDto {
@@ -20,15 +22,15 @@ public class AddCropReqDto {
     @NotBlank(message = "작물이름 적어주세요")
     private String cropName;
 
-    private String cropBlockchainAddress;
-    private String cropImgUrl;
+    private String cultivation;
+    private LocalDate plantingDate;
 
     @Builder
-    public AddCropReqDto(Integer cropCategoryId, String cropName, String cropBlockchainAddress, String cropImgUrl) {
+    public AddCropReqDto(Integer cropCategoryId, String cropName, String cultivation, LocalDate plantingDate) {
         this.cropCategoryId = cropCategoryId;
         this.cropName = cropName;
-        this.cropBlockchainAddress = cropBlockchainAddress;
-        this.cropImgUrl = cropImgUrl;
+        this.cultivation = cultivation;
+        this.plantingDate = plantingDate;
     }
 
 }

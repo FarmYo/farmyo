@@ -35,9 +35,9 @@ public class CropController {
     @PostMapping("")
     @ApiResponse(responseCode = "201", description = "성공 \n\n Success 반환")
     public ResponseEntity<? extends BaseResponseBody> addCrop(@RequestBody @Valid AddCropReqDto addCropReqDto, Authentication authentication) {
-//        log.info("{}", addCropReqDto.getFarmer());
 
         int savedCropId = cropService.addCrop(addCropReqDto,authentication);
+        log.info("{}", savedCropId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, savedCropId));
 

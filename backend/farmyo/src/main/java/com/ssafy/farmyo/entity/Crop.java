@@ -38,8 +38,12 @@ public class Crop extends BaseTime {
     @Column(name = "crop_name", nullable = false)
     private String cropName;
 
+    //상태(재배중 : 0, 수확 : 1)
+    @Column(name = "crop_status", nullable = false)
+    private int cropStatus;
+
     //블록체인주소
-    @Column(name = "crop_blockchain", nullable = false)
+    @Column(name = "crop_blockchain")
     private String cropBlockchainAddress;
 
     //작물대표이미지
@@ -72,10 +76,11 @@ public class Crop extends BaseTime {
 
     //빌더
     @Builder
-    public Crop(Farmer farmer, String cropName, CropCategory cropCategory, String cropBlockchainAddress, String cropImgUrl, LocalDate cropPlantingDate, String cropCultivationSite) {
+    public Crop(Farmer farmer, String cropName, CropCategory cropCategory, int cropStatus, String cropBlockchainAddress, String cropImgUrl, LocalDate cropPlantingDate, String cropCultivationSite) {
 
         this.farmer = farmer;
         this.cropCategory = cropCategory;
+        this.cropStatus = cropStatus;
         this.cropName = cropName;
         this.cropBlockchainAddress = cropBlockchainAddress;
         this.cropImgUrl = cropImgUrl;
