@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import Home from '../../../image/component/home.png';
 import Trade from '../../../image/component/trade.png';
@@ -11,8 +11,10 @@ import BoardClick from '../../../image/component/boardclick.png';
 import ChatClick from '../../../image/component/chatclick.png';
 import MypageClick from '../../../image/component/mypageclick.png';
 import '../../../css/bottombar.css';
+import { useNavigate } from 'react-router-dom';
 
 export default function BottomBar() {
+  const navigate = useNavigate()
   const [home, setHome] = useState({ image: Home, clicked: false });
   const [trade, setTrade] = useState({ image: Trade, clicked: false });
   const [board, setBoard] = useState({ image: Board, clicked: false });
@@ -26,6 +28,9 @@ export default function BottomBar() {
     otherStates.forEach(setStateFunc => setStateFunc(prevState => ({ ...prevState, clicked: false })));
   };
 
+  useEffect(()=>{
+    // access token 확인하기
+  },[])
   return (
     <div>
       <nav className="bg-white border-t-2 border-gray-300 fixed bottom-0 w-full h-28">
@@ -48,12 +53,16 @@ export default function BottomBar() {
               </Link>
             </div>
             <div className='flex flex-col items-center justify-center' onClick={() => handleImageClick(setBoard, board)}>
+              <Link to="/board">
               <img src={board.clicked ? BoardClick : board.image} className="size" alt="" />
               <p className='text-sm text-center font-bold mt-2'>팜&삼</p>
+              </Link>
             </div>
             <div className='flex flex-col items-center justify-center' onClick={() => handleImageClick(setChat, chat)}>
+              <Link to="/chat">
               <img src={chat.clicked ? ChatClick : chat.image} className="size" alt="" />
               <p className='text-sm text-center font-bold mt-2'>채팅</p>
+              </Link>
             </div>
             <div 
               className='flex flex-col items-center justify-center' 

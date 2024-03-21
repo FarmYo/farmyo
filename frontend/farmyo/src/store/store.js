@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import authReducer from "../feature/login/authSlice.js";
-import accessReducer from '../features/login/accessSlice.js';
+import accessReducer from '../feature/login/accessSlice.js';
 
 // Redux-persist 설정을 위한 객체 생성
 // Redux-persist = 리덕스 상태를 다양한 저장소에 영구적으로 저장하는 기능(새로고침, 브라우저 종료일때도 유지)
@@ -13,7 +13,7 @@ const persistConfig = {
   // 사용할 저장소(로컬 스토리지)
   storage,
   // 저장할 Redux state의 slice 이름 설정(선택 저장)
-  whitelist : ['auth'],
+  whitelist : ['access'],
   // 저장하지 않을 Redux state의 slice 이름
   // blacklist : ['']
 };

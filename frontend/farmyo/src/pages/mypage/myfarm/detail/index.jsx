@@ -3,12 +3,24 @@ import Trash from "../../../../image/component/trash.png"
 import Edit from "../../../../image/component/edit.PNG"
 import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import "react-responsive-modal/styles.css"
+import { Modal } from "react-responsive-modal"
 
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
+
+const styles = {
+  modal: {
+    maxWidth: '100%',
+    width: '100%',
+    height: '100%',
+    top: '0',
+    left: '0',
+    margin: '0',
+  },
+};
 
 export default function MyFarmDetail() {
   return(
@@ -77,6 +89,10 @@ export default function MyFarmDetail() {
     <div className="p-2 pl-5">
       <h1>양파 상태 최고네요^^</h1>
     </div>
+
+
+    {/* ******마이팜게시글 수정하기모달******** */}
+
   </div>
   )
 }
