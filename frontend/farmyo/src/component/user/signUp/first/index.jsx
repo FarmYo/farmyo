@@ -142,12 +142,12 @@ export default function SignUpFirst() {
         }, 0);
       } else {
         setTimeout(() => {
-          setCheckPasswordMessage('비밀번호가 서로 일치하지 않습니다.');
+          // setCheckPasswordMessage('비밀번호가 서로 일치하지 않습니다.');
         }, 0);
       }
     } else {
       setTimeout(() => {
-        setCheckPasswordMessage('비밀번호를 입력해주세요.');
+        // setCheckPasswordMessage('비밀번호를 입력해주세요.');
       }, 0);
     }
   };
