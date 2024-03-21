@@ -15,22 +15,13 @@ import ko from 'date-fns/locale/ko'
 import Pesticide from '../../form/pesticide'
 import Award from '../../form/award'
 import '../../../css/liferecord.css'
+import axios from 'axios'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function MyCrops() {
-  const [startDate,setStartDate] = useState(null)
-  const [endDate, setEndDate] = useState(null)
-  const [selected,setSelected] = useState('')
-  const cropList = ['감자','호박','고추','오이','사과']  // 작물등록시 작물 리스트
-  const [selectedCrop, setSelectedCrop] = useState('작물을 선택하세요')
-
-  useEffect(()=>{
-    setSelected('구분')
-  },[])
-  
   const styles = {
     modal: {
       maxWidth: '100%',
@@ -41,6 +32,43 @@ export default function MyCrops() {
       margin: '0',
     },
   };
+  
+
+  const [startDate,setStartDate] = useState(null)
+  const [endDate, setEndDate] = useState(null)
+  const [selected,setSelected] = useState('')
+  const cropList = ['감자','호박','고추','오이','사과']  // 작물등록시 작물 리스트
+  const [selectedCrop, setSelectedCrop] = useState('작물을 선택하세요')
+  const [cropsList,setCropsList] = useState([]) // 작물조회시 담길 리스트
+
+  
+  useEffect(()=>{
+    setSelected('구분')
+    // 작물 리스트 조회
+    axios({
+      url:'http;//192.168.100.116/api/crops/ssafy1',
+      method:'get'
+    })
+    .then((res)=>{
+      console.log(res)
+      setCropsList(res.data.dataBody)
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+    // 작물 카테고리 조회
+    // axios({
+    //   url:'https://j10d209.p.ssafy.io/api/crops/category',
+    //   method:'get'
+    // })
+    // .then((res)=>{
+    //   console.log(res)
+    //   setCropsList(res.data.dataBody)
+    // })
+    // .catch((err)=>{
+    //   console.log(err)
+    // })
+  },[])
   
 
   const [open,setOpen] = useState(false)
@@ -139,16 +167,18 @@ export default function MyCrops() {
     // "작물없으면 등록한 작물이 없습니다"노출
     <div style={{ position:'relative',height:'400px'}}>
       {/* 아래의 디브가 작물이 추가될 때마다 반복됨  */}
-      <div className="flex">
+      {/* {cropsList.map((crop)=>{
+      <div  key={crop.id} className="flex">
         <div style={{backgroundColor:'#bbbbbb',width:80}}></div>
         <div className="p-5">
-          <h1 className="font-bold">작물명</h1>
-          <h1 className="text-sm">심은날짜-2024/05/05</h1>
+          <h1 className="font-bold">{crop.cropName}</h1>
+          {crop.cropHarvestDate && <h1 className="text-sm">{crop.cropHarvestDate}</h1>}
         </div>
         <div className="ml-auto flex items-center p-5" onClick={infoOpenModal}>
           <img src={Next} alt="" style={{width:30,height:30}}/>
         </div>
       </div>
+      })} */}
       
   
       <div style={{ position: 'absolute', bottom: 0, right: 10}}>
