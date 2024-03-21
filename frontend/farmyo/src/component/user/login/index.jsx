@@ -26,11 +26,9 @@ export default function LoginInput() {
     })
     .then((res) => {
       console.log('로그인 완료')
-      if (res.dataHeader.successCode === 0) {
-        navigate("/")
-      } else {
-        console.log('로그인 완료지만 문제가 있어요')
-      }
+      const headerValue = res.headers['access']; // 스프링에서 설정한 응답 헤더 이름을 여기에 입력
+      console.log('헤더 값:', headerValue);
+      navigate("/")  
     })
     .catch((err) => {
       console.log('로그인 실패', err)
