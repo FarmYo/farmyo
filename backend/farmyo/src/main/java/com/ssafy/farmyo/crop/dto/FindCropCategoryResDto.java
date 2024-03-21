@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class FindCropCategoryDto {
+public class FindCropCategoryResDto {
 
     private Integer id;
 
@@ -16,14 +16,14 @@ public class FindCropCategoryDto {
     private String categoryName;
 
     @Builder
-    public FindCropCategoryDto(Integer id, String categoryCode, String categoryName) {
+    public FindCropCategoryResDto(Integer id, String categoryCode, String categoryName) {
         this.id = id;
         this.categoryCode = categoryCode;
         this.categoryName = categoryName;
     }
 
-    public static FindCropCategoryDto toDto(CropCategory cropCategory) {
-        return FindCropCategoryDto.builder()
+    public static FindCropCategoryResDto toDto(CropCategory cropCategory) {
+        return FindCropCategoryResDto.builder()
                 .id(cropCategory.getId())
                 .categoryCode(cropCategory.getCategoryCode())
                 .categoryName(cropCategory.getCategoryName())
