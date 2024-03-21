@@ -22,7 +22,10 @@ public class AddCropReqDto {
     @NotBlank(message = "작물이름 적어주세요")
     private String cropName;
 
+    @NotBlank(message = "재배지를 적어주세요")
     private String cultivation;
+
+    @NotEmpty(message = "심은 날을 적어쥇요")
     private LocalDate plantingDate;
 
     @Builder
