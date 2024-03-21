@@ -13,6 +13,7 @@ import com.ssafy.farmyo.entity.Crop;
 import com.ssafy.farmyo.entity.CropCategory;
 import com.ssafy.farmyo.entity.Farmer;
 import com.ssafy.farmyo.user.repository.FarmerRepository;
+import com.ssafy.farmyo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ public class CropServiceImpl implements CropService {
     private final CropCategoryRepository cropCategoryRepository;
     private final FarmerRepository farmerRepository;
     private final CropContractService cropContractService;
+    private final UserRepository userRepository;
 
 
 
@@ -35,13 +37,17 @@ public class CropServiceImpl implements CropService {
     @Override
     public Integer addCrop(AddCropReqDto addCropReqDto, Authentication authentication) {
 
-        //농부 조회(아직 모름
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        if (userDetails.getJob() == 1) {
-            throw new CustomException(ExceptionType.USER_NOT_EXIST);
-        }
+//        // Authentication 객체와 userDetails가 null이 아닌지 확인
+//        if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails)) {
+//            throw new CustomException(ExceptionType.USER_LOGIN_REQUIRED); //
+//        }
+//        //농부 조회(아직 모름
+//        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+//        if (userDetails.getJob() == 1) {
+//            throw new CustomException(ExceptionType.USER_FARMER_REQUIRED);
+//        }
 
-        Optional<Farmer> optionalFarmer = farmerRepository.findById(userDetails.getId());
+        Optional<Farmer> optionalFarmer = farmerRepository.findById(6);
         if (optionalFarmer.isEmpty()) {
             throw new CustomException(ExceptionType.USER_NOT_EXIST);
         }
@@ -51,13 +57,14 @@ public class CropServiceImpl implements CropService {
         CropCategory cropCategory = cropCategoryRepository.findById(addCropReqDto.getCropCategoryId())
                 .orElseThrow(() -> new CustomException(ExceptionType.CATEGORY_NOT_EXIST));
 
-        //농부는 일단 어떻게 받아서 넣을지 몰라서null처리
+
         Crop crop = Crop.builder()
                 .farmer(farmer)
                 .cropCategory(cropCategory)
                 .cropName(addCropReqDto.getCropName())
-                .cropBlockchainAddress(null)
-                .cropImgUrl(null)
+                .cropCultivationSite(addCropReqDto.getCultivation())
+                .cropPlantingDate(addCropReqDto.getPlantingDate())
+                .cropStatus(0)
                 .build();
         crop = cropRepository.save(crop);
 
