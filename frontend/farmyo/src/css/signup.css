@@ -17,6 +17,12 @@
   padding-left: 2%;
 }
 
+.successmessage {
+  color: green;
+  font-size: smaller;
+  padding-left: 2%;
+}
+
 .buttonmain {
   margin: auto;
   background-color: #F8FCF9;
@@ -50,7 +56,7 @@
 
 .fixed-bottom {
   position: fixed;
-  bottom: 110px;
+  bottom: 0;
   /* bottom: 0; 바닥에 붙여놓기(지금은 하단네브바있어서) */
   width: 100%;
   text-align: center; /* 버튼을 중앙에 배치하려면 */
