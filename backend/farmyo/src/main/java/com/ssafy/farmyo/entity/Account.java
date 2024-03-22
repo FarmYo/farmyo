@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Embeddable
+@Getter
 public class Account{
 
     //예금주

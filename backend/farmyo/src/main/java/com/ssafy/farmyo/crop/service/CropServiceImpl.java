@@ -2,23 +2,21 @@ package com.ssafy.farmyo.crop.service;
 
 
 import com.ssafy.farmyo.blockchain.service.CropContractService;
-import com.ssafy.farmyo.common.auth.CustomUserDetails;
 import com.ssafy.farmyo.common.exception.CustomException;
 import com.ssafy.farmyo.common.exception.ExceptionType;
-import com.ssafy.farmyo.crop.dto.AddCropReqDto;
-import com.ssafy.farmyo.crop.dto.CropListDto;
-import com.ssafy.farmyo.crop.dto.FindCropCategoryDto;
+import com.ssafy.farmyo.crop.dto.*;
 import com.ssafy.farmyo.crop.repository.CropCategoryRepository;
 import com.ssafy.farmyo.crop.repository.CropRepository;
-import com.ssafy.farmyo.entity.Chat;
 import com.ssafy.farmyo.entity.Crop;
 import com.ssafy.farmyo.entity.CropCategory;
+import com.ssafy.farmyo.entity.CropCert;
 import com.ssafy.farmyo.entity.Farmer;
 import com.ssafy.farmyo.user.repository.FarmerRepository;
 import com.ssafy.farmyo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +30,6 @@ public class CropServiceImpl implements CropService {
     private final FarmerRepository farmerRepository;
     private final CropContractService cropContractService;
     private final UserRepository userRepository;
-
 
 
     //작물 등록
@@ -60,8 +57,6 @@ public class CropServiceImpl implements CropService {
                 .orElseThrow(() -> new CustomException(ExceptionType.CATEGORY_NOT_EXIST));
 
 
-
-
         Crop crop = Crop.builder()
                 .farmer(farmer)
                 .cropCategory(cropCategory)
@@ -80,9 +75,25 @@ public class CropServiceImpl implements CropService {
     }
 
 
+    //작물상세조회
+    public CropDetailResDto getCropDetail(int cropId) {
+        Crop findCrop = cropRepository.findById(cropId)
+                .orElseThrow(() -> new CustomException(ExceptionType.CROP_NOT_EXIST));
+        return CropDetailResDto.builder()
+                .id(findCrop.getId())
+                .cropName(findCrop.getCropName())
+                .cropImgUrl(findCrop.getCropImgUrl())
+                .cropStatus(findCrop.getCropStatus())
+                .cropPlantingDate(findCrop.getCropPlantingDate())
+                .cropHarvestDate(findCrop.getCropHarvestDate())
+                .cropCultivationSite(findCrop.getCropCultivationSite())
+                .build();
+    }
+
+
     //작물 사진 업데이트
     @Override
-    public void updateCropImgUrl(Integer cropId, String cropImgUrl) {
+    public void updateCropImgUrl(int cropId, String cropImgUrl) {
         Optional<Crop> cropOptional = cropRepository.findById(cropId);
         if (cropOptional.isPresent()) {
             Crop crop = cropOptional.get();
@@ -97,7 +108,7 @@ public class CropServiceImpl implements CropService {
 
     //농부 작물 리스트 조회
     @Override
-    public List<CropListDto> getCropsByFarmerLoginId(String loginId) {
+    public List<CropListResDto> getCropsByFarmerLoginId(String loginId) {
         Optional<Farmer> farmerOptional = farmerRepository.findByLoginId(loginId);
         if (farmerOptional.isEmpty()) {
             throw new CustomException(ExceptionType.USER_NOT_EXIST);
@@ -105,7 +116,7 @@ public class CropServiceImpl implements CropService {
             Farmer farmer = farmerOptional.get();
             List<Crop> crops = cropRepository.findByFarmerId(farmer.getId());
             return crops.stream()
-                    .map(crop -> CropListDto.builder()
+                    .map(crop -> CropListResDto.builder()
                             .id(crop.getId())
                             .cropStatus(crop.getCropStatus())
                             .cropHarvestDate(crop.getCropHarvestDate())
@@ -116,18 +127,49 @@ public class CropServiceImpl implements CropService {
         }
     }
 
+    //작물 인증 정보 조회
+    @Override
+    @Transactional
+    public List<CropCertResDto> getCropCertList(int cropId) {
+        Crop crop = cropRepository.findById(cropId)
+                .orElseThrow(() -> new CustomException(ExceptionType.CROP_NOT_EXIST));
+        return crop.getCropCertList().stream()
+                .map(cert -> CropCertResDto.builder()
+                        .id(cert.getId())
+                        .certNumber(cert.getCertNumber())
+                        .certName(cert.getCertName())
+                        .certCorp(cert.getCertCorp())
+                        .certDate(cert.getCertDate())
+                        .build())
+                .collect(Collectors.toList());
 
 
+    }
 
-
-
+    //작물 검사 정보 조회
+    @Override
+    @Transactional
+    public List<CropInspectResDto> getCropInspectList(int cropId) {
+        Crop crop = cropRepository.findById(cropId)
+                .orElseThrow(() -> new CustomException(ExceptionType.CROP_NOT_EXIST));
+        return crop.getCropInspectList().stream()
+                .map(inspect -> CropInspectResDto.builder()
+                        .id(inspect.getId())
+                        .inspectNumber(inspect.getInspectNumber())
+                        .inspectName(inspect.getInspectName())
+                        .inspectResult(inspect.getInspectResult())
+                        .inspectCorp(inspect.getInspectCorp())
+                        .inspectDate(inspect.getInspectDate())
+                        .build())
+                .collect(Collectors.toList());
+    }
 
 
     //모든 카테고리 조회
     @Override
-    public List<FindCropCategoryDto> findAllCropCategories() {
+    public List<FindCropCategoryResDto> findAllCropCategories() {
         return cropCategoryRepository.findAll().stream()
-                .map(FindCropCategoryDto::toDto)
+                .map(FindCropCategoryResDto::toDto)
                 .collect(Collectors.toList());
     }
 }

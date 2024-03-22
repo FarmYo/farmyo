@@ -31,6 +31,9 @@ public class BaseResponseBody<T> {
         return body;
     }
 
+    
+
+
     public static BaseResponseBody<Object> error(String resultCode, String resultMessage) {
         BaseResponseBody<Object> body = new BaseResponseBody<>();
         body.getDataHeader().setSuccessCode(1);  // error
