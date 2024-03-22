@@ -133,6 +133,9 @@ export default function SignUpFirst() {
       if (password === realPassword) {
         setCheckIsPassword(true);
         setCheckPasswordMessage("올바른 비밀번호입니다.")
+      } else if (!realPassword) {
+        setCheckIsPassword(false)
+        setCheckPasswordMessage('비밀번호를 입력해주세요.');
       } else {
         setCheckIsPassword(false)
         setCheckPasswordMessage('비밀번호가 서로 일치하지 않습니다.');
