@@ -75,4 +75,30 @@ public class MailServiceImpl implements MailService{
 
         return message;
     }
+
+    @Transactional
+    @Override
+    public void sendJoinMessage(String email) throws MessagingException, UnsupportedEncodingException {
+        // 이메일 중복 검사
+        if(userRepository.findByEmail(email).isPresent())
+            throw new CustomException(ExceptionType.EMAIL_EXIST);
+
+        // 인증 코드 생성
+        String authCode = createAuthCode();
+
+        // 메일 내용 객체 생성
+        MimeMessage message = createMessage(email, authCode);
+
+        // 엔티티 생성
+        EmailAuth emailAuth = EmailAuth.builder()
+                .email(email)
+                .randomNum(authCode)
+                .build();
+
+        // 이메일 저장
+        mailRepository.save(emailAuth);
+
+        // 메일 전송
+        javaMailSender.send(message);
+    }
 }
