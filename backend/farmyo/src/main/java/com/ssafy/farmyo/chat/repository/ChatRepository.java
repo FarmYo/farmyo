@@ -11,7 +11,5 @@ import java.util.Optional;
 @Repository
 public interface ChatRepository extends JpaRepository<Chat, Integer> {
 
-    // 채팅 방을 ID를 기준으로 찾는다.
-    Chat findById(int id);
-git pu
+
 }
