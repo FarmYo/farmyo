@@ -40,11 +40,11 @@ public class TradeServiceImpl implements TradeService {
         // buyer 가져오기
         User buyer = userRepository.findById(tradeReqDto.getBuyer()).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
         // boardId 가져오기
-        Board boardId = boardRepository.findById(tradeReqDto.getBoard());
+        Board boardId = boardRepository.findById(tradeReqDto.getBoard()).orElseThrow(() -> new CustomException(ExceptionType.BOARD_NOT_EXIST));
         // chatId 가져오기
-        Chat chatId = chatRepository.findById(tradeReqDto.getChat());
+        Chat chatId = chatRepository.findById(tradeReqDto.getChat()).orElseThrow(() -> new CustomException(ExceptionType.CHAT_NOT_EXIST));
         // cropId 가져오기
-        Crop cropId = cropRepository.findById(tradeReqDto.getCrop());
+        Crop cropId = cropRepository.findById(tradeReqDto.getCrop()).orElseThrow(() -> new CustomException(ExceptionType.CROP_NOT_EXIST));
 
         // trade 생성
         Trade trade = Trade.builder()

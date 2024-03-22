@@ -15,6 +15,8 @@ public class TradeReqDto {
     private int crop;
     @NotBlank
     private int board;
+    // 만약 chat이 없이 board에서 만들어진 거래라면 0을 넣기
+    @NotBlank
     private int chat;
     @NotBlank
     private int tradePrice;
@@ -22,9 +24,6 @@ public class TradeReqDto {
     private int tradeQuantity;
     @NotBlank
     private int tradeStatus;
-    private String tradeShipment;
-    private String tradeShipcom;
-    private String tradeLocation;
 
 
 }
