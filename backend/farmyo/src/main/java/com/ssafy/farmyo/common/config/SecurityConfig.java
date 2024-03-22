@@ -89,7 +89,7 @@ public class SecurityConfig {
         http
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshTokenRepository), UsernamePasswordAuthenticationFilter.class);
 
-        List<String> origins = List.of("http://localhost:3000", "https://j10d209.p.ssafy.io","http://192.168.0.5:3000");
+        List<String> origins = List.of("http://localhost:3000", "https://j10d209.p.ssafy.io");
 
         // CORS 설정
         http.cors(cors -> cors.configurationSource(request -> {
