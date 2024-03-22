@@ -28,8 +28,14 @@ public enum ExceptionType {
     TRADE_NOT_EXIST(HttpStatus.BAD_REQUEST, "T-001", "존재하지 않는 거래입니다."),
 
     // 계좌
-    ACCOUNT_NOT_EXIST(HttpStatus.UNAUTHORIZED, "A-001", "해당 유저의 계좌가 존재하지 않습니다.");
+    ACCOUNT_NOT_EXIST(HttpStatus.UNAUTHORIZED, "A-001", "해당 유저의 계좌가 존재하지 않습니다."),
 
+    // 게시판
+    BOARD_NOT_EXIST(HttpStatus.BAD_REQUEST, "B-001", "존재하지 않는 게시판입니다."),
+
+
+    // 채팅
+    CHAT_NOT_EXIST(HttpStatus.BAD_REQUEST, "M-001", "존재하지 않는 채팅입니다.");
 
     // 상태, 에러 코드, 메시지
     private final HttpStatus httpStatus;
