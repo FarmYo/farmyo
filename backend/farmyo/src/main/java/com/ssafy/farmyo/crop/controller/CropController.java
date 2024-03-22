@@ -2,10 +2,7 @@ package com.ssafy.farmyo.crop.controller;
 
 
 import com.ssafy.farmyo.common.response.BaseResponseBody;
-import com.ssafy.farmyo.crop.dto.AddCropReqDto;
-import com.ssafy.farmyo.crop.dto.CropListDto;
-import com.ssafy.farmyo.crop.dto.UpdateImgReqDto;
-import com.ssafy.farmyo.crop.dto.FindCropCategoryDto;
+import com.ssafy.farmyo.crop.dto.*;
 import com.ssafy.farmyo.crop.service.CropService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -49,11 +46,19 @@ public class CropController {
     @GetMapping("/list/{farmerLoginId}")
     @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환")
     public ResponseEntity<? extends BaseResponseBody> getCropList(@PathVariable String farmerLoginId) {
-        List<CropListDto> cropsByFarmerLoginId = cropService.getCropsByFarmerLoginId(farmerLoginId);
+        List<CropListResDto> cropsByFarmerLoginId = cropService.getCropsByFarmerLoginId(farmerLoginId);
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, cropsByFarmerLoginId));
     }
 
 
+    // 작물 상세보기
+    @Operation(summary = "작물상세조회", description = "/crops/{cropId}\n\n 해당 작물의 상세 정보를 반환한다.")
+    @GetMapping("/{cropId}")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환")
+    public ResponseEntity<? extends BaseResponseBody> getCropDetail(@PathVariable int cropId) {
+        CropDetailResDto cropDetail = cropService.getCropDetail(cropId);
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, cropDetail));
+    }
 
 
 
@@ -61,18 +66,35 @@ public class CropController {
     @Operation(summary = "대표사진수정 아직 미완성", description = "/crops\n\n 작물의 대표 사진을 변경한다.")
     @PatchMapping("/{cropId}")
     @ApiResponse(responseCode = "204", description = "성공 \n\n Success 반환")
-    public ResponseEntity<? extends BaseResponseBody> updateCropImg(@PathVariable Integer cropId, @RequestBody UpdateImgReqDto updateImgReqDto) {
+    public ResponseEntity<? extends BaseResponseBody> updateCropImg(@PathVariable int cropId, @RequestBody UpdateImgReqDto updateImgReqDto) {
         cropService.updateCropImgUrl(cropId, updateImgReqDto.getCropImgUrl());
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "성공적으로 변경되었습니다."));
     }
 
+    //작물인증정보 조회
+    @Operation(summary = "작물인증정보조회", description = "/crops/{cropId}/cert")
+    @GetMapping("/{cropId}/cert")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n success 반환")
+    public ResponseEntity<? extends BaseResponseBody> getCropCerts(@PathVariable int cropId) {
+        List<CropCertResDto> cropCertresDtoList = cropService.getCropCertList(cropId);
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, cropCertresDtoList));
+    }
+
+    //작물검사정보조회
+    @Operation(summary = "작물검사정보조회", description = "/crops/{cropId}/inspection")
+    @GetMapping("/{cropId}/inspection")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n success 반환")
+    public ResponseEntity<? extends BaseResponseBody> getCropInspections(@PathVariable int cropId) {
+        List<CropInspectResDto> cropInspectResDtoList = cropService.getCropInspectList(cropId);
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, cropInspectResDtoList));
+    }
 
     //작물카테고리 조회
     @Operation(summary = "작물카테고리조회", description = "/crops/category\n\n 작물카테고리를 전부 불러온다.")
     @GetMapping("/category")
     @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환")
     public ResponseEntity<? extends BaseResponseBody> getAllCropCategories() {
-        List<FindCropCategoryDto> categories = cropService.findAllCropCategories();
+        List<FindCropCategoryResDto> categories = cropService.findAllCropCategories();
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, categories));
     }
 }
