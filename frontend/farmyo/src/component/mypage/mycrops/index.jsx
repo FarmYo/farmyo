@@ -46,7 +46,7 @@ export default function MyCrops() {
     setSelected('구분')
     // 작물 리스트 조회
     axios({
-      url:'http://192.168.0.49:8080/api/crops/list/ssafy1',
+      url:'https://j10d209.p.ssafy.io/api/crops/list/ssafy1',
       method:'get'
     })
     .then((res)=>{
@@ -59,12 +59,12 @@ export default function MyCrops() {
     })
     // 작물 카테고리 조회
     axios({
-      url:'http://192.168.0.49:8080/api/crops/category',
+      url:'https://j10d209.p.ssafy.io/api/crops/category',
       method:'get'
     })
     .then((res)=>{
       console.log(res)
-      // setCropList(res.data.dataBody)
+      setCropList(res.data.dataBody)
     })
     .catch((err)=>{
       console.log(err)
@@ -98,7 +98,7 @@ export default function MyCrops() {
   const infoOpenModal = () => {
     setInfoOpen(true);
     axios({
-      url: 'http://192.168.0.49:8080/api/crops/3', // crop_id 변수를 URL에 삽입
+      url: 'https://j10d209.p.ssafy.io/api/crops/3', // crop_id 변수를 URL에 삽입
       method: 'get',
     })
     .then((res)=>{
