@@ -20,8 +20,8 @@ export default function Room(){
     const handleResize = () => {
       const screenHeight = window.innerHeight;
       // 키보드가 올라왔는지 여부를 판단하기 위한 로직
-      // 예를 들어, 화면 높이가 특정 값 이하로 줄어들면 키보드가 올라온 것으로 판단할 수 있습니다.
-      if (screenHeight < 500) { // 이 값은 장치에 따라 조정해야 할 수 있습니다.
+      //화면 높이가 특정 값 이하로 줄어들면 키보드가 올라온 것으로 판단
+      if (screenHeight < 500) { 
         setKeyboardVisible(true);
       } else {
         setKeyboardVisible(false);
@@ -33,7 +33,7 @@ export default function Room(){
   }, []);
 
   useEffect(() => {
-    // 텍스트 요소의 너비를 계산하고 상태를 업데이트합니다.
+    // 텍스트 요소의 너비를 계산하고 상태를 업데이트
     const textWidth = textRef.current ? textRef.current.offsetWidth : 0;
     const padding = 40 // 좌우 패딩을 추가하기 위한 값
     setWidth(textWidth + padding)
@@ -99,7 +99,7 @@ export default function Room(){
       {/* 채팅입력창 */}
       <div className='p-3 flex'  style={{ position: 'fixed', bottom: keyboardVisible ? '0vh' : 10, left: '0', width: '100%', padding: '10px', boxSizing: 'border-box' }}>
         <input id="" name="" type="text" placeholder="" autoComplete="text" 
-        className="block h-10 w-full rounded-3xl border-0 py-1 text-gray-800 ring-2 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+        className="block h-10 pl-5 w-full rounded-3xl border-0 py-1 text-gray-800 ring-2 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
         />
         <div style={{backgroundColor:'#D3D3D3'}} className='rounded-3xl w-12 flex justify-center items-center ml-1'>
           <div><img src={Vector} alt="" style={{ width:20,height:20}}/></div>
