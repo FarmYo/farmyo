@@ -2,15 +2,13 @@ package com.ssafy.farmyo.entity;
 
 import com.ssafy.farmyo.common.entity.BaseTime;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
 @Getter
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "chat")
 public class Chat extends BaseTime {
@@ -59,5 +57,7 @@ public class Chat extends BaseTime {
     public void updateChat(String sessionId) {
         this.sessionId = sessionId;
     }
+
+
 
 }
