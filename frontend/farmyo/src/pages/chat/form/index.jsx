@@ -19,7 +19,7 @@ export default function Form( props ){
           <div>
             <label htmlFor="nickname"className="block text-sm leading-6 text-gray-900">수량</label>
             <div>
-              <input id="nickname" name="nickname" type="text" placeholder="kg" autoComplete="text" 
+              <input id="nickname" name="nickname" type="number" placeholder="kg" autoComplete="text" 
                 className="block h-7 rounded-md w-20 text-gray-900  sm:text-sm sm:leading-6 pl-3"
                 style={{ border: '2px solid #1B5E20'}}/>
             </div>
@@ -27,7 +27,7 @@ export default function Form( props ){
           <div>
             <label htmlFor="nickname"className="block text-sm leading-6 text-gray-900">kg당 가격</label>
             <div>
-              <input id="nickname" name="nickname" type="text" placeholder="원" autoComplete="text" 
+              <input id="nickname" name="nickname" type="number" placeholder="원" autoComplete="text" 
                 className="block h-7  rounded-md w-32 sm:text-sm sm:leading-6 pl-3"
                 style={{ border: '2px solid #1B5E20'}}/>
             </div>

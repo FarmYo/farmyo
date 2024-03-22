@@ -26,8 +26,10 @@ export default function MypageNavbar() {
   return(
     <div>
       <div style={{height:50,backgroundColor:'#1B5E20'}}>
-        <div className="p-2">
+        <div className="p-2 flex justify-between">
           <h1 className="text-xl font-bold" style={{color:"white"}}>마이페이지</h1>
+          {/* 마이페이지유저와 로그인유저가 일치해야 보이는것 */}
+          <h1 className="text-sm font-bold flex items-center" style={{color:"white"}}>로그아웃</h1>
         </div>
       </div>
       <div className='flex border-b-2 border-gray-300'style={{height:130}}>
