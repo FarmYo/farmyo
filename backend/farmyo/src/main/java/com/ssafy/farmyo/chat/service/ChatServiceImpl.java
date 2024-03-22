@@ -3,12 +3,15 @@ package com.ssafy.farmyo.chat.service;
 import com.ssafy.farmyo.chat.dto.ChatDto;
 import com.ssafy.farmyo.chat.dto.MessageDto;
 import com.ssafy.farmyo.chat.repository.ChatRepository;
+import com.ssafy.farmyo.entity.Chat;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -32,6 +35,12 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public List<ChatDto> getChatRooms(int userId) {
-        return null;
+        log.info("userId : " + userId);
+        List<ChatDto> list1 = chatRepository.findAllBySellerId(userId);
+        List<ChatDto> list2 = chatRepository.findAllByBuyerId(userId);
+
+        list1.addAll(list2);
+
+        return list1;
     }
 }
