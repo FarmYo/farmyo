@@ -1,22 +1,31 @@
+// import { useTokenCheck } from '../../feature/login/receiveToken';
 import Photo from '../../image/component/me.png'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function Chatting(){
+  // const isAuthed = useTokenCheck();
   const [chattingList, setChattingList] = useState([
     {
       id: 1,
       name: '차은우보다현준',
       message: '감사합니다!! 많이 파세요!',
-      photoSrc: Photo, 
+      photoSrc: Photo,
+      board_type : 0   // 판매게시판에서 온 채팅인지 구매게시판에서 온 채팅인지
     },
     {
       id: 2,
       name: '차은우보다현준',
       message: '감사합니다!! 많이 파세요!',
-      photoSrc: Photo, 
+      photoSrc: Photo,
+      board_type : 1
     },
   ]);
 
+useEffect(() => {
+  // if (isAuthed) {
+
+  // }
+})
 
   return(
     <div>
@@ -36,21 +45,6 @@ export default function Chatting(){
           </div> 
         </div>
       ))}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </div>
   )
 }

@@ -14,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "chat")
 public class Chat extends BaseTime {
-
     //식별
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,7 +43,7 @@ public class Chat extends BaseTime {
     private List<Message> messages;
 
     //거래매핑
-    @OneToOne(mappedBy = "chat",fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "chat", fetch = FetchType.LAZY)
     private Trade trade;
 
 
@@ -57,5 +56,8 @@ public class Chat extends BaseTime {
         this.sessionId = sessionId;
     }
 
+    public void updateChat(String sessionId) {
+        this.sessionId = sessionId;
+    }
 
 }
