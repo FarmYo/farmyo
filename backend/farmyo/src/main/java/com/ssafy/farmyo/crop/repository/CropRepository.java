@@ -9,7 +9,6 @@ import java.util.List;
 
 @Repository
 public interface CropRepository extends JpaRepository<Crop, Integer> {
-    Crop findById(int id);
 
     //농부loginid로 작물리스트조회
     List<Crop> findByFarmerId(int farmerId);
