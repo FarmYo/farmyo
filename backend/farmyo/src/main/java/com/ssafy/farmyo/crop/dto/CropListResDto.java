@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
-public class CropListDto {
+public class CropListResDto {
 
     private int id;
     private int cropStatus;
@@ -17,7 +17,7 @@ public class CropListDto {
     private LocalDate cropHarvestDate;
 
     @Builder
-    public CropListDto(int id, int cropStatus, String cropName, String cropImgUrl, LocalDate cropHarvestDate){
+    public CropListResDto(int id, int cropStatus, String cropName, String cropImgUrl, LocalDate cropHarvestDate){
         this.id = id;
         this.cropStatus = cropStatus;
         this.cropName = cropName;

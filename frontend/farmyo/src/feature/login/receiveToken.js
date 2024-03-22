@@ -1,20 +1,23 @@
 import axios from "axios";
-import { cookies } from "utils/cookies";
+// import { Cookies } from 'react-cookie';
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setAccessToken } from "accessSlice";
-import { logout } from "authSlice";
+import { setAccessToken, logout } from "./accessSlice";
+// import { logout } from "./authSlice";
 
 export function useTokenCheck() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  // const cookies = new Cookies();
   // const accessToken = useSelector((store) => store.access.accessToken);
+  console.log('여기왔어요')
   const accessToken = useSelector((store) => store.access);
   
   // accessToken 상태 판단
   const checkAccess = async (accessToken) => {
     const headers = { Authorization: {accessToken} };
     // 모든 페이지에서 토큰 상태 확인
+    console.log(accessToken)
     return axios.get(window.location.href, { headers });
   };
 
@@ -43,8 +46,8 @@ export function useTokenCheck() {
   // refreshToken 기반으로 새로운 accessToken 발급
   const refreshAccessToken = async () => {
     // const refreshToken = getCookie("refresh");
-    // const refreshToken = document.cookie.refresh;
-    const refreshToken = cookies.get("refresh");
+    const refreshToken = document.cookie.refresh;
+    // const refreshToken = cookies.get("refresh");
     const data = { refreshToken };
     // 모든 페이지에서 토큰 유효성 확인
     return axios.post(window.location.href, data, { withCredentials: true });

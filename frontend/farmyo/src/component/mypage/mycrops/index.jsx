@@ -15,22 +15,13 @@ import ko from 'date-fns/locale/ko'
 import Pesticide from '../../form/pesticide'
 import Award from '../../form/award'
 import '../../../css/liferecord.css'
+import axios from 'axios'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function MyCrops() {
-  const [startDate,setStartDate] = useState(null)
-  const [endDate, setEndDate] = useState(null)
-  const [selected,setSelected] = useState('')
-  const cropList = ['감자','호박','고추','오이','사과']  // 작물등록시 작물 리스트
-  const [selectedCrop, setSelectedCrop] = useState('작물을 선택하세요')
-
-  useEffect(()=>{
-    setSelected('구분')
-  },[])
-  
   const styles = {
     modal: {
       maxWidth: '100%',
@@ -43,6 +34,44 @@ export default function MyCrops() {
   };
   
 
+  const [startDate,setStartDate] = useState(null)
+  const [endDate, setEndDate] = useState(null)
+  const [selected,setSelected] = useState('')
+  const [cropList,setCropList] = useState([]) // 작물등록시 작물 리스트
+  const [selectedCrop, setSelectedCrop] = useState('작물을 선택하세요')
+  const [cropsList,setCropsList] = useState([]) // 농부가 등록한 작물조회시 담길 리스트
+
+  
+  useEffect(()=>{
+    setSelected('구분')
+    // 작물 리스트 조회
+    axios({
+      url:'https://j10d209.p.ssafy.io/api/crops/list/ssafy1',
+      method:'get'
+    })
+    .then((res)=>{
+      console.log(res)
+      console.log(res.data.dataBody)
+      setCropsList(res.data.dataBody)
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+    // 작물 카테고리 조회
+    axios({
+      url:'https://j10d209.p.ssafy.io/api/crops/category',
+      method:'get'
+    })
+    .then((res)=>{
+      console.log(res)
+      setCropList(res.data.dataBody)
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  },[])
+  
+
   const [open,setOpen] = useState(false)
   const [infoOpen,setInfoOpen] = useState(false)
   const [info2Open,setInfo2Open] = useState(false)
@@ -52,7 +81,10 @@ export default function MyCrops() {
   const [testOpen,setTestOpen] = useState(false)
   const [certificationOpen,setCertificationOpen] = useState(false)
   const [lifeRecordOpen,setLifeRecordOpen] = useState(false)
-
+  // 농산물 상세정보 데이터
+  const [cropName,setCropName] = useState('')
+  const [cropPlantingDate,setCropPlantingDate] = useState('')
+  const [cropCultivationSite,setCropCultivationSite] = useState('')
 
   //농산물등록모달
   const onOpenModal = () => {
@@ -65,7 +97,22 @@ export default function MyCrops() {
   // 농산물정보보기모달(수확전)
   const infoOpenModal = () => {
     setInfoOpen(true);
+    axios({
+      url: 'https://j10d209.p.ssafy.io/api/crops/3', // crop_id 변수를 URL에 삽입
+      method: 'get',
+    })
+    .then((res)=>{
+      console.log(res)
+      setCropName(res.data.dataBody.cropName)
+      setCropPlantingDate(res.data.dataBody.cropPlantingDate)
+      setCropCultivationSite(res.data.dataBody.cropCultivationSite)
+
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
   };
+  
 
   const infoCloseModal = () => {
     setInfoOpen(false);
@@ -139,16 +186,19 @@ export default function MyCrops() {
     // "작물없으면 등록한 작물이 없습니다"노출
     <div style={{ position:'relative',height:'400px'}}>
       {/* 아래의 디브가 작물이 추가될 때마다 반복됨  */}
-      <div className="flex">
+      {cropsList.map((crop,index)=>(
+      <div  key={crop.id} className="flex">
         <div style={{backgroundColor:'#bbbbbb',width:80}}></div>
         <div className="p-5">
-          <h1 className="font-bold">작물명</h1>
-          <h1 className="text-sm">심은날짜-2024/05/05</h1>
+          <h1 className="font-bold">{crop.cropName}</h1>
+          {crop.cropHarvestDate && <h1 className="text-sm">{crop.cropHarvestDate}</h1>}
         </div>
-        <div className="ml-auto flex items-center p-5" onClick={infoOpenModal}>
+        <div className="ml-auto flex items-center p-5"
+        onClick={crop.cropHarvestDate == null ? () => infoOpenModal(crop.id) : () => info2OpenModal(crop.id)}>
           <img src={Next} alt="" style={{width:30,height:30}}/>
         </div>
       </div>
+      ))}
       
   
       <div style={{ position: 'absolute', bottom: 0, right: 10}}>
@@ -185,7 +235,7 @@ export default function MyCrops() {
           style={{width:'16rem'}}>
             <div className="py-1">
               {cropList.map((crop,index)=>(
-              <Menu.Item onClick={() => setSelectedCrop(crop)}> 
+              <Menu.Item key={crop.id} onClick={() => setSelectedCrop(crop.categoryName)}> 
                 {({ active }) => (
                   <button
                     href="#"
@@ -195,7 +245,7 @@ export default function MyCrops() {
                       
                     )}
                   >
-                    {crop}
+                    {crop.categoryName}
                   </button>
                 )}
                 </Menu.Item>
@@ -241,19 +291,19 @@ export default function MyCrops() {
         <div className="px-8">
           <label for="price" class="block text-xl font-medium leading-6 text-gray-900">작물명</label>
           <div class="relative mt-2 rounded-md">
-            <input type="text" name="price" id="price" class="block h-12 w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="작물명입력됨" disabled/>
+            <input type="text" name="price" id="price" class="block h-12 w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" value={cropName} disabled/>
           </div>
         </div>
         <div className="px-8 mt-4">
           <label for="price" class="block text-xl font-medium leading-6 text-gray-900">재배지</label>
           <div class="relative mt-2 rounded-md">
-            <input type="text" name="price" id="price" class="block h-12 w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="재배지입력됨" disabled/>
+            <input type="text" name="price" id="price" class="block h-12 w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" value={cropCultivationSite} disabled/>
           </div>
         </div>
         <div className="px-8 mt-4">
           <label for="date" class="block text-xl font-medium leading-6 text-gray-900">심은날짜</label>
           <div class="relative mt-2 rounded-md">
-            <input type="text" name="price" id="price" class="block h-12 w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="날짜입력됨" disabled />
+            <input type="text" name="price" id="price" class="block h-12 w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" value={cropPlantingDate} disabled />
           </div>
         </div>
         <div className="px-8 mt-10">
@@ -517,7 +567,7 @@ export default function MyCrops() {
             </div>
             <div className="px-8 mt-10">
               <button className="btn w-full flex justify-around" style={{ border:'1px solid #bbbbbb', backgroundColor: 'transparent'}}>
-                <div className="font-bold text-sm" onClick={ApiOpenModal}>+검사 및 인증정보 불러오기</div>
+                <div className="font-bold text-sm" onClick={ApiOpenModal}>+검사 및 인증정보 등록하기</div>
               </button>
             </div> 
             </div>

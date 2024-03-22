@@ -5,13 +5,13 @@ import Logo from '../../../image/component/user/logo.png';
 
 export default function SignUp() {
   const navigate = useNavigate()
-  const [seller, setSeller] = useState(null);
+  const [seller, setSeller] = useState("");
   const handleSellerClick = () => {
-    setSeller(true);
+    setSeller(0);
     navigate("/signup/first", { state: { seller } });
   };
   const handleBuyerClick = () => {
-    setSeller(false);
+    setSeller(1);
     navigate("/signup/first", { state: { seller } });
   };
   return(
