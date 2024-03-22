@@ -32,3 +32,32 @@ spring:
       host: ENC(XVDRASgwuk00feBvY/Ta1gwgJ+n7IbCyhjpj0ykJEe4=)
       port: ENC(mHAvIKkcjL19aJn3d6+jgw==)
       password: ENC(7ReurrhfXLRM+oOUeAE1UA==)
+
+  # mail smtp
+  mail:
+    # 서버 주소
+    host: ENC(DWOUPuLZaNaQZcwbmX+T1yybqlhL+0Tb)
+    # 메일 인증 서버 포트 (587, 465 존재, SSL은 465)
+    port: ENC(CPQPCJglURpCHBpUlw9wPQ==)
+    # 아이디
+    username: ENC(FpltocIfkt9/iEWX65eCf1ZazPgNoVUpXRV9GfblfW4=)
+    # 비밀번호
+    password: ENC(ddmZzSaqYPvaeQy2ks840q5Y+6YZJyLM)
+    properties:
+      # 메일 디버그 모드 설정 (전송 과정 로그 출력)
+      debug: true
+      mail:
+        smtp:
+          # SMTP 인증 활성화 (활성시 로그인 때 계정 정보 필요)
+          auth: true
+          ssl:
+            # SSL 보안 설정 (전송 과정 데이터 암호화 제공)
+            enable: true
+            # 신뢰할 수 있는 SMTP 서버 호스트 지정
+            trust: ENC(drFX7+EasQdiMjHhaWGChiVc/KNFIJOM)
+          # STARTTLS 연결을 활성화 (평문 통신 채널에서 암호화 통신 채널로 업그레이드)
+          starttls.enable: true
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 100MB

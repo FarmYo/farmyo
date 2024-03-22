@@ -3,6 +3,8 @@ package com.ssafy.farmyo.user.controller;
 import com.ssafy.farmyo.common.auth.CustomUserDetails;
 import com.ssafy.farmyo.common.response.BaseResponseBody;
 import com.ssafy.farmyo.user.dto.JoinReqDto;
+import com.ssafy.farmyo.user.dto.VerifyEmailReqDto;
+import com.ssafy.farmyo.user.service.MailService;
 import com.ssafy.farmyo.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final MailService mailService;
 
     @Operation(summary = "회원가입", description = "/users\n\n 사용자의 정보를 통해 회원가입 한다.")
     @PostMapping("")
@@ -50,5 +53,16 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, "경로별 인가 성공"));
     }
 
+    @Operation(summary = "회원가입을 위한 이메일 인증", description = "/users/join/auth\n\n 사용자는 회원가입을 위해 이메일 인증을 한다.")
+    @PostMapping("/email")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환")
+    public ResponseEntity<? extends BaseResponseBody> verifyJoinEmail(@Valid @RequestBody VerifyEmailReqDto verifyEmailReqDto) throws Exception {
+
+        log.info("verifyJoinEmail : 회원가입을 위한 이메일 인증");
+
+        // 메일 전송 후 코드 받기
+        mailService.sendJoinMessage(verifyEmailReqDto.getEmail());
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
+    }
 
 }
