@@ -27,7 +27,6 @@ public enum ExceptionType {
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "T-002", "유효하지 않은 리프레시 토큰입니다."),
     EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "T-003", "만료된 리프레시 토큰입니다."),
 
-    USER_LOGIN_REQUIRED(HttpStatus.UNAUTHORIZED, "U-001", "로그인이 필요합니다."),
 
     // 거래
     TRADE_NOT_EXIST(HttpStatus.BAD_REQUEST, "T-001", "존재하지 않는 거래입니다."),
@@ -37,6 +36,9 @@ public enum ExceptionType {
 
     // 게시판
     BOARD_NOT_EXIST(HttpStatus.BAD_REQUEST, "B-001", "존재하지 않는 게시판입니다."),
+    CROP_NOT_ASSOCIATED_WITH_BOARD(HttpStatus.BAD_REQUEST, "B-002", "게시판에 연결된 작물이 존재하지 않습니다."),
+
+
 
 
     // 채팅
