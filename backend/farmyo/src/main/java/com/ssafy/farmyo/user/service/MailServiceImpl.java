@@ -103,6 +103,32 @@ public class MailServiceImpl implements MailService{
         javaMailSender.send(message);
     }
 
+
+    // 비밀번호를 찾기 위한 메일 전송
+    @Override
+    public void sendPasswordRecoveryMessage(String email) throws MessagingException, UnsupportedEncodingException {
+        // 가입된 이메일인지 확인
+        if(userRepository.findByEmail(email).isEmpty()) throw new CustomException(ExceptionType.EMAIL_NOT_EXIST);
+
+        // 인증 코드 생성
+        String authCode = createAuthCode();
+
+        // 메일 내용 객체 생성
+        MimeMessage message = createMessage(email, authCode);
+
+        // 엔티티 생성
+        EmailAuth emailAuth = EmailAuth.builder()
+                .email(email)
+                .randomNum(authCode)
+                .build();
+
+        // 이메일 저장
+        mailRepository.save(emailAuth);
+
+        // 메일 전송
+        javaMailSender.send(message);
+    }
+
     @Override
     public void validateAuthCode(VerifyCodeReqDto verifyCodeReqDto) {
         // 인증 코드 유효성 검사
