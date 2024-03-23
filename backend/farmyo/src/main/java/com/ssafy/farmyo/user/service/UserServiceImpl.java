@@ -59,4 +59,13 @@ public class UserServiceImpl implements UserService {
         // 식별 ID 값 반환
         return savedUser.getId();
     }
+
+    @Override
+    public int checkIdDuplicate(String id) {
+
+        // 해당 아이디의 유저가 있다면 0(False) 반환
+        if(userRepository.findByLoginId(id).isPresent()) return 0;
+
+        return 1;
+    }
 }
