@@ -58,6 +58,7 @@ public class Board extends BaseTime {
 
     //게시판이미지매핑
     @OneToMany(mappedBy = "board")
+    @OrderBy("imgOrder ASC")
     private List<BoardImg> boardImgList = new ArrayList<>();
 
     //채팅방매핑
