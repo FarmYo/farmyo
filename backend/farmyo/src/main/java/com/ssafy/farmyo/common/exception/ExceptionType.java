@@ -10,11 +10,11 @@ public enum ExceptionType {
     // 회원
     USER_NOT_EXIST(HttpStatus.UNAUTHORIZED, "U-001", "존재하지 않는 회원입니다."),
     USER_LOGIN_REQUIRED(HttpStatus.UNAUTHORIZED, "U-002", "로그인이 필요합니다."),
-    EMAIL_NOT_EXIST(HttpStatus.BAD_REQUEST, "U-002", "존재하지 않는 이메일입니다."),
     EMAIL_EXIST(HttpStatus.BAD_REQUEST, "U-003", "이미 사용 중인 이메일입니다."),
     CODE_TIME_EXPIRED(HttpStatus.BAD_REQUEST, "U-004", "인증 시간이 초과하였습니다."),
     CODE_NOT_MATCH(HttpStatus.BAD_REQUEST, "U-005", "인증 코드가 일치하지 않습니다."),
     CODE_NOT_EXIST(HttpStatus.BAD_REQUEST, "U-006", "인증 코드가 유효하지 않습니다."),
+    EMAIL_NOT_EXIST(HttpStatus.BAD_REQUEST, "U-007", "존재하지 않는 이메일입니다."),
 
     // 작물
     CROP_NOT_EXIST(HttpStatus.BAD_REQUEST, "C-001", "존재하지 않는 작물입니다."),
