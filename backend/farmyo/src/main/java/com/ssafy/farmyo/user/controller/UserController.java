@@ -8,6 +8,7 @@ import com.ssafy.farmyo.user.dto.VerifyCodeReqDto;
 import com.ssafy.farmyo.user.service.MailService;
 import com.ssafy.farmyo.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -85,6 +86,16 @@ public class UserController {
         // 메일 전송 후 코드 받기
         mailService.sendPasswordRecoveryMessage(verifyEmailReqDto.getEmail());
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
+    }
+
+    @Operation(summary = "아이디 중복검사", description = "사용자가 작성한 아이디의 중복검사를 한다.")
+    @GetMapping("/join/duplicate")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n ")
+    public ResponseEntity<? extends BaseResponseBody> checkIdDuplicate(@RequestParam
+                                                                           @Parameter(description = "회원가입 시 입력한 로그인 아이디")
+                                                                           String id) {
+        log.info("checkIdDuplicate Id : {}", id);
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, userService.checkIdDuplicate(id)));
     }
 
 }
