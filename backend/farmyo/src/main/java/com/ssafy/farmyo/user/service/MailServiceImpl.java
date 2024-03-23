@@ -4,6 +4,7 @@ import com.ssafy.farmyo.common.exception.CustomException;
 import com.ssafy.farmyo.common.exception.ExceptionType;
 import com.ssafy.farmyo.common.redis.EmailAuth;
 import com.ssafy.farmyo.common.redis.MailRepository;
+import com.ssafy.farmyo.user.dto.VerifyCodeReqDto;
 import com.ssafy.farmyo.user.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
@@ -100,5 +101,16 @@ public class MailServiceImpl implements MailService{
 
         // 메일 전송
         javaMailSender.send(message);
+    }
+
+    @Override
+    public void validateAuthCode(VerifyCodeReqDto verifyCodeReqDto) {
+        // 인증 코드 유효성 검사
+
+        // 이메일로 인증 엔티티 조회
+        EmailAuth emailAuth = mailRepository.findById(verifyCodeReqDto.getEmail()).orElseThrow(() -> new CustomException(ExceptionType.CODE_TIME_EXPIRED));
+
+        // 인증 코드 일치 여부
+        if(!emailAuth.getRandomNum().equals(verifyCodeReqDto.getAuthCode())) throw new CustomException(ExceptionType.CODE_NOT_MATCH);
     }
 }
