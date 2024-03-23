@@ -2,6 +2,7 @@ package com.ssafy.farmyo.crop.service;
 
 
 import com.ssafy.farmyo.blockchain.service.CropContractService;
+import com.ssafy.farmyo.common.auth.CustomUserDetails;
 import com.ssafy.farmyo.common.exception.CustomException;
 import com.ssafy.farmyo.common.exception.ExceptionType;
 import com.ssafy.farmyo.crop.dto.*;
@@ -36,17 +37,16 @@ public class CropServiceImpl implements CropService {
     @Override
     public Integer addCrop(AddCropReqDto addCropReqDto, Authentication authentication) {
 
-//        // Authentication 객체와 userDetails가 null이 아닌지 확인
-//        if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails)) {
-//            throw new CustomException(ExceptionType.USER_LOGIN_REQUIRED); //
-//        }
-//        //농부 조회(아직 모름
-//        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-//        if (userDetails.getJob() == 1) {
-//            throw new CustomException(ExceptionType.USER_FARMER_REQUIRED);
-//        }
+        // Authentication 객체와 userDetails가 null이 아닌지 확인
+        if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails userDetails)) {
+            throw new CustomException(ExceptionType.USER_LOGIN_REQUIRED); //
+        }
+        //농부 조회(아직 모름
+        if (userDetails.getJob() == 1) {
+            throw new CustomException(ExceptionType.USER_FARMER_REQUIRED);
+        }
 
-        Optional<Farmer> optionalFarmer = farmerRepository.findById(6);
+        Optional<Farmer> optionalFarmer = farmerRepository.findById(userDetails.getId());
         if (optionalFarmer.isEmpty()) {
             throw new CustomException(ExceptionType.USER_NOT_EXIST);
         }
@@ -60,7 +60,7 @@ public class CropServiceImpl implements CropService {
         Crop crop = Crop.builder()
                 .farmer(farmer)
                 .cropCategory(cropCategory)
-                .cropName(addCropReqDto.getCropName())
+                .cropName(cropCategory.getCategoryName())
                 .cropCultivationSite(addCropReqDto.getCultivation())
                 .cropPlantingDate(addCropReqDto.getPlantingDate())
                 .cropStatus(0)

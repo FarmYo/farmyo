@@ -35,7 +35,7 @@ public class CropController {
     public ResponseEntity<? extends BaseResponseBody> addCrop(@RequestBody @Valid AddCropReqDto addCropReqDto, Authentication authentication) {
 
         int savedCropId = cropService.addCrop(addCropReqDto,authentication);
-        log.info("{}", savedCropId);
+        log.info("{} : 작물 등록 실행, ID = {}", authentication.getName(), savedCropId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, savedCropId));
 
@@ -47,6 +47,7 @@ public class CropController {
     @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환")
     public ResponseEntity<? extends BaseResponseBody> getCropList(@PathVariable String farmerLoginId) {
         List<CropListResDto> cropsByFarmerLoginId = cropService.getCropsByFarmerLoginId(farmerLoginId);
+        log.info("{} : 작물 리스트 조회 실행", farmerLoginId);
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, cropsByFarmerLoginId));
     }
 
@@ -57,6 +58,7 @@ public class CropController {
     @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환")
     public ResponseEntity<? extends BaseResponseBody> getCropDetail(@PathVariable int cropId) {
         CropDetailResDto cropDetail = cropService.getCropDetail(cropId);
+        log.info("{} : 작물 상세 조회 실행", cropId);
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, cropDetail));
     }
 
@@ -68,6 +70,7 @@ public class CropController {
     @ApiResponse(responseCode = "204", description = "성공 \n\n Success 반환")
     public ResponseEntity<? extends BaseResponseBody> updateCropImg(@PathVariable int cropId, @RequestBody UpdateImgReqDto updateImgReqDto) {
         cropService.updateCropImgUrl(cropId, updateImgReqDto.getCropImgUrl());
+        log.info("{} : 대표 사진 수정 실행", cropId);
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "성공적으로 변경되었습니다."));
     }
 
@@ -77,6 +80,7 @@ public class CropController {
     @ApiResponse(responseCode = "200", description = "성공 \n\n success 반환")
     public ResponseEntity<? extends BaseResponseBody> getCropCerts(@PathVariable int cropId) {
         List<CropCertResDto> cropCertresDtoList = cropService.getCropCertList(cropId);
+        log.info("{} : 작물 인증 정보 조회 실행", cropId);
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, cropCertresDtoList));
     }
 
@@ -86,6 +90,7 @@ public class CropController {
     @ApiResponse(responseCode = "200", description = "성공 \n\n success 반환")
     public ResponseEntity<? extends BaseResponseBody> getCropInspections(@PathVariable int cropId) {
         List<CropInspectResDto> cropInspectResDtoList = cropService.getCropInspectList(cropId);
+        log.info("{} : 작물 검사 정보 조회 실행", cropId);
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, cropInspectResDtoList));
     }
 
@@ -95,6 +100,7 @@ public class CropController {
     @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환")
     public ResponseEntity<? extends BaseResponseBody> getAllCropCategories() {
         List<FindCropCategoryResDto> categories = cropService.findAllCropCategories();
+        log.info("작물 카테고리 전체 조회 실행");
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, categories));
     }
 }
