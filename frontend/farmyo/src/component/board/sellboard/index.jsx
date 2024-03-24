@@ -34,7 +34,7 @@ export default function SellBoardList(){
   };
 
   return(
-    <div style={{height:'450px',position:'relative'}}>
+    <div style={{height:'420px',position:'relative'}}>
       {/* 팝니다 게시글목록하나 */}
       <div className="p-4 flex">
         <div style={{backgroundColor:'#bbbbbb'}} className="w-32"></div>
