@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+// import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setAccessToken } from '../../../feature/login/accessSlice';
 import axios from 'axios';
 import Logo from '../../../image/component/user/logo.png';

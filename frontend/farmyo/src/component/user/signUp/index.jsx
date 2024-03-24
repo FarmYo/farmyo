@@ -1,18 +1,15 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useNavigate } from "react-router-dom";
 import '../../../css/signup.css';
 import Logo from '../../../image/component/user/logo.png';
 
 export default function SignUp() {
   const navigate = useNavigate()
-  const [seller, setSeller] = useState("");
   const handleSellerClick = () => {
-    setSeller(0);
-    navigate("/signup/first", { state: { seller } });
+    navigate("/signup/first", { state: { seller:0 } });
   };
   const handleBuyerClick = () => {
-    setSeller(1);
-    navigate("/signup/first", { state: { seller } });
+    navigate("/signup/first", { state: { seller:1 } });
   };
   return(
   <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 logo">

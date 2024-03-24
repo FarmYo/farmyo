@@ -7,7 +7,7 @@ import "../../../css/trade.css";
 
 export default function BuyerTrade() {
   const { cropId } = useParams(); // URL 파라미터에서 `id` 추출
-  const [item, setItem] = useState(null);
+  // const [item, setItem] = useState(null);
   // useEffect(() => {
   //   // 전달받은 id값을 사용하여 데이터 불러오기
   //   axios.get(`/api/trades/${id}`)
@@ -164,7 +164,7 @@ export default function BuyerTrade() {
         <p>배송대기중</p>
         </div>
         </div>
-        <div className="fixed-bottom">
+        <div className="fixed-bottom1">
           <button className="finishbutton">결제</button>
       </div>
 
