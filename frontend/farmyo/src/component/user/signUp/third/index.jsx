@@ -1,9 +1,104 @@
-import React, { useEffect } from 'react'
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useLocation } from "react-router-dom";
+import Swal from "sweetalert2";
+import api from "../../../../api/api"
 import '../../../../css/signup.css';
 
 export default function SignUpSecond() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const { isSeller, id, email, password, nickName, phoneNumber, zoomNumber, address, detailAddress } = location.state;
+  const [account, setAccount] = useState("")
+  const [isAccount, setIsAccount] = useState(false)
+  const checkAccount = ((account) => {
+    if (account) {
+      setIsAccount(true)
+    }
+  })
+
+  const [accountNumber, setAccountNumber] = useState("")
+  const [isAccountNumber, setIsAccountNumber] = useState(false)
+  const isNumber = ((number) => {
+    if (isNaN(number)) {
+      Swal.fire({
+        title: '숫자 외에 입력할 수 없습니다.',
+        confirmButtonColor: '#1B5E20',
+      });
+      const numbers = number.replace(/[^0-9]/g, "");
+      setAccountNumber(numbers)
+    } else {
+      setAccountNumber(number)
+    }
+  })
+  const checkAccountNumber = ((accountNumber) => {
+    if (accountNumber) {
+      setIsAccountNumber(true)
+    }
+  })
+
+  const [bankName, setBankName] = useState("")
+  const [isBankName, setIsBankName] = useState(false)
+  const checkBankName = ((bankName) => {
+    if (bankName) {
+      setIsBankName(true)
+    }
+  })
+
+  const changePage = (() => {
+    if (isAccount === true && isAccountNumber === true && isBankName === true) {
+      if (isSeller === 0) {
+        // 판매자
+        navigate("/signup/business", { state: { isSeller, id, email, password, nickName, phoneNumber, zoomNumber, address, detailAddress, account, accountNumber, bankName } }, { replace: true })
+      } else if (isSeller === 1) {
+        // 구매자
+        api.post('user', {
+            loginId : id,              
+            password : password,               
+            telephone : phoneNumber, 
+            depositor : account,         
+            bank : bankName,          
+            account : accountNumber,
+            email : email,  
+            nickname : nickName,        
+            addressCode : zoomNumber,          
+            addressLegal : address,
+            addressDetail : detailAddress,
+            job : isSeller
+          }
+        )
+        .then((res) => {
+          console.log('인증번호 확인 성공')
+          if (res.data.dataHeader.successCode === 0) {
+            navigate('/login', { replace: true })
+            Swal.fire({
+              title:'회원이 되신 걸<br>환영합니다',
+              confirmButtonColor: '#1B5E20',
+            })
+          } else if (res.data.dataHeader.resultCode === "G-003") {
+            Swal.fire({
+              title:'G-003 에러',
+              html: '회원가입 실패',
+              confirmButtonColor: '#1B5E20',
+            })
+          }
+        })
+        .catch((err) => {
+          console.log('인증번호 확인 실패', err)
+          Swal.fire({
+            title:'알 수 없는 에러',
+            html: '회원가입 실패',
+            confirmButtonColor: '#1B5E20',
+          })
+        })
+      }} else {
+        console.log('로그인 실패 화면 확인해보기', zoomNumber, address, detailAddress, account, accountNumber, bankName)
+        Swal.fire({
+          html: '<br>입력 정보를<br>확인해주세요',
+          confirmButtonColor: '#1B5E20',
+        })
+      }
+    })
+
   useEffect(() => {
     const allInputs = document.querySelectorAll('input');
     const button = document.querySelector('.finishbutton');
@@ -30,6 +125,13 @@ export default function SignUpSecond() {
 
       <div>
         <input 
+          value={account}
+          onChange={(event) => {
+            setAccount(event.target.value)
+          }}
+          onBlur={(event) => {
+            checkAccount(event.target.value)
+          }}
           id="account" 
           name="account" 
           type="text" 
@@ -41,6 +143,13 @@ export default function SignUpSecond() {
       </div>
       <div>
         <input 
+          value={accountNumber}
+          onChange={(event) => {
+            isNumber(event.target.value)
+          }}
+          onBlur={(event) => {
+            checkAccountNumber(event.target.value)
+          }}
           id="accountnumber" 
           name="accountnumber" 
           type="text" 
@@ -52,8 +161,15 @@ export default function SignUpSecond() {
       </div>
       <div>
         <input 
-          id="bank" 
-          name="bank" 
+          value={bankName}
+          onChange={(event) => {
+            setBankName(event.target.value)
+          }}
+          onBlur={(event) => {
+            checkBankName(event.target.value)
+          }}
+          id="bankName" 
+          name="bankName" 
           type="text" 
           placeholder="은행명"
           autoComplete="text"
@@ -66,8 +182,7 @@ export default function SignUpSecond() {
     <div className="fixed-bottom">
       <button 
         className="finishbutton"
-        // onClick={() => {navigate("/login")}} // 구매자용
-        onClick={() => {navigate("/signup/business")}} // 사업자등록(판매자용)
+        onClick={() => {changePage()}} 
       >
         회원 가입 완료(3/3)
       </button>
