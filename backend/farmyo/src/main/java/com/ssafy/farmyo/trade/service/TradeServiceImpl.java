@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class TradeServiceImpl implements TradeService {
 
     private final TradeRepository tradeRepository;
@@ -36,15 +35,15 @@ public class TradeServiceImpl implements TradeService {
     public void createTrade(TradeReqDto tradeReqDto) {
 
         // seller 가져오기
-        User seller = userRepository.findById(tradeReqDto.getSeller()).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+        User seller = userRepository.findByLoginId(tradeReqDto.getSellerId()).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
         // buyer 가져오기
-        User buyer = userRepository.findById(tradeReqDto.getBuyer()).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+        User buyer = userRepository.findByLoginId(tradeReqDto.getBuyerId()).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
         // boardId 가져오기
-        Board boardId = boardRepository.findById(tradeReqDto.getBoard()).orElseThrow(() -> new CustomException(ExceptionType.BOARD_NOT_EXIST));
+        Board board = boardRepository.findById(tradeReqDto.getBoardId()).orElseThrow(() -> new CustomException(ExceptionType.BOARD_NOT_EXIST));
         // chatId 가져오기
-        Chat chatId = chatRepository.findById(tradeReqDto.getChat()).orElseThrow(() -> new CustomException(ExceptionType.CHAT_NOT_EXIST));
+        Chat chat = chatRepository.findById(tradeReqDto.getChatId()).orElseThrow(() -> new CustomException(ExceptionType.CHAT_NOT_EXIST));
         // cropId 가져오기
-        Crop cropId = cropRepository.findById(tradeReqDto.getCrop()).orElseThrow(() -> new CustomException(ExceptionType.CROP_NOT_EXIST));
+        Crop crop = cropRepository.findById(tradeReqDto.getCropId()).orElseThrow(() -> new CustomException(ExceptionType.CROP_NOT_EXIST));
 
         // trade 생성
         Trade trade = Trade.builder()
@@ -52,13 +51,14 @@ public class TradeServiceImpl implements TradeService {
                 .tradeQuantity(tradeReqDto.getTradeQuantity())
                 .buyer(buyer)
                 .seller(seller)
-                .chat(chatId)
-                .crop(cropId)
-                .board(boardId)
+                .chat(chat)
+                .crop(crop)
+                .board(board)
                 .build();
 
         // trade 저장
         tradeRepository.save(trade);
+        log.info("{} : (service)거래 생성 완료", trade);
     }
 
 
