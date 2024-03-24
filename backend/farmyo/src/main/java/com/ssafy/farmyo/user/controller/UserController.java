@@ -4,9 +4,11 @@ import com.ssafy.farmyo.common.auth.CustomUserDetails;
 import com.ssafy.farmyo.common.response.BaseResponseBody;
 import com.ssafy.farmyo.user.dto.JoinReqDto;
 import com.ssafy.farmyo.user.dto.VerifyEmailReqDto;
+import com.ssafy.farmyo.user.dto.VerifyCodeReqDto;
 import com.ssafy.farmyo.user.service.MailService;
 import com.ssafy.farmyo.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -63,6 +65,37 @@ public class UserController {
         // 메일 전송 후 코드 받기
         mailService.sendJoinMessage(verifyEmailReqDto.getEmail());
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
+    }
+
+    @Operation(summary = "이메일 인증 확인", description = "/users/auth/check\n\n 사용자는 이메일 인증 확인을 한다.")
+    @PostMapping("/auth/check")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환")
+    public ResponseEntity<? extends BaseResponseBody> verifyEmailCode(@Valid @RequestBody VerifyCodeReqDto verifyCodeReqDto) {
+
+        // 인증 코드 확인 후 토큰 반환 (주석 이유 : 추가 로직 필요!)
+        // String token = mailService.validateAuthCode(verifyCodeReqDto);
+        mailService.validateAuthCode(verifyCodeReqDto);
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
+    }
+
+    @Operation(summary = "비밀번호 찾기를 위한 이메일 인증", description = "/users/pwd/auth\n\n 사용자는 비밀번호 찾기를 위해 이메일 인증을 한다.")
+    @PostMapping("/email/password")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환")
+    public ResponseEntity<? extends BaseResponseBody> verifyPasswordRecoveryEmail(@Valid @RequestBody VerifyEmailReqDto verifyEmailReqDto) throws Exception {
+
+        // 메일 전송 후 코드 받기
+        mailService.sendPasswordRecoveryMessage(verifyEmailReqDto.getEmail());
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
+    }
+
+    @Operation(summary = "아이디 중복검사", description = "사용자가 작성한 아이디의 중복검사를 한다.")
+    @GetMapping("/join/duplicate")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n ")
+    public ResponseEntity<? extends BaseResponseBody> checkIdDuplicate(@RequestParam
+                                                                           @Parameter(description = "회원가입 시 입력한 로그인 아이디")
+                                                                           String id) {
+        log.info("checkIdDuplicate Id : {}", id);
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, userService.checkIdDuplicate(id)));
     }
 
 }
