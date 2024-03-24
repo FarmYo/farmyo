@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useNavigate, useLocation } from "react-router-dom";
 import { Modal } from "react-responsive-modal"
-import axios from 'axios';
+import api from "../../../../api/api"
 import Swal from "sweetalert2";
 import '../../../../css/signup.css';
 
@@ -27,10 +27,7 @@ export default function SignUpFirst() {
     if (id && typeof id === 'string') {
       const trimmedId = id.trim();
       if (trimmedId.split(' ').length < 2 && trimmedId.length > 5 && trimmedId.length < 21) {
-        axios({
-          url:`https://j10d209.p.ssafy.io/api/user/join/duplicate?id=${id}`,
-          method:'get'
-        })
+        api.get(`user/join/duplicate?id=${id}`)
         .then((res) => {
           console.log('아이디 중복검사 완료', res)
           if (res.data.dataBody === 1) {
@@ -73,13 +70,7 @@ export default function SignUpFirst() {
     if (isValid === false) {
       setCheckEmailMessage('형식에 맞지 않는 이메일입니다.')
     } else {
-      axios({
-        url:'https://j10d209.p.ssafy.io/api/user/email',
-        method: 'post',
-        data:{
-          email:email
-        }
-      })
+      api.post('user/email', {email:email})
       .then((res) => {
         console.log('이메일 중복 검사 및 인증번호 발송 완료')
       //   if (res.dataHeader.successCode === "1") {
@@ -127,14 +118,11 @@ export default function SignUpFirst() {
     if (code.length < 1) {
       Swal.fire('인증번호를 입력하세요.')
     } else {
-      axios({
-        url:`https://j10d209.p.ssafy.io/api/user/auth/check`,
-        method:'post',
-        data:{
+      api.post('user/auth/check', {
           email:email,
           authCode:code
         }
-      })
+      )
       .then((res) => {
         console.log('인증번호 확인 성공')
         if (res.data.dataHeader.successCode === 0) {

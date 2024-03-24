@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from "react-router-dom";
-// import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import axios from 'axios';
+import api from "../../../../api/api"
 import '../../../../css/signup.css';
 
 export default function SignUpSecond() {
@@ -52,10 +51,7 @@ export default function SignUpSecond() {
         navigate("/signup/business", { state: { isSeller, id, email, password, nickName, phoneNumber, zoomNumber, address, detailAddress, account, accountNumber, bankName } }, { replace: true })
       } else if (isSeller === 1) {
         // 구매자
-        axios({
-          url:`https://j10d209.p.ssafy.io/api/user`,
-          method:'post',
-          data:{
+        api.post('user', {
             loginId : id,              
             password : password,               
             telephone : phoneNumber, 
@@ -67,9 +63,9 @@ export default function SignUpSecond() {
             addressCode : zoomNumber,          
             addressLegal : address,
             addressDetail : detailAddress,
-            job : isSeller // 생산자 0, 소비자 1 
+            job : isSeller
           }
-        })
+        )
         .then((res) => {
           console.log('인증번호 확인 성공')
           if (res.data.dataHeader.successCode === 0) {
