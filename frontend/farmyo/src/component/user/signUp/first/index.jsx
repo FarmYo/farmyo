@@ -93,17 +93,18 @@ export default function SignUpFirst() {
       //     onOpenModal();
       //   }
       // })
-      if (res.data.dataHeader.resultCode === "U-003") {
-          setCheckEmailMessage('중복된 이메일입니다.')
-        } else if (res.data.dataHeader.successCode === 0) {
+      if (res.data.dataHeader.successCode === 0) {
         setCheckEmailMessage("")
         onOpenModal();
       }
     })
     .catch((err) => {
+      if (err.response.data.dataHeader.resultCode === "U-003") {
+        setCheckEmailMessage('중복된 이메일입니다.')
+      } else {
       console.log('이메일 인증 발송 실패', err)
       setCheckEmailMessage('인증번호 발송을 다시 눌러주세요.')
-      })
+    }})
     }
   }
   
