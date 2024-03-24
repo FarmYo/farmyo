@@ -83,9 +83,10 @@ public class Trade extends BaseTime {
 
     //빌더형식
     @Builder
-    public Trade(Board board, Crop crop, Chat chat, User buyer, User seller,
+    public Trade(int id, Board board, Crop crop, Chat chat, User buyer, User seller,
                  int tradePrice, int tradeQuantity, int tradeStatus,
                  String tradeShipment, String tradeShipcom, String tradeLocation, String tradeBlockchain) {
+        this.id = id;
         this.board = board;
         this.crop = crop;
         this.chat = chat;

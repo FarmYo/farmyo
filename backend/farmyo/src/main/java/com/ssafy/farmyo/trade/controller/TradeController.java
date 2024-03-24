@@ -23,10 +23,11 @@ public class TradeController {
 
     private final TradeService tradeService;
 
-    @PostMapping("/")
+    @PostMapping("")
     @Operation(summary = "거래 생성하기", description = "chat 또는 board를 통해서 얻은 정보로 거래를 생성한다.")
     public ResponseEntity<? extends BaseResponseBody> createTrade(
-            @RequestParam(name = "tradeReqDto")
+//            @RequestParam(name = "tradeReqDto")
+            @RequestBody
             @Parameter(description = "거래 생성을 위한 dto 정보 입력")
             TradeReqDto tradeReqDto) {
         log.info("{} : createTrade 실행", tradeReqDto);
