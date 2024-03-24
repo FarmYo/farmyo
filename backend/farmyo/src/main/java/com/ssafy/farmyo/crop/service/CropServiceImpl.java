@@ -35,18 +35,11 @@ public class CropServiceImpl implements CropService {
 
     //작물 등록
     @Override
-    public Integer addCrop(AddCropReqDto addCropReqDto, Authentication authentication) {
+    public Integer addCrop(AddCropReqDto addCropReqDto, int farmerId) {
 
-        // Authentication 객체와 userDetails가 null이 아닌지 확인
-        if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails userDetails)) {
-            throw new CustomException(ExceptionType.USER_LOGIN_REQUIRED); //
-        }
-        //농부 조회(아직 모름
-        if (userDetails.getJob() == 1) {
-            throw new CustomException(ExceptionType.USER_FARMER_REQUIRED);
-        }
 
-        Optional<Farmer> optionalFarmer = farmerRepository.findById(userDetails.getId());
+        //해당 id의 파머가 있는지 확인
+        Optional<Farmer> optionalFarmer = farmerRepository.findById(farmerId);
         if (optionalFarmer.isEmpty()) {
             throw new CustomException(ExceptionType.USER_NOT_EXIST);
         }
