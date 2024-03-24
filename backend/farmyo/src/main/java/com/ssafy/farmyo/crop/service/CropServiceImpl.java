@@ -2,6 +2,7 @@ package com.ssafy.farmyo.crop.service;
 
 
 import com.ssafy.farmyo.blockchain.service.CropContractService;
+import com.ssafy.farmyo.common.auth.CustomUserDetails;
 import com.ssafy.farmyo.common.exception.CustomException;
 import com.ssafy.farmyo.common.exception.ExceptionType;
 import com.ssafy.farmyo.crop.dto.*;
@@ -9,7 +10,6 @@ import com.ssafy.farmyo.crop.repository.CropCategoryRepository;
 import com.ssafy.farmyo.crop.repository.CropRepository;
 import com.ssafy.farmyo.entity.Crop;
 import com.ssafy.farmyo.entity.CropCategory;
-import com.ssafy.farmyo.entity.CropCert;
 import com.ssafy.farmyo.entity.Farmer;
 import com.ssafy.farmyo.user.repository.FarmerRepository;
 import com.ssafy.farmyo.user.repository.UserRepository;
@@ -36,10 +36,10 @@ public class CropServiceImpl implements CropService {
     @Override
     public Integer addCrop(AddCropReqDto addCropReqDto, Authentication authentication) {
 
-//        // Authentication 객체와 userDetails가 null이 아닌지 확인
-//        if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails)) {
-//            throw new CustomException(ExceptionType.USER_LOGIN_REQUIRED); //
-//        }
+        // Authentication 객체와 userDetails가 null이 아닌지 확인
+        if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails)) {
+            throw new CustomException(ExceptionType.USER_LOGIN_REQUIRED); //
+        }
 //        //농부 조회(아직 모름
 //        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 //        if (userDetails.getJob() == 1) {
