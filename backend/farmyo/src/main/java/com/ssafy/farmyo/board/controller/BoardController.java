@@ -38,8 +38,6 @@ public class BoardController {
     public ResponseEntity<? extends BaseResponseBody> getBoardDetail(@PathVariable int boardId) {
         BoardDetailResDto boardDetailResDto = boardService.getBoardDetail(boardId);
         log.info("게시물 상세조회 API 호출 - 게시물 ID: {}", boardId);
-
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, boardDetailResDto));
-
     }
 }

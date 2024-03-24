@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface BoardRepository extends JpaRepository<Board, Integer> {
 
     //상세 조회용 (연관 엔티티 바로 불러와서 N+1문제 방지)
-    @EntityGraph(attributePaths = {"user", "crop", "boardImgList"})
+    @EntityGraph(attributePaths = {"user", "crop", "boardImgList","cropCategory"})
     Optional<Board> findWithDetailsById(Integer id);
 
 

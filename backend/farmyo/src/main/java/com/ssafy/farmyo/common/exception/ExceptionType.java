@@ -37,6 +37,7 @@ public enum ExceptionType {
     // 게시판
     BOARD_NOT_EXIST(HttpStatus.BAD_REQUEST, "B-001", "존재하지 않는 게시판입니다."),
     CROP_NOT_ASSOCIATED_WITH_BOARD(HttpStatus.BAD_REQUEST, "B-002", "게시판에 연결된 작물이 존재하지 않습니다."),
+    CROPCATEGORY_NOT_ASSOCIATED_WITH_BOARD(HttpStatus.BAD_REQUEST, "B-003", "판매게시판에 연결된 작물카테고리가 존재하지 않습니다."),
 
 
 
