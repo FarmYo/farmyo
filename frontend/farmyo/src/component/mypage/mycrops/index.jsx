@@ -94,11 +94,13 @@ export default function MyCrops() {
   const onCloseModal = () => {
     setOpen(false);
   };
+
   // 농산물정보보기모달(수확전)
-  const infoOpenModal = () => {
+  const infoOpenModal = (crop_id) => {
+    console.log(crop_id)
     setInfoOpen(true);
     axios({
-      url: 'https://j10d209.p.ssafy.io/api/crops/3', // crop_id 변수를 URL에 삽입
+      url: `https://j10d209.p.ssafy.io/api/crops/${crop_id}`, // crop_id 변수를 URL에 삽입
       method: 'get',
     })
     .then((res)=>{
@@ -318,7 +320,7 @@ export default function MyCrops() {
         </div>
         <div className="px-8 mt-10" onClick={harvestOpenModal}>
           <button className="btn w-full flex justify-around" style={{ border:'3px solid #81C784',backgroundColor: 'transparent'}}>
-            <img src={Harvest} alt="" style={{width:40,height:30}}/>
+            <img src={Harvest} alt="" style={{width:30,height:30}}/>
             <div className="mr-5 font-bold">수확하기</div>
           </button>
         </div>
@@ -558,7 +560,6 @@ export default function MyCrops() {
                 locale={ko}
                 selected={endDate}
                 dateFormat="yyyy년 MM월 dd일"
- 
                 onChange={date => setEndDate(date)}
                 className="block h-10 w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 placeholderText="날짜를 선택하세요"
