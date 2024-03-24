@@ -21,17 +21,25 @@ public class BoardServiceImpl implements  BoardService {
     private final BoardRepository boardRepository;
 
 
+    //게시글 상세 조회
     @Override
     @Transactional(readOnly = true)
     public BoardDetailResDto getBoardDetail(int boardId) {
         Board board = boardRepository.findWithDetailsById(boardId)
                 .orElseThrow(() -> new CustomException(ExceptionType.BOARD_NOT_EXIST));
-        if (board.getCrop() == null) {
-            throw new CustomException(ExceptionType.CROP_NOT_ASSOCIATED_WITH_BOARD);
+
+        //카테고리있는지 확인
+        if (board.getCropCategory() == null){
+            throw new CustomException(ExceptionType.CROPCATEGORY_NOT_ASSOCIATED_WITH_BOARD);
         }
+
         List<String> imgUrls = new ArrayList<>();
-        // boardType이 0일 경우에만 이미지 URL 목록을 설정
+        // boardType이 0일 경우에만(팜요게시판) 연결된 작물이 있는지 + 이미지 URL 목록을 설정
         if (board.getBoardType() == 0) {
+
+            if (board.getCrop() == null) {
+                throw new CustomException(ExceptionType.CROP_NOT_ASSOCIATED_WITH_BOARD);
+            }
             imgUrls = board.getBoardImgList().stream()
                     .map(BoardImg::getImgUrl)
                     .toList();
@@ -41,13 +49,14 @@ public class BoardServiceImpl implements  BoardService {
                 .userId(board.getUser().getId())
                 .userNickname(board.getUser().getNickname())
                 .cropId(board.getCrop().getId())
-                .cropName(board.getCrop().getCropName())
-                .boardType(board.getBoardType())
+                .cropCategory(board.getCropCategory().getCategoryName())
                 .boardTitle(board.getBoardTitle())
                 .boardContent(board.getBoardContent())
                 .boardQuantity(board.getBoardQuantity())
                 .boardPrice(board.getBoardPrice())
                 .boardImgUrls(imgUrls)
+                .createdAt(board.getCreatedAt())
+                .updatedAt(board.getUpdatedAt())
                 .build();
     }
 
