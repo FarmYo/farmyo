@@ -1,6 +1,9 @@
 package com.ssafy.farmyo.crop.controller;
 
 
+import com.ssafy.farmyo.common.auth.CustomUserDetails;
+import com.ssafy.farmyo.common.exception.CustomException;
+import com.ssafy.farmyo.common.exception.ExceptionType;
 import com.ssafy.farmyo.common.response.BaseResponseBody;
 import com.ssafy.farmyo.crop.dto.*;
 import com.ssafy.farmyo.crop.service.CropService;
@@ -34,8 +37,13 @@ public class CropController {
     @ApiResponse(responseCode = "201", description = "성공 \n\n Success 반환")
     public ResponseEntity<? extends BaseResponseBody> addCrop(@RequestBody @Valid AddCropReqDto addCropReqDto, Authentication authentication) {
 
-        int savedCropId = cropService.addCrop(addCropReqDto,authentication);
-        log.info("{} : 작물 등록 실행, ID = {}", authentication.getName(), savedCropId);
+        // 농부인지 구매자인지 확인
+        if (userDetails.getJob() == 1) {
+            throw new CustomException(ExceptionType.USER_FARMER_REQUIRED);
+        }
+
+        int savedCropId = cropService.addCrop(addCropReqDto, userDetails.getId());
+        log.info(" 작물 등록 실행 loginId = {}, cropId = {}", authentication.getName(), savedCropId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, savedCropId));
 
