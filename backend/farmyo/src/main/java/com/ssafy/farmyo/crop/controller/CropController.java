@@ -37,6 +37,8 @@ public class CropController {
     @ApiResponse(responseCode = "201", description = "성공 \n\n Success 반환")
     public ResponseEntity<? extends BaseResponseBody> addCrop(@RequestBody @Valid AddCropReqDto addCropReqDto, Authentication authentication) {
 
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
         // 농부인지 구매자인지 확인
         if (userDetails.getJob() == 1) {
             throw new CustomException(ExceptionType.USER_FARMER_REQUIRED);
