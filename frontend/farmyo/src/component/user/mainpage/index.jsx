@@ -1,6 +1,5 @@
 import React from 'react'
 import { useNavigate } from "react-router-dom";
-import { logout } from '../../../feature/login/accessSlice';
 import '../../../css/mainpage.css'
 import Logo from '../../../image/component/user/logo.png';
 
@@ -27,7 +26,6 @@ export default function Mainpage() {
       <button
 //        onClick={() => {navigate("/signup/first")}}
         onClick={() => {
-        logout()
         navigate("/board",{state:{selected:0}}
         )}}
 
