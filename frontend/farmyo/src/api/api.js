@@ -10,8 +10,6 @@ api.interceptors.request.use(
   (config) => {
     // 로컬 스토리지에서 토큰 가져오기
     const accessToken = localStorage.getItem("access");
-    localStorage.clear()
-    localStorage.setItem("access",'')
     if (accessToken) {
       // 토큰이 있으면 헤더에 추가
       config.headers['access'] = accessToken;
