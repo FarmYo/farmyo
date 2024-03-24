@@ -3,8 +3,8 @@ package com.ssafy.farmyo.user.controller;
 import com.ssafy.farmyo.common.auth.CustomUserDetails;
 import com.ssafy.farmyo.common.response.BaseResponseBody;
 import com.ssafy.farmyo.user.dto.JoinReqDto;
-import com.ssafy.farmyo.user.dto.VerifyEmailReqDto;
 import com.ssafy.farmyo.user.dto.VerifyCodeReqDto;
+import com.ssafy.farmyo.user.dto.VerifyEmailReqDto;
 import com.ssafy.farmyo.user.service.MailService;
 import com.ssafy.farmyo.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,10 +36,15 @@ public class UserController {
     @ApiResponse(responseCode = "201", description = "성공 \n\n Success 반환")
     public ResponseEntity<? extends BaseResponseBody> join(@RequestBody @Valid JoinReqDto joinReqDto) {
 
-        log.info("{}", joinReqDto.getLoginId());
+        int savedUserId = 0;
 
-        // 회원가입
-        int savedUserId = userService.join(joinReqDto);
+        if(joinReqDto.getJob() == 0){
+            // 생산자
+            savedUserId = userService.farmerJoin(joinReqDto);
+        }else{
+            // 소비자
+            savedUserId = userService.customerJoin(joinReqDto);
+        }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, savedUserId));
     }
