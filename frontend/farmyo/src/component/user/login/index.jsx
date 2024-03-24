@@ -1,22 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, Link } from "react-router-dom";
-// import { useSelector, useDispatch } from "react-redux";
-import { useDispatch } from "react-redux";
-import { setAccessToken } from '../../../feature/login/accessSlice';
-import axios from 'axios';
+import api from "../../../api/api"
 import Logo from '../../../image/component/user/logo.png';
 import '../../../css/signup.css';
 
 export default function LoginInput() {
   const navigate = useNavigate()
-  const dispatch = useDispatch()
-
-  // const [accessToken, setAccessToken] = useState("")
 
   const [id, setId] = useState("")
   const [password, setPassword] = useState("")
   const goLogin = () => {
-    // console.log("loginId :", id, "password :", password)
     if (id === "" || password === "") {
       if (id === "") {
         console.log('아이디가 비었다')
@@ -24,19 +17,14 @@ export default function LoginInput() {
         console.log('비밀번호가 비었다')
       }
     } else {
-    axios({
-      url : 'https://j10d209.p.ssafy.io/api/user/login',
-      // url : 'http://localhost:8080/api/user/login',
-      method:'post',
-      data:{
+    api.post('user/login', {
         loginId:id, password
       }
-    })
+    )
     .then((res) => {
       console.log('로그인 완료')
-      // console.log('accessToken :', res.headers.access)
       const accessToken = res.headers.access
-      dispatch(setAccessToken(accessToken))
+      localStorage.setItem("access", accessToken)
       navigate("/", { replace : true })
     })
     .catch((err) => {

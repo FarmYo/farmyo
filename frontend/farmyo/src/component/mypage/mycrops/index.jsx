@@ -15,7 +15,7 @@ import ko from 'date-fns/locale/ko'
 import Pesticide from '../../form/pesticide'
 import Award from '../../form/award'
 import '../../../css/liferecord.css'
-import axios from 'axios'
+import api from "../../../api/api"
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -45,10 +45,7 @@ export default function MyCrops() {
   useEffect(()=>{
     setSelected('구분')
     // 작물 리스트 조회
-    axios({
-      url:'https://j10d209.p.ssafy.io/api/crops/list/ssafy1',
-      method:'get'
-    })
+    api.get('crops/list/ssafy1')
     .then((res)=>{
       console.log(res)
       console.log(res.data.dataBody)
@@ -58,10 +55,7 @@ export default function MyCrops() {
       console.log(err)
     })
     // 작물 카테고리 조회
-    axios({
-      url:'https://j10d209.p.ssafy.io/api/crops/category',
-      method:'get'
-    })
+    api.get('crops/category')
     .then((res)=>{
       console.log(res)
       setCropList(res.data.dataBody)
@@ -99,10 +93,7 @@ export default function MyCrops() {
   const infoOpenModal = (crop_id) => {
     console.log(crop_id)
     setInfoOpen(true);
-    axios({
-      url: `https://j10d209.p.ssafy.io/api/crops/${crop_id}`, // crop_id 변수를 URL에 삽입
-      method: 'get',
-    })
+    api.get(`crops/${crop_id}`) // crop_id 변수를 URL에 삽입
     .then((res)=>{
       console.log(res)
       setCropName(res.data.dataBody.cropName)
@@ -210,7 +201,7 @@ export default function MyCrops() {
             +</div>
         </div>
       </div>
-     
+      
 
       {/* ********모달모음************ */}
       {/* ******농산물 등록모달창***** */}
@@ -341,7 +332,7 @@ export default function MyCrops() {
       </Modal>
 
        {/* *******농산물정보보기모달(수확후)****** */} 
-       <Modal open={info2Open} onClose={info2CloseModal} styles={styles}>
+        <Modal open={info2Open} onClose={info2CloseModal} styles={styles}>
         <div className="pt-5">
           <div className="px-8">
           <div style={{ height:100, backgroundColor:'#bbbbbb'}}>
@@ -435,7 +426,7 @@ export default function MyCrops() {
       </Modal>
 
        {/* ******농산물인증정보모달******* */}
-       <Modal open={certificationOpen} onClose={CertificationCloseModal} styles={styles}>
+        <Modal open={certificationOpen} onClose={CertificationCloseModal} styles={styles}>
         <div style={{ position:'fixed',top:0,left:0, width: '100%', height: '50px', backgroundColor: '#1B5E20'}}
           className="flex justify-center items-center">
           <h1 style={{color:'white'}} className="text-2xl">인증정보</h1>
@@ -456,7 +447,7 @@ export default function MyCrops() {
                 <input type="text" name="price" id="price" class="block h-10 pl-2 rounded-md w-full border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="021-1009-001" disabled/>
               </div>
             </div>
-         
+          
             <div className="px-4 mt-4 mb-4">
               <label for="price" class="block text-lg font-medium leading-6 text-gray-900">인증기관명</label>
               <div class="relative mt-2 rounded-md">
