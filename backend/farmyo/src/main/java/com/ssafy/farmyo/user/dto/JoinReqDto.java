@@ -24,7 +24,6 @@ public class JoinReqDto {
     private String telephone;
 
     // 직업
-    @NotBlank
     private int job;
 
     // 이메일
@@ -58,4 +57,12 @@ public class JoinReqDto {
     @NotBlank
     private String addressDetail;
 
+    // 사업자 등록 번호
+    private String licenseNum;
+
+    // 대표자 성명
+    private String representative;
+
+    // 개업일자
+    private String startDate;
 }
