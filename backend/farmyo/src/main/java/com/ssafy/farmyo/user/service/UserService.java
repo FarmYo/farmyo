@@ -1,6 +1,7 @@
 package com.ssafy.farmyo.user.service;
 
 import com.ssafy.farmyo.user.dto.JoinReqDto;
+import com.ssafy.farmyo.user.dto.UserResDto;
 
 public interface UserService {
     // 소비자 회원 가입
@@ -11,4 +12,7 @@ public interface UserService {
 
     // 아이디 중복 검사
     int checkIdDuplicate(String id);
+
+    // 회원 정보 불러오기
+    UserResDto getUserInfo(int id);
 }

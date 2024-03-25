@@ -4,6 +4,7 @@ import com.ssafy.farmyo.common.exception.CustomException;
 import com.ssafy.farmyo.common.exception.ExceptionType;
 import com.ssafy.farmyo.entity.*;
 import com.ssafy.farmyo.user.dto.JoinReqDto;
+import com.ssafy.farmyo.user.dto.UserResDto;
 import com.ssafy.farmyo.user.openApi.OpenApiManager;
 import com.ssafy.farmyo.user.repository.AddressRepository;
 import com.ssafy.farmyo.user.repository.FarmerRepository;
@@ -114,5 +115,12 @@ public class UserServiceImpl implements UserService {
         if(userRepository.findByLoginId(id).isPresent()) return 0;
 
         return 1;
+    }
+
+    @Override
+    public UserResDto getUserInfo(int id) {
+
+        // 회원 정보 return
+        return userRepository.getUserInfoById(id);
     }
 }
