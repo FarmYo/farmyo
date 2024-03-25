@@ -21,76 +21,71 @@ export default function SellerTrade() {
   //   return <div>대기화면 컴포넌트</div>;
   // }
   const [open,setOpen] = useState(false)
+
   const onOpenModal = () => {
     setOpen(true);
   };
+
   const onCloseModal = () => {
     setOpen(false);
   };
+
   const alerter = () => {
     Swal.fire({
       html: '<h1>송장번호가<br>입력되었습니다!</h1>',
       confirmButtonColor: '#1B5E20',
     });
   };
+
   return(
     <div>
-      <div style={{height:50,backgroundColor:'#1B5E20'}}>
-        <div className="p-2">
-          <h1 className="text-xl font-bold" style={{color:"white"}}>거래</h1>
-        </div>
-      </div>
-
-      <div className="flex flex-row">
-        {/* {item.name} */}
-        {cropId}
-        {/* <div>
-          {item.status}
-          {item.createdAt}
-          // status 확인 후 한글로 교체 + (입금완료, 거래중, 거래완료)일 때 수정시간으로 작성
-        </div> */}
-      </div>
       <div>
-      <div className="p-2">
-        <h2 className="h2">농산물</h2>
-        작물명
-      </div>
-      <div className="p-2">
-        <h2 className="h2">거래 수량</h2>
-        20kg
+        <div className="p-3 flex justify-between border-b-2 border-gray-100 h-20">
+          <div className="font-bold text-xl flex items-center">달디달고 달디단 밤양갱</div>
+          <div className="font-bold text-lg flex items-center" style={{color:'gray'}}>입금대기중</div>
         </div>
-
-        <h2 className="h2">거래 가격</h2>
-        220,000원
-
-        <div className="flex flex-row justify-between">
+        <div className="p-3 border-b-2 space-y-2 border-gray-100">
+          <div className="font-bold text-lg flex items-center">작물</div>
+          <div className="text-lg flex items-center" style={{color:'gray'}}>밤양갱</div>
+        </div>
+        <div className="p-3 border-b-2 space-y-2 border-gray-100">
+          <div className="font-bold text-lg flex items-center">거래수량</div>
+          <div className="text-lg flex items-center" style={{color:'gray'}}>20kg</div>
+        </div>
+        <div className="p-3 border-b-2 space-y-2 border-gray-100">
+          <div className="font-bold text-lg flex items-center">거래가격</div>
+          <div className="text-lg flex items-center" style={{color:'gray'}}>220000원(1kg = 11000원)</div>
+        </div>
+        <div className="p-3 border-b-2 border-gray-100 flex">
           <div>
-            <h2 className="h2">구매자</h2>
-            구매자명
+            <div className="font-bold text-lg flex items-center">구매자</div>
+            <div className="text-lg flex items-center" style={{color:'gray'}}>권현준</div>
           </div>
-          <div>
-            <h2 className="h2">판매자</h2>
-            판매자명
+          <div className="pl-28">
+            <div className="font-bold text-lg flex items-center">판매자</div>
+            <div className="text-lg flex items-center" style={{color:'gray'}}>내이름</div>
           </div>
         </div>
-
-        <h2 className="h2">배송지</h2>
-        경상북도 구미시 여현로 7길
-        
-        <h2 className="h2">송장번호</h2>
-        <button
-          onClick={onOpenModal}
-          className="addressbutton btn"
-        >
-          송장번호 입력
-        </button>
-
+        <div className="p-3 border-b-2 space-y-2 border-gray-100">
+          <div className="font-bold text-lg flex items-center">배송지</div>
+          <div className="text-lg flex items-center" style={{color:'gray'}}>경상북도 구미시 여헌로 7길 24 203호</div>
+        </div>
+        <div className="p-3 border-b-2 space-y-2 border-gray-100">
+          <div className="font-bold text-lg flex items-center">송장번호</div>
+          <button
+            onClick={onOpenModal}
+            className="addressbutton btn"
+          >
+            송장번호 입력
+          </button>
+        </div>
       </div>
+      
+      {/* 송장번호입력모달창 */}
       <Modal
       open={open}
       onClose={onCloseModal}
       showCloseIcon={false}
-      // center
       classNames={{
         // overlay: 'customOverlay', // 뒷 배경 설정할 때 커스텀 할 것
         modal: 'customModal', // 모달 커스텀 할 것

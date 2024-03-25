@@ -26,6 +26,7 @@ export default function LoginInput() {
     axios({
       url : 'https://j10d209.p.ssafy.io/api/user/login',
       // url : 'http://localhost:8080/api/user/login',
+
       method:'post',
       data:{
         loginId:id, password
