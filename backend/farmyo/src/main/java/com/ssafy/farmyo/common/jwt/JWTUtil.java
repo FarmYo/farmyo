@@ -38,16 +38,21 @@ public class JWTUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("userJob", Integer.class);
     }
 
+    public String getNickname(String token){
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("nickname", String.class);
+    }
+
     // 검증 - 만료 기간 추출 메서드
     public Boolean isExpired(String token) {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
 
     // 토큰 생성 메서드
-    public String createJwt(String category, String loginId, int userId, int userJob, Long expiredMs){
+    public String createJwt(String category, String loginId, String nickname, int userId, int userJob, Long expiredMs){
         return Jwts.builder()
                 .claim("category", category)
                 .claim("loginId", loginId)
+                .claim("nickname", nickname)
                 .claim("userId", userId)
                 .claim("userJob", userJob)
                 .issuedAt(new Date(System.currentTimeMillis()))

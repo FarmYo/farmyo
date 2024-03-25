@@ -21,7 +21,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 @Validated
 @Slf4j
@@ -56,6 +56,7 @@ public class UserController {
         log.info("User 식별 ID : {}", userDetails.getId());
         log.info("User LoginId : {}", userDetails.getUsername());
         log.info("User 직업 : {}", userDetails.getJob());
+        log.info("User 이름 : {}", userDetails.getNickname());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, "경로별 인가 성공"));
     }
