@@ -4,7 +4,9 @@ import com.ssafy.farmyo.common.exception.CustomException;
 import com.ssafy.farmyo.common.exception.ExceptionType;
 import com.ssafy.farmyo.common.redis.EmailAuth;
 import com.ssafy.farmyo.common.redis.MailRepository;
+import com.ssafy.farmyo.entity.User;
 import com.ssafy.farmyo.user.dto.VerifyCodeReqDto;
+import com.ssafy.farmyo.user.dto.VerifyEmailReqDto;
 import com.ssafy.farmyo.user.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
@@ -17,6 +19,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Optional;
 import java.util.Random;
 
 @Slf4j
@@ -106,9 +109,16 @@ public class MailServiceImpl implements MailService{
 
     // 비밀번호를 찾기 위한 메일 전송
     @Override
-    public void sendPasswordRecoveryMessage(String email) throws MessagingException, UnsupportedEncodingException {
+    public void sendPasswordRecoveryMessage(VerifyEmailReqDto verifyEmailReqDto) throws MessagingException, UnsupportedEncodingException {
+
         // 가입된 이메일인지 확인
-        if(userRepository.findByEmail(email).isEmpty()) throw new CustomException(ExceptionType.EMAIL_NOT_EXIST);
+        User user = userRepository.findByEmail(verifyEmailReqDto.getEmail()).orElseThrow(() -> new CustomException(ExceptionType.EMAIL_NOT_EXIST));
+
+        // 이메일로 가져온 유저 엔티티와 로그인 아이디 일치 여부 확인
+        if(!user.getLoginId().equals(verifyEmailReqDto.getLoginId())) throw new CustomException(ExceptionType.LOGIN_ID_MISMATCH);
+
+
+        String email = verifyEmailReqDto.getEmail();
 
         // 인증 코드 생성
         String authCode = createAuthCode();

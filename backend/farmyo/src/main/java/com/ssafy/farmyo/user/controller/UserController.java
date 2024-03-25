@@ -84,13 +84,16 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
     }
 
-    @Operation(summary = "비밀번호 찾기를 위한 이메일 인증", description = "/users/pwd/auth\n\n 사용자는 비밀번호 찾기를 위해 이메일 인증을 한다.")
+    @Operation(summary = "비밀번호 찾기를 위한 이메일 인증", description = "/users/email/password\n\n 사용자는 비밀번호 찾기를 위해 이메일 인증을 한다.")
     @PostMapping("/email/password")
     @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환")
     public ResponseEntity<? extends BaseResponseBody> verifyPasswordRecoveryEmail(@Valid @RequestBody VerifyEmailReqDto verifyEmailReqDto) throws Exception {
 
+        log.info("{}", verifyEmailReqDto.getEmail());
+        log.info("{}", verifyEmailReqDto.getLoginId());
+
         // 메일 전송 후 코드 받기
-        mailService.sendPasswordRecoveryMessage(verifyEmailReqDto.getEmail());
+        mailService.sendPasswordRecoveryMessage(verifyEmailReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
     }
 
@@ -104,4 +107,14 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, userService.checkIdDuplicate(id)));
     }
 
+    @Operation(summary = "회원 정보 불러오기", description = "현재 로그인한 회원의 정보를 가져온다.")
+    @GetMapping("")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n 유저 정보를 담은 DTO 반환 ")
+    public ResponseEntity<? extends BaseResponseBody> getUserInfo(Authentication authentication) {
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        log.info("User 식별 ID : {}", userDetails.getId());
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, userService.getUserInfo(userDetails.getId())));
+    }
 }
