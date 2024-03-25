@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface ChatService {
     void publishMsg(MessageDto messageDto);
-    List<ChatDto> getChatRooms(int userId);
+    List<ChatDto> getChatRooms(String loginId);
 }
+

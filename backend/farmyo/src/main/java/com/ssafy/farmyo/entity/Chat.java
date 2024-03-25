@@ -8,7 +8,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "chat")
 public class Chat extends BaseTime {
@@ -47,17 +46,11 @@ public class Chat extends BaseTime {
 
     //빌더
     @Builder
-    public Chat(Board board, User seller, User buyer, String sessionId) {
+    public Chat(int id, Board board, User seller, User buyer, String sessionId) {
+        this.id = id;
         this.board = board;
         this.seller = seller;
         this.buyer = buyer;
         this.sessionId = sessionId;
     }
-
-    public void updateChat(String sessionId) {
-        this.sessionId = sessionId;
-    }
-
-
-
 }

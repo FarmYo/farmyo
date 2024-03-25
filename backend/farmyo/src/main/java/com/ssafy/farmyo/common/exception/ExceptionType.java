@@ -51,7 +51,7 @@ public enum ExceptionType {
 
 
     // 채팅
-    CHAT_NOT_EXIST(HttpStatus.BAD_REQUEST, "M-001", "존재하지 않는 채팅입니다.");
+    CHAT_NOT_EXIST(HttpStatus.BAD_REQUEST, "M-001", "존재하지 않는 채팅방입니다.");
 
     // 상태, 에러 코드, 메시지
     private final HttpStatus httpStatus;
