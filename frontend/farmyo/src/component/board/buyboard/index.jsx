@@ -29,7 +29,7 @@ export default function BuyBoardList(){
   return(
     
 
-    <div style={{height:'450px',position:'relative'}}>
+    <div style={{height:'420px',position:'relative'}}>
       {/* 삽니다게시글한개 */}
       <div className="p-4 flex">
         <div className="w-full ml-2">

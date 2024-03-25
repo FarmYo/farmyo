@@ -33,7 +33,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.refreshTokenRepository = refreshTokenRepository;
-        this.setFilterProcessesUrl("/user/login");
+        this.setFilterProcessesUrl("/users/login");
     }
 
     @Override
@@ -76,13 +76,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         int id = userDetails.getId();
         String username = userDetails.getUsername();
+        String nickname = userDetails.getNickname();
         int job = userDetails.getJob();
 
-        log.info("Create Token - loginId : {}, id : {}, job : {}", username, id, job);
+        log.info("Create Token - loginId : {}, id : {}, job : {}, nickname : {}", username, id, job, nickname);
 
         //토큰 생성
-        String access = jwtUtil.createJwt("access", username, id, job, 86400000L);
-        String refresh = jwtUtil.createJwt("refresh", username, id, job,  86400000L);
+        String access = jwtUtil.createJwt("access", username, nickname, id,  job, 86400000L);
+        String refresh = jwtUtil.createJwt("refresh", username, nickname, id, job,  86400000L);
 
         // Refresh 토큰 Redis 저장
         refreshTokenRepository.save(new RefreshToken(refresh, username, access));

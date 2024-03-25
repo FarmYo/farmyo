@@ -57,7 +57,5 @@ spring:
             trust: ENC(drFX7+EasQdiMjHhaWGChiVc/KNFIJOM)
           # STARTTLS 연결을 활성화 (평문 통신 채널에서 암호화 통신 채널로 업그레이드)
           starttls.enable: true
-  servlet:
-    multipart:
-      max-file-size: 50MB
-      max-request-size: 100MB
+  openAPI:
+    serviceKey: ENC(nXjJih1FS+sHcpW4XwDjHHPzKatWDkcgU/ntbVePC75gtXui+qMV+C/yCNGFI3vHKXQowSZ9Rqaj9zwGJxBT2746Y4MY/3F5BKn8Cekwlq2yup+YVqzbgqwThNAFps0yYVLJX/qvqp436o1EApkI0g==)
