@@ -1,9 +1,6 @@
 package com.ssafy.farmyo.common.config;
 
-import com.ssafy.farmyo.common.auth.CustomAccessDeniedHandler;
-import com.ssafy.farmyo.common.auth.CustomAuthenticationEntryPoint;
-import com.ssafy.farmyo.common.auth.JWTFilter;
-import com.ssafy.farmyo.common.auth.LoginFilter;
+import com.ssafy.farmyo.common.auth.*;
 import com.ssafy.farmyo.common.jwt.JWTUtil;
 import com.ssafy.farmyo.common.redis.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.Arrays;
@@ -88,6 +86,8 @@ public class SecurityConfig {
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
         http
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshTokenRepository), UsernamePasswordAuthenticationFilter.class);
+        http
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenRepository), LogoutFilter.class);
 
         List<String> origins = List.of("http://localhost:3000", "https://j10d209.p.ssafy.io","http://172.30.1.74:3000");
 
