@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
-import api from "../../../../api/api"
+import api from '../../../api/api';
 import '../../../css/signup.css';
 
 export default function Business() {
@@ -46,21 +46,32 @@ export default function Business() {
         title:'회원이 되신 걸<br>환영합니다',
         confirmButtonColor: '#1B5E20',
       })
-    } else if (res.data.dataHeader.resultCode === "G-003") {
-      Swal.fire({
-        title:'G-003 에러',
-        html: '회원가입 실패',
-        confirmButtonColor: '#1B5E20',
-      })
+    } else {
+      console.log('그렇지만 여기로 왔다는 건 로직 다시 확인 필요')
     }
   })
   .catch((err) => {
+    if (err.response.data.dataHeader.resultCode === "U-008") {
+      console.log('사업자등록 오류', err)
+      Swal.fire({
+        title:'사업자등록 오류',
+        html: '사업자 등록 정보를 확인해주세요',
+        confirmButtonColor: '#1B5E20',
+      })
+    } else if (err.response.data.dataHeader.resultCode === "U-009") {
+      console.log('중복된 사업자등록', err)
+      Swal.fire({
+        title:'중복된 사업자등록',
+        html: '사업자 등록 정보를 확인해주세요',
+        confirmButtonColor: '#1B5E20',
+      })
+    } else {
     console.log('판매자 회원가입 확인 실패', err)
     Swal.fire({
       title:'알 수 없는 에러',
       html: '회원가입 실패',
       confirmButtonColor: '#1B5E20',
-    })
+    })}
   })
 } else {
   console.log('판매자 회원가입 실패 화면 확인해보기', '우편번호 : ', zoomNumber, '주소 :', address, '상세주소 :', detailAddress, '예금주 :', account, '계좌번호 :', accountNumber, '은행명 :', bankName, '사업자등록번호 :', businessNumber, '대표자 :', ownerName, '개업일 :', openDay)

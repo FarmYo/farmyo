@@ -232,11 +232,18 @@ export default function SignUpFirst() {
     if (checkIsId === true && checkIsEmail === true && checkIsPassword === true) {
       navigate("/signup/second", { state: { isSeller, id, email, password } }, { replace: true })
     } else {
+      if (checkIsId === true && checkIsEmail === false && checkIsPassword === true) {
+        console.log('이메일 인증 실패')
+      Swal.fire({
+        html: '<br>이메일 인증을<br>확인해주세요',
+        confirmButtonColor: '#1B5E20',
+      })
+      } else {
       console.log('로그인 실패 화면 확인해보기', checkIsId, checkIsEmail, checkIsPassword)
       Swal.fire({
         html: '<br>입력 정보를<br>확인해주세요',
         confirmButtonColor: '#1B5E20',
-      })
+      })}
     }
   }
 
