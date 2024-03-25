@@ -1,5 +1,6 @@
 package com.ssafy.farmyo.board.dto;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
@@ -19,10 +20,10 @@ public class AddBuyBoardReqDto {
     @NotBlank
     private String content;
     //거래량
-    @NotEmpty
+    @Min(value = 1, message = "수량은 0보다 커야합니다.")
     private int quantity;
     //가격
-    @NotEmpty
+    @Min(value = 1, message = "가격은 0보다 커야합니다.")
     private int price;
 
 }
