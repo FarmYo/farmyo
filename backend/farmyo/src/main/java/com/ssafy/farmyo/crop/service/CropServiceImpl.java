@@ -10,7 +10,6 @@ import com.ssafy.farmyo.crop.repository.CropCategoryRepository;
 import com.ssafy.farmyo.crop.repository.CropRepository;
 import com.ssafy.farmyo.entity.Crop;
 import com.ssafy.farmyo.entity.CropCategory;
-import com.ssafy.farmyo.entity.CropCert;
 import com.ssafy.farmyo.entity.Farmer;
 import com.ssafy.farmyo.user.repository.FarmerRepository;
 import com.ssafy.farmyo.user.repository.UserRepository;
