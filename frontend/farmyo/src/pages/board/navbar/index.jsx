@@ -1,6 +1,7 @@
 import { Menu, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
 import Dropdown from '../../../image/component/dropdown.png'
+import Up from '../../../image/component/up.png'
 import Search from '../../../image/component/search.png'
 import { useState,useEffect } from 'react'
 import SellBoardList from '../../../component/board/sellboard'

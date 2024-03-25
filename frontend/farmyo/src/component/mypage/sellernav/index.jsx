@@ -35,7 +35,9 @@ export default function MypageNavbar() {
     <div>
       <div style={{height:50,backgroundColor:'#1B5E20'}}>
         <div className="p-2 flex justify-between">
+          {/* 마이라는 이름은 자기프로필일때만이고 다른사람이면 상대방 닉네임이름으로 뜨게 */}
           <h1 className="text-xl font-bold" style={{color:"white"}}>마이페이지</h1>
+          {/* 마이페이지유저와 로그인유저가 일치해야 보이는것 */}
           <h1 className="text-sm font-bold flex items-center" style={{color:"white"}}>로그아웃</h1>
         </div>
       </div>
