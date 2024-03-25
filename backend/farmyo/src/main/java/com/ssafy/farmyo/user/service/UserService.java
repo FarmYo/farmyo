@@ -1,6 +1,7 @@
 package com.ssafy.farmyo.user.service;
 
 import com.ssafy.farmyo.user.dto.JoinReqDto;
+import com.ssafy.farmyo.user.dto.PasswordResetDto;
 import com.ssafy.farmyo.user.dto.UserResDto;
 
 public interface UserService {
@@ -15,4 +16,7 @@ public interface UserService {
 
     // 회원 정보 불러오기
     UserResDto getUserInfo(int id);
+
+    // 비밀번호 초기화
+    void resetPassword(PasswordResetDto passwordResetDto);
 }

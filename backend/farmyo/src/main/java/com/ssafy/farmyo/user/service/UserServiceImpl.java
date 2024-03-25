@@ -4,11 +4,13 @@ import com.ssafy.farmyo.common.exception.CustomException;
 import com.ssafy.farmyo.common.exception.ExceptionType;
 import com.ssafy.farmyo.entity.*;
 import com.ssafy.farmyo.user.dto.JoinReqDto;
+import com.ssafy.farmyo.user.dto.PasswordResetDto;
 import com.ssafy.farmyo.user.dto.UserResDto;
 import com.ssafy.farmyo.user.openApi.OpenApiManager;
 import com.ssafy.farmyo.user.repository.AddressRepository;
 import com.ssafy.farmyo.user.repository.FarmerRepository;
 import com.ssafy.farmyo.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -122,5 +124,17 @@ public class UserServiceImpl implements UserService {
 
         // 회원 정보 return
         return userRepository.getUserInfoById(id);
+    }
+
+    @Override
+    @Transactional
+    public void resetPassword(PasswordResetDto passwordResetDto) {
+
+        // 비밀번호를 바꾸고자 하는 유저의 엔티티를 가져옴
+        User user = userRepository.findByEmail(passwordResetDto.getEmail()).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+
+        // 해당 비밀번호 수정 (Dirty Checking)
+        user.updatePassword(bCryptPasswordEncoder.encode(passwordResetDto.getPassword()));
+
     }
 }
