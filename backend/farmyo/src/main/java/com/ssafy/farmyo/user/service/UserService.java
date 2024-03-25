@@ -2,6 +2,7 @@ package com.ssafy.farmyo.user.service;
 
 import com.ssafy.farmyo.user.dto.JoinReqDto;
 import com.ssafy.farmyo.user.dto.PasswordResetDto;
+import com.ssafy.farmyo.user.dto.PasswordUpdateDto;
 import com.ssafy.farmyo.user.dto.UserResDto;
 
 public interface UserService {
@@ -19,4 +20,7 @@ public interface UserService {
 
     // 비밀번호 초기화
     void resetPassword(PasswordResetDto passwordResetDto);
+
+    // 비밀번호 수정
+    void updatePassword(int id, PasswordUpdateDto passwordUpdateDto);
 }
