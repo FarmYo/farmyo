@@ -1,82 +1,95 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 // import { Element } from "react-scroll";
-import strawberry from '../../../image/component/trade/strawberry.jpg'
-import bam from '../../../image/component/trade/bam.jpg'
-import sweetpotato from '../../../image/component/trade/sweetpotato.jpg'
 import '../../../css/trade.css'
+import { Menu, Transition } from '@headlessui/react'
+import { Fragment } from 'react'
+import Dropdown from '../../../image/component/dropdown.png'
+import Up from '../../../image/component/up.png'
 
-// 상품을 받아올테니까 대충 있다고 치고
-const ListData = [
-  { id: 1, name: "딸기딸기딸기딸기", seller: "조현제", photo: strawberry, status: "입금 대기중" },
-  { id: 2, name: "달고달고 달디단 밤", seller: "조현제", photo: bam, status: "입금 완료" },
-  { id: 3, name: "호박고구마호박고구마!", seller: "조현제", photo: sweetpotato, status: "거래중" },
-  { id: 4, name: "테스트", seller: "테스트", photo: "기본 이미지", status: "거래중" },
-  { id: 5, name: "거래", seller: "완료", photo: "불러오면 넣을 거", status: "거래완료" },
-  { id: 6, name: "거래완료", seller: "거래완료", photo: "대충 이미지", status: "거래완료" },
-  { id: 7, name: "이름", seller: "판매자", photo: "대충 사진", status: "거래완료" },
+// 진행중인 거래목록들
+const ongoingData = [
+  { id: 1, name: "딸기딸기딸기딸기", seller: "조현제",  status: "입금 대기중",count:50,won:10000 },
+  { id: 2, name: "달고달고 달디단 밤", seller: "조현제", status: "입금 완료",count:50,won:10000  },
+  { id: 3, name: "호박고구마호박고구마!", seller: "조현제", status: "거래중" ,count:50,won:10000 },
 ];
 
 export default function OngoingTrade() {
-  const [filter, setFilter] = useState("전체");
-  const filteredList = ListData.filter(item => item.status === filter || (filter === "전체" && item.status !== "거래완료"));
-  const navigate = useNavigate()
-  const [currentPage, setCurrentPage] = useState(1);
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-  const getVisibleList = () => {
-    const startIndex = (currentPage - 1) * 3; // 현재 페이지의 시작 인덱스
-    const endIndex = startIndex + 3; // 현재 페이지의 끝 인덱스
-    return filteredList.slice(startIndex, endIndex); // 현재 페이지에 표시할 목록
-  };
+  function classNames(...classes) {
+    return classes.filter(Boolean).join(' ')
+  }
+  const [selectedItem, setSelectedItem] = useState('전체')
+  const [isOpen, setIsOpen] = useState(false) // 드롭다운 메뉴 열림닫힘 구분
+
+  // 전체,입금대기중,입금완료,거래중 필터링
+  const filteredItems = ongoingData.filter(item => {
+    if (selectedItem === '전체') return true; 
+    return item.status === selectedItem; 
+  });
+
+
   return(
     <div>
       {/* 드롭다운 구현 */}
-      <div className="flex justify-end">
-      <div className="dropdown dropdown-hover">
-        <div 
-          tabIndex={0} 
-          role="button" 
-          className="btn m-1 filterbutton" 
-          onClick={() => setFilter("전체")}
-        >
-          {filter}
+      <div className='p-2 flex justify-end'>
+        <Menu as="div" className="relative inline-block text-left">
+        <div>
+          <Menu.Button className="inline-flex w-32 h-12 justify-between items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50"
+          style={{ border: '3px solid #81C784', backgroundColor: 'transparent'}}>
+            <div className='pl-3'>{selectedItem}</div>
+            <img src={isOpen ? Up : Dropdown} alt="" style={{width:15,height:10}}/>
+          </Menu.Button>
         </div>
-          <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow rounded-box w-52">
-            <li><button onClick={() => setFilter("전체")}>전체</button></li>
-            <li><button onClick={() => setFilter("입금 대기중")}>입금 대기중</button></li>
-            <li><button onClick={() => setFilter("입금 완료")}>입금 완료</button></li>
-            <li><button onClick={() => setFilter("거래중")}>거래중</button></li>
-          </ul>
-      </div>
-      </div>
-      {/* 진행중 목록 화면에 나타낼 것 */}
-      {/* <div className="fruitlist">  스크롤 표시하려고 함 */}
-      <div className="scroll-mr-1">
-        {getVisibleList().map(item => (
-          <div key={item.id} className="item p-2 border rounded-md" onClick={() => {navigate(`/trade/seller/${item.id}`)}}>
-            <img src={item.photo} alt={item.name} />
-            <div>
-              <div>{item.name}</div>
-              <div>{item.seller}</div>
-              
+        <Transition
+          as={Fragment}
+          enter="transition ease-out duration-100"
+          enterFrom="transform opacity-0 scale-95"
+          enterTo="transform opacity-100 scale-100"
+          leave="transition ease-in duration-75"
+          leaveFrom="transform opacity-100 scale-100"
+          leaveTo="transform opacity-0 scale-95"
+        >
+          <Menu.Items className="absolute left-0 z-10 mt-2 w-28 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <div className="py-1">
+              {['전체','입금 대기중', '입금 완료', '거래중'].map((item) => (
+                <Menu.Item key={item}>
+                  {({ active }) => (
+                    <a
+                      href="#"
+                      className={`${
+                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
+                      } block px-4 py-2 text-sm`}
+                      onClick={(e) => {
+                        setSelectedItem(item)}}
+                    >
+                      {item}
+                    </a>
+                  )}
+                </Menu.Item>
+              ))}
             </div>
-            <span className="item-status">({item.status})</span>
-             
+          </Menu.Items>
+        </Transition>
+      </Menu>
+      </div>
+      
+      {/* 거래목록  */}
+      {filteredItems.map((item) => (
+          <div key={item.id} className="p-3 border-b-2 border-gray-150 flex">
+            <div style={{backgroundColor:'#bbbbbb'}} className="w-32"></div>
+            <div className="w-full ml-2">
+              <h1 className="text-lg font-bold">{item.name}</h1>
+              <h1 className="text-sm">{item.seller}</h1>
+              <h1 style={{ color:'#1B5E20' }} className="font-bold">{item.count}kg</h1>
+              <div className='flex justify-between'>
+                <h1 style={{ color:'#1B5E20' }} className="font-bold">{item.won}원/kg</h1>
+                <h1 className="text-xl">{item.status}</h1>
+              </div>     
+            </div>
           </div>
-        ))}
-      </div>
+        ))
+      }
 
-      {/* 페이지네이션 */}
-      <div className="join flex justify-center pagination">
-        {Array.from({ length: Math.ceil(filteredList.length / 3) }).map((_, index) => (
-          <button key={index} className="join-item btn" onClick={() => handlePageChange(index + 1)}>
-            {index + 1}
-          </button>
-        ))}
-      </div>
-      {/* </div> */}
     </div>
   )
 }

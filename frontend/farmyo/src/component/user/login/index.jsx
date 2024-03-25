@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, Link } from "react-router-dom";
 import api from "../../../api/api"
+import Swal from 'sweetalert2';
 import Logo from '../../../image/component/user/logo.png';
 import '../../../css/signup.css';
 
@@ -17,7 +18,7 @@ export default function LoginInput() {
         console.log('비밀번호가 비었다')
       }
     } else {
-    api.post('user/login', {
+    api.post('users/login', {
         loginId:id, password
       }
     )
@@ -31,7 +32,7 @@ export default function LoginInput() {
       console.log('로그인 실패', err)
       setId("")
       setPassword("")
-      alert('로그인에 실패하셨습니다.')
+      Swal.fire('아이디·비밀번호를<br>확인해주세요')
     })
   }}
 
