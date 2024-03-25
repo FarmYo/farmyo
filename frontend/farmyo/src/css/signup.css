@@ -11,8 +11,21 @@
   margin-top: 37%;
 }
 
+.text {
+  font-size: x-large;
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
 .warningmessage {
   color: red;
+  font-size: smaller;
+  padding-left: 2%;
+}
+
+.successmessage {
+  color: green;
   font-size: smaller;
   padding-left: 2%;
 }
@@ -50,7 +63,7 @@
 
 .fixed-bottom {
   position: fixed;
-  bottom: 110px;
+  bottom: 0;
   /* bottom: 0; 바닥에 붙여놓기(지금은 하단네브바있어서) */
   width: 100%;
   text-align: center; /* 버튼을 중앙에 배치하려면 */
@@ -63,6 +76,12 @@
   border: #1B5E20 solid 1px;
   background-color: #1B5E20;
   color : white;
+}
+
+.closeButton {
+  position: absolute;
+  right: 10px; /* 오른쪽 끝에서 10px 간격으로 조정 */
+  top: 10px;
 }
 
 /* 사업자 등록 */
@@ -99,7 +118,7 @@
   max-width: 100%;
   max-height: 100vh; /* 화면 높이에 맞춰 설정 */ 
   width: 90%; 
-  position: fixed; 
+  position: fixed;
   top: 30%;
   left: 0;
   border-radius: 5%;

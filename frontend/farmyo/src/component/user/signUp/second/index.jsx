@@ -1,25 +1,92 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useCallback } from 'react'
+// import React, { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import DaumPostcode from 'react-daum-postcode';
 import Modal from 'react-responsive-modal';
+import Swal from "sweetalert2";
 import '../../../../css/signup.css';
 
 export default function SignUpSecond() {
   const navigate = useNavigate()
+
+  const location = useLocation()
+  const { isSeller, id, email, password } = location.state;
+  const alerter = () => {
+    Swal.fire({
+      title: '숫자 외에 입력할 수 없습니다.',
+      confirmButtonColor: '#1B5E20',
+    });
+  };
   
   const [nickName, setNickName] = useState("")
+  const [isNickName, setIsNickName] = useState(false)
+  const checkNickName = ((nickName) => {
+    if (nickName) {
+      setIsNickName(true)
+    }
+  })
   
-  const [phoneNumber,setPhoneNumber] = useState("")
+  const [phoneNumber, setPhoneNumber] = useState("")
+  const [isPhoneNumber, setIsPhoneNumber] = useState(false)
+  const isNumber = ((number) => {
+    if (isNaN(number)) {
+      alerter()
+      const numbers = number.replace(/[^0-9]/g, "");
+      setPhoneNumber(numbers)
+    } else {
+      setPhoneNumber(number)
+    }
+  })
+  const checkPhoneNumber = ((phoneNumber) => {
+    if (phoneNumber) {
+      setIsPhoneNumber(true)
+    }
+  })
+  
+  const [zoomNumber, setZoomNumber] = useState("")
 
   const [address, setAddress] = useState("")
-  const [detailAddress, setDetailAddress] = useState("")
-  const [isOpen, setIsOpen] = useState(false);
+  const [isAddress, setIsAddress] = useState(false)
+  const checkAddress = ((address) => {
+    if (address.length > 0) {
+      setIsAddress(true)
+    }
+  })
   const addressSearch = (data) => {
+    // 주소 입력시 모달 확인 => 페이지를 새로 만든다 or 모달 띄우는 법을 찾는다(커스텀)
     console.log(data)
     setAddress(data.roadAddress);
-    setDetailAddress('');
-    setIsOpen(false)
+    setZoomNumber(data.zonecode)
+    setIsAddress(true)
+    // setDetailAddress('');
+    // setIsOpen(false)
   }
+  const [detailAddress, setDetailAddress] = useState("")
+  const [isDetailAddress, setIsDetailAddress] = useState(false)
+  const checkDetailAddress = ((detailAddress) => {
+    if (detailAddress) {
+      setIsDetailAddress(true)
+    }
+  })
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const changePage = (() => {
+      if (isNickName === true && isPhoneNumber === true && isAddress === true && isDetailAddress === true) {
+        console.log(isSeller, id, email, password, nickName, phoneNumber, address, detailAddress)
+        navigate("/signup/third", { state: { isSeller, id, email, password, nickName, phoneNumber, zoomNumber, address, detailAddress } }, { replace: true })
+        // navigate("/signup/third", { state: { nickName, phoneNumber, address, detailAddress } }, { replace: true })
+      } else {
+        console.log('로그인 실패 화면 확인해보기', isNickName, isPhoneNumber, isAddress, isDetailAddress)
+        Swal.fire({
+          html: '<br>입력 정보를<br>확인해주세요',
+          confirmButtonColor: '#1B5E20',
+        })
+      }
+    }
+  )
+
 
   useEffect(() => {
     const allInputs = document.querySelectorAll('input');
@@ -35,6 +102,7 @@ export default function SignUpSecond() {
       });
     });
   }, []);
+
   return(
     <div>
     <div className="main mx-auto w-auto max-w-sm p-10">
@@ -49,6 +117,9 @@ export default function SignUpSecond() {
         <input 
           value={nickName}
           onChange={(event) => setNickName(event.target.value)}
+          onBlur={(nickName) => {
+            checkNickName(nickName)
+          }}
           id="nickname" 
           name="nickname" 
           type="text" 
@@ -68,7 +139,10 @@ export default function SignUpSecond() {
         <div>
           <input 
             value={phoneNumber}
-            onChange={(event) => setPhoneNumber(event.target.value)}
+            onChange={(event) => isNumber(event.target.value)}
+            onBlur={(phoneNumber) => {
+              checkPhoneNumber(phoneNumber)
+            }}
             id="phonenumber" 
             name="phonenumber" 
             type="tel" 
@@ -91,6 +165,9 @@ export default function SignUpSecond() {
         <input 
           value={address}
           onChange={(event) => setAddress(event.target.value)}
+          onBlur={(event) => {
+            checkAddress(event.target.value)
+          }}
           id="address" 
           name="address" 
           type="text"
@@ -111,6 +188,9 @@ export default function SignUpSecond() {
         <input 
           value={detailAddress}
           onChange={(event) => setDetailAddress(event.target.value)}
+          onBlur={(detailAddress) => {
+            checkDetailAddress(detailAddress)
+          }}
           id="detailaddress" 
           name="detailaddress" 
           type="text" 
@@ -121,27 +201,41 @@ export default function SignUpSecond() {
         />
       </div>
 
+    <div style={{ position: 'relative' }}>
       <Modal
         open={isOpen}
         showCloseIcon={false}
-        classNames={{
+        className={{
           modal: 'customModal',
         }}
+        onOverlayClick={() => setIsOpen(false)} //  Modal 외부 영역을 클릭했을 때 실행되는 함수
+        onEscapeKey={() => setIsOpen(false)} // Esc 키를 눌렀을 때 실행되는 함수
+        onClose={() => {}}
       >
+        {/* <button 
+          onClick={() => {
+            setIsOpen(false)
+          }}
+          className="closeButton"
+        >X</button> */}
         <DaumPostcode
-          onComplete={addressSearch}
+          onComplete={(data) => {
+            addressSearch(data);
+            // setIsOpen(false); // 주소 검색 완료 후 Modal 닫기 // 주소가 안되는 문제 수정해야한다.
+          }}
           autoClose
           width="100%"
           height="100%"
         />
       </Modal>
-      </div>
+    </div>
+  </div>
 
     </div>
     <div className="fixed-bottom">
       <button 
         className="finishbutton"
-        onClick={() => {navigate("/signup/third")}}
+        onClick={() => changePage()}
       >
         추가정보입력(2/3)
       </button>

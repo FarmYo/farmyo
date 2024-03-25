@@ -91,11 +91,11 @@ export default function MypageEdit(){
           disabled/>
       </div>
       <div className="flex justify-between mt-5">
-        <button class="btn rounded-md" style={{ backgroundColor:'#81C784'}}>
-          <h1 style={{ color:'white' }} className="text-sm" onClick={()=>document.getElementById('changepassword').showModal()}>비밀번호 변경</h1>
+        <button class="btn rounded-md" style={{ backgroundColor:'#81C784'}} onClick={()=>document.getElementById('changepassword').showModal()}>
+          <h1 style={{ color:'white' }} className="text-sm" >비밀번호 변경</h1>
         </button>
-        <button class="btn rounded-md w-32" style={{ backgroundColor:'#81C784'}}>
-          <h1 style={{ color:'white' }} className="text-sm" onClick={()=>document.getElementById('edit').showModal()}>프로필 수정</h1>
+        <button class="btn rounded-md w-32" style={{ backgroundColor:'#81C784'}} onClick={()=>document.getElementById('edit').showModal()}>
+          <h1 style={{ color:'white' }} className="text-sm" >프로필 수정</h1>
         </button>
       </div>
       {/* 비밀번호변경모달 */}

@@ -10,4 +10,7 @@ import java.util.Optional;
 public interface FarmerRepository extends JpaRepository<Farmer, Integer> {
     //로그인 아이디로 해당 농부조회
     Optional<Farmer> findByLoginId(String loginId);
+
+    // 사업자 번호로 해당 농부 조회
+    Optional<Farmer> findByFarmerLicense(String licenseNum);
 }

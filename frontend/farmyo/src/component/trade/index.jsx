@@ -19,10 +19,9 @@ export default function Trade() {
           <h1 className="text-xl font-bold" style={{color:"white"}}>거래</h1>
         </div>
       </div>
-
-      <div className='flex justify-around p-3' style={{height:50}}>
-        <h1 className='font-extrabold' style={{ color: selected === 0 ? 'black' : 'gray' }} onClick={()=>{handleClick(0)}}>진행중인 거래</h1>
-        <h1 className='font-extrabold' style={{ color: selected === 1 ? 'black' : 'gray' }} onClick={()=>{handleClick(1)}}>완료된 거래</h1>
+      <div className='flex justify-around border-b-2 p-2 border-gray-300' style={{height:60}}>
+        <div className='flex justify-center items-center'><h1 className='font-bold text-lg' style={{ color: selected === 0 ? 'black' : 'gray' }} onClick={()=>{handleClick(0)}}>진행중인 거래</h1></div>
+        <div className='flex justify-center items-center'><h1 className='font-bold text-lg' style={{ color: selected === 1 ? 'black' : 'gray' }} onClick={()=>{handleClick(1)}}>완료된 거래</h1></div>
       </div>
       {/* 선택된 컴포넌트 조건부 렌더링 */}
       {selected === 0 && <OngoingTrade />}

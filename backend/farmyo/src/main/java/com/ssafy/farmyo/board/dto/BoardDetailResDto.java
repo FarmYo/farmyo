@@ -17,6 +17,8 @@ public class BoardDetailResDto {
     private int userId;
     //작성자닉네임
     private String userNickname;
+    //작성자 로그인id
+    private String userLoginId;
     //작물Id
     private int cropId;
     //작물카테고리이름
