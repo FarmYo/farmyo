@@ -1,25 +1,12 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-// import axios from "axios";
 import "react-responsive-modal/styles.css"
 import { Modal } from "react-responsive-modal"
 import Swal from "sweetalert2";
 import "../../../css/trade.css";
 
 export default function SellerTrade() {
-  const { cropId } = useParams(); // URL 파라미터에서 `cropId` 추출
-  // 받아온 거 그대로 적어주기
-  // const [item, setItem] = useState(null);
-  // useEffect(() => {
-  //   // 전달받은 id값을 사용하여 데이터 불러오기
-  //   axios.get(`/api/trades/${id}`)
-  //     .then(response => response.json())
-  //     .then(data => setItem(data));
-  // }, [id]);
-  // item 값이 없을 때(시간차이) 로딩화면 띄우기
-  // if (!item) {
-  //   return <div>대기화면 컴포넌트</div>;
-  // }
+
   const [open,setOpen] = useState(false)
 
   const onOpenModal = () => {
