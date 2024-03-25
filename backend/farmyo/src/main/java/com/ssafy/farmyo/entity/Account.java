@@ -1,15 +1,14 @@
 package com.ssafy.farmyo.entity;
 
-import com.ssafy.farmyo.common.entity.BaseTime;
-import com.ssafy.farmyo.entity.User;
-import jakarta.persistence.*;
-import lombok.AccessLevel;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Embeddable
 @Getter
+@NoArgsConstructor
 public class Account{
 
     //예금주
@@ -36,7 +35,10 @@ public class Account{
         this.accountBalance = accountBalance;
     }
 
-    public Account() {
-
+    public void updateAll(String depositor, String bankName, String accountNumber) {
+        this.depositor = depositor;
+        this.bankName = bankName;
+        this.accountNumber = accountNumber;
+        this.accountBalance = 0;
     }
 }

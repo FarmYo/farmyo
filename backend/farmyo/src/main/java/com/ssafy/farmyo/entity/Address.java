@@ -1,7 +1,6 @@
 package com.ssafy.farmyo.entity;
 
 import com.ssafy.farmyo.common.entity.BaseTime;
-import com.ssafy.farmyo.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -41,6 +40,12 @@ public class Address extends BaseTime {
     @Builder
     public Address(User user, String addressCode, String addressLegal, String addressDetail) {
         this.user = user;
+        this.addressCode = addressCode;
+        this.addressLegal = addressLegal;
+        this.addressDetail = addressDetail;
+    }
+
+    public void updateAll(String addressCode, String addressLegal, String addressDetail){
         this.addressCode = addressCode;
         this.addressLegal = addressLegal;
         this.addressDetail = addressDetail;
