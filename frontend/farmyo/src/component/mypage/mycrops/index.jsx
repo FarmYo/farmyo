@@ -38,17 +38,44 @@ export default function MyCrops() {
   const [endDate, setEndDate] = useState(null)
   const [selected,setSelected] = useState('')
   const [cropList,setCropList] = useState([]) // 작물등록시 작물 리스트
-  const [selectedCrop, setSelectedCrop] = useState('작물을 선택하세요')
   const [cropsList,setCropsList] = useState([]) // 농부가 등록한 작물조회시 담길 리스트
+  const [cropId,setCropId] = useState(null)
+  //작물 리스트 5개단위로 페이지네이션
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 5
+  //전체 페이지수 계산
+  const totalItems = cropsList.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-  
+
+
+
+  // currentPage에 따라 보여줄 항목 계산
+  const indexOfLastItem = currentPage * itemsPerPage
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage
+  const currentItems = cropsList.slice(indexOfFirstItem, indexOfLastItem)
+
+   // 페이지 변경 함수
+   const goToNextPage = () => {
+    setCurrentPage(currentPage => {
+      if (currentPage < totalPages) return currentPage + 1;
+      return currentPage;
+    });
+  };
+   const goToPrevPage = () => setCurrentPage(page => page > 1 ? page - 1 : page);
+
+   const pageNumbers = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumbers.push(i);
+    }
+
+
   useEffect(()=>{
     setSelected('구분')
-    // 작물 리스트 조회
+    // 작물 리스트 조회(수정필요) 지금은 임시로 ssafy1의 작물리스트르 조회함
     api.get('crops/list/ssafy1')
     .then((res)=>{
       console.log(res)
-      console.log(res.data.dataBody)
       setCropsList(res.data.dataBody)
     })
     .catch((err)=>{
@@ -57,7 +84,7 @@ export default function MyCrops() {
     // 작물 카테고리 조회
     api.get('crops/category')
     .then((res)=>{
-      console.log(res)
+      // console.log(res)
       setCropList(res.data.dataBody)
     })
     .catch((err)=>{
@@ -79,15 +106,42 @@ export default function MyCrops() {
   const [cropName,setCropName] = useState('')
   const [cropPlantingDate,setCropPlantingDate] = useState('')
   const [cropCultivationSite,setCropCultivationSite] = useState('')
+  const [cropHarvestDate,setCropHarvestDate] = useState('')
+  const [cropImgUrl,setCropImgUrl] = useState('')
 
   //농산물등록모달
   const onOpenModal = () => {
     setOpen(true);
   };
 
+  //작물 등록에 필요한 값
+  const [selectedCrop, setSelectedCrop] = useState({ id: null, categoryName: '작물을 선택하세요' })
+  const [cultivation,setCultivation] = useState('') // 재배지
+  const [plantingDate,setPlantingDate] = useState('') // 심은날짜
+
   const onCloseModal = () => {
-    setOpen(false);
+    setOpen(false)
+    // 작물등록axios
+    api.post('crops',{
+        cropCategoryId:selectedCrop.id,
+        cultivation:cultivation,
+        plantingDate:plantingDate
+      }
+    )
+    .then((res)=>{
+      console.log('작물등록성공')
+      console.log(res)
+      // 상태 초기화
+      setSelectedCrop({ id: null, categoryName: '작물을 선택하세요' });
+      setCultivation('');
+      setPlantingDate('');
+
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
   };
+
 
   // 농산물정보보기모달(수확전)
   const infoOpenModal = (crop_id) => {
@@ -111,8 +165,20 @@ export default function MyCrops() {
     setInfoOpen(false);
   };
   // 농산물정보보기모달(수확후)
-  const info2OpenModal = () => {
+  const info2OpenModal = (crop_id) => {
     setInfo2Open(true);
+    api.get(`crops/${crop_id}`)// crop_id 변수를 URL에 삽입
+    .then((res)=>{
+      console.log(res)
+      setCropName(res.data.dataBody.cropName)
+      setCropPlantingDate(res.data.dataBody.cropPlantingDate)
+      setCropCultivationSite(res.data.dataBody.cropCultivationSite)
+      setCropHarvestDate(res.data.dataBody.cropHarvestDate)
+      setCropImgUrl(res.data.dataBody.cropImgUrl)
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
   };
 
   const info2CloseModal = () => {
@@ -172,27 +238,45 @@ export default function MyCrops() {
     setLifeRecordOpen(false);
   };
   
-  
-
 
   return(
     // "작물없으면 등록한 작물이 없습니다"노출
-    <div style={{ position:'relative',height:'400px'}}>
+    <div style={{ position:'relative',height:'410px'}}>
       {/* 아래의 디브가 작물이 추가될 때마다 반복됨  */}
-      {cropsList.map((crop,index)=>(
-      <div  key={crop.id} className="flex">
-        <div style={{backgroundColor:'#bbbbbb',width:80}}></div>
+      {currentItems.map((crop,index)=>(
+      <div  key={crop.id} className="flex"
+            onClick={crop.cropHarvestDate == null ? () => infoOpenModal(crop.id) : () => info2OpenModal(crop.id)}>
+        {/* <div style={{backgroundColor:'#bbbbbb',width:80}}></div> */}
+        {crop.cropHarvestDate ? (
+      <img src={crop.cropImgUrl} alt="Crop Image" style={{width:80, height: 70, objectFit: 'cover'}} />
+    ) : (
+      <div style={{backgroundColor:'#bbbbbb',width:80}}></div>
+    )}
         <div className="p-5">
           <h1 className="font-bold">{crop.cropName}</h1>
-          {crop.cropHarvestDate && <h1 className="text-sm">{crop.cropHarvestDate}</h1>}
+          {crop.cropHarvestDate && <h1 className="text-sm">수확날짜 : {crop.cropHarvestDate}</h1>}
         </div>
         <div className="ml-auto flex items-center p-5"
-        onClick={crop.cropHarvestDate == null ? () => infoOpenModal(crop.id) : () => info2OpenModal(crop.id)}>
+        >
           <img src={Next} alt="" style={{width:30,height:30}}/>
         </div>
       </div>
       ))}
       
+      <div style={{ position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)' }}>
+        <div className="join flex justify-center">
+          <button className="join-item btn"  onClick={goToPrevPage}>«</button>
+          {pageNumbers.map(number => (
+          <button key={number}
+          className={`join-item btn ${currentPage === number ? 'active' : ''}`}
+          onClick={() => setCurrentPage(number)}>
+            {number}
+          </button>
+          ))}
+          <button className="join-item btn"  onClick={goToNextPage}>»</button>
+        </div>
+      </div>
+
   
       <div style={{ position: 'absolute', bottom: 0, right: 10}}>
         <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
@@ -211,7 +295,7 @@ export default function MyCrops() {
           <Menu.Button className="inline-flex w-full justify-center items-center gap-x-1.5 rounded-md
           bg-white px-12 py-3 text-xl text-gray-900 font-semibold
             ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-            {selectedCrop}
+            {selectedCrop.categoryName}
             <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
           </Menu.Button>
   
@@ -228,7 +312,7 @@ export default function MyCrops() {
           style={{width:'16rem'}}>
             <div className="py-1">
               {cropList.map((crop,index)=>(
-              <Menu.Item key={crop.id} onClick={() => setSelectedCrop(crop.categoryName)}> 
+              <Menu.Item key={crop.id} onClick={() => setSelectedCrop({ id: crop.id, categoryName: crop.categoryName })}> 
                 {({ active }) => (
                   <button
                     href="#"
@@ -252,7 +336,8 @@ export default function MyCrops() {
             <label for="price" class="block text-xl font-medium leading-6 text-gray-900">재배지</label>
             <div class="relative mt-2 rounded-md shadow-sm">
               <input type="text" name="price" id="price" class="block h-12 w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
-              placeholder="재배지를 입력하세요"/>
+              placeholder="재배지를 입력하세요"
+              onChange={(e) => setCultivation(e.target.value)}/>
               <div class="absolute inset-y-0 right-0 flex items-center">
               </div>
             </div>
@@ -262,10 +347,9 @@ export default function MyCrops() {
             <div class="relative mt-2 rounded-md shadow-sm">
             <DatePicker
               locale={ko}
-              selected={startDate}
+              selected={plantingDate ? new Date(plantingDate) : null}
               dateFormat="yyyy년 MM월 dd일"
-              
-              onChange={date => setStartDate(date)}
+              onChange={date => setPlantingDate(date.toISOString().slice(0, 10))}
               className="block h-12 w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               placeholderText="날짜를 선택하세요"
             />
@@ -284,19 +368,19 @@ export default function MyCrops() {
         <div className="px-8">
           <label for="price" class="block text-xl font-medium leading-6 text-gray-900">작물명</label>
           <div class="relative mt-2 rounded-md">
-            <input type="text" name="price" id="price" class="block h-12 w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" value={cropName} disabled/>
+            <input type="text" name="price" id="price" class="block h-12 w-full rounded-md border-0 py-1.5 pl-2 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" value={cropName} disabled/>
           </div>
         </div>
         <div className="px-8 mt-4">
           <label for="price" class="block text-xl font-medium leading-6 text-gray-900">재배지</label>
           <div class="relative mt-2 rounded-md">
-            <input type="text" name="price" id="price" class="block h-12 w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" value={cropCultivationSite} disabled/>
+            <input type="text" name="price" id="price" class="block h-12 w-full rounded-md border-0 py-1.5 pl-2 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" value={cropCultivationSite} disabled/>
           </div>
         </div>
         <div className="px-8 mt-4">
           <label for="date" class="block text-xl font-medium leading-6 text-gray-900">심은날짜</label>
           <div class="relative mt-2 rounded-md">
-            <input type="text" name="price" id="price" class="block h-12 w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" value={cropPlantingDate} disabled />
+            <input type="text" name="price" id="price" class="block h-12 w-full rounded-md border-0 py-1.5 pl-2 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" value={cropPlantingDate} disabled />
           </div>
         </div>
         <div className="px-8 mt-10">
@@ -334,33 +418,31 @@ export default function MyCrops() {
        {/* *******농산물정보보기모달(수확후)****** */} 
         <Modal open={info2Open} onClose={info2CloseModal} styles={styles}>
         <div className="pt-5">
-          <div className="px-8">
-          <div style={{ height:100, backgroundColor:'#bbbbbb'}}>
-            사진있음
-          </div>
+          <div className="px-8 flex justify-center">  
+            <img src={cropImgUrl} alt="Crop" style={{ height: '100%', width: 'auto' }} /> 
           </div>
           <div className="px-8 mt-4">
             <label for="price" class="block text-lg font-medium leading-6 text-gray-900">작물명</label>
             <div class="relative mt-2 rounded-md">
-              <input type="text" name="price" id="price" class="block h-10 w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="작물명입력됨" disabled/>
+              <input type="text" name="price" id="price" class="block h-10 w-full rounded-md border-0 py-1.5 pl-2 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" value={cropName} disabled/>
             </div>
           </div>
           <div className="px-8 mt-4">
             <label for="price" class="block text-lg font-medium leading-6 text-gray-900">재배지</label>
             <div class="relative mt-2 rounded-md">
-              <input type="text" name="price" id="price" class="block h-10 w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="재배지입력됨" disabled/>
+              <input type="text" name="price" id="price" class="block h-10 w-full rounded-md border-0 py-1.5 pl-2 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" value={cropCultivationSite} disabled/>
             </div>
           </div>
           <div className="px-8 mt-4">
             <label for="date" class="block text-lg  font-medium leading-6 text-gray-900">심은날짜</label>
             <div class="relative mt-2 rounded-md">
-              <input type="text" name="price" id="price" class="block h-10 w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="날짜입력됨" disabled />
+              <input type="text" name="price" id="price" class="block h-10 w-full rounded-md border-0 py-1.5 pl-2 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" value={cropPlantingDate} disabled />
             </div>
           </div>
           <div className="px-8 mt-4">
             <label for="date" class="block text-lg  font-medium leading-6 text-gray-900">수확날짜</label>
             <div class="relative mt-2 rounded-md">
-              <input type="text" name="price" id="price" class="block h-10 w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="날짜입력됨" disabled />
+              <input type="text" name="price" id="price" class="block h-10 w-full rounded-md border-0 py-1.5 pl-2 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" value={cropHarvestDate} disabled />
             </div>
           </div>
           <div className="px-8 mt-10 flex justify-center">
