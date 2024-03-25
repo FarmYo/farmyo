@@ -10,9 +10,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TradeRepository extends JpaRepository<Trade, Integer> {
+
+
 
     // 판매자의 아이디를 통해 거래완료된 거래 목록 가져오기
     @Query(value =
