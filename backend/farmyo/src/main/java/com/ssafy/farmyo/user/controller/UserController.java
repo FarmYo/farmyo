@@ -2,9 +2,7 @@ package com.ssafy.farmyo.user.controller;
 
 import com.ssafy.farmyo.common.auth.CustomUserDetails;
 import com.ssafy.farmyo.common.response.BaseResponseBody;
-import com.ssafy.farmyo.user.dto.JoinReqDto;
-import com.ssafy.farmyo.user.dto.VerifyCodeReqDto;
-import com.ssafy.farmyo.user.dto.VerifyEmailReqDto;
+import com.ssafy.farmyo.user.dto.*;
 import com.ssafy.farmyo.user.service.MailService;
 import com.ssafy.farmyo.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -116,5 +114,34 @@ public class UserController {
         log.info("User 식별 ID : {}", userDetails.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, userService.getUserInfo(userDetails.getId())));
+    }
+
+    @Operation(summary = "비밀번호 초기화", description = "비밀번호 찾기에서 비밀번호 수정")
+    @PatchMapping("/password/reset")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환 ")
+    public ResponseEntity<? extends BaseResponseBody> resetPassword(@Parameter(description = "비밀번호 초기화를 위한 정보를 담는 Dto")
+                                                                    @RequestBody PasswordResetDto passwordResetDto) {
+
+        log.info("{}", passwordResetDto.getEmail());
+        log.info("{}", passwordResetDto.getLoginId());
+        log.info("{}", passwordResetDto.getPassword());
+
+        userService.resetPassword(passwordResetDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
+    }
+
+    @Operation(summary = "비밀번호 수정", description = "현재 비밀번호와 변경할 비밀번호를 DTO에 받아 비밀번호 수정")
+    @PatchMapping("/password/update")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환 ")
+    public ResponseEntity<? extends BaseResponseBody> updatePassword(@Parameter(description = "비밀번호 수정을 위한 정보를 담는 Dto")
+                                                                    @RequestBody PasswordUpdateDto passwordUpdateDto,
+                                                                     Authentication authentication) {
+
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        userService.updatePassword(customUserDetails.getId(), passwordUpdateDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
     }
 }
