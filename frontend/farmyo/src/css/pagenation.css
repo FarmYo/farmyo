@@ -1,0 +1,4 @@
+.join-item.btn.active {
+  background-color: #1B5E20; /* 활성화된 버튼의 배경색 */
+  color: white; /* 활성화된 버튼의 글자색 */
+}
