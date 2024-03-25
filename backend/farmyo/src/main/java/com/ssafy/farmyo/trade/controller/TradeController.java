@@ -16,17 +16,18 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/trade")
+@RequestMapping("/trades")
 @RequiredArgsConstructor
 @Tag(name = "2. Trade", description = "Trade API")
 public class TradeController {
 
     private final TradeService tradeService;
 
-    @PostMapping("/")
+    @PostMapping("")
     @Operation(summary = "거래 생성하기", description = "chat 또는 board를 통해서 얻은 정보로 거래를 생성한다.")
     public ResponseEntity<? extends BaseResponseBody> createTrade(
-            @RequestParam(name = "tradeReqDto")
+//            @RequestParam(name = "tradeReqDto")
+            @RequestBody
             @Parameter(description = "거래 생성을 위한 dto 정보 입력")
             TradeReqDto tradeReqDto) {
         log.info("{} : createTrade 실행", tradeReqDto);
@@ -39,12 +40,12 @@ public class TradeController {
     @GetMapping("/list")
     @Operation(summary = "유저별 거래 목록 조회", description = "유저 id를 통해 해당 유저의 거래 목록을 조회한다.")
     public ResponseEntity<? extends BaseResponseBody> getTradeList(
-            @RequestParam(name = "userId")
+            @RequestParam(name = "loginId")
             @Parameter(description = "거래 목록을 조회할 유저의 아이디")
-            int userId) {
-        log.info("{} : getTradeList 실행", userId);
+            String loginId) {
+        log.info("{} : getTradeList 실행", loginId);
 
-        TradeListReqDto tradeListReqDto = tradeService.getTrades(userId);
+        TradeListReqDto tradeListReqDto = tradeService.getTrades(loginId);
 
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, tradeListReqDto));
     }
