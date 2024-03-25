@@ -33,6 +33,7 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     public void createTrade(TradeReqDto tradeReqDto) {
+        Trade trade;
 
         // seller 가져오기
         User seller = userRepository.findByLoginId(tradeReqDto.getSellerId()).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
@@ -40,22 +41,37 @@ public class TradeServiceImpl implements TradeService {
         User buyer = userRepository.findByLoginId(tradeReqDto.getBuyerId()).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
         // boardId 가져오기
         Board board = boardRepository.findById(tradeReqDto.getBoardId()).orElseThrow(() -> new CustomException(ExceptionType.BOARD_NOT_EXIST));
-        // chatId 가져오기
-        Chat chat = chatRepository.findById(tradeReqDto.getChatId()).orElseThrow(() -> new CustomException(ExceptionType.CHAT_NOT_EXIST));
         // cropId 가져오기
         Crop crop = cropRepository.findById(tradeReqDto.getCropId()).orElseThrow(() -> new CustomException(ExceptionType.CROP_NOT_EXIST));
 
-        // trade 생성
-        Trade trade = Trade.builder()
-                .tradePrice(tradeReqDto.getTradePrice())
-                .tradeQuantity(tradeReqDto.getTradeQuantity())
-                .buyer(buyer)
-                .seller(seller)
-                .chat(chat)
-                .crop(crop)
-                .board(board)
-                .build();
+        // chatId 가져오기
+        Chat chat;
+        if (chatRepository.findById(tradeReqDto.getChatId()).isPresent()) { // 만약 chat이 있다면
+            chat = chatRepository.findById(tradeReqDto.getChatId()).get();
+            // trade 생성
+            trade = Trade.builder()
+                    .tradePrice(tradeReqDto.getTradePrice())
+                    .tradeQuantity(tradeReqDto.getTradeQuantity())
+                    .buyer(buyer)
+                    .seller(seller)
+                    .chat(chat)
+                    .crop(crop)
+                    .board(board)
+                    .build();
 
+        } else { // 만약 chat이 없다면
+            // trade 생성
+            trade = Trade.builder()
+                    .tradePrice(tradeReqDto.getTradePrice())
+                    .tradeQuantity(tradeReqDto.getTradeQuantity())
+                    .buyer(buyer)
+                    .seller(seller)
+                    .crop(crop)
+                    .board(board)
+                    .build();
+
+        }
+        
         // trade 저장
         tradeRepository.save(trade);
         log.info("{} : (service)거래 생성 완료", trade);
@@ -63,8 +79,13 @@ public class TradeServiceImpl implements TradeService {
 
 
     @Override
-    public TradeListReqDto getTrades(int userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+    public TradeListReqDto getTrades(String loginId) {
+        User user;
+        if (userRepository.findByLoginId(loginId).isPresent()) {
+            user = userRepository.findByLoginId(loginId).get();
+        } else {
+            throw new CustomException(ExceptionType.USER_NOT_EXIST);
+        }
         TradeListReqDto tradeListReqDto = new TradeListReqDto();
 
         // user가 판매자인지 구매자인지 확인
@@ -72,12 +93,12 @@ public class TradeServiceImpl implements TradeService {
 
         if (job == 0) { // user가 판매자라면
             // 진행중인 거래와 완료된 거래를 각각 tradeListReqDto에 넣음
-            tradeListReqDto.setNotFinishedList(tradeRepository.getSellerTradeListNotFinished(userId));
-            tradeListReqDto.setFinishedList(tradeRepository.getSellerTradeListFinished(userId));
+            tradeListReqDto.setNotFinishedList(tradeRepository.getSellerTradeListNotFinished(loginId));
+            tradeListReqDto.setFinishedList(tradeRepository.getSellerTradeListFinished(loginId));
         } else { // user가 구매자라면
             // 진행중인 거래와 완료된 거래를 각각 tradeListReqDto에 넣음
-            tradeListReqDto.setNotFinishedList(tradeRepository.getBuyerTradeListNotFinished(userId));
-            tradeListReqDto.setFinishedList(tradeRepository.getBuyerTradeListFinished(userId));
+            tradeListReqDto.setNotFinishedList(tradeRepository.getBuyerTradeListNotFinished(loginId));
+            tradeListReqDto.setFinishedList(tradeRepository.getBuyerTradeListFinished(loginId));
 
         }
 
