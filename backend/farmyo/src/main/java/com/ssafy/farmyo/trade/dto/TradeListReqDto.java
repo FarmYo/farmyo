@@ -1,5 +1,6 @@
 package com.ssafy.farmyo.trade.dto;
 
+import com.ssafy.farmyo.entity.Trade;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;

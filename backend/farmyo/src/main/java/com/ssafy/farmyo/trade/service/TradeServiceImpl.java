@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -91,21 +92,80 @@ public class TradeServiceImpl implements TradeService {
         // user가 판매자인지 구매자인지 확인
         int job = user.getJob();
 
+        log.info("{} : user job", job);
+
         if (job == 0) { // user가 판매자라면
-            List<TradeListDto> finish = tradeRepository.getSellerListFinish(id);
-            List<TradeListDto> notFinish = tradeRepository.getSellerListNotFinish(id);
+            List<Trade> finish = tradeRepository.findAllBySellerAndTradeStatus(id, 3);
+            List<Trade> notFinish = tradeRepository.findAllBySellerAndTradeStatusNot(id, 3);
+            List<TradeListDto> selNot = new ArrayList<>();
+            List<TradeListDto> sel = new ArrayList<>();
+
+            for (Trade trade : notFinish) {
+                TradeListDto tradeListDto = TradeListDto.builder()
+                        .id(trade.getId())
+                        .nickname(trade.getBuyer().getNickname())
+                        .boardTitle(trade.getBoard().getBoardTitle())
+                        .tradePrice(trade.getTradePrice())
+                        .tradeQuantity(trade.getTradeQuantity())
+                        .tradeStatus(trade.getTradeStatus())
+                .build();
+
+                selNot.add(tradeListDto);
+            }
+
+            for (Trade trade : finish) {
+                TradeListDto tradeListDto = TradeListDto.builder()
+                        .id(trade.getId())
+                        .nickname(trade.getBuyer().getNickname())
+                        .boardTitle(trade.getBoard().getBoardTitle())
+                        .tradePrice(trade.getTradePrice())
+                        .tradeQuantity(trade.getTradeQuantity())
+                        .tradeStatus(trade.getTradeStatus())
+                        .build();
+
+                sel.add(tradeListDto);
+            }
 
             return TradeListReqDto.builder()
-                    .FinishedList(finish)
-                    .NotFinishedList(notFinish)
+                    .FinishedList(sel)
+                    .NotFinishedList(selNot)
                     .build();
+
         } else { // user가 구매자라면
-            List<TradeListDto> finish = tradeRepository.getBuyerListFinish(id);
-            List<TradeListDto> notFinish = tradeRepository.getBuyerListNotFinish(id);
+            List<Trade> finish = tradeRepository.findAllByBuyerAndTradeStatus(id, 3);
+            List<Trade> notFinish = tradeRepository.findAllByBuyerAndTradeStatusNot(id, 3);
+            List<TradeListDto> buyNot = new ArrayList<>();
+            List<TradeListDto> buy = new ArrayList<>();
+
+            for (Trade trade : notFinish) {
+                TradeListDto tradeListDto = TradeListDto.builder()
+                        .id(trade.getId())
+                        .nickname(trade.getSeller().getNickname())
+                        .boardTitle(trade.getBoard().getBoardTitle())
+                        .tradePrice(trade.getTradePrice())
+                        .tradeQuantity(trade.getTradeQuantity())
+                        .tradeStatus(trade.getTradeStatus())
+                        .build();
+
+                buyNot.add(tradeListDto);
+            }
+
+            for (Trade trade : finish) {
+                TradeListDto tradeListDto = TradeListDto.builder()
+                        .id(trade.getId())
+                        .nickname(trade.getSeller().getNickname())
+                        .boardTitle(trade.getBoard().getBoardTitle())
+                        .tradePrice(trade.getTradePrice())
+                        .tradeQuantity(trade.getTradeQuantity())
+                        .tradeStatus(trade.getTradeStatus())
+                        .build();
+
+                buy.add(tradeListDto);
+            }
 
             return TradeListReqDto.builder()
-                    .FinishedList(finish)
-                    .NotFinishedList(notFinish)
+                    .FinishedList(buy)
+                    .NotFinishedList(buyNot)
                     .build();
 
         }
