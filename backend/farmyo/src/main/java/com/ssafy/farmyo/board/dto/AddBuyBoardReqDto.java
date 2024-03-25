@@ -11,7 +11,7 @@ import lombok.Getter;
 public class AddBuyBoardReqDto {
 
     //작물카테고리id
-    @NotEmpty
+    @Min(value = 1)
     private int cropCategoryId;
     //제목
     @NotBlank
