@@ -50,7 +50,7 @@ public class User extends BaseTime {
     private String nickname;
 
     //이메일
-    @Column(name = "user_email", nullable = false)
+    @Column(name = "user_email", nullable = false, unique = true)
     private String email;
 
     // 유저 직업 job=0 -> 판매자(seller), job=1 -> 구매자(buyer)

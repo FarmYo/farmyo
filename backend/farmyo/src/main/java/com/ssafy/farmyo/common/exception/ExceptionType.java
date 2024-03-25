@@ -46,9 +46,11 @@ public enum ExceptionType {
     CROPCATEGORY_NOT_ASSOCIATED_WITH_BOARD(HttpStatus.BAD_REQUEST, "B-003", "판매게시판에 연결된 작물카테고리가 존재하지 않습니다."),
     FARMER_CANNOT_POST_BUY_BOARD(HttpStatus.BAD_REQUEST, "B-004", "농부는 구매 게시판을 작성할 수 없습니다."),
     QUANTITY_INVALID(HttpStatus.BAD_REQUEST, "B-005", "게시판의 수량이 유효하지 않습니다."),
-    PRICE_INVALID(HttpStatus.BAD_REQUEST, "B-006", "게시판의 가격이 유요하지 않습니다."),
+    PRICE_INVALID(HttpStatus.BAD_REQUEST, "B-006", "게시판의 가격이 유효하지 않습니다."),
     CROP_NOT_OWNED_BY_FARMER(HttpStatus.BAD_REQUEST, "B-007", "작물이 로그인한 농부의 소유가 아닙니다."),
-
+    TITLE_NOT_EXIST(HttpStatus.BAD_REQUEST, "B-008", "글 제목이 없습니다."),
+    CONTENT_NOT_EXIST(HttpStatus.BAD_REQUEST, "B-009", "글 내용이 없습니다."),
+    BOARDTYPE_INVALID(HttpStatus.BAD_REQUEST, "B-010", "보드타입이 잘못되었습니다."),
 
     // 채팅
     CHAT_NOT_EXIST(HttpStatus.BAD_REQUEST, "M-001", "존재하지 않는 채팅방입니다.");
