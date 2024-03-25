@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useParams } from "react-router-dom";
 import "react-responsive-modal/styles.css"
 import { Modal } from "react-responsive-modal"
-// import axios from "axios";
+// import  from "axios";
 
 export default function BuyerTrade() {
 

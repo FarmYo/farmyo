@@ -72,7 +72,7 @@ export default function MyCrops() {
 
   useEffect(()=>{
     setSelected('구분')
-    // 작물 리스트 조회
+    // 작물 리스트 조회(수정필요) 지금은 임시로 ssafy1의 작물리스트르 조회함
     api.get('crops/list/ssafy1')
     .then((res)=>{
       console.log(res)
