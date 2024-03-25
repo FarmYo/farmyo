@@ -84,13 +84,16 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
     }
 
-    @Operation(summary = "비밀번호 찾기를 위한 이메일 인증", description = "/users/pwd/auth\n\n 사용자는 비밀번호 찾기를 위해 이메일 인증을 한다.")
+    @Operation(summary = "비밀번호 찾기를 위한 이메일 인증", description = "/users/email/password\n\n 사용자는 비밀번호 찾기를 위해 이메일 인증을 한다.")
     @PostMapping("/email/password")
     @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환")
     public ResponseEntity<? extends BaseResponseBody> verifyPasswordRecoveryEmail(@Valid @RequestBody VerifyEmailReqDto verifyEmailReqDto) throws Exception {
 
+        log.info("{}", verifyEmailReqDto.getEmail());
+        log.info("{}", verifyEmailReqDto.getLoginId());
+
         // 메일 전송 후 코드 받기
-        mailService.sendPasswordRecoveryMessage(verifyEmailReqDto.getEmail());
+        mailService.sendPasswordRecoveryMessage(verifyEmailReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
     }
 

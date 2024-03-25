@@ -13,4 +13,8 @@ public class VerifyEmailReqDto {
     @Email
     // 이메일 전송 아이디
     private String email;
+
+    @NotBlank
+    // 회원 로그인 아이디
+    private String loginId;
 }
