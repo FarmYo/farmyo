@@ -23,4 +23,7 @@ public interface UserService {
 
     // 회원 수정
     void modifyUserInfo(int id, UserModifyDto userModifyDto);
+
+    // 회원 탈퇴
+    void deactivateUser(int id);
 }

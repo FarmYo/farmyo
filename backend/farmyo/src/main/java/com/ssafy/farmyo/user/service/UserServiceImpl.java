@@ -171,4 +171,13 @@ public class UserServiceImpl implements UserService {
         if(!user.getAccount().getAccountNumber().equals(userModifyDto.getAccount()))
             user.getAccount().updateAll(userModifyDto.getDepositor(), userModifyDto.getBank(), userModifyDto.getAccount());
     }
+
+    @Override
+    public void deactivateUser(int id) {
+
+        User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+
+        user.updateStatus(UserStatus.WITHDRAWN);
+
+    }
 }
