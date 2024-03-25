@@ -3,23 +3,21 @@ package com.ssafy.farmyo.user.service;
 import com.ssafy.farmyo.common.exception.CustomException;
 import com.ssafy.farmyo.common.exception.ExceptionType;
 import com.ssafy.farmyo.entity.*;
-import com.ssafy.farmyo.user.dto.JoinReqDto;
-import com.ssafy.farmyo.user.dto.PasswordResetDto;
-import com.ssafy.farmyo.user.dto.PasswordUpdateDto;
-import com.ssafy.farmyo.user.dto.UserResDto;
+import com.ssafy.farmyo.user.dto.*;
 import com.ssafy.farmyo.user.openApi.OpenApiManager;
 import com.ssafy.farmyo.user.repository.AddressRepository;
 import com.ssafy.farmyo.user.repository.FarmerRepository;
 import com.ssafy.farmyo.user.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -29,6 +27,7 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
+    @Transactional
     public int customerJoin(JoinReqDto joinReqDto) {
         // 계좌 생성
         Account account = Account.builder()
@@ -71,6 +70,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public int farmerJoin(JoinReqDto joinReqDto) {
 
         // 만약 사업자 등록을 이미 했다면 예외 처리
@@ -151,5 +151,24 @@ public class UserServiceImpl implements UserService {
 
         // 해당 비밀번호 수정 (Dirty Checking)
         user.updatePassword(bCryptPasswordEncoder.encode(passwordUpdateDto.getNewPassword()));
+    }
+
+    @Override
+    @Transactional
+    public void modifyUserInfo(int id, UserModifyDto userModifyDto) {
+
+        // 비밀번호를 바꾸고자 하는 유저의 엔티티를 가져옴
+        User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+
+        // 유저 기본 정보 수정 (닉네임, 전화번호, 상태 메세지)
+        user.updateAll(userModifyDto.getNickname(), userModifyDto.getTelephone(), userModifyDto.getComment());
+
+        // 주소 수정
+        Address address = user.getAddress();
+        address.updateAll(userModifyDto.getAddressCode(), userModifyDto.getAddressLegal(), userModifyDto.getAddressDetail());
+
+        // 계좌 수정
+        if(!user.getAccount().getAccountNumber().equals(userModifyDto.getAccount()))
+            user.getAccount().updateAll(userModifyDto.getDepositor(), userModifyDto.getBank(), userModifyDto.getAccount());
     }
 }

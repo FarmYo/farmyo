@@ -163,12 +163,11 @@ public class User extends BaseTime {
         this.comment = comment;
     }
 
-
     //피그마보고 한번에 수정하는 거 모아둔 함수
-    public void updateAll(String nickname, String email ,String telephone) {
+    public void updateAll(String nickname, String telephone, String comment) {
         this.nickname = nickname;
-        this.email = email;
         this.telephone = telephone;
+        this.comment = comment;
     }
 
 }
