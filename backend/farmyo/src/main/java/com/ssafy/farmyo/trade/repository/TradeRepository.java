@@ -10,113 +10,22 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TradeRepository extends JpaRepository<Trade, Integer> {
 
-    // 판매자의 아이디를 통해 거래완료된 거래 목록 가져오기
-    @Query(value =
-            "SELECT t.id, s.nickname as seller, buy.nickname as buyer, b.boardTitle as board, t.tradeStatus, t.tradePrice, t.tradeQuantity "+
-                    "FROM Trade t " +
-                    "JOIN t.board b " +
-                    "JOIN t.seller s " +
-                    "JOIN t.buyer buy " +
-                    "WHERE t.seller.loginId = :loginId AND t.tradeStatus = 3"
-    )
-    List<TradeListDto> getSellerTradeListFinished(String loginId);
+    @Query(value = "SELECT t.id, t.seller.nickname, t.board.boardTitle, t.tradePrice, t.tradeQuantity, t.tradeStatus FROM Trade t WHERE t.seller.id = :id AND t.tradeStatus = 3")
+    List<TradeListDto> getSellerListFinish(int id);
 
+    @Query(value = "SELECT t.id, t.seller.nickname, t.board.boardTitle, t.tradePrice, t.tradeQuantity, t.tradeStatus FROM Trade t WHERE t.seller.id = :id AND t.tradeStatus != 3")
+    List<TradeListDto> getSellerListNotFinish(int id);
 
-    // 판매자의 아이디를 통해 거래완료가 안된 거래 목록 가져오기
-    @Query(value =
-            "SELECT t.id, s.nickname as seller, buy.nickname as buyer, b.boardTitle as board, t.tradeStatus, t.tradePrice, t.tradeQuantity " +
-            "FROM Trade t " +
-            "JOIN t.board b " +
-            "JOIN t.seller s " +
-            "JOIN t.buyer buy " +
-            "WHERE t.seller.loginId = :loginId AND t.tradeStatus != 3"
-    )
-    List<TradeListDto> getSellerTradeListNotFinished(String loginId);
+    @Query(value = "SELECT t.id, t.buyer.nickname, t.board.boardTitle, t.tradePrice, t.tradeQuantity, t.tradeStatus FROM Trade t WHERE t.buyer.id = :id AND t.tradeStatus = 3")
+    List<TradeListDto> getBuyerListFinish(int id);
 
-    // 구매자의 아이디를 통해 거래완료된 거래 목록 가져오기
-    @Query(value =
-            "SELECT t.id, s.nickname as seller, buy.nickname as buyer, b.boardTitle as board, t.tradeStatus, t.tradePrice, t.tradeQuantity " +
-                    "FROM Trade t " +
-                    "JOIN t.board b " +
-                    "JOIN t.seller s " +
-                    "JOIN t.buyer buy " +
-                    "WHERE t.buyer.loginId = :loginId AND t.tradeStatus = 3"
-    )
-    List<TradeListDto> getBuyerTradeListFinished(String loginId);
-
-
-    // 구매자의 아이디를 통해 거래완료가 안된 거래 목록 가져오기
-    @Query(value =
-            "SELECT t.id, s.nickname as seller, buy.nickname as buyer, b.boardTitle as board, t.tradeStatus, t.tradePrice, t.tradeQuantity " +
-                    "FROM Trade t " +
-                    "JOIN t.board b " +
-                    "JOIN t.seller s " +
-                    "JOIN t.buyer buy " +
-                    "WHERE t.buyer.loginId = :loginId AND t.tradeStatus != 3"
-    )
-    List<TradeListDto> getBuyerTradeListNotFinished(String loginId);
-
-//// 판매자의 아이디를 통해 거래완료된 거래 목록 가져오기
-//@Query(nativeQuery = true, value =
-//        "SELECT t.id, s.user_nickname as seller, buy.user_nickname as buyer, b.board_title as board, t.trade_status, t.trade_price, t.trade_quantity \n" +
-//                "FROM trade t \n" +
-//                "JOIN board b \n" +
-//                "ON t.board_id = b.id \n" +
-//                "JOIN user s \n" +
-//                "ON t.trade_seller = s.id \n" +
-//                "JOIN user buy \n" +
-//                "ON t.trade_buyer = buy.id \n" +
-//                "WHERE s.user_loginid = :loginId AND t.trade_status = 3;"
-//)
-//List<TradeListDto> getSellerTradeListFinished(String loginId);
-//
-//
-//    // 판매자의 아이디를 통해 거래완료가 안된 거래 목록 가져오기
-//    @Query(nativeQuery = true, value =
-//            "SELECT t.id, s.user_nickname as seller, buy.user_nickname as buyer, b.board_title as board, t.trade_status, t.trade_price, t.trade_quantity \n" +
-//                    "FROM trade t \n" +
-//                    "JOIN board b \n" +
-//                    "ON t.board_id = b.id \n" +
-//                    "JOIN user s \n" +
-//                    "ON t.trade_seller = s.id \n" +
-//                    "JOIN user buy \n" +
-//                    "ON t.trade_buyer = buy.id \n" +
-//                    "WHERE s.user_loginid = :loginId AND t.trade_status != 3;"
-//    )
-//    List<TradeListDto> getSellerTradeListNotFinished(String loginId);
-//
-//    // 구매자의 아이디를 통해 거래완료된 거래 목록 가져오기
-//    @Query(nativeQuery = true, value =
-//            "SELECT t.id, s.user_nickname as seller, buy.user_nickname as buyer, b.board_title as board, t.trade_status, t.trade_price, t.trade_quantity \n" +
-//                    "FROM trade t \n" +
-//                    "JOIN board b \n" +
-//                    "ON t.board_id = b.id \n" +
-//                    "JOIN user s \n" +
-//                    "ON t.trade_seller = s.id \n" +
-//                    "JOIN user buy \n" +
-//                    "ON t.trade_buyer = buy.id \n" +
-//                    "WHERE buy.user_loginid = :loginId AND t.trade_status = 3;"
-//    )
-//    List<TradeListDto> getBuyerTradeListFinished(String loginId);
-//
-//
-//    // 구매자의 아이디를 통해 거래완료가 안된 거래 목록 가져오기
-//    @Query(nativeQuery = true, value =
-//            "SELECT t.id, s.user_nickname as seller, buy.user_nickname as buyer, b.board_title as board, t.trade_status, t.trade_price, t.trade_quantity \n" +
-//                    "FROM trade t \n" +
-//                    "JOIN board b \n" +
-//                    "ON t.board_id = b.id \n" +
-//                    "JOIN user s \n" +
-//                    "ON t.trade_seller = s.id \n" +
-//                    "JOIN user buy \n" +
-//                    "ON t.trade_buyer = buy.id \n" +
-//                    "WHERE buy.user_loginid = :loginId AND t.trade_status != 3;"
-//    )
-//    List<TradeListDto> getBuyerTradeListNotFinished(String loginId);
+    @Query(value = "SELECT t.id, t.buyer.nickname, t.board.boardTitle, t.tradePrice, t.tradeQuantity, t.tradeStatus FROM Trade t WHERE t.buyer.id = :id AND t.tradeStatus != 3")
+    List<TradeListDto> getBuyerListNotFinish(int id);
 
     @Transactional
     @Modifying

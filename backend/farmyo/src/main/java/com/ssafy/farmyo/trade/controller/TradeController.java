@@ -34,18 +34,18 @@ public class TradeController {
 
         tradeService.createTrade(tradeReqDto);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, 1));
+        return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, "sucess"));
     }
 
     @GetMapping("/list")
     @Operation(summary = "유저별 거래 목록 조회", description = "유저 id를 통해 해당 유저의 거래 목록을 조회한다.")
     public ResponseEntity<? extends BaseResponseBody> getTradeList(
-            @RequestParam(name = "loginId")
+            @RequestParam(name = "id")
             @Parameter(description = "거래 목록을 조회할 유저의 아이디")
-            String loginId) {
-        log.info("{} : getTradeList 실행", loginId);
+            int id) {
+        log.info("{} : getTradeList 실행", id);
 
-        TradeListReqDto tradeListReqDto = tradeService.getTrades(loginId);
+        TradeListReqDto tradeListReqDto = tradeService.getTrades(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, tradeListReqDto));
     }
@@ -80,7 +80,7 @@ public class TradeController {
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, 0));
     }
 
-    @PutMapping("/deopsit/{id}")
+    @PutMapping("/deposit/{id}")
     @Operation(summary = "거래 입금완료", description = "입금대기중이던 상태를 입금완료 상태로 변경하고 입금 테이블이 생성된다.")
     public ResponseEntity<? extends BaseResponseBody> updateTradeDeposit(
             @PathVariable(name = "id")
