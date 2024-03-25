@@ -34,7 +34,7 @@ public class BoardController {
     @Operation(summary = "삼요게시물작성", description = "/boards/buy\n\n 삼요게시물 작성")
     @PostMapping("/buy")
     @ApiResponse(responseCode = "201", description = "성공 \n\n Success 반환")
-    public ResponseEntity<? extends BaseResponseBody> addBuyBoard(@RequestBody @Valid AddBuyBoardReqDto addBuyBoardReqDto, Authentication authentication) {
+    public ResponseEntity<? extends BaseResponseBody> addBuyBoard(@RequestBody @Validated AddBuyBoardReqDto addBuyBoardReqDto, Authentication authentication) {
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
@@ -42,6 +42,7 @@ public class BoardController {
         if (userDetails.getJob() == 0) {
             throw new CustomException(ExceptionType.FARMER_CANNOT_POST_BUY_BOARD);
         }
+
 
         int boardId = boardService.addBuyerBoard(addBuyBoardReqDto, userDetails.getId());
         log.info("삼요 게시판 작성, boardId = {}", boardId);
@@ -53,7 +54,7 @@ public class BoardController {
     @Operation(summary = "팜요게시물작성", description = "/boards/sell\n\n 팜요게시글 작성")
     @PostMapping("/sell")
     @ApiResponse(responseCode = "201", description = "성공 \n\n Success 반환")
-    public ResponseEntity<? extends BaseResponseBody> addFarmerBoard(@RequestBody @Valid AddFarmerBoardReqDto addFarmerBoardReqDto, Authentication authentication) {
+    public ResponseEntity<? extends BaseResponseBody> addFarmerBoard(@RequestBody @Validated AddFarmerBoardReqDto addFarmerBoardReqDto, Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         System.out.println("userDetails.getJob() = " + userDetails.getJob());
 

@@ -41,6 +41,15 @@ public class BoardServiceImpl implements BoardService {
         //작물 카테고리 조회
         CropCategory cropCategory = cropCategoryRepository.findById(addBuyBoardReqDto.getCropCategoryId())
                 .orElseThrow(() -> new CustomException(ExceptionType.CATEGORY_NOT_EXIST));
+        //거래량이 0초과인지 확인
+        if (addBuyBoardReqDto.getQuantity() <= 0) {
+            throw new CustomException(ExceptionType.QUANTITY_INVALID);
+        }
+
+        //가격이 0초과인지 확인
+        if (addBuyBoardReqDto.getPrice() <= 0) {
+            throw new CustomException(ExceptionType.PRICE_INVALID);
+        }
 
         Board board = Board.builder()
                 .user(user)
@@ -76,6 +85,15 @@ public class BoardServiceImpl implements BoardService {
         //작물id에서 작물카테고리 조회
         if (crop.getCropCategory() == null) {
             throw new CustomException(ExceptionType.CATEGORY_NOT_EXIST);
+        }
+        //거래량이 0초과인지 확인
+        if (addFarmerBoardReqDto.getQuantity() <= 0) {
+            throw new CustomException(ExceptionType.QUANTITY_INVALID);
+        }
+
+        //가격이 0초과인지 확인
+        if (addFarmerBoardReqDto.getPrice() <= 0) {
+            throw new CustomException(ExceptionType.PRICE_INVALID);
         }
 
         CropCategory cropCategory = crop.getCropCategory();
