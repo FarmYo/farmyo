@@ -65,6 +65,7 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         String loginId = jwtUtil.getLoginId(accessToken);
+        String nickname = jwtUtil.getNickname(accessToken);
         int userID = jwtUtil.getUserId(accessToken);
         int userJob = jwtUtil.getUserJob(accessToken);
 
@@ -72,6 +73,7 @@ public class JWTFilter extends OncePerRequestFilter {
                 .id(userID)
                 .job(userJob)
                 .loginId(loginId)
+                .nickname(nickname)
                 .build();
 
         CustomUserDetails customUserDetails = new CustomUserDetails(user);

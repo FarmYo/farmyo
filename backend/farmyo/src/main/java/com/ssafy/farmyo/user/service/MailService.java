@@ -1,5 +1,4 @@
 package com.ssafy.farmyo.user.service;
-
 import com.ssafy.farmyo.user.dto.VerifyCodeReqDto;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;

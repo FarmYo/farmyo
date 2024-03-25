@@ -52,4 +52,7 @@ public class CustomUserDetails implements UserDetails {
 
     // 유저 직업
     public int getJob() {return user.getJob();}
+
+    // 유저 이름
+    public String getNickname() {return user.getNickname();}
 }

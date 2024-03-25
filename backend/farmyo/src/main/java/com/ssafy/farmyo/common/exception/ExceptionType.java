@@ -7,15 +7,18 @@ import org.springframework.http.HttpStatus;
 public enum ExceptionType {
 
     // 에러 열거
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S-001", "서버 내부 오류입니다."),
 
     // 회원
     USER_NOT_EXIST(HttpStatus.UNAUTHORIZED, "U-001", "존재하지 않는 회원입니다."),
     USER_LOGIN_REQUIRED(HttpStatus.UNAUTHORIZED, "U-002", "로그인이 필요합니다."),
-    EMAIL_EXIST(HttpStatus.BAD_REQUEST, "U-003", "이미 사용 중인 이메일입니다."),
-    CODE_TIME_EXPIRED(HttpStatus.BAD_REQUEST, "U-004", "인증 시간이 초과하였습니다."),
-    CODE_NOT_MATCH(HttpStatus.BAD_REQUEST, "U-005", "인증 코드가 일치하지 않습니다."),
-    CODE_NOT_EXIST(HttpStatus.BAD_REQUEST, "U-006", "인증 코드가 유효하지 않습니다."),
-    EMAIL_NOT_EXIST(HttpStatus.BAD_REQUEST, "U-007", "존재하지 않는 이메일입니다."),
+    EMAIL_NOT_EXIST(HttpStatus.BAD_REQUEST, "U-003", "존재하지 않는 이메일입니다."),
+    EMAIL_EXIST(HttpStatus.BAD_REQUEST, "U-004", "이미 사용 중인 이메일입니다."),
+    CODE_TIME_EXPIRED(HttpStatus.BAD_REQUEST, "U-005", "인증 시간이 초과하였습니다."),
+    CODE_NOT_MATCH(HttpStatus.BAD_REQUEST, "U-006", "인증 코드가 일치하지 않습니다."),
+    CODE_NOT_EXIST(HttpStatus.BAD_REQUEST, "U-007", "인증 코드가 유효하지 않습니다."),
+    INVALID_BUSINESS_LICENSE(HttpStatus.BAD_REQUEST, "U-008", "유효하지 않은 사업자 등록 정보입니다."),
+    DUPLICATE_BUSINESS_LICENSE(HttpStatus.BAD_REQUEST, "U-009", "중복된 사업자 등록 정보입니다."),
 
     // 작물
     CROP_NOT_EXIST(HttpStatus.BAD_REQUEST, "C-001", "존재하지 않는 작물입니다."),
@@ -27,6 +30,7 @@ public enum ExceptionType {
     TOKEN_NOT_EXIST(HttpStatus.UNAUTHORIZED, "T-001", "토큰이 존재하지 않습니다."),
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "T-002", "유효하지 않은 리프레시 토큰입니다."),
     EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "T-003", "만료된 리프레시 토큰입니다."),
+
 
     // 거래
     TRADE_NOT_EXIST(HttpStatus.BAD_REQUEST, "T-001", "존재하지 않는 거래입니다."),
