@@ -17,7 +17,7 @@ export default function LoginInput() {
         console.log('비밀번호가 비었다')
       }
     } else {
-    api.post('user/login', {
+    api.post('users/login', {
         loginId:id, password
       }
     )

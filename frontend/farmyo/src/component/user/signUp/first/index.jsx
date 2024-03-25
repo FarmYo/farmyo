@@ -27,7 +27,7 @@ export default function SignUpFirst() {
     if (id && typeof id === 'string') {
       const trimmedId = id.trim();
       if (trimmedId.split(' ').length < 2 && trimmedId.length > 5 && trimmedId.length < 21) {
-        api.get(`user/join/duplicate?id=${id}`)
+        api.get(`users/join/duplicate?id=${id}`)
         .then((res) => {
           console.log('아이디 중복검사 완료', res)
           if (res.data.dataBody === 1) {
@@ -70,7 +70,7 @@ export default function SignUpFirst() {
     if (isValid === false) {
       setCheckEmailMessage('형식에 맞지 않는 이메일입니다.')
     } else {
-      api.post('user/email', {email:email})
+      api.post('users/email', {email:email})
       .then((res) => {
         console.log('이메일 중복 검사 및 인증번호 발송 완료')
       //   if (res.dataHeader.successCode === "1") {
@@ -118,7 +118,7 @@ export default function SignUpFirst() {
     if (code.length < 1) {
       Swal.fire('인증번호를 입력하세요.')
     } else {
-      api.post('user/auth/check', {
+      api.post('users/auth/check', {
           email:email,
           authCode:code
         }
