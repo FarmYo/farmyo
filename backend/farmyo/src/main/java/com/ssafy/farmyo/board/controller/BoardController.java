@@ -3,6 +3,7 @@ package com.ssafy.farmyo.board.controller;
 import com.ssafy.farmyo.board.dto.AddBuyBoardReqDto;
 import com.ssafy.farmyo.board.dto.AddFarmerBoardReqDto;
 import com.ssafy.farmyo.board.dto.BoardDetailResDto;
+import com.ssafy.farmyo.board.dto.BoardListResDto;
 import com.ssafy.farmyo.board.service.BoardService;
 import com.ssafy.farmyo.common.auth.CustomUserDetails;
 import com.ssafy.farmyo.common.exception.CustomException;
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/boards")
@@ -79,4 +83,22 @@ public class BoardController {
         log.info("게시물 상세조회 API 호출 - 게시물 ID: {}", boardId);
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, boardDetailResDto));
     }
+
+    //게시물 목록조회 params 0 은 팜요 1 은 삼요
+    @Operation(summary = "게시물목록조회", description = "/boards \n\n 게시물 목록 조회")
+    @GetMapping("")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환")
+    public ResponseEntity<? extends BaseResponseBody> getBoardList(
+            @RequestParam("type") int boardType,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+        List<BoardListResDto> boardListResDtoList = boardService.findBoardListByType(boardType, page, size);
+        if (boardType == 0) {
+            log.info("팜요 게시물 목록조회 API 호출");
+        } else {
+            log.info("삼요 게시물 목록조회 API 호출");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, boardListResDtoList));
+    }
+
 }
