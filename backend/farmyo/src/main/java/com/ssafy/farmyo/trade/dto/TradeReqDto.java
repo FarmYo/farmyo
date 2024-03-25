@@ -7,17 +7,18 @@ import lombok.Getter;
 @Getter
 public class TradeReqDto {
 
+
     @NotBlank
-    private int seller;
+    private String sellerId;
     @NotBlank
-    private int buyer;
+    private String buyerId;
     @NotBlank
-    private int crop;
+    private int cropId;
     @NotBlank
-    private int board;
+    private int boardId;
     // 만약 chat이 없이 board에서 만들어진 거래라면 0을 넣기
     @NotBlank
-    private int chat;
+    private int chatId;
     @NotBlank
     private int tradePrice;
     @NotBlank
