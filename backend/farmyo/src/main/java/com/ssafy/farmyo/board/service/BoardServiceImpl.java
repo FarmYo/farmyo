@@ -3,6 +3,7 @@ package com.ssafy.farmyo.board.service;
 import com.ssafy.farmyo.board.dto.AddBuyBoardReqDto;
 import com.ssafy.farmyo.board.dto.AddFarmerBoardReqDto;
 import com.ssafy.farmyo.board.dto.BoardDetailResDto;
+import com.ssafy.farmyo.board.dto.BoardListResDto;
 import com.ssafy.farmyo.board.repository.BoardRepository;
 import com.ssafy.farmyo.common.exception.CustomException;
 import com.ssafy.farmyo.common.exception.ExceptionType;
@@ -12,11 +13,14 @@ import com.ssafy.farmyo.entity.*;
 import com.ssafy.farmyo.user.repository.FarmerRepository;
 import com.ssafy.farmyo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -51,6 +55,16 @@ public class BoardServiceImpl implements BoardService {
             throw new CustomException(ExceptionType.PRICE_INVALID);
         }
 
+        //게시글 제목이 있는지 확인
+        if (addBuyBoardReqDto.getTitle().isBlank()) {
+            throw new CustomException(ExceptionType.TITLE_NOT_EXIST);
+        }
+
+        //게시글 본문이 있는지 확인
+        if (addBuyBoardReqDto.getContent().isBlank()) {
+            throw new CustomException(ExceptionType.CONTENT_NOT_EXIST);
+        }
+
         Board board = Board.builder()
                 .user(user)
                 .cropCategory(cropCategory)
@@ -69,7 +83,7 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public Integer addFarmerBoard(AddFarmerBoardReqDto addFarmerBoardReqDto, int farmerId) {
 
-        //현태 토큰으로 꺼내온 농부가 있는지 확인
+        //현재 토큰으로 꺼내온 농부가 있는지 확인
         Farmer farmer = farmerRepository.findById(farmerId)
                 .orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
 
@@ -95,6 +109,18 @@ public class BoardServiceImpl implements BoardService {
         if (addFarmerBoardReqDto.getPrice() <= 0) {
             throw new CustomException(ExceptionType.PRICE_INVALID);
         }
+
+
+        //게시글 제목이 있는지 확인
+        if (addFarmerBoardReqDto.getTitle().isBlank()) {
+            throw new CustomException(ExceptionType.TITLE_NOT_EXIST);
+        }
+
+        //게시글 본문이 있는지 확인
+        if (addFarmerBoardReqDto.getContent().isBlank()) {
+            throw new CustomException(ExceptionType.CONTENT_NOT_EXIST);
+        }
+
 
         CropCategory cropCategory = crop.getCropCategory();
 
@@ -161,6 +187,28 @@ public class BoardServiceImpl implements BoardService {
                 .createdAt(board.getCreatedAt())
                 .updatedAt(board.getUpdatedAt())
                 .build();
+    }
+
+
+    //게시글 목록 조회
+    @Transactional(readOnly = true)
+    public List<BoardListResDto> findBoardListByType(int boardType, int page, int size) {
+        if (!(boardType <= 1)) {
+            throw new CustomException(ExceptionType.BOARDTYPE_INVALID);
+        }
+        Page<Board> boards = boardRepository.getArticleList(boardType, PageRequest.of(page, size));
+        return boards.stream().map(board -> BoardListResDto.builder()
+                        .boardId(board.getId())
+                        .boardType(boardType)
+                        .title(board.getBoardTitle())
+                        .quantity(board.getBoardQuantity())
+                        .price(board.getBoardPrice())
+                        .userId(board.getUser().getId())
+                        .userNickname(board.getUser().getNickname())
+                        .cropCategory(board.getCropCategory().getCategoryName())
+                        .imgUrl(boardType == 0 ? board.getCrop().getCropImgUrl() : null)
+                        .build())
+                .collect(Collectors.toList());
     }
 
 
