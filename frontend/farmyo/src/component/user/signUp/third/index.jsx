@@ -51,7 +51,7 @@ export default function SignUpSecond() {
         navigate("/signup/business", { state: { isSeller, id, email, password, nickName, phoneNumber, zoomNumber, address, detailAddress, account, accountNumber, bankName } }, { replace: true })
       } else if (isSeller === 1) {
         // 구매자
-        api.post('user', {
+        api.post('users', {
             loginId : id,              
             password : password,               
             telephone : phoneNumber, 
@@ -67,7 +67,7 @@ export default function SignUpSecond() {
           }
         )
         .then((res) => {
-          console.log('인증번호 확인 성공')
+          console.log('소비자 회원가입 확인 성공')
           if (res.data.dataHeader.successCode === 0) {
             navigate('/login', { replace: true })
             Swal.fire({
@@ -83,7 +83,7 @@ export default function SignUpSecond() {
           }
         })
         .catch((err) => {
-          console.log('인증번호 확인 실패', err)
+          console.log('소비자 회원가입 확인 실패', err)
           Swal.fire({
             title:'알 수 없는 에러',
             html: '회원가입 실패',
@@ -91,7 +91,7 @@ export default function SignUpSecond() {
           })
         })
       }} else {
-        console.log('로그인 실패 화면 확인해보기', zoomNumber, address, detailAddress, account, accountNumber, bankName)
+        console.log('소비자 회원가입 실패 이유 확인해보기', '우편번호 : ', zoomNumber, '주소 :', address, '상세주소 :', detailAddress, '예금주 :', account, '계좌번호 :', accountNumber, '은행명 :', bankName)
         Swal.fire({
           html: '<br>입력 정보를<br>확인해주세요',
           confirmButtonColor: '#1B5E20',
@@ -152,9 +152,9 @@ export default function SignUpSecond() {
           }}
           id="accountnumber" 
           name="accountnumber" 
-          type="text" 
+          type="tel" 
           placeholder="계좌번호"
-          autoComplete="text"
+          autoComplete="tel"
           required
           className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3 mt-4"
         />
