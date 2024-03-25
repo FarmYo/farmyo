@@ -6,6 +6,7 @@ import com.ssafy.farmyo.common.exception.CustomException;
 import com.ssafy.farmyo.common.exception.ExceptionType;
 import com.ssafy.farmyo.crop.repository.CropRepository;
 import com.ssafy.farmyo.entity.*;
+import com.ssafy.farmyo.trade.dto.TradeListDto;
 import com.ssafy.farmyo.trade.dto.TradeListReqDto;
 import com.ssafy.farmyo.trade.dto.TradeReqDto;
 import com.ssafy.farmyo.trade.dto.TradeResDto;
@@ -17,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -79,65 +82,64 @@ public class TradeServiceImpl implements TradeService {
 
 
     @Override
-    public TradeListReqDto getTrades(String loginId) {
-        User user;
-        if (userRepository.findByLoginId(loginId).isPresent()) {
-            user = userRepository.findByLoginId(loginId).get();
-        } else {
-            throw new CustomException(ExceptionType.USER_NOT_EXIST);
-        }
-        TradeListReqDto tradeListReqDto = new TradeListReqDto();
+    @Transactional
+    public TradeListReqDto getTrades(int id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+
+        log.info("user : {}", user);
 
         // user가 판매자인지 구매자인지 확인
         int job = user.getJob();
 
         if (job == 0) { // user가 판매자라면
-            // 진행중인 거래와 완료된 거래를 각각 tradeListReqDto에 넣음
-            tradeListReqDto.setNotFinishedList(tradeRepository.getSellerTradeListNotFinished(loginId));
-            tradeListReqDto.setFinishedList(tradeRepository.getSellerTradeListFinished(loginId));
+            List<TradeListDto> finish = tradeRepository.getSellerListFinish(id);
+            List<TradeListDto> notFinish = tradeRepository.getSellerListNotFinish(id);
+
+            return TradeListReqDto.builder()
+                    .FinishedList(finish)
+                    .NotFinishedList(notFinish)
+                    .build();
         } else { // user가 구매자라면
-            // 진행중인 거래와 완료된 거래를 각각 tradeListReqDto에 넣음
-            tradeListReqDto.setNotFinishedList(tradeRepository.getBuyerTradeListNotFinished(loginId));
-            tradeListReqDto.setFinishedList(tradeRepository.getBuyerTradeListFinished(loginId));
+            List<TradeListDto> finish = tradeRepository.getBuyerListFinish(id);
+            List<TradeListDto> notFinish = tradeRepository.getBuyerListNotFinish(id);
+
+            return TradeListReqDto.builder()
+                    .FinishedList(finish)
+                    .NotFinishedList(notFinish)
+                    .build();
 
         }
-
-        return tradeListReqDto;
     }
 
+
     @Override
+    @Transactional
     public TradeResDto getTrade(int id) {
         Trade trade = tradeRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.TRADE_NOT_EXIST));
 
-        TradeResDto tradeResDto = new TradeResDto();
-
-        // seller, buyer, crop, board id로 string값 받아오기
-        tradeResDto.setSeller(trade.getSeller().getNickname());
-        tradeResDto.setBuyer(trade.getBuyer().getNickname());
-        tradeResDto.setCrop(trade.getCrop().getCropName());
-        tradeResDto.setBoard(trade.getBoard().getBoardTitle());
-
-        // trade entity에서 나머지 정보 받아오기
-        tradeResDto.setId(trade.getId());
-        tradeResDto.setTradePrice(trade.getTradePrice());
-        tradeResDto.setTradeQuantity(trade.getTradeQuantity());
-        tradeResDto.setChatId(trade.getChat().getId());
-        tradeResDto.setTradeStatus(trade.getTradeStatus());
-        tradeResDto.setTradeShipcom(trade.getTradeShipcom());
-        tradeResDto.setTradeShipment(trade.getTradeShipment());
-        tradeResDto.setTradeLocation(trade.getTradeLocation());
-        tradeResDto.setTradeBlockchain(trade.getTradeBlockchain());
-
-        return tradeResDto;
+        return TradeResDto.builder()
+                .board(trade.getBoard().getBoardTitle())
+                .crop(trade.getCrop().getCropName())
+                .tradePrice(trade.getTradePrice())
+                .tradeQuantity(trade.getTradeQuantity())
+                .seller(trade.getSeller().getNickname())
+                .buyer(trade.getBuyer().getNickname())
+                .tradeStatus(trade.getTradeStatus())
+                .tradeLocation(trade.getTradeLocation())
+                .tradeShipment(trade.getTradeShipment())
+                .tradeShipcom(trade.getTradeShipcom())
+                .build();
     }
 
     @Override
+    @Transactional
     public void updateTradeLocation(int id, String location) {
         // 거래 테이블 주소 업데이트
         tradeRepository.updateLocation(id, location);
     }
 
     @Override
+    @Transactional
     public void updateTradeDeposit(int id, String depositName) {
         Trade trade = tradeRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.TRADE_NOT_EXIST));
 
@@ -156,6 +158,7 @@ public class TradeServiceImpl implements TradeService {
     }
 
     @Override
+    @Transactional
     public void updateTradeDeal(int id, String tradeShipment, String tradeShipcom) {
         // 거래 테이블 송장번호, 택배사 업데이트
         tradeRepository.updateShip(id, tradeShipment, tradeShipcom);
@@ -164,6 +167,7 @@ public class TradeServiceImpl implements TradeService {
     }
 
     @Override
+    @Transactional
     public void updateTradeFinish(int id) {
         Trade trade = tradeRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.TRADE_NOT_EXIST));
         User seller = userRepository.findById(trade.getSeller().getId()).orElseThrow(() -> new CustomException((ExceptionType.USER_LOGIN_REQUIRED)));

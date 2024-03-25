@@ -1,11 +1,9 @@
 package com.ssafy.farmyo.trade.dto;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-@Data
+@Getter
+@Builder
 public class TradeDto {
 
     private int id;

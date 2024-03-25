@@ -10,7 +10,7 @@ import java.util.Map;
 public interface TradeService {
 
     void createTrade(TradeReqDto tradeReqDto);
-    TradeListReqDto getTrades(String loginId);
+    TradeListReqDto getTrades(int id);
     TradeResDto getTrade(int id);
     void updateTradeLocation(int id, String location);
     void updateTradeDeposit(int id, String depositName);
