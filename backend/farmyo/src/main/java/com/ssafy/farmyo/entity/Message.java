@@ -26,7 +26,7 @@ public class Message extends BaseTime {
 
     //채팅내용
     @Column(name = "chat_content", nullable = false)
-    private String chatContent;
+    private String content;
 
     //발신자
     @Column(name = "user_id", nullable = false)
@@ -34,9 +34,9 @@ public class Message extends BaseTime {
 
     //빌더
     @Builder
-    public Message(Chat chat, String chatContent, int userId) {
+    public Message(Chat chat, String content, int userId) {
         this.chat = chat;
-        this.chatContent = chatContent;
+        this.content = content;
         this.userId = userId;
     }
 }
