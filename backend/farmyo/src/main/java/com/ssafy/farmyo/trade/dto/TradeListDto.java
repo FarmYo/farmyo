@@ -4,16 +4,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 
-@Getter
-@Builder
+@Data
 public class TradeListDto {
 
     private int id;
-    private String seller;
-    private String buyer;
+    private String nickname;
     private String boardTitle;
-    private int tradeStatus;
     private int tradePrice;
     private int tradeQuantity;
+    private int tradeStatus;
 
 }

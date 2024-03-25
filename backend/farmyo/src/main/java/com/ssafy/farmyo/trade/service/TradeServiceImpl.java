@@ -6,6 +6,7 @@ import com.ssafy.farmyo.common.exception.CustomException;
 import com.ssafy.farmyo.common.exception.ExceptionType;
 import com.ssafy.farmyo.crop.repository.CropRepository;
 import com.ssafy.farmyo.entity.*;
+import com.ssafy.farmyo.trade.dto.TradeListDto;
 import com.ssafy.farmyo.trade.dto.TradeListReqDto;
 import com.ssafy.farmyo.trade.dto.TradeReqDto;
 import com.ssafy.farmyo.trade.dto.TradeResDto;
@@ -17,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -80,34 +83,34 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     @Transactional
-    public TradeListReqDto getTrades(String loginId) {
-        User user;
-        if (userRepository.findByLoginId(loginId).isPresent()) {
-            user = userRepository.findByLoginId(loginId).get();
-        } else {
-            throw new CustomException(ExceptionType.USER_NOT_EXIST);
-        }
+    public TradeListReqDto getTrades(int id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
 
         log.info("user : {}", user);
-
-        TradeListReqDto tradeListReqDto = new TradeListReqDto();
 
         // user가 판매자인지 구매자인지 확인
         int job = user.getJob();
 
         if (job == 0) { // user가 판매자라면
-            // 진행중인 거래와 완료된 거래를 각각 tradeListReqDto에 넣음
-            tradeListReqDto.setNotFinishedList(tradeRepository.getSellerTradeListNotFinished(loginId));
-            tradeListReqDto.setFinishedList(tradeRepository.getSellerTradeListFinished(loginId));
+            List<TradeListDto> finish = tradeRepository.getSellerListFinish(id);
+            List<TradeListDto> notFinish = tradeRepository.getSellerListNotFinish(id);
+
+            return TradeListReqDto.builder()
+                    .FinishedList(finish)
+                    .NotFinishedList(notFinish)
+                    .build();
         } else { // user가 구매자라면
-            // 진행중인 거래와 완료된 거래를 각각 tradeListReqDto에 넣음
-            tradeListReqDto.setNotFinishedList(tradeRepository.getBuyerTradeListNotFinished(loginId));
-            tradeListReqDto.setFinishedList(tradeRepository.getBuyerTradeListFinished(loginId));
+            List<TradeListDto> finish = tradeRepository.getBuyerListFinish(id);
+            List<TradeListDto> notFinish = tradeRepository.getBuyerListNotFinish(id);
+
+            return TradeListReqDto.builder()
+                    .FinishedList(finish)
+                    .NotFinishedList(notFinish)
+                    .build();
 
         }
-
-        return tradeListReqDto;
     }
+
 
     @Override
     @Transactional
