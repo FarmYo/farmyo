@@ -33,7 +33,7 @@ export default function BottomBar() {
   },[])
   return (
     <div>
-      <nav className="bg-white border-t-2 border-gray-300 fixed bottom-0 w-full h-28">
+      <nav className="bg-white border-t-2 border-gray-300 fixed bottom-0 w-full h-20">
         <div className='p-3'>
           <div className="flex justify-between">
             <div className='flex flex-col items-center justify-center'

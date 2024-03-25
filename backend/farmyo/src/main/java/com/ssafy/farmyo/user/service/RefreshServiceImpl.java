@@ -54,14 +54,15 @@ public class RefreshServiceImpl implements RefreshService{
 
         // 토큰에서 정보 가져오기
         String loginId = jwtUtil.getLoginId(refresh);
+        String nickname = jwtUtil.getNickname(refresh);
         Integer id = jwtUtil.getUserId(refresh);
         Integer job = jwtUtil.getUserJob(refresh);
 
         log.info("Create Token - loginId : {}, id : {}, job : {}", loginId, id, job);
 
         // 토큰 생성
-        String newAccess = jwtUtil.createJwt("access", loginId, id, job, 86400000L);
-        String newRefresh = jwtUtil.createJwt("refresh", loginId, id, job,  86400000L);
+        String newAccess = jwtUtil.createJwt("access", loginId, nickname, id, job, 86400000L);
+        String newRefresh = jwtUtil.createJwt("refresh", loginId, nickname, id, job,  86400000L);
 
         //response
         response.setHeader("access", newAccess);

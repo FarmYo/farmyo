@@ -65,7 +65,7 @@ img {
   padding: 0.25rem;
 }
 
-.fixed-bottom {
+.fixed-bottom1 {
   position: fixed;
   bottom: 110px;
   /* bottom: 0; 바닥에 붙여놓기(지금은 하단네브바있어서) */
