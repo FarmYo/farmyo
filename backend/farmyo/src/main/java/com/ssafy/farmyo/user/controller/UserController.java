@@ -170,4 +170,30 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
     }
+
+    @Operation(summary = "계좌 수정", description = "수정 정보를 받아 해당 유저의 계좌를 변경")
+    @PatchMapping("/account")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환 ")
+    public ResponseEntity<? extends BaseResponseBody> modifyAccountInfo(@Parameter(description = "계좌 수정 정보") @Valid @RequestBody AccountModifyDto accountModifyDto,
+                                                                    Authentication authentication) {
+
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        userService.modifyAccountInfo(customUserDetails.getId(), accountModifyDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
+    }
+
+    @Operation(summary = "주소 수정", description = "수정 정보를 받아 해당 유저의 주소를 변경")
+    @PatchMapping("/address")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환 ")
+    public ResponseEntity<? extends BaseResponseBody> modifyAddressInfo(@Parameter(description = "주소 수정 정보") @Valid @RequestBody AddressModifyDto addressModifyDto,
+                                                                        Authentication authentication) {
+
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        userService.modifyAddressInfo(customUserDetails.getId(), addressModifyDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
+    }
 }
