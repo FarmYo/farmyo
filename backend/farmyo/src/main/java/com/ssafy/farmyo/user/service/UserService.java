@@ -1,9 +1,6 @@
 package com.ssafy.farmyo.user.service;
 
-import com.ssafy.farmyo.user.dto.JoinReqDto;
-import com.ssafy.farmyo.user.dto.PasswordResetDto;
-import com.ssafy.farmyo.user.dto.PasswordUpdateDto;
-import com.ssafy.farmyo.user.dto.UserResDto;
+import com.ssafy.farmyo.user.dto.*;
 
 public interface UserService {
     // 소비자 회원 가입
@@ -23,4 +20,10 @@ public interface UserService {
 
     // 비밀번호 수정
     void updatePassword(int id, PasswordUpdateDto passwordUpdateDto);
+
+    // 회원 수정
+    void modifyUserInfo(int id, UserModifyDto userModifyDto);
+
+    // 회원 탈퇴
+    void deactivateUser(int id);
 }
