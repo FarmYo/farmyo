@@ -8,7 +8,7 @@ import java.util.List;
 public interface CropService {
 
     //작물 등록
-    Integer addCrop(AddCropReqDto addCropReqDto, int farmerId);
+    int addCrop(AddCropReqDto addCropReqDto, int farmerId);
 
     //작물 상세조회
     CropDetailResDto getCropDetail(int cropId);

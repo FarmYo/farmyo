@@ -18,6 +18,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,7 +37,8 @@ public class CropServiceImpl implements CropService {
 
     //작물 등록
     @Override
-    public Integer addCrop(AddCropReqDto addCropReqDto, int farmerId) {
+    @Transactional
+    public int addCrop(AddCropReqDto addCropReqDto, int farmerId){
 
 
         //해당 id의 파머가 있는지 확인
@@ -60,8 +64,23 @@ public class CropServiceImpl implements CropService {
         crop = cropRepository.save(crop);
 
 
-        //블록체인기능 다듬어서 넣을곳
-//        cropContractService.addBasicInfo(BigInteger.valueOf(crop.getId()), crop.getCropName());
+//        블록체인기능 다듬어서 넣을곳
+        // localDate타입 timeStamp로 바꾸기 블록체인 통신을 위해 bigInteger로 바꿔야함
+        ZonedDateTime zdt = crop.getCropPlantingDate().atStartOfDay(ZoneId.of("Asia/Seoul"));
+
+        //zdt를 타임스탬프로 변환
+        long unixTimeStamp = zdt.toEpochSecond();
+
+        //Unix타임스탬프를 BigInteger로 변환
+        BigInteger plantingDate= BigInteger.valueOf(unixTimeStamp);
+
+
+        try {
+            cropContractService.addBasicInfo(BigInteger.valueOf(crop.getId()), crop.getCropName(), crop.getCropCultivationSite(), plantingDate);
+            System.out.println("CropServiceImpl.addCrop");
+        } catch (Exception e) {
+            throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
+        }
 
         return crop.getId();
     }
