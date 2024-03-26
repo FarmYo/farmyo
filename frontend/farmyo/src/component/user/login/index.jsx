@@ -32,8 +32,18 @@ export default function LoginInput() {
       console.log('로그인 실패', err)
       setId("")
       setPassword("")
-      Swal.fire('아이디·비밀번호를<br>확인해주세요')
-    })
+      if (err.response.data.dataHeader?.resultCode === "U-000") {
+        Swal.fire({
+          title: '탈퇴한 회원입니다.',
+          confirmButtonColor: '#1B5E20',
+        });
+      } else {
+        Swal.fire({
+          title: '아이디·비밀번호를<br>확인해주세요',
+          confirmButtonColor: '#1B5E20',
+        });
+    }
+  })
   }}
 
 
