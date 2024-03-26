@@ -16,5 +16,6 @@ public interface TradeService {
     void updateTradeDeposit(int id, String depositName);
     void updateTradeDeal(int id, String tradeShipment, String tradeShipcom);
     void updateTradeFinish(int id);
+    void deleteTrade(int id);
 
 }

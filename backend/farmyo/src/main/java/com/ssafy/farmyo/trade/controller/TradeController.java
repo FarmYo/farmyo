@@ -77,7 +77,7 @@ public class TradeController {
 
         tradeService.updateTradeLocation(id, location);
 
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, 0));
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "sucess"));
     }
 
     @PutMapping("/deposit/{id}")
@@ -93,7 +93,7 @@ public class TradeController {
 
         tradeService.updateTradeDeposit(id, depositName);
 
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, 0));
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "sucess"));
     }
 
     @PutMapping("/deal/{id}")
@@ -112,7 +112,7 @@ public class TradeController {
 
         tradeService.updateTradeDeal(id, tradeShipment, tradeShipcom);
 
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0 , 0));
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0 , "sucess"));
     }
 
     @PutMapping("/final/{id}")
@@ -125,7 +125,20 @@ public class TradeController {
 
         tradeService.updateTradeFinish(id);
 
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, 0));
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "sucess"));
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "거래 삭제(거래 취소)", description = "거래 아이디를 통해 입금대기중일 때 거래를 취소한다.")
+    public ResponseEntity<? extends BaseResponseBody> deleteTrade(
+            @PathVariable(name = "id")
+            @Parameter(description = "거래 아이디")
+            int id) {
+        log.info("{} : deleteTrade 실행", id);
+
+        tradeService.deleteTrade(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "sucess"));
     }
 
 }
