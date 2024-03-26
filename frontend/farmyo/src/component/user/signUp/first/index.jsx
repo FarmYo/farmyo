@@ -132,21 +132,22 @@ export default function SignUpFirst() {
             title:'인증완료',
             confirmButtonColor: '#1B5E20',
           })
-        } else if (res.data.dataHeader.resultCode === "U-004") {
-          setCheckIsEmail(false)
-          alerter1()
-          onCloseModal();
-          setCheckEmailMessage('이메일 전송 버튼을 다시 눌러주세요')
-        } else if (res.data.dataHeader.resultCode === "U-005") {
-          setCheckIsEmail(false)
-          setCode("")
-          alerter2()
+        } else {
+          console.log('여기로 온다는 것? 로직을 확인해야한다는 것')
         }
       })
       .catch((err) => {
         console.log('인증번호 확인 실패', err)
-        setCode("")
-        alerter2()
+        if (err.response.data.dataHeader.resultCode === "U-004") {
+          setCheckIsEmail(false)
+          alerter1()
+          onCloseModal();
+          setCheckEmailMessage('이메일 전송 버튼을 다시 눌러주세요')
+        } else if (err.response.data.dataHeader.resultCode === "U-005") {
+          setCheckIsEmail(false)
+          setCode("")
+          alerter2()
+        }
       })
     }
   },[email])

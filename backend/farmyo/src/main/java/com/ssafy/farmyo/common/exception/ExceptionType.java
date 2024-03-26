@@ -26,6 +26,7 @@ public enum ExceptionType {
     CROP_NOT_EXIST(HttpStatus.BAD_REQUEST, "C-001", "존재하지 않는 작물입니다."),
     CATEGORY_NOT_EXIST(HttpStatus.BAD_REQUEST, "C-002", "존재하지 않는 작물 카테고리입니다."),
     USER_FARMER_REQUIRED(HttpStatus.BAD_REQUEST, "C-003", "농부만 작물 등록할 수 있습니다."),
+    BLOCKCHAIN_FAILED_TO_CREATE(HttpStatus.INTERNAL_SERVER_ERROR, "C-004", "블록체인 등록 중 내부 오류가 발생했습니다."),
 
 
     // 토큰
@@ -53,7 +54,6 @@ public enum ExceptionType {
     CONTENT_NOT_EXIST(HttpStatus.BAD_REQUEST, "B-009", "글 내용이 없습니다."),
     BOARDTYPE_INVALID(HttpStatus.BAD_REQUEST, "B-010", "보드타입이 잘못되었습니다."),
     USER_NOT_AUTHOR(HttpStatus.FORBIDDEN, "B-011", "작성자만 수정 또는 삭제할 수 있습니다."),
-
 
 
     // 채팅

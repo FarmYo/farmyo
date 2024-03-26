@@ -16,10 +16,13 @@ import Pesticide from '../../form/pesticide'
 import Award from '../../form/award'
 import '../../../css/liferecord.css'
 import api from "../../../api/api"
+import '../../../css/pagenation.css'
+
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
+
 
 export default function MyCrops() {
   const styles = {
@@ -242,6 +245,8 @@ export default function MyCrops() {
   return(
     // "작물없으면 등록한 작물이 없습니다"노출
     <div style={{ position:'relative',height:'410px'}}>
+      {cropsList.length > 0 ?(
+        <>
       {/* 아래의 디브가 작물이 추가될 때마다 반복됨  */}
       {currentItems.map((crop,index)=>(
       <div  key={crop.id} className="flex"
@@ -276,7 +281,12 @@ export default function MyCrops() {
           <button className="join-item btn"  onClick={goToNextPage}>»</button>
         </div>
       </div>
-
+      </>
+      ) : (
+        <div style={{ textAlign: 'center', paddingTop: '20%' }}>
+        등록한 작물이 없습니다.
+      </div>  
+      )}
   
       <div style={{ position: 'absolute', bottom: 0, right: 10}}>
         <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>

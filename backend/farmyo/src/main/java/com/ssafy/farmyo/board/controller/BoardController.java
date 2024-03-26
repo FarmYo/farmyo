@@ -9,8 +9,6 @@ import com.ssafy.farmyo.common.response.BaseResponseBody;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -35,7 +33,7 @@ public class BoardController {
     @Operation(summary = "삼요게시물작성", description = "/boards/buy\n\n 삼요게시물 작성")
     @PostMapping("/buy")
     @ApiResponse(responseCode = "201", description = "성공 \n\n Success 반환")
-    public ResponseEntity<? extends BaseResponseBody> addBuyBoard(@RequestBody @Validated AddBuyBoardReqDto addBuyBoardReqDto, Authentication authentication) {
+    public ResponseEntity<? extends BaseResponseBody> createBuyBoard(@RequestBody @Validated AddBuyBoardReqDto addBuyBoardReqDto, Authentication authentication) {
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
@@ -55,7 +53,7 @@ public class BoardController {
     @Operation(summary = "팜요게시물작성", description = "/boards/sell\n\n 팜요게시글 작성")
     @PostMapping("/sell")
     @ApiResponse(responseCode = "201", description = "성공 \n\n Success 반환")
-    public ResponseEntity<? extends BaseResponseBody> addFarmerBoard(@RequestBody @Validated AddFarmerBoardReqDto addFarmerBoardReqDto, Authentication authentication) {
+    public ResponseEntity<? extends BaseResponseBody> createFarmerBoard(@RequestBody @Validated AddFarmerBoardReqDto addFarmerBoardReqDto, Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
         //농부인지 구매자인지 확인 농부만 가능
@@ -101,7 +99,7 @@ public class BoardController {
     @Operation(summary = "게시물수정", description = "/boards/{boardId} \n\n 게시물 수정")
     @PatchMapping("/{boardId}")
     @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환")
-    public ResponseEntity<? extends BaseResponseBody> patchBoard(@PathVariable int boardId, @RequestBody @Validated PatchBoardReqDto patchBoardReqDto, Authentication authentication) {
+    public ResponseEntity<? extends BaseResponseBody> updateBoard(@PathVariable int boardId, @RequestBody @Validated PatchBoardReqDto patchBoardReqDto, Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         int patchBoardId = boardService.patchBoard(boardId,patchBoardReqDto, userDetails.getId());
         log.info("{}번 게시물 업데이트", boardId);
