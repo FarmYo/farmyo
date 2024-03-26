@@ -1,6 +1,7 @@
 package com.ssafy.farmyo.chat.controller;
 
 import com.ssafy.farmyo.chat.dto.ChatDto;
+import com.ssafy.farmyo.chat.dto.ChatRoomDto;
 import com.ssafy.farmyo.chat.dto.MessageDto;
 import com.ssafy.farmyo.chat.dto.MessageListDto;
 import com.ssafy.farmyo.chat.service.ChatService;
@@ -25,6 +26,21 @@ import java.util.List;
 public class ChatController {
 
     private final ChatService chatService;
+
+    @PostMapping("/room")
+    @Operation(summary = "채팅방 열기", description = "이전에 있던 채팅방이 있으면 이전 채팅방, 없다면 새로운 채팅방 만들기")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n Chat 반환(채팅방 Id)")
+    public ResponseEntity<? extends BaseResponseBody> createRoom(
+            @RequestBody
+            @Parameter(description = "거래당 채팅이 생길 수 있으므로 boardId, sellerId, buyerId")
+            ChatRoomDto chatRoomDto) {
+
+        // 임시 저장
+        ChatDto chatDto = chatService.createChatRoom(chatRoomDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
+    }
+
     @PostMapping("/message")
     @Operation(summary = "유저 채팅 전송", description = "chatId인 채팅방에 메세지를 전송하고 DB에 저장한다.")
     @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환")
