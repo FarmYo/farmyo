@@ -19,27 +19,4 @@ public class UserModifyDto {
     // 상태메세지
     private String comment;
 
-    // 예금주
-    @NotBlank
-    private String depositor;
-
-    // 은행명
-    @NotBlank
-    private String bank;
-
-    // 계좌번호
-    @NotBlank
-    private String account;
-
-    // 우편번호
-    @NotBlank
-    private String addressCode;
-
-    // 법정주소
-    @NotBlank
-    private String addressLegal;
-
-    // 상세주소
-    @NotBlank
-    private String addressDetail;
 }
