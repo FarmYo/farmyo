@@ -106,10 +106,9 @@ public class UserServiceImpl implements UserService {
 
         // 농부 저장
         Farmer savedFarmer = farmerRepository.saveAndFlush(farmer);
-        User savedUser = userRepository.findById(savedFarmer.getId()).orElseThrow(() -> new CustomException(ExceptionType.INTERNAL_SERVER_ERROR));
 
         Address address = Address.builder()
-                .user(savedUser)
+                .user(savedFarmer)
                 .addressLegal(joinReqDto.getAddressLegal())
                 .addressCode(joinReqDto.getAddressCode())
                 .addressDetail(joinReqDto.getAddressDetail())
