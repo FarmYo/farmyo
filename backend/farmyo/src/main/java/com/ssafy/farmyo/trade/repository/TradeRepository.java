@@ -31,47 +31,18 @@ public interface TradeRepository extends JpaRepository<Trade, Integer> {
             "WHERE buy.id = :id AND t.tradeStatus != 3")
     List<TradeListDto> getTradeDetailsByBuyerIdAndStatusNot(@Param("id") int id);
 
-    @Query(value = "SELECT t FROM Trade t WHERE t.seller.id = :id AND t.tradeStatus = :tradeStatus")
+    @Query(value = "SELECT t FROM Trade t WHERE t.buyer.id = :id AND t.tradeStatus = :tradeStatus")
     List<Trade> findAllByBuyerAndTradeStatus(int id, int tradeStatus);
 
-    @Query(value = "SELECT t FROM Trade t WHERE t.seller.id = :id AND t.tradeStatus != :tradeStatus")
+    @Query(value = "SELECT t FROM Trade t WHERE t.buyer.id = :id AND t.tradeStatus != :tradeStatus")
     List<Trade> findAllByBuyerAndTradeStatusNot(int id, int tradeStatus);
 
-    @Query(value = "SELECT t FROM Trade t WHERE t.buyer.id = :id AND t.tradeStatus = :tradeStatus")
+    @Query(value = "SELECT t FROM Trade t WHERE t.seller.id = :id AND t.tradeStatus = :tradeStatus")
     List<Trade> findAllBySellerAndTradeStatus(int id, int tradeStatus);
 
-    @Query(value = "SELECT t FROM Trade t WHERE t.buyer.id = :id AND t.tradeStatus != :tradeStatus")
+    @Query(value = "SELECT t FROM Trade t WHERE t.seller.id = :id AND t.tradeStatus != :tradeStatus")
     List<Trade> findAllBySellerAndTradeStatusNot(int id, int tradeStatus);
 
-    @Query("SELECT t.id, s.nickname, b.boardTitle, t.tradePrice, t.tradeQuantity, t.tradeStatus " +
-            "FROM Trade t " +
-            "JOIN t.board b " +
-            "JOIN t.seller s " +
-            "JOIN t.buyer buy " +
-            "WHERE buy.id = :id AND t.tradeStatus = 3")
-    List<TradeListDto> getTradeDetailsByBuyerIdAndStatus(@Param("id") int id);
-
-    @Query("SELECT t.id, buy.nickname, b.boardTitle, t.tradePrice, t.tradeQuantity, t.tradeStatus " +
-            "FROM Trade t " +
-            "JOIN t.board b " +
-            "JOIN t.seller s " +
-            "JOIN t.buyer buy " +
-            "WHERE s.id = :id AND t.tradeStatus != 3")
-    List<TradeListDto> getTradeDetailsBySellerIdAndStatusNot(@Param("id") int id);
-
-    @Query("SELECT t.id, buy.nickname, b.boardTitle, t.tradePrice, t.tradeQuantity, t.tradeStatus " +
-            "FROM Trade t " +
-            "JOIN t.board b " +
-            "JOIN t.seller s " +
-            "JOIN t.buyer buy " +
-            "WHERE s.id = :id AND t.tradeStatus = 3")
-    List<TradeListDto> getTradeDetailsBySellerIdAndStatus(@Param("id") int id);
-
-//    @Query(value = "SELECT t.id, t.buyer.nickname, t.board.boardTitle, t.tradePrice, t.tradeQuantity, t.tradeStatus FROM Trade t WHERE t.buyer.id = :id AND t.tradeStatus = 3")
-//    List<TradeListDto> getBuyerListFinish(int id);
-//
-//    @Query(value = "SELECT t.id, t.buyer.nickname, t.board.boardTitle, t.tradePrice, t.tradeQuantity, t.tradeStatus FROM Trade t WHERE t.buyer.id = :id AND t.tradeStatus != 3")
-//    List<TradeListDto> getBuyerListNotFinish(int id);
 
     @Transactional
     @Modifying
