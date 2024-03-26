@@ -5,12 +5,44 @@ import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import '../../../css/barchart.css'
 import Back from '../../../image/component/leftarrow.png'
+import { useParams } from "react-router-dom"
+import api from '../../../api/api'
+import { useState } from "react"
+
+
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function SellDetail(){
+  const params = useParams()
+  const boardId = params.boardId
+  const [tradeQuantity,setTradeQuantity] = useState(null)
+
+
+  // 게시판에서 바로 거래생성 로직
+  const goTrade = () =>{
+    api.post('trades',{
+      sellerId:"ssafy1",//수정
+      buyerId:"ssafy2", //수정
+      cropId:1,   //수정
+      boardId:boardId,
+      tradePrice:20000, //수정
+      tradeQuantity:tradeQuantity,
+      tradeStatus:0 //수정
+    }
+  )
+    .then((res)=>{
+      console.log(res)
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  }
+
+
+
   return(
     <div>
        {/* 팝니다 상세게시글사진 */}
@@ -100,8 +132,12 @@ export default function SellDetail(){
           <h1 className="font-bold">50kg</h1>
         </div>
         <div>
-          <button className="btn mr-2" style={{ backgroundColor: '#1B5E20'}}> 
-            <div className="font-bold text-md" style={{ color:'white' }} onClick={()=>document.getElementById('gotrade').showModal()}>거래하기</div>
+          <button className="btn mr-2" style={{ backgroundColor: '#1B5E20'}} 
+          onClick={()=>{
+          document.getElementById('gotrade').showModal()
+          
+          }}> 
+            <div className="font-bold text-md" style={{ color:'white' }}>거래하기</div>
           </button>
           <button className="btn" style={{ backgroundColor: '#1B5E20'}}> 
             <div className="font-bold text-md" style={{ color:'white' }}>채팅하기</div>
@@ -122,7 +158,10 @@ export default function SellDetail(){
           </div>
           <label for="price" class="block text-md mt-5 leading-6 text-gray-900">수량</label>
           <div class="relative rounded-md mt-1">
-            <input type="number" name="price" id="price" class="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="수량을 입력하세요(kg)"/>
+            <input type="number" name="price" id="price" min="0" step="1"
+            class="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
+            placeholder="수량을 입력하세요(kg)"
+            onChange={(e)=>setTradeQuantity(e.target.value)}/>
           </div>
           <label for="price" class="block text-md mt-5 leading-6 text-gray-900">총 주문금액</label>
           <div class="relative rounded-md mt-1">
@@ -130,7 +169,7 @@ export default function SellDetail(){
             <h1>10000원/kg</h1>
           </div>
           <div className="mt-10">
-            <button className="btn w-full flex justify-around" style={{ backgroundColor: '#1B5E20'}}> 
+            <button className="btn w-full flex justify-around" style={{ backgroundColor: '#1B5E20'}} onClick={()=>goTrade()}> 
               <div className="font-bold text-lg" style={{ color:'white' }}>구매하기</div>
             </button>
           </div>
