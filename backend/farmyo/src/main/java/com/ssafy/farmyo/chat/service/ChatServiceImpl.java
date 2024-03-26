@@ -1,6 +1,7 @@
 package com.ssafy.farmyo.chat.service;
 
 import com.ssafy.farmyo.chat.dto.ChatDto;
+import com.ssafy.farmyo.chat.dto.ChatRoomDto;
 import com.ssafy.farmyo.chat.dto.MessageDto;
 import com.ssafy.farmyo.chat.dto.MessageListDto;
 import com.ssafy.farmyo.chat.repository.ChatRepository;
@@ -40,6 +41,16 @@ public class ChatServiceImpl implements ChatService {
         this.userRepository = userRepository;
         this.chatRepository = chatRepository;
         this.messageRepository = messageRepository;
+    }
+
+    @Override
+    @Transactional
+    public ChatDto createChatRoom(ChatRoomDto chatRoomDto) {
+
+        // 임시 저장
+        chatRepository.findById(chatRoomDto.getBoardId());
+
+        return null;
     }
 
     @Override
@@ -102,4 +113,5 @@ public class ChatServiceImpl implements ChatService {
 
         return result;
     }
+
 }
