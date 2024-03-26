@@ -11,11 +11,9 @@ export default function CheckPassword() {
   const navigate = useNavigate()
 
   const [id, setId] = useState("")
-  // const [isId, setIsId] = useState("")
 
   const [email, setEmail] = useState("")
   const [checkEmail, setCheckEmail] = useState(false)
-  // const [isEmail, setIsEmail] = useState("")
   
   const checkValidEmail = useCallback((email) => {
     const emailForm = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i;
@@ -75,7 +73,7 @@ export default function CheckPassword() {
             required
             className="inputstyle block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
             placeholder="인증코드"
-            />
+          />
         </div>
 
           <button
@@ -311,7 +309,6 @@ const checkPassword = () => {
     >
       <FirstModal />
     </Modal>
-
     <Modal
       open={twoopen}
       onClose={onTwoCloseModal}
