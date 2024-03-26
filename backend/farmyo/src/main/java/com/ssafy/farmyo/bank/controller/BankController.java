@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/banks")
 @RequiredArgsConstructor
-@Tag(name="1.BANK", description="BANK API")
+@Tag(name="6.BANK", description="BANK API")
 public class BankController {
 
     private final BankService bankService;
