@@ -201,12 +201,17 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     @Transactional
-    public void updateTradeOriginalLocation(int id, int userId) {
+    public TradeLocationDto updateTradeOriginalLocation(int id, int userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
         String location = user.getAddress().getAddressLegal();
         String locationDetail = user.getAddress().getAddressDetail();
 
         tradeRepository.updateLocation(id, location, locationDetail);
+
+        return TradeLocationDto.builder()
+                .location(location)
+                .locationDetail(locationDetail)
+                .build();
     }
 
     @Override
