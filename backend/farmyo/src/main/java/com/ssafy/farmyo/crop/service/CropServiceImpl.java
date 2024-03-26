@@ -79,7 +79,7 @@ public class CropServiceImpl implements CropService {
             cropContractService.addBasicInfo(BigInteger.valueOf(crop.getId()), crop.getCropName(), crop.getCropCultivationSite(), plantingDate);
             System.out.println("CropServiceImpl.addCrop");
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
         }
 
         return crop.getId();
