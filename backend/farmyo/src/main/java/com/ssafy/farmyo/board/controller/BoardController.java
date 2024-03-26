@@ -104,6 +104,7 @@ public class BoardController {
     public ResponseEntity<? extends BaseResponseBody> patchBoard(@PathVariable int boardId, @RequestBody @Validated PatchBoardReqDto patchBoardReqDto, Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         int patchBoardId = boardService.patchBoard(boardId,patchBoardReqDto, userDetails.getId());
+        log.info("{}번 게시물 업데이트", boardId);
 
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, patchBoardId));
 

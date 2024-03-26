@@ -228,7 +228,6 @@ public class BoardServiceImpl implements BoardService {
 //
 //            }
 //        }
-
         board = boardRepository.save(board);
         return board.getId();
     }
