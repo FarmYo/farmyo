@@ -249,5 +249,18 @@ public class TradeServiceImpl implements TradeService {
         tradeRepository.updateStatus(id, 3);
     }
 
+    @Override
+    public void deleteTrade(int id) {
+        Trade trade = tradeRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.TRADE_NOT_EXIST));
+
+        if (trade.getTradeStatus() != 0) {
+            throw new CustomException(ExceptionType.STATUS_NOT_MATCH);
+        } else {
+            tradeRepository.deleteById(id);
+        }
+
+
+    }
+
 
 }
