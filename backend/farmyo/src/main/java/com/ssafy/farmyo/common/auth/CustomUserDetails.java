@@ -1,6 +1,7 @@
 package com.ssafy.farmyo.common.auth;
 
 import com.ssafy.farmyo.entity.User;
+import com.ssafy.farmyo.entity.UserStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -55,4 +56,7 @@ public class CustomUserDetails implements UserDetails {
 
     // 유저 이름
     public String getNickname() {return user.getNickname();}
+
+    // 유저 상태
+    public UserStatus getUserStatus() {return user.getStatus();}
 }

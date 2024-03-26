@@ -135,12 +135,38 @@ public class UserController {
     @PatchMapping("/password/update")
     @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환 ")
     public ResponseEntity<? extends BaseResponseBody> updatePassword(@Parameter(description = "비밀번호 수정을 위한 정보를 담는 Dto")
-                                                                    @RequestBody PasswordUpdateDto passwordUpdateDto,
+                                                                     @RequestBody PasswordUpdateDto passwordUpdateDto,
                                                                      Authentication authentication) {
 
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
         userService.updatePassword(customUserDetails.getId(), passwordUpdateDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
+    }
+
+    @Operation(summary = "회원정보 수정", description = "회원 수정 DTO를 받아 회원 정보 수정")
+    @PatchMapping("")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환 ")
+    public ResponseEntity<? extends BaseResponseBody> modifyUser(@Parameter(description = "유저 수정을 위한 정보를 담는 Dto")
+                                                                 @RequestBody UserModifyDto userModifyDto,
+                                                                 Authentication authentication) {
+
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        userService.modifyUserInfo(customUserDetails.getId(), userModifyDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
+    }
+
+    @Operation(summary = "회원 탈퇴", description = "회원탈퇴")
+    @PatchMapping("/deactivate")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환 ")
+    public ResponseEntity<? extends BaseResponseBody> modifyUser(Authentication authentication) {
+
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        userService.deactivateUser(customUserDetails.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
     }
