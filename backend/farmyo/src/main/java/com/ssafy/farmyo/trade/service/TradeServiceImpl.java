@@ -183,6 +183,7 @@ public class TradeServiceImpl implements TradeService {
                 .buyer(trade.getBuyer().getNickname())
                 .tradeStatus(trade.getTradeStatus())
                 .tradeLocation(trade.getTradeLocation())
+                .tradeLocationDetail(trade.getTradeLocationDetail())
                 .tradeShipment(trade.getTradeShipment())
                 .tradeShipcom(trade.getTradeShipcom())
                 .build();
