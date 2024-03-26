@@ -7,7 +7,7 @@ export default function Mainpage() {
   const navigate = useNavigate()
 
   return(
-  <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 logo">
+  <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 logo space-y-10">
     <div className="mx-auto w-full max-w-sm mb-0">
       <img
         className="mx-auto h-auto w-auto"
