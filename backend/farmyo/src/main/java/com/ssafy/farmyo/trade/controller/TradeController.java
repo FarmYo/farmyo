@@ -5,6 +5,7 @@ import com.ssafy.farmyo.trade.dto.*;
 import com.ssafy.farmyo.trade.service.TradeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -90,9 +91,9 @@ public class TradeController {
     ) {
         log.info("{}, {} : updateTradeLocation 실행", id, userId);
 
-        tradeService.updateTradeOriginalLocation(id, userId);
+        TradeLocationDto tradeLocationDto = tradeService.updateTradeOriginalLocation(id, userId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "sucess"));
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, tradeLocationDto));
     }
 
     @PatchMapping("/deposit/{id}")
@@ -118,7 +119,7 @@ public class TradeController {
             @Parameter(description = "거래 아이디")
             int id,
             @RequestBody
-            @Parameter(description = "송장번호(tradeShipment) 및 택배사(tradeShipcom)")
+            @Schema(description = "송장번호(tradeShipment) 및 택배사(tradeShipcom)")
             TradeShipDto tradeShipDto) {
         log.info("{} : updateTradeDeal 실행" , id);
 

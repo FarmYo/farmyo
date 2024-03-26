@@ -10,7 +10,7 @@ public interface TradeService {
     TradeListReqDto getTrades(int id);
     TradeResDto getTrade(int id);
     void updateTradeLocation(int id, TradeLocationDto tradeLocationDto);
-    void updateTradeOriginalLocation(int id, int userId);
+    TradeLocationDto updateTradeOriginalLocation(int id, int userId);
     void updateTradeDeposit(int id, String depositName);
     void updateTradeDeal(int id, TradeShipDto tradeShipDto);
     void updateTradeFinish(int id);
