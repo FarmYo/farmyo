@@ -38,7 +38,7 @@ public class CropServiceImpl implements CropService {
     //작물 등록
     @Override
     @Transactional
-    public int addCrop(AddCropReqDto addCropReqDto, int farmerId){
+    public int addCrop(AddCropReqDto addCropReqDto, int farmerId) {
 
 
         //해당 id의 파머가 있는지 확인
@@ -72,12 +72,11 @@ public class CropServiceImpl implements CropService {
         long unixTimeStamp = zdt.toEpochSecond();
 
         //Unix타임스탬프를 BigInteger로 변환
-        BigInteger plantingDate= BigInteger.valueOf(unixTimeStamp);
+        BigInteger plantingDate = BigInteger.valueOf(unixTimeStamp);
 
 
         try {
             cropContractService.addBasicInfo(BigInteger.valueOf(crop.getId()), crop.getCropName(), crop.getCropCultivationSite(), plantingDate);
-            System.out.println("CropServiceImpl.addCrop");
         } catch (Exception e) {
             throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
         }
@@ -182,5 +181,53 @@ public class CropServiceImpl implements CropService {
         return cropCategoryRepository.findAll().stream()
                 .map(FindCropCategoryResDto::toDto)
                 .collect(Collectors.toList());
+    }
+
+
+    //블록체인 기록 등록
+
+    @Override
+    public void createBlockChain(int cropId, int userId, CropBlockchainResDto cropBlockchainResDto) {
+        Crop crop = cropRepository.findById(cropId)
+                .orElseThrow(() -> new CustomException(ExceptionType.CROP_NOT_EXIST));
+        // localDate타입 timeStamp로 바꾸기 블록체인 통신을 위해 bigInteger로 바꿔야함
+        if (cropBlockchainResDto.getEventDate() == null) {
+            throw new CustomException(ExceptionType.EVENTDATE_INVALID);
+        }
+        ZonedDateTime zdt = cropBlockchainResDto.getEventDate().atStartOfDay(ZoneId.of("Asia/Seoul"));
+
+        //zdt를 타임스탬프로 변환
+        long unixTimeStamp = zdt.toEpochSecond();
+
+        //Unix타임스탬프를 BigInteger로 변환
+        BigInteger eventDate = BigInteger.valueOf(unixTimeStamp);
+
+        if (cropBlockchainResDto.getType() == 1) {
+
+            if (cropBlockchainResDto.getPesticideName().isEmpty()) {
+                throw new CustomException(ExceptionType.PesticideName_INVALID);
+            }
+            if (cropBlockchainResDto.getPesticideType().isEmpty()) {
+                throw new CustomException(ExceptionType.PesticideCode_INVALID);
+            }
+            try {
+                cropContractService.addUsageInfo(BigInteger.valueOf(crop.getId()), cropBlockchainResDto.getPesticideName(), cropBlockchainResDto.getPesticideType(), eventDate);
+            } catch (Exception e) {
+                throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
+            }
+        } else {
+            if (cropBlockchainResDto.getContestName().isEmpty()) {
+                throw new CustomException(ExceptionType.ContestName_INVALID);
+            }
+            if (cropBlockchainResDto.getAwardDetails().isEmpty()) {
+                throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
+            }
+            try {
+                cropContractService.addContestInfo(BigInteger.valueOf(crop.getId()), cropBlockchainResDto.getContestName(), cropBlockchainResDto.getAwardDetails(), eventDate);
+            } catch (Exception e) {
+                throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
+            }
+        }
+
     }
 }
