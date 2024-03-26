@@ -3,7 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 import api from "../../../api/api"
 import Swal from 'sweetalert2';
 import Logo from '../../../image/component/user/logo.png';
-import '../../../css/signup.css';
+import '../../../css/signup.css'
+import { jwtDecode } from 'jwt-decode';
 
 export default function LoginInput() {
   const navigate = useNavigate()
@@ -25,14 +26,16 @@ export default function LoginInput() {
     .then((res) => {
       console.log('로그인 완료')
       const accessToken = res.headers.access
-      localStorage.setItem("access", accessToken)
+      localStorage.setItem("access", accessToken) // 토큰 저장
       navigate("/", { replace : true })
+      const decodeToken = jwtDecode(accessToken)
+      console.log(decodeToken)
     })
     .catch((err) => {
       console.log('로그인 실패', err)
       setId("")
       setPassword("")
-      Swal.fire('아이디·비밀번호를<br>확인해주세요')
+      Swal.fire('아이디·비c밀번호를<br>확인해주세요')
     })
   }}
 

@@ -1,38 +1,99 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import { useParams } from "react-router-dom";
 import "react-responsive-modal/styles.css"
 import { Modal } from "react-responsive-modal"
-// import  from "axios";
+import api from '../../../api/api'
+import DaumPostcode from 'react-daum-postcode';
+
+
 
 export default function BuyerTrade() {
+  const params = useParams()
+  const tradeId = params.tradeId
+  const [info,setInfo] = useState([])
+  const [address, setAddress] = useState('');
+  const [detailAddress, setDetailAddress] = useState('');
+  const [showAddressModal, setShowAddressModal] = useState(false);
+
+
+  const handleAddressSelect = (data) => {
+    let fullAddress = data.address;
+    let extraAddress = '';
+    if (data.addressType === 'R') {
+      if (data.bname !== '') {
+        extraAddress += data.bname;
+      }
+      if (data.buildingName !== '') {
+        extraAddress += `, ${data.buildingName}`;
+      }
+      fullAddress += extraAddress !== '' ? ` (${extraAddress})` : '';
+    }
+
+    setAddress(fullAddress);
+    setShowAddressModal(false);
+  };
+
+
+
+  // 상세거래내역 조회
+  useEffect(()=>{
+    api.get(`trades/detail/${tradeId}`)
+    .then((res)=>{
+      console.log(res.data.dataBody)
+      console.log('상세거래조회성공')
+      setInfo(res.data.dataBody)
+      
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  },[tradeId])
+
+  const tradeStatusToText = {
+    0: '입금 대기중',
+    1: '입금 완료',
+    2: '거래중',
+  };
+
+  const deleteTrade = () =>{
+    api.delete(`trades/${tradeId}`)
+    .then((res)=>{
+      console.log(res)
+      console.log('거래취소됨')
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  }
+
 
   return(
     <div>
       <div>
         <div className="p-3 flex justify-between border-b-2 border-gray-100 h-20">
-          <div className="font-bold text-xl flex items-center">달디달고 달디단 밤양갱</div>
-          <div className="font-bold text-lg flex items-center" style={{color:'gray'}}>입금대기중</div>
+          <div className="font-bold text-xl flex items-center">{info.board}</div>
+          <div className="font-bold text-lg flex items-center" style={{color:'gray'}}>{tradeStatusToText[info.tradeStatus]}</div>
         </div>
         <div className="p-3 border-b-2 space-y-2 border-gray-100">
           <div className="font-bold text-lg flex items-center">작물</div>
-          <div className="text-lg flex items-center" style={{color:'gray'}}>밤양갱</div>
+          <div className="text-lg flex items-center" style={{color:'gray'}}>{info.crop}</div>
         </div>
         <div className="p-3 border-b-2 space-y-2 border-gray-100">
           <div className="font-bold text-lg flex items-center">거래수량</div>
-          <div className="text-lg flex items-center" style={{color:'gray'}}>20kg</div>
+          <div className="text-lg flex items-center" style={{color:'gray'}}>{info.tradeQuantity}kg</div>
         </div>
         <div className="p-3 border-b-2 space-y-2 border-gray-100">
           <div className="font-bold text-lg flex items-center">거래가격</div>
-          <div className="text-lg flex items-center" style={{color:'gray'}}>220000원(1kg = 11000원)</div>
+          <div className="text-lg flex items-center" style={{color:'gray'}}>{info.tradePrice*info.tradeQuantity}원(1kg = {info.tradePrice}원)</div>
         </div>
         <div className="p-3 border-b-2 border-gray-100 flex">
           <div>
             <div className="font-bold text-lg flex items-center">구매자</div>
-            <div className="text-lg flex items-center" style={{color:'gray'}}>내이름</div>
+            <div className="text-lg flex items-center" style={{color:'gray'}}>{info.buyer}</div>
           </div>
           <div className="pl-28">
             <div className="font-bold text-lg flex items-center">판매자</div>
-            <div className="text-lg flex items-center" style={{color:'gray'}}>오승현</div>
+            <div className="text-lg flex items-center" style={{color:'gray'}}>{info.seller}</div>
           </div>
         </div>
         <div className="p-3 border-b-2 space-y-2 border-gray-100">
@@ -46,7 +107,7 @@ export default function BuyerTrade() {
           <div className="text-lg flex items-center" style={{color:'gray'}}>배송대기중</div>
         </div>
         <div className="pt-1 flex justify-between space-x-2">
-          <div className='flex-grow'><button className="btn w-full">거래취소</button></div>
+          <div className='flex-grow' onClick={deleteTrade}><button className="btn w-full">거래취소</button></div>
           <div className='flex-grow'><button className="btn w-full" style={{backgroundColor:'#1B5E20',color:'white'}}>결제</button></div>
         </div>
 
@@ -95,11 +156,24 @@ export default function BuyerTrade() {
             name="address"
             type="text"
             autoComplete="address"
+            value={address}
             required
+            readOnly
             className="block rounded-md border-0 py-1 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
             placeholder="주소"
           />
-          <button className="btn btn-sm" style={{ backgroundColor:'#1B5E20',color:'white' }}>주소검색</button>
+          <button className="btn btn-sm" 
+          style={{ backgroundColor:'#1B5E20',color:'white' }}
+          onClick={() => setShowAddressModal(true)} >주소검색</button>
+          
+          <Modal open={showAddressModal} onClose={() => setShowAddressModal(false)} center>
+            <DaumPostcode onComplete={handleAddressSelect} autoClose width="100%" height="auto" />
+          </Modal>
+
+
+
+
+
           </div>
           <div className='pt-3'>
             <input
@@ -108,8 +182,11 @@ export default function BuyerTrade() {
             type="text"
             autoComplete="text"
             required
+            value={detailAddress}
             className="block rounded-md border-0 w-full py-1 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
             placeholder="상세주소"
+            onChange={(e)=>setDetailAddress(e.target.value)}
+
           />
           <button
             onClick={(event)=>{
@@ -125,6 +202,9 @@ export default function BuyerTrade() {
           </div>
         </div>
       </dialog>
+
+
+      
     </div>
   )
 }
