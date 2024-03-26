@@ -71,6 +71,7 @@ public class CropController {
         log.info("{} : 작물 상세 조회 실행", cropId);
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, cropDetail));
     }
+    
 
 
 
