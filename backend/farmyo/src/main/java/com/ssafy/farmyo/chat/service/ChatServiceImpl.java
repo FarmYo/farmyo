@@ -2,6 +2,7 @@ package com.ssafy.farmyo.chat.service;
 
 import com.ssafy.farmyo.chat.dto.ChatDto;
 import com.ssafy.farmyo.chat.dto.MessageDto;
+import com.ssafy.farmyo.chat.dto.MessageListDto;
 import com.ssafy.farmyo.chat.repository.ChatRepository;
 import com.ssafy.farmyo.chat.repository.MessageRepository;
 import com.ssafy.farmyo.common.exception.CustomException;
@@ -89,6 +90,15 @@ public class ChatServiceImpl implements ChatService {
         else {
             result = chatRepository.findAllByBuyerId(user.getId());
         }
+
+        return result;
+    }
+
+    @Override
+    public List<MessageListDto> getMessages(int chatId) {
+        log.info("chatId : {} ", chatId);
+
+        List<MessageListDto> result = messageRepository.findAllById(chatId);
 
         return result;
     }
