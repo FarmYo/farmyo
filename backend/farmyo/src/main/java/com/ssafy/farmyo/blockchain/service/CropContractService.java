@@ -1,6 +1,8 @@
 package com.ssafy.farmyo.blockchain.service;
 
 import com.ssafy.farmyo.blockchain.contract.CropContract;
+import com.ssafy.farmyo.common.exception.CustomException;
+import com.ssafy.farmyo.common.exception.ExceptionType;
 import org.springframework.stereotype.Service;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
@@ -36,12 +38,22 @@ public class CropContractService {
         this.cropContract = CropContract.load(contractAddress, web3j, credentials, gasProvider);
     }
 
-    public void addBasicInfo(BigInteger cropPK, String cropName, String land, BigInteger createdAt) throws Exception {
-        cropContract.addBasicInfo(cropPK, cropName, land, createdAt).send();
+    public void addBasicInfo(BigInteger cropPK, String cropName, String land, BigInteger createdAt) {
+        try {
+            cropContract.addBasicInfo(cropPK, cropName, land, createdAt).send();
+        } catch (Exception e) {
+            System.out.println("왜ㅔ실패지");
+            throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
+        }
+
     }
 
-    public void addUsageInfo(BigInteger cropPK, String drugName, String drugKind, BigInteger createdAt) throws Exception {
-        cropContract.addUsageInfo(cropPK, drugName, drugKind, createdAt).send();
+    public void addUsageInfo(BigInteger cropPK, String drugName, String drugKind, BigInteger createdAt)  {
+        try {
+            cropContract.addUsageInfo(cropPK, drugName, drugKind, createdAt).send();
+        } catch (Exception e) {
+            throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
+        }
     }
 
     public void addContestInfo(BigInteger cropPK, String contestName, String win, BigInteger createdAt) throws Exception {
