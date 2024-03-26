@@ -27,7 +27,7 @@ public class BankController {
     @ApiResponse(responseCode = "200", description = "성공 \n\n 은행명 리스트 반환")
     public ResponseEntity<? extends BaseResponseBody> join() {
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, bankService.getCategory()));
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, bankService.getCategory()));
     }
 
 }
