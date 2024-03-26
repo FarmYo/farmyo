@@ -1,12 +1,33 @@
 import React, { useState,useEffect } from 'react'
 import OngoingTrade from './ongoingTrade';
 import SuccessTrade from './successTrade';
+import api from '../../api/api'
+import { jwtDecode } from 'jwt-decode'
 
 export default function Trade() {
   const [selected,setSelected] = useState(null)
-  
+  const userId = jwtDecode( localStorage.getItem("access") ).userId 
+  const [finishedList,setFinishedList] = useState([]) // 완료된 거래담길 리스트
+  const [notFinishedList,setNotFinishedList] = useState([]) //진행중인 거래담길 리스트
+
   useEffect(()=>{
-    setSelected(0);
+    setSelected(0)
+
+    //거래리스트 조회
+    api.get('trades/list',{
+      params: {
+        id:userId
+      }
+    })
+    .then((res)=>{
+      console.log(res)
+      setFinishedList(res.data.dataBody.finishedList)
+      setNotFinishedList(res.data.dataBody.notFinishedList)
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+
   },[])
   
   const handleClick = (index) => {
@@ -24,8 +45,8 @@ export default function Trade() {
         <div className='flex justify-center items-center'><h1 className='font-bold text-lg' style={{ color: selected === 1 ? 'black' : 'gray' }} onClick={()=>{handleClick(1)}}>완료된 거래</h1></div>
       </div>
       {/* 선택된 컴포넌트 조건부 렌더링 */}
-      {selected === 0 && <OngoingTrade />}
-      {selected === 1 && <SuccessTrade />}
+      {selected === 0 && <OngoingTrade ongoingData={notFinishedList}/>}
+      {selected === 1 && <SuccessTrade finishedData={finishedList}/>}
     </div>
   )
 }

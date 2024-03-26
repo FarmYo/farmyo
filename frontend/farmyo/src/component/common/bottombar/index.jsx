@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from "react-router-dom";
+import { Link,useLocation } from "react-router-dom";
 import Home from '../../../image/component/home.png';
 import Trade from '../../../image/component/trade.png';
 import Board from '../../../image/component/board.png';
@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function BottomBar() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [home, setHome] = useState({ image: Home, clicked: false });
   const [trade, setTrade] = useState({ image: Trade, clicked: false });
   const [board, setBoard] = useState({ image: Board, clicked: false });
@@ -29,8 +30,12 @@ export default function BottomBar() {
   };
 
   useEffect(()=>{
-    // access token 확인하기
-  },[])
+    if (location.pathname === "/board" && location.state && location.state.selected !== undefined) {
+      handleImageClick(setBoard, { ...board, clicked: true });
+    }
+  },[location])
+
+  
   return (
     <div>
       <nav className="bg-white border-t-2 border-gray-300 fixed bottom-0 w-full h-20">

@@ -7,7 +7,7 @@ export default function MypageEdit(){
 
   // 이전페이지로
   const goBack = () => {
-    navigate(-1); 
+    navigate('/mypage/seller') // 수정필요 
   };
 
   return(
