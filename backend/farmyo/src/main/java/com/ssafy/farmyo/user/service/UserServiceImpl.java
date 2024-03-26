@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         // 농부 저장
-        Farmer savedFarmer = farmerRepository.saveAndFlush(farmer);
+        Farmer savedFarmer = farmerRepository.save(farmer);
 
         Address address = Address.builder()
                 .user(savedFarmer)
