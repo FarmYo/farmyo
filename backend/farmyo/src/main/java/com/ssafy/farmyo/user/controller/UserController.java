@@ -179,10 +179,6 @@ public class UserController {
 
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        log.info("{}", accountModifyDto.getAccount());
-        log.info("{}", accountModifyDto.getDepositor());
-        log.info("{}", accountModifyDto.getBank());
-
         userService.modifyAccountInfo(customUserDetails.getId(), accountModifyDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));

@@ -187,7 +187,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void modifyAccountInfo(int id, AccountModifyDto accountModifyDto) {
 
-        // 비밀번호를 바꾸고자 하는 유저의 엔티티를 가져옴
+        // 계좌 바꾸고자 하는 유저의 엔티티를 가져옴
         User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
 
         // 계좌 수정
@@ -199,7 +199,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void modifyAddressInfo(int id, AddressModifyDto addressModifyDto) {
 
-        // 비밀번호를 바꾸고자 하는 유저의 엔티티를 가져옴
+        // 주소를 바꾸고자 하는 유저의 엔티티를 가져옴
         User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
 
         // 주소 수정
