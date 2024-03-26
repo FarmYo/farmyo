@@ -68,6 +68,10 @@ public class Trade extends BaseTime {
     @Column(name = "trade_location")
     private String tradeLocation;
 
+    //배송지 상세
+    @Column(name = "trade_location_detail")
+    private String tradeLocationDetail;
+
     //블록체인주소
     @Column(name = "trade_blockchain")
     private String tradeBlockchain;
@@ -85,7 +89,7 @@ public class Trade extends BaseTime {
     @Builder
     public Trade(int id, Board board, Crop crop, Chat chat, User buyer, User seller,
                  int tradePrice, int tradeQuantity, int tradeStatus,
-                 String tradeShipment, String tradeShipcom, String tradeLocation, String tradeBlockchain) {
+                 String tradeShipment, String tradeShipcom, String tradeLocation, String tradeLocationDetail,String tradeBlockchain) {
         this.id = id;
         this.board = board;
         this.crop = crop;
@@ -98,6 +102,7 @@ public class Trade extends BaseTime {
         this.tradeShipment = tradeShipment;
         this.tradeShipcom = tradeShipcom;
         this.tradeLocation = tradeLocation;
+        this.tradeLocationDetail = tradeLocationDetail;
         this.tradeBlockchain = tradeBlockchain;
     }
 
