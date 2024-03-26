@@ -30,6 +30,10 @@ public class RefreshServiceImpl implements RefreshService{
         String refresh = null;
 
         Cookie[] cookies = request.getCookies();
+
+        // 리프레시 토큰이 담긴 쿠키가 없을 시 에외 발생
+        if(cookies == null) throw new CustomException(ExceptionType.TOKEN_NOT_EXIST);
+
         System.out.println(Arrays.toString(cookies));
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals("refresh")) {
