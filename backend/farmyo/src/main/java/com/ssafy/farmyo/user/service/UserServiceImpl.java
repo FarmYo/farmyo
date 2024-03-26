@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
     public int farmerJoin(JoinReqDto joinReqDto) {
 
         // 만약 사업자 등록을 이미 했다면 예외 처리
-        if(farmerRepository.findByFarmerLicense(joinReqDto.getLicenseNum()).isPresent()) throw new CustomException(ExceptionType.DUPLICATE_BUSINESS_LICENSE);
+//        if(farmerRepository.findByFarmerLicense(joinReqDto.getLicenseNum()).isPresent()) throw new CustomException(ExceptionType.DUPLICATE_BUSINESS_LICENSE);
 
         // 사업자 공공 API 불러오기
         openApiManager.validateLicense(joinReqDto.getLicenseNum() ,joinReqDto.getRepresentative(), joinReqDto.getStartDate());
@@ -106,6 +106,15 @@ public class UserServiceImpl implements UserService {
 
         // 농부 저장
         Farmer savedFarmer = farmerRepository.save(farmer);
+
+        Address address = Address.builder()
+                .user(savedFarmer)
+                .addressLegal(joinReqDto.getAddressLegal())
+                .addressCode(joinReqDto.getAddressCode())
+                .addressDetail(joinReqDto.getAddressDetail())
+                .build();
+
+        addressRepository.save(address);
 
         // 식별 ID 값 반환
         return savedFarmer.getId();
