@@ -1,9 +1,6 @@
 package com.ssafy.farmyo.board.controller;
 
-import com.ssafy.farmyo.board.dto.AddBuyBoardReqDto;
-import com.ssafy.farmyo.board.dto.AddFarmerBoardReqDto;
-import com.ssafy.farmyo.board.dto.BoardDetailResDto;
-import com.ssafy.farmyo.board.dto.BoardListResDto;
+import com.ssafy.farmyo.board.dto.*;
 import com.ssafy.farmyo.board.service.BoardService;
 import com.ssafy.farmyo.common.auth.CustomUserDetails;
 import com.ssafy.farmyo.common.exception.CustomException;
@@ -60,7 +57,6 @@ public class BoardController {
     @ApiResponse(responseCode = "201", description = "성공 \n\n Success 반환")
     public ResponseEntity<? extends BaseResponseBody> addFarmerBoard(@RequestBody @Validated AddFarmerBoardReqDto addFarmerBoardReqDto, Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        System.out.println("userDetails.getJob() = " + userDetails.getJob());
 
         //농부인지 구매자인지 확인 농부만 가능
         if (userDetails.getJob() == 1) {
@@ -99,6 +95,18 @@ public class BoardController {
             log.info("삼요 게시물 목록조회 API 호출");
         }
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, boardListResDtoList));
+    }
+
+    //게시물수정
+    @Operation(summary = "게시물수정", description = "/boards/{boardId} \n\n 게시물 수정")
+    @PatchMapping("/{boardId}")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환")
+    public ResponseEntity<? extends BaseResponseBody> patchBoard(@PathVariable int boardId, @RequestBody @Validated PatchBoardReqDto patchBoardReqDto, Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        int patchBoardId = boardService.patchBoard(boardId,patchBoardReqDto, userDetails.getId());
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, patchBoardId));
+
     }
 
 }
