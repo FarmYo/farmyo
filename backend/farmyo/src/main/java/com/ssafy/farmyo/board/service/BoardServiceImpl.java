@@ -219,6 +219,26 @@ public class BoardServiceImpl implements BoardService {
         if (!board.getUser().getId().equals(userId)) {
             throw new CustomException(ExceptionType.USER_NOT_AUTHOR);
         }
+        //거래량이 0초과인지 확인
+        if (patchBoardReqDto.getQuantity() <= 0) {
+            throw new CustomException(ExceptionType.QUANTITY_INVALID);
+        }
+
+        //가격이 0초과인지 확인
+        if (patchBoardReqDto.getPrice() <= 0) {
+            throw new CustomException(ExceptionType.PRICE_INVALID);
+        }
+
+
+        //게시글 제목이 있는지 확인
+        if (patchBoardReqDto.getTitle().isBlank()) {
+            throw new CustomException(ExceptionType.TITLE_NOT_EXIST);
+        }
+
+        //게시글 본문이 있는지 확인
+        if (patchBoardReqDto.getContent().isBlank()) {
+            throw new CustomException(ExceptionType.CONTENT_NOT_EXIST);
+        }
         board.patchBoard(patchBoardReqDto.getQuantity(), patchBoardReqDto.getPrice(), patchBoardReqDto.getTitle(), patchBoardReqDto.getContent());
 
         //팜요게시글일 경우 사진수정 나중에 s3되고 구현
