@@ -36,6 +36,7 @@ public enum ExceptionType {
 
     // 거래
     TRADE_NOT_EXIST(HttpStatus.BAD_REQUEST, "T-001", "존재하지 않는 거래입니다."),
+    STATUS_NOT_MATCH(HttpStatus.BAD_REQUEST, "T-002", "거래 상태가 맞지 않습니다."),
 
     // 계좌
     ACCOUNT_NOT_EXIST(HttpStatus.UNAUTHORIZED, "A-001", "해당 유저의 계좌가 존재하지 않습니다."),
