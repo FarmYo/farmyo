@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.farmyo.common.jwt.JWTUtil;
 import com.ssafy.farmyo.common.redis.RefreshToken;
 import com.ssafy.farmyo.common.redis.RefreshTokenRepository;
+import com.ssafy.farmyo.entity.UserStatus;
 import com.ssafy.farmyo.user.dto.LoginReqDto;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
@@ -19,6 +20,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -68,7 +72,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     // 로그인 성공시 실행하는 메소드
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
 
         log.info("Login Success");
 
@@ -78,6 +82,23 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String username = userDetails.getUsername();
         String nickname = userDetails.getNickname();
         int job = userDetails.getJob();
+        UserStatus status = userDetails.getUserStatus();
+
+        if(status == UserStatus.WITHDRAWN){
+            String jsonResponse = "{\"dataHeader\": {\"successCode\": 1, \"resultCode\": \"U-000\", \"resultMessage\": \"회원 탈퇴한 계정입니다.\"}, \"dataBody\": null}";
+
+            // JSON 형식으로 응답을 반환하기 위해 Content-Type 설정
+            response.setContentType("application/json");
+            // 상태 코드 설정
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+
+            // JSON 응답을 출력
+            PrintWriter out = new PrintWriter(new OutputStreamWriter(response.getOutputStream(), StandardCharsets.UTF_8), true);
+            out.print(jsonResponse);
+            out.flush();
+
+            return;
+        }
 
         log.info("Create Token - loginId : {}, id : {}, job : {}, nickname : {}", username, id, job, nickname);
 
