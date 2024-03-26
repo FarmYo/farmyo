@@ -171,14 +171,6 @@ public class UserServiceImpl implements UserService {
 
         // 유저 기본 정보 수정 (닉네임, 전화번호, 상태 메세지)
         user.updateAll(userModifyDto.getNickname(), userModifyDto.getTelephone(), userModifyDto.getComment());
-
-        // 주소 수정
-        Address address = user.getAddress();
-        address.updateAll(userModifyDto.getAddressCode(), userModifyDto.getAddressLegal(), userModifyDto.getAddressDetail());
-
-        // 계좌 수정
-        if(!user.getAccount().getAccountNumber().equals(userModifyDto.getAccount()))
-            user.getAccount().updateAll(userModifyDto.getDepositor(), userModifyDto.getBank(), userModifyDto.getAccount());
     }
 
     @Override
@@ -189,5 +181,29 @@ public class UserServiceImpl implements UserService {
 
         user.updateStatus(UserStatus.WITHDRAWN);
 
+    }
+
+    @Override
+    @Transactional
+    public void modifyAccountInfo(int id, AccountModifyDto accountModifyDto) {
+
+        // 비밀번호를 바꾸고자 하는 유저의 엔티티를 가져옴
+        User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+
+        // 계좌 수정
+        if(!user.getAccount().getAccountNumber().equals(accountModifyDto.getAccount()))
+            user.getAccount().updateAll(accountModifyDto.getDepositor(), accountModifyDto.getBank(), accountModifyDto.getAccount());
+    }
+
+    @Override
+    @Transactional
+    public void modifyAddressInfo(int id, AddressModifyDto addressModifyDto) {
+
+        // 비밀번호를 바꾸고자 하는 유저의 엔티티를 가져옴
+        User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+
+        // 주소 수정
+        Address address = user.getAddress();
+        address.updateAll(addressModifyDto.getAddressCode(), addressModifyDto.getAddressLegal(), addressModifyDto.getAddressDetail());
     }
 }
