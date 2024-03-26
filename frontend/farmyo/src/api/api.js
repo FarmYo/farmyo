@@ -3,6 +3,7 @@ import axios from 'axios';
 // Axios 인스턴스 생성
 const api = axios.create({
   baseURL: 'https://j10d209.p.ssafy.io/api/',
+  // baseURL: "http://localhost:8080/api/",
 });
 
 // 요청 인터셉터 추가
