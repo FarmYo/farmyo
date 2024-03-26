@@ -22,4 +22,6 @@ public interface BoardRepository extends JpaRepository<Board, Integer> {
     Page<Board> getArticleList(@Param("boardType") int boardType, Pageable pageable);
 
 
+
+
 }

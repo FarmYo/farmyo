@@ -84,4 +84,11 @@ public class Board extends BaseTime {
         this.boardPrice = boardPrice;
     }
 
+    public void patchBoard(int boardQuantity, int boardPrice, String boardTitle, String boardContent) {
+        this.boardContent = boardContent;
+        this.boardPrice = boardPrice;
+        this.boardTitle = boardTitle;
+        this.boardQuantity = boardQuantity;
+    }
+
 }

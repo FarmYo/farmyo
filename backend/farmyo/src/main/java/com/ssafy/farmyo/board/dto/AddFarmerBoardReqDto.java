@@ -29,7 +29,7 @@ public class AddFarmerBoardReqDto {
     @Min(value = 1, message = "가격은 0보다 커야합니다.")
     private int price;
     //이미지들
-    private List<MultipartFile> files;
+    private List<MultipartFile> images;
 
 
 }
