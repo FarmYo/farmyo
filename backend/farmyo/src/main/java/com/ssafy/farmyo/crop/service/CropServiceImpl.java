@@ -19,8 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -65,19 +67,17 @@ public class CropServiceImpl implements CropService {
         crop = cropRepository.save(crop);
 
 
-//        블록체인기능 다듬어서 넣을곳
-        // localDate타입 timeStamp로 바꾸기 블록체인 통신을 위해 bigInteger로 바꿔야함
-        ZonedDateTime zdt = crop.getCropPlantingDate().atStartOfDay(ZoneId.of("Asia/Seoul"));
 
-        //zdt를 타임스탬프로 변환
-        long unixTimeStamp = zdt.toEpochSecond();
 
-        //Unix타임스탬프를 BigInteger로 변환
-        BigInteger plantingDate = BigInteger.valueOf(unixTimeStamp);
+        // LocalDate 타입의 날짜를 yyyyMMdd 형식의 String으로 변환
+        String formattedDate = crop.getCropPlantingDate().format(DateTimeFormatter.BASIC_ISO_DATE); // '20241031'
+
+        // String을 BigInteger로 변환
+        BigInteger plantingDate = new BigInteger(formattedDate);
 
 
         try {
-            cropContractService.addBasicInfo(BigInteger.valueOf(crop.getId()), crop.getCropName(), crop.getCropCultivationSite(), plantingDate);
+            cropContractService.addPlantingInfo(BigInteger.valueOf(crop.getId()), crop.getCropName(), crop.getCropCultivationSite(), plantingDate);
         } catch (Exception e) {
             throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
         }
@@ -143,7 +143,7 @@ public class CropServiceImpl implements CropService {
 
     //작물 인증 정보 조회
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<CropCertResDto> getCropCertList(int cropId) {
         Crop crop = cropRepository.findById(cropId)
                 .orElseThrow(() -> new CustomException(ExceptionType.CROP_NOT_EXIST));
@@ -162,7 +162,7 @@ public class CropServiceImpl implements CropService {
 
     //작물 검사 정보 조회
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<CropInspectResDto> getCropInspectList(int cropId) {
         Crop crop = cropRepository.findById(cropId)
                 .orElseThrow(() -> new CustomException(ExceptionType.CROP_NOT_EXIST));
@@ -196,7 +196,6 @@ public class CropServiceImpl implements CropService {
 
         Crop crop = cropRepository.findById(cropId)
                 .orElseThrow(() -> new CustomException(ExceptionType.CROP_NOT_EXIST));
-        // localDate타입 timeStamp로 바꾸기 블록체인 통신을 위해 bigInteger로 바꿔야함
 
         //작물주인과 접속자가 다를 경우
         if (!crop.getFarmer().getId().equals(userId)) {
@@ -207,13 +206,12 @@ public class CropServiceImpl implements CropService {
         if (cropBlockchainResDto.getEventDate() == null) {
             throw new CustomException(ExceptionType.EVENTDATE_INVALID);
         }
-        ZonedDateTime zdt = cropBlockchainResDto.getEventDate().atStartOfDay(ZoneId.of("Asia/Seoul"));
+//        블록체인기능 다듬어서 넣을곳
+        // LocalDate 타입의 날짜를 yyyyMMdd 형식의 String으로 변환
+        String formattedDate = cropBlockchainResDto.getEventDate().format(DateTimeFormatter.BASIC_ISO_DATE); // '20241031'
 
-        //zdt를 타임스탬프로 변환
-        long unixTimeStamp = zdt.toEpochSecond();
-
-        //Unix타임스탬프를 BigInteger로 변환
-        BigInteger eventDate = BigInteger.valueOf(unixTimeStamp);
+        // String을 BigInteger로 변환
+        BigInteger eventDate = new BigInteger(formattedDate);
 
         if (cropBlockchainResDto.getType() == 1) {
 
@@ -228,7 +226,7 @@ public class CropServiceImpl implements CropService {
             } catch (Exception e) {
                 throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
             }
-        } else {
+        } else if (cropBlockchainResDto.getType() == 2) {
             if (cropBlockchainResDto.getContestName().isEmpty()) {
                 throw new CustomException(ExceptionType.ContestName_INVALID);
             }
@@ -240,6 +238,15 @@ public class CropServiceImpl implements CropService {
             } catch (Exception e) {
                 throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
             }
+        } else if (cropBlockchainResDto.getType() == 3) {
+            try {
+                cropContractService.addHarvestInfo(BigInteger.valueOf(crop.getId()), eventDate);
+            } catch (Exception e) {
+                throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
+            }
+        }
+        else {
+            throw new CustomException(ExceptionType.TYPE_INVALID);
         }
 
     }
