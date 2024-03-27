@@ -35,7 +35,7 @@ public class CropController {
     @Operation(summary = "작물등록", description = "/crops\n\n 작물을 등록한다.")
     @PostMapping("")
     @ApiResponse(responseCode = "201", description = "성공 \n\n Success 반환")
-    public ResponseEntity<? extends BaseResponseBody> addCrop(@RequestBody @Valid AddCropReqDto addCropReqDto, Authentication authentication) {
+    public ResponseEntity<? extends BaseResponseBody> createCrop(@RequestBody @Valid AddCropReqDto addCropReqDto, Authentication authentication) {
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 

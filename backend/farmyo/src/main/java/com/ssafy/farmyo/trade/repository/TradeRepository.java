@@ -31,16 +31,16 @@ public interface TradeRepository extends JpaRepository<Trade, Integer> {
             "WHERE buy.id = :id AND t.tradeStatus != 3")
     List<TradeListDto> getTradeDetailsByBuyerIdAndStatusNot(@Param("id") int id);
 
-    @Query(value = "SELECT t FROM Trade t WHERE t.buyer.id = :id AND t.tradeStatus = :tradeStatus")
+    @Query(value = "SELECT t FROM Trade t WHERE t.buyer.id = :id AND t.tradeStatus = :tradeStatus ORDER BY t.updatedAt DESC ")
     List<Trade> findAllByBuyerAndTradeStatus(int id, int tradeStatus);
 
-    @Query(value = "SELECT t FROM Trade t WHERE t.buyer.id = :id AND t.tradeStatus != :tradeStatus")
+    @Query(value = "SELECT t FROM Trade t WHERE t.buyer.id = :id AND t.tradeStatus != :tradeStatus ORDER BY t.updatedAt DESC ")
     List<Trade> findAllByBuyerAndTradeStatusNot(int id, int tradeStatus);
 
-    @Query(value = "SELECT t FROM Trade t WHERE t.seller.id = :id AND t.tradeStatus = :tradeStatus")
+    @Query(value = "SELECT t FROM Trade t WHERE t.seller.id = :id AND t.tradeStatus = :tradeStatus ORDER BY t.updatedAt DESC ")
     List<Trade> findAllBySellerAndTradeStatus(int id, int tradeStatus);
 
-    @Query(value = "SELECT t FROM Trade t WHERE t.seller.id = :id AND t.tradeStatus != :tradeStatus")
+    @Query(value = "SELECT t FROM Trade t WHERE t.seller.id = :id AND t.tradeStatus != :tradeStatus ORDER BY t.updatedAt DESC ")
     List<Trade> findAllBySellerAndTradeStatusNot(int id, int tradeStatus);
 
 
@@ -51,8 +51,8 @@ public interface TradeRepository extends JpaRepository<Trade, Integer> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE Trade t SET t.tradeLocation = :location WHERE t.id = :id")
-    void updateLocation(int id, String location);
+    @Query("UPDATE Trade t SET t.tradeLocation = :location, t.tradeLocationDetail = :locationDetail WHERE t.id = :id")
+    void updateLocation(int id, String location, String locationDetail);
 
     @Transactional
     @Modifying
