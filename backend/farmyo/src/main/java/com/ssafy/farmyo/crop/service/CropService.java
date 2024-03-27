@@ -28,4 +28,7 @@ public interface CropService {
 
     //카테고리조회
     List<FindCropCategoryResDto> findAllCropCategories();
+
+    //블록체인 기록 등록
+    void createBlockChain(int cropId, int userId, CropBlockchainResDto cropBlockchainResDto);
 }
