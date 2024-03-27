@@ -23,6 +23,7 @@
     "redux-persist": "^6.0.0",
     "sweetalert2": "^11.10.6",
     "web-vitals": "^2.1.4",
+    "web3": "^4.7.0",
     "workbox-background-sync": "^6.6.0",
     "workbox-broadcast-update": "^6.6.0",
     "workbox-cacheable-response": "^6.6.0",
