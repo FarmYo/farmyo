@@ -2,7 +2,6 @@ package com.ssafy.farmyo.crop.service;
 
 
 import com.ssafy.farmyo.blockchain.service.CropContractService;
-import com.ssafy.farmyo.common.auth.CustomUserDetails;
 import com.ssafy.farmyo.common.exception.CustomException;
 import com.ssafy.farmyo.common.exception.ExceptionType;
 import com.ssafy.farmyo.crop.dto.*;
@@ -14,7 +13,6 @@ import com.ssafy.farmyo.entity.Farmer;
 import com.ssafy.farmyo.user.repository.FarmerRepository;
 import com.ssafy.farmyo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -188,9 +186,18 @@ public class CropServiceImpl implements CropService {
 
     @Override
     public void createBlockChain(int cropId, int userId, CropBlockchainResDto cropBlockchainResDto) {
+
+
         Crop crop = cropRepository.findById(cropId)
                 .orElseThrow(() -> new CustomException(ExceptionType.CROP_NOT_EXIST));
         // localDate타입 timeStamp로 바꾸기 블록체인 통신을 위해 bigInteger로 바꿔야함
+
+        //작물주인과 접속자가 다를 경우
+        if (!crop.getFarmer().getId().equals(userId)) {
+            throw new CustomException(ExceptionType.CROP_NOT_OWNED_BY_FARMER);
+        }
+
+        //작성일이 없을 경유
         if (cropBlockchainResDto.getEventDate() == null) {
             throw new CustomException(ExceptionType.EVENTDATE_INVALID);
         }
