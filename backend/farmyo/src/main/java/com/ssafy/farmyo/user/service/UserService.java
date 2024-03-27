@@ -2,6 +2,8 @@ package com.ssafy.farmyo.user.service;
 
 import com.ssafy.farmyo.user.dto.*;
 
+import java.util.List;
+
 public interface UserService {
     // 소비자 회원 가입
     int customerJoin(JoinReqDto joinReqDto);
@@ -32,4 +34,14 @@ public interface UserService {
 
     // 주소 정보 수정
     void modifyAddressInfo(int id, AddressModifyDto addressModifyDto);
+
+    // 즐겨찾기 추가
+    void addBookmark(int userId, int farmerId);
+
+    // 즐겨찾기 조회
+    List<BookmarkResDto> getBookmarkList(int userId);
+
+    // 즐겨찾기 삭제
+    void removeBookmark(int userId, int farmerId);
+
 }
