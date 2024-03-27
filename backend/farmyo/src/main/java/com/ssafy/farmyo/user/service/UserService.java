@@ -34,4 +34,8 @@ public interface UserService {
 
     // 즐겨찾기 조회
     List<BookmarkResDto> getBookmarkList(int userId);
+
+    // 즐겨찾기 삭제
+    void removeBookmark(int userId, int farmerId);
+
 }

@@ -214,4 +214,16 @@ public class UserServiceImpl implements UserService {
     public List<BookmarkResDto> getBookmarkList(int userId) {
         return favoriteRepository.getCustomerBookmarkList(userId);
     }
+
+    @Override
+    @Transactional
+    public void removeBookmark(int userId, int bookmarkId) {
+
+        Favorite favorite = favoriteRepository.findById(bookmarkId).orElseThrow(() -> new CustomException(ExceptionType.NOT_EXIST_FAVORITE));
+
+        if(!(favorite.getUser().getId() == userId)) throw new CustomException(ExceptionType.INVALID_ACCESS_FAVORITE);
+
+        favoriteRepository.delete(favorite);
+    }
+
 }
