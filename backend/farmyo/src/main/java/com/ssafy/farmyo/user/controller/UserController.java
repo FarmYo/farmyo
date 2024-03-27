@@ -234,5 +234,7 @@ public class UserController {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
         userService.removeBookmark(customUserDetails.getId(), bookmarkId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
     }
 }
