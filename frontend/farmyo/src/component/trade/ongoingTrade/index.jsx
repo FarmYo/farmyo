@@ -31,7 +31,7 @@ export default function OngoingTrade({ ongoingData }) {
     '전체': null, // '전체'를 선택한 경우 모든 항목을 표시
     '입금 대기중': 0,
     '입금 완료': 1,
-    '거래중': 2
+    '배송중': 2
   };
 
   // 전체,입금대기중,입금완료,거래중 필터링
@@ -43,7 +43,7 @@ export default function OngoingTrade({ ongoingData }) {
   const tradeStatusToText = {
     0: '입금 대기중',
     1: '입금 완료',
-    2: '거래중',
+    2: '배송중',
   };
 
   // 상세 거래내역으로 가는것
@@ -87,7 +87,7 @@ export default function OngoingTrade({ ongoingData }) {
         >
           <Menu.Items className="absolute left-0 z-10 mt-2 w-36 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
             <div className="py-1">
-              {['전체','입금 대기중', '입금 완료', '거래중'].map((item) => (
+              {['전체','입금 대기중', '입금 완료', '배송중'].map((item) => (
                 <Menu.Item key={item}>
                   {({ active }) => (
                     <a

@@ -3,14 +3,15 @@ package com.ssafy.farmyo.crop.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @NoArgsConstructor
 public class UpdateImgReqDto {
-    private String cropImgUrl;
+    private MultipartFile cropImg;
 
     @Builder
-    public UpdateImgReqDto(String cropImgUrl) {
-        this.cropImgUrl = cropImgUrl;
+    public UpdateImgReqDto(MultipartFile cropImg) {
+        this.cropImg = cropImg;
     }
 }
