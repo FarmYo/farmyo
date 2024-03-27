@@ -2,6 +2,7 @@ package com.ssafy.farmyo.crop.service;
 
 import com.ssafy.farmyo.crop.dto.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public interface CropService {
     List<CropListResDto> getCropsByFarmerLoginId(String loginId);
 
     //작물 이미지 수정
-    void updateCropImgUrl(int cropId, String cropImgUrl);
+    void updateCropImgUrl(int cropId, MultipartFile cropImg);
 
     //작물 인증 정보 조회
     List<CropCertResDto> getCropCertList(int cropId);
