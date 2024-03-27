@@ -3,6 +3,8 @@ import Back from "../../../image/component/leftarrow.png"
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import api from "../../../api/api"
+import { Dropdown } from 'primereact/dropdown';
+import BankNameList from "../../../store"
 import Swal from "sweetalert2"
 import { jwtDecode } from "jwt-decode"
 
@@ -11,15 +13,37 @@ export default function MypageEdit(){
   const [userInfo, setUserInfo] = useState([])
   const [pastPassword, setPastPassword] =useState("")
   const [newPassword, setNewPassword] = useState("")
+  const [bankList, setBankList] = useState([]);
+  const BankList = () => {
+      api.get('banks')
+      .then((res) => {
+        console.log('은행 리스트 받아오기 성공', res.data.dataBody)
+        setBankList(res.data.dataBody)
+      })
+      .catch((err) => {
+        console.log('은행 리스트 받아오기 실패', err)
+      })
+  }
+  const banks = (bank) => {
+    return (
+      <select>
+        {bank.options.map((option) => (
+          <option
+            key={option.id}
+            value={option.id}
+          >
+            {option.bankName}
+          </option>
+        ))}
+      </select>
+    )
+  }
 
   const getUserInfo = (() => {
     api.get('users')
     .then((res) => {
       console.log('정보 받아오기 성공', res.data, res.data.dataBody)
       setUserInfo(res.data.dataBody)
-      // if (userInfo.comment) {
-      //   setMessage(userInfo.comment)   
-      // }
     })
     .catch((err) => {
       console.log('정보 받아오기 실패', err)
@@ -27,15 +51,72 @@ export default function MypageEdit(){
   })
 
   const changeInfo = (() => {
-
+    if (userInfo?.nickname && userInfo?.telephone && userInfo?.comment) {
+      api.patch('users', {
+        nickname : userInfo?.nickname,
+        telephone : userInfo?.telephone,
+        comment : userInfo?.comment,
+      })
+      .then((res) => {
+        console.log('유저정보 수정 성공')
+        console.log('현재 유저 정보 :', userInfo)
+        document.getElementById('changeInfo').close()
+        Swal.fire({
+          title : '변경되었습니다.',
+          confirmButtonColor: '#1B5E20',
+        })
+      })
+      .catch((err) => {
+        console.log('유저 정보 수정 실패', err)
+        console.log('현재 유저 정보 :', userInfo)
+      })
+    }
   })
 
   const changeAddress = (() => {
-
+    if (userInfo?.addressCode && userInfo?.addressLegal && userInfo?.addressDetail) {
+      api.patch('users/address', {
+        addressCode : userInfo?.addressCode,
+        addressLegal : userInfo?.addressLegal,
+        addressDetail : userInfo?.addressDetail,
+      })
+      .then((res) => {
+        console.log('주소정보 수정 성공')
+        console.log('현재 유저 정보 :', userInfo)
+        document.getElementById('changeAddress').close()
+        Swal.fire({
+          title : '변경되었습니다.',
+          confirmButtonColor: '#1B5E20',
+        })
+      })
+      .catch((err) => {
+        console.log('주소 정보 수정 실패', err)
+        console.log('현재 유저 정보 :', userInfo)
+      })
+    }
   })
 
   const changeAccount = (() => {
-
+    if (userInfo?.account?.depositor && userInfo?.account?.bankName && userInfo?.account?.accountNumber) {
+      api.patch('users/account', {
+        depositor : userInfo?.account?.depositor,
+        bank : userInfo?.account?.bankName,
+        account : userInfo?.account?.accountNumber,
+      })
+      .then((res) => {
+        console.log('계좌 정보 수정 성공')
+        console.log('현재 유저 정보 :', userInfo)
+        document.getElementById('changeAccount').close()
+        Swal.fire({
+          title : '변경되었습니다.',
+          confirmButtonColor: '#1B5E20',
+        })
+      })
+      .catch((err) => {
+        console.log('계좌 정보 수정 실패', err)
+        console.log('현재 유저 정보 :', userInfo)
+      })
+    }
   })
 
   const changePassword = (() => {
@@ -91,6 +172,7 @@ export default function MypageEdit(){
 
   useEffect(()=>{
     getUserInfo();
+    BankList();
   },[])
 
   return(
@@ -127,9 +209,6 @@ export default function MypageEdit(){
       </div>
       </div>
       <div>
-        {/* <input id="id" name="id" type="text" placeholder="아이디입력됨" autoComplete="text" 
-          className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-          disabled/> */}
       </div>
 
       <label htmlFor="email"
@@ -138,9 +217,6 @@ export default function MypageEdit(){
       </label>
       <div className="mb-3">
         <p>{userInfo?.email}</p>
-        {/* <input id="email" name="email" type="text" placeholder="이메일입력됨" autoComplete="text" 
-          className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-          disabled/> */}
       </div>
       <hr />
       <div className="flex justify-between mt-2">
@@ -157,9 +233,6 @@ export default function MypageEdit(){
       </div>
       <div>
         <p>{userInfo?.nickname}</p>
-        {/* <input id="nickname" name="nickname" type="text" placeholder="닉네임입력됨" autoComplete="text" 
-          className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-          disabled/> */}
       </div>
       <label htmlFor="number"
         className="block text-sm leading-6 text-gray-900 mt-2">
@@ -167,9 +240,6 @@ export default function MypageEdit(){
       </label>
       <div>
         <p>{userInfo?.telephone}</p>
-        {/* <input id="number" name="number" type="text" placeholder="연락처입력됨" autoComplete="text" 
-          className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-          disabled/> */}
       </div>
       <label htmlFor="message"
         className="block text-sm leading-6 text-gray-900 mt-2">
@@ -177,10 +247,6 @@ export default function MypageEdit(){
       </label>
       <div className="mb-3">
         <p>{userInfo?.comment}</p>
-        {/* <p>{message}</p> */}
-        {/* <input id="message" name="message" type="text" placeholder="상태메시지 입니다" autoComplete="text" 
-          className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-          disabled/> */}
       </div>
       <hr />
       <div className="flex justify-between mt-2">
@@ -198,12 +264,6 @@ export default function MypageEdit(){
       <div className="mb-3">
         <p>{userInfo?.addressLegal}</p>
         <p>{userInfo?.addressDetail}</p>
-        {/* <input id="address" name="address" type="text" placeholder="주소입력됨" autoComplete="text" 
-          className="block h-10 w-full rounded-md border-0  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-          disabled/>
-          <input id="address" name="address" type="text" placeholder="상세주소입력됨" autoComplete="text" 
-          className="block h-10 w-full rounded-md border-0 mt-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-          disabled/> */}
       </div>
       <hr />
       <div className="flex justify-between mt-2">
@@ -222,30 +282,12 @@ export default function MypageEdit(){
         <p>예금주 : {userInfo?.account?.depositor}</p>
         <p>은행명 : {userInfo?.account?.bankName}</p>
         <p>계좌번호 : {userInfo?.account?.accountNumber}</p>
-        {/* <input id="account" name="account" type="text" placeholder="예금주입력됨" autoComplete="text" 
-          className="block h-10 w-full rounded-md border-0  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-          disabled/>
-          <input id="account" name="account" type="text" placeholder="계좌번호입력됨" autoComplete="text" 
-          className="block h-10 w-full rounded-md border-0 mt-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-          disabled/>
-          <input id="account" name="account" type="text" placeholder="은행명입력됨" autoComplete="text" 
-          className="block h-10 w-full rounded-md border-0 mt-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-          disabled/> */}
       </div>
 
       <button className="btn rounded-md w-full mt-5" style={{ backgroundColor:'#81C784'}}
             onClick={()=>document.getElementById('changepassword').showModal()}>
               <h1 style={{ color:'white' }} className="text-sm">비밀번호 변경</h1>
             </button>
-
-      {/* <div className="flex justify-between mt-5">
-        <button className="btn rounded-md" style={{ backgroundColor:'#81C784'}} onClick={()=>document.getElementById('changepassword').showModal()}>
-          <h1 style={{ color:'white' }} className="text-sm" >비밀번호 변경</h1>
-        </button>
-        <button className="btn rounded-md w-32" style={{ backgroundColor:'#81C784'}} onClick={()=>document.getElementById('edit').showModal()}>
-          <h1 style={{ color:'white' }} className="text-sm" >프로필 수정</h1>
-        </button>
-      </div> */}
 
       {/* 포인트 잔액 모달 */}
       <dialog id="checkPoint" className="modal">
@@ -263,7 +305,12 @@ export default function MypageEdit(){
       <dialog id="changeInfo" className="modal">
         <div className="modal-box" style={{ height:'350px'}}>
           <form method="dialog">
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            <button 
+              onClick={() => navigate('/mypage/edit')}
+              className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+            >
+              ✕
+            </button>
           </form>
           <div>
           <label htmlFor="nickname"
@@ -271,16 +318,36 @@ export default function MypageEdit(){
               닉네임
             </label>
             <div>
-              <input id="nickname" name="nickname" type="text" placeholder={userInfo?.nickname} autoComplete="text" 
+              <input 
+                value={userInfo?.nickname}
+                onChange={(event) => {
+                  const newUserInfo = {
+                    ...userInfo,
+                    nickname: event.target.value,
+                  };
+                  setUserInfo(newUserInfo);}}
+                id="nickname" 
+                name="nickname" 
+                type="text" 
+                placeholder={userInfo?.nickname} 
+                autoComplete="text" 
                 className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-                />
+              />
             </div>
             <label htmlFor="number"
               className="block text-sm leading-6 text-gray-900 mt-2">
               연락처
             </label>
             <div>
-              <input id="number" name="number" type="text" placeholder={userInfo?.telephone} autoComplete="text" 
+              <input 
+                value={userInfo?.telephone}
+                onChange={(event) => {
+                  const newUserInfo = {
+                    ...userInfo,
+                    telephone: event.target.value,
+                  };
+                  setUserInfo(newUserInfo);}}
+                id="number" name="number" type="text" placeholder={userInfo?.telephone} autoComplete="text" 
                 className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
                 />
             </div>
@@ -289,7 +356,15 @@ export default function MypageEdit(){
               상태메시지
             </label>
             <div>
-              <input id="message" name="message" type="text" placeholder={userInfo?.comment} autoComplete="text" 
+              <input 
+                value={userInfo?.comment}
+                onChange={(event) => {
+                  const newUserInfo = {
+                    ...userInfo,
+                    comment: event.target.value,
+                  };
+                  setUserInfo(newUserInfo);}}
+                id="message" name="message" type="text" placeholder={userInfo?.comment} autoComplete="text" 
                 className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
                 />
             </div>
@@ -317,21 +392,37 @@ export default function MypageEdit(){
             </label>
             <div>
               <div className="flex justify-between">
-                <input id="address" name="address" type="text" placeholder={userInfo?.addressLegal} autoComplete="text" 
+                <input 
+                  value={userInfo?.addressLegal}
+                  onChange={(event) => {
+                    const newUserInfo = {
+                      ...userInfo,
+                      addressLegal : event.target.value,
+                    };
+                    setUserInfo(newUserInfo);}}
+                  id="address" name="address" type="text" placeholder={userInfo?.addressLegal} autoComplete="text" 
                   className="block rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
                   />
                   <button className="btn rounded-md" style={{ backgroundColor:'#bbbbbb'}}>
                   <span style={{ color:'white' }} className="text-sm">주소검색</span>
                 </button>
               </div>
-                <input id="address" name="address" type="text" placeholder={userInfo?.addressDetail} autoComplete="text" 
+                <input 
+                  value={userInfo?.addressDetail}
+                  onChange={(event) => {
+                    const newUserInfo = {
+                      ...userInfo,
+                      addressDetail : event.target.value,
+                    };
+                    setUserInfo(newUserInfo);}}
+                  id="addressDetail" name="addressDetail" type="text" placeholder={userInfo?.addressDetail} autoComplete="text" 
                 className="block h-10 w-full rounded-md border-0 mt-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
                 />
             </div>
             <button
               className="btn rounded-md w-full mt-5"
               style={{ backgroundColor:'#81C784'}}
-              onClick={() => changeAccount()}
+              onClick={() => changeAddress()}
             >
               <h1 style={{ color:'white' }} className="text-sm">정보 수정</h1>
             </button>
@@ -359,7 +450,29 @@ export default function MypageEdit(){
               className="block text-sm leading-6 text-gray-900 mt-2">
               은행명
             </label>
+              <Dropdown 
+                value={userInfo?.account?.bankName} 
+                onChange={(event) => {
+                  const newUserInfo = {
+                    ...userInfo,
+                    account : {
+                      ...userInfo.account,
+                      bankName : event.target.value,
+                    }
+                  };
+                  setUserInfo(newUserInfo);}}
+                options={bankList} optionLabel="bankName" placeholder="은행명" filter className="w-full md:w-14rem" />
+              {/* <span className="p-float-label w-full md:w-14rem"> */}
+                {/* <Dropdown inputId="dd-city" value={selectedCity} onChange={(e) => setSelectedCity(e.value)} options={cities} optionLabel="name" className="w-full" />
+
+                <Dropdown value={selectedCountry} onChange={(e) => setSelectedCountry(e.value)} options={countries} optionLabel="name" placeholder="은행명" filter valueTemplate={selectedCountryTemplate} itemTemplate={countryOptionTemplate} className="w-full md:w-14rem" /> */}
+
+              {/* </span> */}
             <div>
+
+
+
+
                 <input id="bankName" name="bankName" type="text" placeholder={userInfo?.account?.bankName} autoComplete="text" 
                 className="block h-10 w-full rounded-md border-0 mt-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
                 />
@@ -376,9 +489,9 @@ export default function MypageEdit(){
             <button
               className="btn rounded-md w-full mt-5"
               style={{ backgroundColor:'#81C784'}}
-              onClick={() => changeAddress()}
+              onClick={() => changeAccount()}
             >
-              <h1 style={{ color:'white' }} className="text-sm">정보 수정</h1>
+              <h1 style={{ color:'white' }} className="text-sm">저장</h1>
             </button>
           </div>
         </div>
@@ -400,7 +513,7 @@ export default function MypageEdit(){
               type="password" 
               placeholder="현재 비밀번호" 
               autoComplete="password" 
-              className="block h-10 w-full rounded-md border-0  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
+              className="block h-10 w-full rounded-md border-0  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3 mb-3"
             />
             <p>새 비밀번호</p>
             <input 
@@ -409,96 +522,16 @@ export default function MypageEdit(){
               id="newPassword" 
               name="newPassword" 
               type="password" 
-              placeholder="새비밀번호 확인" 
+              placeholder="새비밀번호" 
               autoComplete="password" 
-              className="block h-10 w-full rounded-md border-0 mt-5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
+              className="block h-10 w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
             />
             <button
               className="btn rounded-md w-full mt-5"
               style={{ backgroundColor:'#81C784'}}
               onClick={() => changePassword()}
             >
-              <h1 style={{ color:'white' }} className="text-sm">비밀번호 변경하기</h1>
-            </button>
-          </div>
-        </div>
-      </dialog>
-
-      {/* 프로필 수정모달*/}
-      <dialog id="edit" className="modal">
-        <div className="modal-box pt-16" style={{ height:'1000px'}}>
-          <form method="dialog">
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-          </form>
-          <div>
-            <div className="flex justify-center">
-              <img src={Me} alt="" style={{ width:80 }}/>
-            </div>
-            <button className="btn rounded-md w-full mt-5" style={{ backgroundColor:'#bbbbbb'}}>
-              <h1 style={{ color:'white' }} className="text-sm">프로필 사진 변경하기</h1>
-            </button>
-            <label htmlFor="nickname"
-              className="block text-sm leading-6 text-gray-900 mt-4">
-              닉네임
-            </label>
-            <div>
-              <input id="nickname" name="nickname" type="text" placeholder="닉네임입력됨" autoComplete="text" 
-                className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-                />
-            </div>
-            <label htmlFor="number"
-              className="block text-sm leading-6 text-gray-900 mt-2">
-              연락처
-            </label>
-            <div>
-              <input id="number" name="number" type="text" placeholder="연락처입력됨" autoComplete="text" 
-                className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-                />
-            </div>
-            <label htmlFor="message"
-              className="block text-sm leading-6 text-gray-900 mt-2">
-              상태메시지
-            </label>
-            <div>
-              <input id="message" name="message" type="text" placeholder="상태메시지 입니다" autoComplete="text" 
-                className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-                />
-            </div>
-            <label htmlFor="address"
-              className="block text-sm leading-6 text-gray-900 mt-2">
-              주소
-            </label>
-            <div>
-              <div className="flex justify-between">
-                <input id="address" name="address" type="text" placeholder="주소입력됨" autoComplete="text" 
-                  className="block rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-                  />
-                  <button className="btn rounded-md" style={{ backgroundColor:'#bbbbbb'}}>
-                  <span style={{ color:'white' }} className="text-sm">주소검색</span>
-                </button>
-              </div>
-                <input id="address" name="address" type="text" placeholder="상세주소입력됨" autoComplete="text" 
-                className="block h-10 w-full rounded-md border-0 mt-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-                />
-            </div>
-            <label htmlFor="account"
-              className="block text-sm leading-6 text-gray-900 mt-2">
-              계좌
-            </label>
-            <div>
-              <input id="account" name="account" type="text" placeholder="예금주입력됨" autoComplete="text" 
-                className="block h-10 w-full rounded-md border-0  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-                />
-                <input id="account" name="account" type="text" placeholder="계좌번호입력됨" autoComplete="text" 
-                className="block h-10 w-full rounded-md border-0 mt-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-                />
-                <input id="account" name="account" type="text" placeholder="은행명입력됨" autoComplete="text" 
-                className="block h-10 w-full rounded-md border-0 mt-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-                />
-            </div>
-            <button className="btn rounded-md w-full mt-5" style={{ backgroundColor:'#81C784'}}
-            onClick={()=>document.getElementById('edit').close()}>
-              <h1 style={{ color:'white' }} className="text-sm">프로필 수정하기</h1>
+              <h1 style={{ color:'white' }} className="text-sm">비밀번호 변경</h1>
             </button>
           </div>
         </div>

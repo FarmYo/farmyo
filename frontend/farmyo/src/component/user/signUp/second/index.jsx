@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 // import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from "react-router-dom";
 // import { useNavigate } from "react-router-dom";
@@ -76,7 +76,6 @@ export default function SignUpSecond() {
       if (isNickName === true && isPhoneNumber === true && isAddress === true && isDetailAddress === true) {
         console.log(isSeller, id, email, password, nickName, phoneNumber, address, detailAddress)
         navigate("/signup/third", { state: { isSeller, id, email, password, nickName, phoneNumber, zoomNumber, address, detailAddress } }, { replace: true })
-        // navigate("/signup/third", { state: { nickName, phoneNumber, address, detailAddress } }, { replace: true })
       } else {
         console.log('로그인 실패 화면 확인해보기', isNickName, isPhoneNumber, isAddress, isDetailAddress)
         Swal.fire({
