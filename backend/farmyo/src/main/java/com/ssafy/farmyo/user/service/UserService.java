@@ -29,6 +29,12 @@ public interface UserService {
     // 회원 탈퇴
     void deactivateUser(int id);
 
+    // 계좌 정보 수정
+    void modifyAccountInfo(int id, AccountModifyDto accountModifyDto);
+
+    // 주소 정보 수정
+    void modifyAddressInfo(int id, AddressModifyDto addressModifyDto);
+
     // 즐겨찾기 추가
     void addBookmark(int userId, int farmerId);
 
