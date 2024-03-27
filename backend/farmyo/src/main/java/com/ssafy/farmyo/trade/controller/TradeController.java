@@ -119,7 +119,6 @@ public class TradeController {
             @Parameter(description = "거래 아이디")
             int id,
             @RequestBody
-            @Schema(description = "송장번호(tradeShipment) 및 택배사(tradeShipcom)")
             TradeShipDto tradeShipDto) {
         log.info("{} : updateTradeDeal 실행" , id);
 
