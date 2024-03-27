@@ -116,7 +116,7 @@ public class CropController {
     }
 
     //작물블록체인 등록
-    @Operation(summary = "작물블록체인등록", description = "/crops/{cropId}\n\n 작물 블록체인등록(1:농약,2:대회")
+    @Operation(summary = "작물블록체인등록", description = "/crops/{cropId}\n\n 작물 블록체인등록(1:농약,2:대회,3:수확)")
     @PostMapping("/{cropId}")
     @ApiResponse(responseCode = "201", description = "성공 \n\n Success 반환")
     public ResponseEntity<? extends BaseResponseBody> createCropBlockchain(@PathVariable int cropId, @RequestBody CropBlockchainResDto cropBlockchainResDto, Authentication authentication) {
@@ -127,7 +127,7 @@ public class CropController {
         }
 
         cropService.createBlockChain(cropId, userDetails.getId(), cropBlockchainResDto);
-        log.info("작물 블록체인 등록 실행 {}", cropId);
+        log.info("작물 블록체인 등록 실행 {}, 등록 타입 {}", cropId, cropBlockchainResDto.getType());
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, "성공적으로 블록체인에 저장되었습니다."));
 
     }
