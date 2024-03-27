@@ -33,6 +33,7 @@ public enum ExceptionType {
     ContestName_INVALID(HttpStatus.BAD_REQUEST, "C-007", "대회이름이 입력되지 않았습니다."),
     AWARDDETAILS_INVALID(HttpStatus.BAD_REQUEST, "C-008", "수상내역이 입력되지 않았습니다."),
     EVENTDATE_INVALID(HttpStatus.BAD_REQUEST, "C-009", "발생일이 입력되지 않았습니다."),
+    TYPE_INVALID(HttpStatus.BAD_REQUEST, "C-010", "타입 값이 올바르지 않습니다."),
 
 
 
