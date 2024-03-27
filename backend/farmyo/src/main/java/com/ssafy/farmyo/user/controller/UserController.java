@@ -194,4 +194,20 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, userService.getBookmarkList(customUserDetails.getId())));
     }
+
+    @Operation(summary = "즐겨찾기 삭제", description = "현재 로그인한 회원이 해당 농부를 즐겨찾기 삭제")
+    @DeleteMapping("/bookmarks")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환 ")
+    public ResponseEntity<? extends BaseResponseBody> removeBookmark(
+            @Parameter(description = "삭제하고자 하는 즐겨찾기 PK값") @RequestParam("bookmarkId") int bookmarkId,
+            Authentication authentication) {
+
+        log.info("{}", bookmarkId);
+
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        userService.removeBookmark(customUserDetails.getId(), bookmarkId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
+    }
 }
