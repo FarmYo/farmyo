@@ -14,10 +14,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -74,13 +76,14 @@ public class CropController {
     
 
 
-
     //대표사진수정  사진 넣는걸로 바꿔야한다 url이 아니라 수정해야함 임시용
     @Operation(summary = "대표사진수정 아직 미완성", description = "/crops\n\n 작물의 대표 사진을 변경한다.")
-    @PatchMapping("/{cropId}")
+    @PatchMapping(value = "/{cropId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiResponse(responseCode = "204", description = "성공 \n\n Success 반환")
-    public ResponseEntity<? extends BaseResponseBody> updateCropImg(@PathVariable int cropId, @RequestBody UpdateImgReqDto updateImgReqDto) {
-        cropService.updateCropImgUrl(cropId, updateImgReqDto.getCropImgUrl());
+    public ResponseEntity<? extends BaseResponseBody> updateCropImg(
+            @PathVariable int cropId,
+            @RequestParam(name = "cropImg") MultipartFile cropImg) {
+        cropService.updateCropImgUrl(cropId, cropImg);
         log.info("{} : 대표 사진 수정 실행", cropId);
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "성공적으로 변경되었습니다."));
     }
