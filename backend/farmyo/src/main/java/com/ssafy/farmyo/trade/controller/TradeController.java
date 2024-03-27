@@ -1,12 +1,11 @@
 package com.ssafy.farmyo.trade.controller;
 
 import com.ssafy.farmyo.common.response.BaseResponseBody;
-import com.ssafy.farmyo.trade.dto.TradeListReqDto;
-import com.ssafy.farmyo.trade.dto.TradeReqDto;
-import com.ssafy.farmyo.trade.dto.TradeResDto;
+import com.ssafy.farmyo.trade.dto.*;
 import com.ssafy.farmyo.trade.service.TradeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -63,24 +62,41 @@ public class TradeController {
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, tradeResDto));
     }
 
-    @PutMapping("/location/{id}")
-    @Operation(summary = "주소등록", description = "주소를 받아 거래 테이블에 추가한다.")
+    @PatchMapping("/location/{id}")
+    @Operation(summary = "신규주소등록", description = "주소를 새로 받아 거래 테이블에 추가한다.")
     public ResponseEntity<? extends BaseResponseBody> updateTradeLocation(
             @PathVariable(name = "id")
             @Parameter(description = "거래 아이디")
             int id,
-            @RequestParam(name = "location")
+            @RequestBody
             @Parameter(description = "주소")
-            String location
+            TradeLocationDto tradeLocationDto
     ) {
-        log.info("{}, {} : updateTradeLocation 실행", id, location);
+        log.info("{}, {} : updateTradeLocation 실행", id, tradeLocationDto);
 
-        tradeService.updateTradeLocation(id, location);
+        tradeService.updateTradeLocation(id, tradeLocationDto);
 
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, 0));
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "sucess"));
     }
 
-    @PutMapping("/deposit/{id}")
+    @PatchMapping("/originalLocation/{id}")
+    @Operation(summary = "기존주소등록", description = "유저 아이디를 받아 기본 주소를 찾은 후 거래 테이블에 추가한다.")
+    public ResponseEntity<? extends BaseResponseBody> updateTradeOriginalLocation(
+            @PathVariable(name = "id")
+            @Parameter(description = "거래 아이디")
+            int id,
+            @RequestParam(name ="userId")
+            @Parameter(description = "유저 아이디")
+            int userId
+    ) {
+        log.info("{}, {} : updateTradeLocation 실행", id, userId);
+
+        TradeLocationDto tradeLocationDto = tradeService.updateTradeOriginalLocation(id, userId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, tradeLocationDto));
+    }
+
+    @PatchMapping("/deposit/{id}")
     @Operation(summary = "거래 입금완료", description = "입금대기중이던 상태를 입금완료 상태로 변경하고 입금 테이블이 생성된다.")
     public ResponseEntity<? extends BaseResponseBody> updateTradeDeposit(
             @PathVariable(name = "id")
@@ -93,29 +109,26 @@ public class TradeController {
 
         tradeService.updateTradeDeposit(id, depositName);
 
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, 0));
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "sucess"));
     }
 
-    @PutMapping("/deal/{id}")
+    @PatchMapping("/deal/{id}")
     @Operation(summary = "거래 거래중", description = "입금완료이던 상태를 거래중 상태로 변경하고 택배사와 송장번호 컬럼을 추가한다.")
     public ResponseEntity<? extends BaseResponseBody> updateTradeDeal(
             @PathVariable(name = "id")
             @Parameter(description = "거래 아이디")
             int id,
-            @RequestParam(name = "tradeShipment")
-            @Parameter(description = "송장번호")
-            String tradeShipment,
-            @RequestParam(name = "tradeShipcom")
-            @Parameter(description = "택배사")
-            String tradeShipcom) {
+            @RequestBody
+            @Schema(description = "송장번호(tradeShipment) 및 택배사(tradeShipcom)")
+            TradeShipDto tradeShipDto) {
         log.info("{} : updateTradeDeal 실행" , id);
 
-        tradeService.updateTradeDeal(id, tradeShipment, tradeShipcom);
+        tradeService.updateTradeDeal(id, tradeShipDto);
 
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0 , 0));
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0 , "sucess"));
     }
 
-    @PutMapping("/final/{id}")
+    @PatchMapping("/final/{id}")
     @Operation(summary = "거래 거래완료", description = "거래중 상태를 거래완료 상태로 변경하고 출금 테이블 생성")
     public ResponseEntity<? extends BaseResponseBody> updateTradeFinish(
             @PathVariable(name = "id")
@@ -125,7 +138,20 @@ public class TradeController {
 
         tradeService.updateTradeFinish(id);
 
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, 0));
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "sucess"));
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "거래 삭제(거래 취소)", description = "거래 아이디를 통해 입금대기중일 때 거래를 취소한다.")
+    public ResponseEntity<? extends BaseResponseBody> deleteTrade(
+            @PathVariable(name = "id")
+            @Parameter(description = "거래 아이디")
+            int id) {
+        log.info("{} : deleteTrade 실행", id);
+
+        tradeService.deleteTrade(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "sucess"));
     }
 
 }

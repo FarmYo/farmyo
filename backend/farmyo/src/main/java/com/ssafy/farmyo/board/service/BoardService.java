@@ -1,9 +1,6 @@
 package com.ssafy.farmyo.board.service;
 
-import com.ssafy.farmyo.board.dto.AddBuyBoardReqDto;
-import com.ssafy.farmyo.board.dto.AddFarmerBoardReqDto;
-import com.ssafy.farmyo.board.dto.BoardDetailResDto;
-import com.ssafy.farmyo.board.dto.BoardListResDto;
+import com.ssafy.farmyo.board.dto.*;
 
 import java.util.List;
 
@@ -20,5 +17,8 @@ public interface BoardService {
 
     //게시글 목록조회
     List<BoardListResDto> findBoardListByType(int boardType, int page, int size);
+
+    //게시판 수정
+    Integer patchBoard(int boardId, PatchBoardReqDto patchBoardReqDto, int userId);
 
 }

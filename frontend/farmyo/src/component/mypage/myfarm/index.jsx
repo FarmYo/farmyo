@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import "react-responsive-modal/styles.css"
 import { Modal } from "react-responsive-modal"
 import Gallery from "../../../image/component/gallery.png"
+import { jwtDecode } from 'jwt-decode';
 
 export default function MyFarm() {
   function classNames(...classes) {
@@ -21,6 +22,8 @@ export default function MyFarm() {
       margin: '0',
     },
   };
+
+
   
   const [open,setOpen] = useState(false)
   const [photoOpen,setPhotoOpen] = useState(false)

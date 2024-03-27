@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
     public int farmerJoin(JoinReqDto joinReqDto) {
 
         // 만약 사업자 등록을 이미 했다면 예외 처리
-        if(farmerRepository.findByFarmerLicense(joinReqDto.getLicenseNum()).isPresent()) throw new CustomException(ExceptionType.DUPLICATE_BUSINESS_LICENSE);
+//        if(farmerRepository.findByFarmerLicense(joinReqDto.getLicenseNum()).isPresent()) throw new CustomException(ExceptionType.DUPLICATE_BUSINESS_LICENSE);
 
         // 사업자 공공 API 불러오기
         openApiManager.validateLicense(joinReqDto.getLicenseNum() ,joinReqDto.getRepresentative(), joinReqDto.getStartDate());
@@ -110,6 +110,15 @@ public class UserServiceImpl implements UserService {
 
         // 농부 저장
         Farmer savedFarmer = farmerRepository.save(farmer);
+
+        Address address = Address.builder()
+                .user(savedFarmer)
+                .addressLegal(joinReqDto.getAddressLegal())
+                .addressCode(joinReqDto.getAddressCode())
+                .addressDetail(joinReqDto.getAddressDetail())
+                .build();
+
+        addressRepository.save(address);
 
         // 식별 ID 값 반환
         return savedFarmer.getId();
@@ -166,14 +175,6 @@ public class UserServiceImpl implements UserService {
 
         // 유저 기본 정보 수정 (닉네임, 전화번호, 상태 메세지)
         user.updateAll(userModifyDto.getNickname(), userModifyDto.getTelephone(), userModifyDto.getComment());
-
-        // 주소 수정
-        Address address = user.getAddress();
-        address.updateAll(userModifyDto.getAddressCode(), userModifyDto.getAddressLegal(), userModifyDto.getAddressDetail());
-
-        // 계좌 수정
-        if(!user.getAccount().getAccountNumber().equals(userModifyDto.getAccount()))
-            user.getAccount().updateAll(userModifyDto.getDepositor(), userModifyDto.getBank(), userModifyDto.getAccount());
     }
 
     @Override
@@ -187,12 +188,38 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void modifyAccountInfo(int id, AccountModifyDto accountModifyDto) {
+
+        // 계좌 바꾸고자 하는 유저의 엔티티를 가져옴
+        User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+
+        // 계좌 수정
+        if(!user.getAccount().getAccountNumber().equals(accountModifyDto.getAccount()))
+            user.getAccount().updateAll(accountModifyDto.getDepositor(), accountModifyDto.getBank(), accountModifyDto.getAccount());
+    }
+
+
+
+    @Override
+    public void modifyAddressInfo(int id, AddressModifyDto addressModifyDto) {
+
+        // 주소를 바꾸고자 하는 유저의 엔티티를 가져옴
+        User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+
+        // 주소 수정
+        Address address = user.getAddress();
+        address.updateAll(addressModifyDto.getAddressCode(), addressModifyDto.getAddressLegal(), addressModifyDto.getAddressDetail());
+    }
+    
+
+    @Override
     @Transactional
     public void addBookmark(int userId, int farmerId) {
         // 이미 즐겨찾기가 있다면 예외 처리
-        if(favoriteRepository.checkFavoriteExistence(userId, farmerId).isPresent()){
+        if (favoriteRepository.checkFavoriteExistence(userId, farmerId).isPresent()) {
             throw new CustomException(ExceptionType.ALREADY_EXIST_FAVORITE);
-        };
+        }
+        ;
 
         // 현재 로그인한 유저 엔티티 조회
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
@@ -211,19 +238,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<BookmarkResDto> getBookmarkList(int userId) {
-        return favoriteRepository.getCustomerBookmarkList(userId);
-    }
-
-    @Override
     @Transactional
     public void removeBookmark(int userId, int bookmarkId) {
 
         Favorite favorite = favoriteRepository.findById(bookmarkId).orElseThrow(() -> new CustomException(ExceptionType.NOT_EXIST_FAVORITE));
 
-        if(!(favorite.getUser().getId() == userId)) throw new CustomException(ExceptionType.INVALID_ACCESS_FAVORITE);
+        if (!(favorite.getUser().getId() == userId)) throw new CustomException(ExceptionType.INVALID_ACCESS_FAVORITE);
 
         favoriteRepository.delete(favorite);
     }
 
+    @Override
+    public List<BookmarkResDto> getBookmarkList(int userId) {
+        return favoriteRepository.getCustomerBookmarkList(userId);
+    }
 }

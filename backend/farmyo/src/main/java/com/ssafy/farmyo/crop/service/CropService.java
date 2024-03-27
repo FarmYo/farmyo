@@ -8,7 +8,7 @@ import java.util.List;
 public interface CropService {
 
     //작물 등록
-    Integer addCrop(AddCropReqDto addCropReqDto, int farmerId);
+    int addCrop(AddCropReqDto addCropReqDto, int farmerId);
 
     //작물 상세조회
     CropDetailResDto getCropDetail(int cropId);
@@ -27,4 +27,7 @@ public interface CropService {
 
     //카테고리조회
     List<FindCropCategoryResDto> findAllCropCategories();
+
+    //블록체인 기록 등록
+    void createBlockChain(int cropId, int userId, CropBlockchainResDto cropBlockchainResDto);
 }
