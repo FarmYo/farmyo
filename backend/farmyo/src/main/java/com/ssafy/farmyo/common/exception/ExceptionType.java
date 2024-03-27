@@ -21,6 +21,7 @@ public enum ExceptionType {
     DUPLICATE_BUSINESS_LICENSE(HttpStatus.BAD_REQUEST, "U-009", "중복된 사업자 등록 정보입니다."),
     LOGIN_ID_MISMATCH(HttpStatus.BAD_REQUEST, "U-010", "일치하는 회원 정보가 없습니다."),
     PASSWORD_NOT_MATCH(HttpStatus.BAD_REQUEST, "U-011", "현재 비밀번호가 일치하지 않습니다."),
+    FARMER_NOT_EXIST(HttpStatus.BAD_REQUEST, "U-012", "존재하지 않는 농부입니다."),
 
     // 작물
     CROP_NOT_EXIST(HttpStatus.BAD_REQUEST, "C-001", "존재하지 않는 작물입니다."),
@@ -53,7 +54,10 @@ public enum ExceptionType {
     BOARDTYPE_INVALID(HttpStatus.BAD_REQUEST, "B-010", "보드타입이 잘못되었습니다."),
 
     // 채팅
-    CHAT_NOT_EXIST(HttpStatus.BAD_REQUEST, "M-001", "존재하지 않는 채팅방입니다.");
+    CHAT_NOT_EXIST(HttpStatus.BAD_REQUEST, "M-001", "존재하지 않는 채팅방입니다."),
+
+    // 즐겨찾기
+    ALREADY_EXIST_FAVORITE(HttpStatus.BAD_REQUEST, "F-001", "이미 존재하는 즐겨찾기 입니다.");
 
     // 상태, 에러 코드, 메시지
     private final HttpStatus httpStatus;

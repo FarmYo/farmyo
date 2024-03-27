@@ -170,4 +170,18 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
     }
+
+    @Operation(summary = "즐겨찾기 추가", description = "현재 로그인한 회원이 해당 농부를 즐겨찾기 추가")
+    @PostMapping("/bookmarks")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환 ")
+    public ResponseEntity<? extends BaseResponseBody> addBookmark(
+            @Parameter(description = "즐겨찾기 관련 농부 정보") @RequestBody BookmarkReqDto bookmarkReqDto,
+            Authentication authentication) {
+
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        userService.addBookmark(customUserDetails.getId(), bookmarkReqDto.getFarmerId());
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
+    }
 }
