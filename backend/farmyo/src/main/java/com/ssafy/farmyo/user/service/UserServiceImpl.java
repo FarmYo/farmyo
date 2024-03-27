@@ -15,6 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -206,5 +208,10 @@ public class UserServiceImpl implements UserService {
 
         // 즐겨찾기 엔티티 저장
         favoriteRepository.save(favorite);
+    }
+
+    @Override
+    public List<BookmarkResDto> getBookmarkList(int userId) {
+        return favoriteRepository.getCustomerBookmarkList(userId);
     }
 }

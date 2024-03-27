@@ -184,4 +184,14 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, "Success"));
     }
+
+    @Operation(summary = "즐겨찾기 조회", description = "소비자가 자신이 즐겨찾기한 농부 리스트를 조회")
+    @GetMapping("/bookmarks")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환 ")
+    public ResponseEntity<? extends BaseResponseBody> getBookmarkList(Authentication authentication) {
+
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, userService.getBookmarkList(customUserDetails.getId())));
+    }
 }
