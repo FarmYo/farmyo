@@ -5,6 +5,7 @@ import com.ssafy.farmyo.blockchain.service.CropContractService;
 import com.ssafy.farmyo.common.auth.CustomUserDetails;
 import com.ssafy.farmyo.common.exception.CustomException;
 import com.ssafy.farmyo.common.exception.ExceptionType;
+import com.ssafy.farmyo.common.s3.AwsS3Service;
 import com.ssafy.farmyo.crop.dto.*;
 import com.ssafy.farmyo.crop.repository.CropCategoryRepository;
 import com.ssafy.farmyo.crop.repository.CropRepository;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
 import java.time.ZoneId;
@@ -33,6 +35,7 @@ public class CropServiceImpl implements CropService {
     private final FarmerRepository farmerRepository;
     private final CropContractService cropContractService;
     private final UserRepository userRepository;
+    private final AwsS3Service awsS3Service;
 
 
     //작물 등록
@@ -104,9 +107,12 @@ public class CropServiceImpl implements CropService {
 
     //작물 사진 업데이트
     @Override
-    public void updateCropImgUrl(int cropId, String cropImgUrl) {
+    public void updateCropImgUrl(int cropId, MultipartFile cropImg) {
         Optional<Crop> cropOptional = cropRepository.findById(cropId);
         if (cropOptional.isPresent()) {
+
+            String cropImgUrl = awsS3Service.uploadFile(cropImg);
+
             Crop crop = cropOptional.get();
             crop.updateCropImgUrl(cropImgUrl);
             cropRepository.save(crop);
