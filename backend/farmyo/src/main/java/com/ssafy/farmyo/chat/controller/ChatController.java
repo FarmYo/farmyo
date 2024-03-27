@@ -2,9 +2,11 @@ package com.ssafy.farmyo.chat.controller;
 
 import com.ssafy.farmyo.chat.dto.ChatDto;
 import com.ssafy.farmyo.chat.dto.ChatRoomDto;
-import com.ssafy.farmyo.chat.dto.MessageDto;
+import com.ssafy.farmyo.chat.dto.ChatMessageDto;
 import com.ssafy.farmyo.chat.dto.MessageListDto;
 import com.ssafy.farmyo.chat.service.ChatService;
+import com.ssafy.farmyo.chat.service.RedisPublisher;
+import com.ssafy.farmyo.chat.service.RedisSubscriber;
 import com.ssafy.farmyo.common.response.BaseResponseBody;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -26,6 +28,8 @@ import java.util.List;
 public class ChatController {
 
     private final ChatService chatService;
+    private final RedisPublisher redisPublisher;
+    private final RedisSubscriber redisSubscriber;
 
     @PostMapping("/room")
     @Operation(summary = "채팅방 열기", description = "이전에 있던 채팅방이 있으면 이전 채팅방, 없다면 새로운 채팅방 만들기")
@@ -46,8 +50,12 @@ public class ChatController {
     public ResponseEntity<? extends BaseResponseBody> sendMessage (
             @RequestBody
             @Parameter(description = "chatId , content, userId 가 포함된 MessageDto")
-            MessageDto messageDto) {
-        chatService.publishMsg(messageDto);
+            ChatMessageDto chatMessageDto) {
+        // 리팩토링 필요해보임 Transactional
+        // DB에 먼저 저장하고 보내기
+        chatService.sendMsg(chatMessageDto);
+        // redisPublish 해주기
+        redisPublisher.sendMessage(chatMessageDto);
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
     }
 
