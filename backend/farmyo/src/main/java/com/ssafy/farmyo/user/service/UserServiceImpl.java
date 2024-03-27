@@ -188,6 +188,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void modifyAccountInfo(int id, AccountModifyDto accountModifyDto) {
 
         // 계좌 바꾸고자 하는 유저의 엔티티를 가져옴
@@ -201,6 +202,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
+    @Transactional
     public void modifyAddressInfo(int id, AddressModifyDto addressModifyDto) {
 
         // 주소를 바꾸고자 하는 유저의 엔티티를 가져옴
