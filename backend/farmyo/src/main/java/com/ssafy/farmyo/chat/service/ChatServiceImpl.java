@@ -1,5 +1,6 @@
 package com.ssafy.farmyo.chat.service;
 
+import com.ssafy.farmyo.board.repository.BoardRepository;
 import com.ssafy.farmyo.chat.dto.ChatDto;
 import com.ssafy.farmyo.chat.dto.ChatRoomDto;
 import com.ssafy.farmyo.chat.dto.MessageDto;
@@ -8,6 +9,7 @@ import com.ssafy.farmyo.chat.repository.ChatRepository;
 import com.ssafy.farmyo.chat.repository.MessageRepository;
 import com.ssafy.farmyo.common.exception.CustomException;
 import com.ssafy.farmyo.common.exception.ExceptionType;
+import com.ssafy.farmyo.entity.Board;
 import com.ssafy.farmyo.entity.Chat;
 import com.ssafy.farmyo.entity.Message;
 import com.ssafy.farmyo.entity.User;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -32,25 +35,50 @@ public class ChatServiceImpl implements ChatService {
     private final UserRepository userRepository;
     private final ChatRepository chatRepository;
     private final MessageRepository messageRepository;
+    private final BoardRepository boardRepository;
 
     public ChatServiceImpl(@Qualifier("redisMsgTemplate")RedisTemplate<String, Object> redisTemplate,
                            UserRepository userRepository,
                            ChatRepository chatRepository,
-                           MessageRepository messageRepository) {
+                           MessageRepository messageRepository,
+                           BoardRepository boardRepository) {
         this.redisTemplate = redisTemplate;
         this.userRepository = userRepository;
         this.chatRepository = chatRepository;
         this.messageRepository = messageRepository;
+        this.boardRepository = boardRepository;
     }
 
     @Override
     @Transactional
     public ChatDto createChatRoom(ChatRoomDto chatRoomDto) {
 
-        // 임시 저장
-        chatRepository.findById(chatRoomDto.getBoardId());
+        ChatDto chatDto;
+        // 이미 기존에 채팅방이 있으면 기존의 채팅방 정보 리턴하기
+        if (chatRepository.findById(chatRoomDto.getBoardId()).isPresent()) {
+            Optional<Chat> chat = chatRepository.findById(chatRoomDto.getBoardId());
 
-        return null;
+            chatDto = new ChatDto(chatRoomDto.getBoardId(), chatRoomDto.getBuyerId(), chatRoomDto.getSellerId());
+
+        }
+        // 기존 채팅방이 없다면 만들고 리턴해주기
+        else {
+
+            Board board = boardRepository.findById(chatRoomDto.getBoardId()).orElseThrow(() -> new CustomException(ExceptionType.BOARD_NOT_EXIST));
+            User buyer = userRepository.findById(chatRoomDto.getBuyerId()).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+            User seller = userRepository.findById(chatRoomDto.getBuyerId()).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+
+            Chat chat = Chat.builder()
+                    .board(board)
+                    .buyer(buyer)
+                    .seller(seller)
+                    .build();
+
+            Chat savedChat = chatRepository.save(chat);
+
+            chatDto = new ChatDto(chat.getId(), buyer.getId(), seller.getId());
+        }
+        return chatDto;
     }
 
     @Override

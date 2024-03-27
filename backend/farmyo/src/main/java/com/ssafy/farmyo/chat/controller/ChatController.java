@@ -35,10 +35,9 @@ public class ChatController {
             @Parameter(description = "거래당 채팅이 생길 수 있으므로 boardId, sellerId, buyerId")
             ChatRoomDto chatRoomDto) {
 
-        // 임시 저장
         ChatDto chatDto = chatService.createChatRoom(chatRoomDto);
 
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, chatDto));
     }
 
     @PostMapping("/message")
