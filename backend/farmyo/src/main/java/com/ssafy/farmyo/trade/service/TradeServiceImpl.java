@@ -262,6 +262,11 @@ public class TradeServiceImpl implements TradeService {
                 .withdrawalName(seller.getAccount().getDepositor())
                 .build();
 
+        // 새로 업데이트 될 잔액
+        int sellerBalance = trade.getSeller().getAccount().getAccountBalance() + trade.getTradePrice();
+
+        // 잔액 업데이트
+        userRepository.updateAccount(trade.getSeller().getId(), sellerBalance);
         // 출금 테이블 저장
         tradeWithdrawalRepository.save(tradeWithdrawal);
         // 거래 테이블 상태 업데이트
