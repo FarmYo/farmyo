@@ -7,6 +7,7 @@ import com.ssafy.farmyo.user.dto.*;
 import com.ssafy.farmyo.user.openApi.OpenApiManager;
 import com.ssafy.farmyo.user.repository.AddressRepository;
 import com.ssafy.farmyo.user.repository.FarmerRepository;
+import com.ssafy.farmyo.user.repository.FavoriteRepository;
 import com.ssafy.farmyo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final FarmerRepository farmerRepository;
     private final AddressRepository addressRepository;
+    private final FavoriteRepository favoriteRepository;
     private final OpenApiManager openApiManager;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -180,5 +182,29 @@ public class UserServiceImpl implements UserService {
 
         user.updateStatus(UserStatus.WITHDRAWN);
 
+    }
+
+    @Override
+    @Transactional
+    public void addBookmark(int userId, int farmerId) {
+        // 이미 즐겨찾기가 있다면 예외 처리
+        if(favoriteRepository.checkFavoriteExistence(userId, farmerId).isPresent()){
+            throw new CustomException(ExceptionType.ALREADY_EXIST_FAVORITE);
+        };
+
+        // 현재 로그인한 유저 엔티티 조회
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+
+        // 즐겨찾기한 농부 엔티티 조회
+        Farmer farmer = farmerRepository.findById(farmerId).orElseThrow(() -> new CustomException(ExceptionType.FARMER_NOT_EXIST));
+
+        // 즐겨찾기 엔티티 생성
+        Favorite favorite = Favorite.builder()
+                .user(user)
+                .farmer(farmer)
+                .build();
+
+        // 즐겨찾기 엔티티 저장
+        favoriteRepository.save(favorite);
     }
 }

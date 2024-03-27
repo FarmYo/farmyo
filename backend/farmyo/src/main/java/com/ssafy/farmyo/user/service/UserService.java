@@ -26,4 +26,7 @@ public interface UserService {
 
     // 회원 탈퇴
     void deactivateUser(int id);
+
+    // 즐겨찾기 추가
+    void addBookmark(int userId, int farmerId);
 }
