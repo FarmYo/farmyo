@@ -58,9 +58,9 @@ export default function Router (){
       {/* 구매자마이페이지 */}
       <Route path='/mypage/buyer' element={<BuyerMypage />} />
       {/* 상대방판매자마이페이지 */}
-      <Route path='/mypage/seller/:nickname' element={<OpponentSellerMypage />} /> 
+      <Route path='/mypage/seller/:id' element={<OpponentSellerMypage />} /> 
       {/* 상대방구매자마이페이지 */}
-      <Route path='/mypage/buyer/:nickname' element={<OpponentBuyerMypage />} />
+      <Route path='/mypage/buyer/:id' element={<OpponentBuyerMypage />} />
       {/* 마이팜디테일페이지 */}
       <Route path='/mypage/:myfarmId/detail' element={<MyFarmDetail />} />
       {/* 팜&삼 게시판페이지 */}

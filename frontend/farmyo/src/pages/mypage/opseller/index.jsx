@@ -14,11 +14,25 @@ export default function OpponentSeller (){
   const [selected,setSelected] = useState(null)
   const [love,setLove] = useState(false)
   const param = useParams()
-  const nickname = param.nickname
+  const profileId= param.id
 
 
+  // 프로필 상단바조회
   useEffect(()=>{
+    console.log(profileId)
     setSelected(0);
+    api.get('farms/user', {
+      params: {
+        id: 
+      }
+    })    
+    .then((res)=>{
+      console.log(res)
+      console.log('마이페이지 상단정보조회성공')
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
   },[])
 
   const handleClick = (index) => {
@@ -48,7 +62,7 @@ export default function OpponentSeller (){
     <div>
       <div style={{height:50,backgroundColor:'#1B5E20'}}>
         <div className="p-2 flex justify-between">
-          <h1 className="text-xl font-bold" style={{color:"white"}}>{nickname}님의 페이지</h1>
+          <h1 className="text-xl font-bold" style={{color:"white"}}>님의 페이지</h1>
         </div>
       </div>
       <div className='flex border-b-2 border-gray-300' style={{height:140}}>
@@ -56,7 +70,7 @@ export default function OpponentSeller (){
           <img src={Me} alt="" style={{ height:80,width:80}}/>
         </div>
         <div className='p-7 pl-3'>
-          <h1 className='font-bold'>{nickname}</h1>
+          <h1 className='font-bold'></h1>
           <h4 className='text-sm'>대구광역시 달서구 호산로 126</h4>
           <h4 className='text-sm'style={{color:'gray'}}>상태메시지 입니다</h4>
         </div>
@@ -67,9 +81,9 @@ export default function OpponentSeller (){
         <h1 className='font-bold' style={{ color: selected === 2 ? 'black' : 'gray' }} onClick={()=>{handleClick(2)}}>게시글</h1>
       </div>
       {/* 선택된 컴포넌트 조건부 렌더링 */}
-      {selected === 0 && <Myfarm nickname={nickname}/>}
+      {/* {selected === 0 && <Myfarm nickname={nickname}/>}
       {selected === 1 && <Mycrops nickname={nickname}/>}
-      {selected === 2 && <ArticleList />}
+      {selected === 2 && <ArticleList />} */}
     </div>
   )
 }
