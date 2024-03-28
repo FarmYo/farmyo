@@ -1,5 +1,6 @@
 import React, { useState,useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import api from '../../../api/api'
 import Me from '../../../image/component/me.png'
 import Next from '../../../image/component/next.png'
 import Sae from '../../../image/component/sae.png'
@@ -23,6 +24,17 @@ export default function MypageNavbar() {
   }
 
 
+  const logOut = (() => {
+    api.post('users/logout')
+    .then((res) => {
+      console.log('로그아웃!')
+      localStorage.clear()
+    })
+    .catch((err) => {
+      console.log('로그아웃 안된다 영원히..로그인..상태', err)
+    })
+  })
+
   //수정페이지로가기
   const GoEdit= () => {
     navigate('/mypage/edit'); // '/mypage/edit' 경로로 이동합니다.
@@ -35,7 +47,7 @@ export default function MypageNavbar() {
           {/* 마이라는 이름은 자기프로필일때만이고 다른사람이면 상대방 닉네임이름으로 뜨게 */}
           <h1 className="text-xl font-bold" style={{color:"white"}}>마이페이지</h1>
           {/* 마이페이지유저와 로그인유저가 일치해야 보이는것 */}
-          <h1 className="text-sm font-bold flex items-center" style={{color:"white"}}>로그아웃</h1>
+          <button onClick={() => logOut()} className="text-sm font-bold flex items-center" style={{color:"white"}}>로그아웃</button>
         </div>
       </div>
       <div className='flex border-b-2 border-gray-300' style={{height:140}}>
