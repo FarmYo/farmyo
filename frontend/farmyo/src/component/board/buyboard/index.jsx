@@ -54,7 +54,7 @@ export default function BuyBoardList(){
     
 
     <div style={{height:'420px',position:'relative'}}>
-      {/* 삽니다게시글한개 */}
+      {/* 삽니다 게시글 목록 */}
       {boardInfo.map((article) => (
         <div className="p-4 flex">
           <div className="w-full ml-2">
@@ -68,20 +68,6 @@ export default function BuyBoardList(){
           </div>
         </div>
       ))}
-
-      <div className="p-4 flex">
-        <div className="w-full ml-2">
-          <h1 className="text-lg font-bold">감자 샘플 받아보고 싶어요!</h1>
-          <h1 className="text-sm">작성자</h1>
-          <h1 style={{ color:'#1B5E20' }} className="font-bold">1kg</h1>
-          <div className='flex justify-between'>
-            <h1 style={{ color:'#1B5E20' }} className="font-bold">10000원/kg</h1>
-            <img src={Chatting} alt="" style={{width:30}}/> 
-          </div>     
-        </div>
-      </div>
-
-
 
       <div style={{ position: 'absolute', bottom: 0, right: 10}}>
         <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
