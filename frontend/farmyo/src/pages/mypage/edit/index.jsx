@@ -435,7 +435,7 @@ export default function MypageEdit(){
       <Modal
         open={isOpen}
         showCloseIcon={true}
-        center
+        // center
         className={{
           modal: 'customModal',
         }}
@@ -449,7 +449,7 @@ export default function MypageEdit(){
           onComplete={(data) => {
             addressSearch(data);
             document.getElementById('changeAddress').showModal()
-            // setIsOpen(false); // 주소 검색 완료 후 Modal 닫기 // 주소가 안되는 문제 수정해야한다.
+            setIsOpen(false); // 주소 검색 완료 후 Modal 닫기 // 주소가 선택 안되는 문제 수정해야한다.
           }}
           autoClose
           width="100%"
