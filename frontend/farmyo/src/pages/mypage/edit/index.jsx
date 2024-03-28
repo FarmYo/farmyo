@@ -3,8 +3,10 @@ import Back from "../../../image/component/leftarrow.png"
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import api from "../../../api/api"
-import { Dropdown } from 'primereact/dropdown';
-import BankNameList from "../../../store"
+import Modal from "react-responsive-modal"
+import DaumPostcode from 'react-daum-postcode';
+// import { Dropdown } from 'primereact/dropdown';
+// import BankNameList from "../../../store"
 import Swal from "sweetalert2"
 import { jwtDecode } from "jwt-decode"
 
@@ -13,31 +15,41 @@ export default function MypageEdit(){
   const [userInfo, setUserInfo] = useState([])
   const [pastPassword, setPastPassword] =useState("")
   const [newPassword, setNewPassword] = useState("")
-  const [bankList, setBankList] = useState([]);
-  const BankList = () => {
-      api.get('banks')
-      .then((res) => {
-        console.log('은행 리스트 받아오기 성공', res.data.dataBody)
-        setBankList(res.data.dataBody)
-      })
-      .catch((err) => {
-        console.log('은행 리스트 받아오기 실패', err)
-      })
-  }
-  const banks = (bank) => {
-    return (
-      <select>
-        {bank.options.map((option) => (
-          <option
-            key={option.id}
-            value={option.id}
-          >
-            {option.bankName}
-          </option>
-        ))}
-      </select>
-    )
-  }
+  const [isOpen, setIsOpen] = useState(false);
+  const addressSearch = (data) => {
+    console.log(data)
+    const newUserInfo = {
+      ...userInfo,
+      addressCode : data.zonecode,
+      addressLegal : data.roadAddress,
+    };
+    setUserInfo(newUserInfo)}
+
+  // const [bankList, setBankList] = useState([]);
+  // const BankList = () => {
+  //     api.get('banks')
+  //     .then((res) => {
+  //       console.log('은행 리스트 받아오기 성공', res.data.dataBody)
+  //       setBankList(res.data.dataBody)
+  //     })
+  //     .catch((err) => {
+  //       console.log('은행 리스트 받아오기 실패', err)
+  //     })
+  // }
+  // const banks = (bank) => {
+  //   return (
+  //     <select>
+  //       {bank.options.map((option) => (
+  //         <option
+  //           key={option.id}
+  //           value={option.id}
+  //         >
+  //           {option.bankName}
+  //         </option>
+  //       ))}
+  //     </select>
+  //   )
+  // }
 
   const getUserInfo = (() => {
     api.get('users')
@@ -172,7 +184,7 @@ export default function MypageEdit(){
 
   useEffect(()=>{
     getUserInfo();
-    BankList();
+    // BankList();
   },[])
 
   return(
@@ -380,6 +392,32 @@ export default function MypageEdit(){
       </dialog>
 
       {/* 주소 수정 모달 */}
+      <Modal
+        open={isOpen}
+        showCloseIcon={true}
+        center
+        className={{
+          modal: 'customModal',
+        }}
+        onOverlayClick={() => setIsOpen(false)} //  Modal 외부 영역을 클릭했을 때 실행되는 함수
+        onEscapeKey={() => setIsOpen(false)} // Esc 키를 눌렀을 때 실행되는 함수
+        onClose={() => {}}
+      >
+        {/* <button onClick={() => {setIsOpen(false)}} className="closeButton">X</button> */}
+        {/* <firstModal/> */}
+        <DaumPostcode
+          onComplete={(data) => {
+            addressSearch(data);
+            document.getElementById('changeAddress').showModal()
+            // setIsOpen(false); // 주소 검색 완료 후 Modal 닫기 // 주소가 안되는 문제 수정해야한다.
+          }}
+          autoClose
+          width="100%"
+          height="100%"
+        />
+      </Modal>
+
+      <Modal></Modal>
       <dialog id="changeAddress" className="modal">
         <div className="modal-box" style={{ height:'250px'}}>
           <form method="dialog">
@@ -403,7 +441,14 @@ export default function MypageEdit(){
                   id="address" name="address" type="text" placeholder={userInfo?.addressLegal} autoComplete="text" 
                   className="block rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
                   />
-                  <button className="btn rounded-md" style={{ backgroundColor:'#bbbbbb'}}>
+                  <button
+                    onClick={() => {
+                      document.getElementById('changeAddress').close()
+                      setIsOpen(true)
+                    }}
+                      className="btn rounded-md"
+                      style={{ backgroundColor:'#bbbbbb'}}
+                    >
                   <span style={{ color:'white' }} className="text-sm">주소검색</span>
                 </button>
               </div>
@@ -442,7 +487,18 @@ export default function MypageEdit(){
               예금주
             </label>
             <div>
-              <input id="accountOwner" name="accountOwner" type="text" placeholder={userInfo?.account?.depositor} autoComplete="text" 
+              <input 
+                value={userInfo?.account?.depositor}
+                onChange={(event) => {
+                  const newUserInfo = {
+                    ...userInfo,
+                    account :{
+                      ...userInfo.account,
+                      depositor: event.target.value,
+                    }
+                  };
+                  setUserInfo(newUserInfo);}}
+                id="accountOwner" name="accountOwner" type="text" placeholder={userInfo?.account?.depositor} autoComplete="text" 
                 className="block h-10 w-full rounded-md border-0  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
                 />
                 </div>
@@ -450,7 +506,7 @@ export default function MypageEdit(){
               className="block text-sm leading-6 text-gray-900 mt-2">
               은행명
             </label>
-              <Dropdown 
+              {/* <Dropdown 
                 value={userInfo?.account?.bankName} 
                 onChange={(event) => {
                   const newUserInfo = {
@@ -461,7 +517,8 @@ export default function MypageEdit(){
                     }
                   };
                   setUserInfo(newUserInfo);}}
-                options={bankList} optionLabel="bankName" placeholder="은행명" filter className="w-full md:w-14rem" />
+                options={bankList} optionLabel="bankName" placeholder="은행명" filter className="w-full md:w-14rem" /> */}
+
               {/* <span className="p-float-label w-full md:w-14rem"> */}
                 {/* <Dropdown inputId="dd-city" value={selectedCity} onChange={(e) => setSelectedCity(e.value)} options={cities} optionLabel="name" className="w-full" />
 
@@ -470,11 +527,19 @@ export default function MypageEdit(){
               {/* </span> */}
             <div>
 
-
-
-
-                <input id="bankName" name="bankName" type="text" placeholder={userInfo?.account?.bankName} autoComplete="text" 
-                className="block h-10 w-full rounded-md border-0 mt-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
+                <input
+                  value={userInfo?.account?.bankName}
+                  onChange={(event) => {
+                    const newUserInfo = {
+                      ...userInfo,
+                      account :{
+                        ...userInfo.account,
+                        bankName: event.target.value,
+                      }
+                    };
+                    setUserInfo(newUserInfo);}}
+                  id="bankName" name="bankName" type="text" placeholder={userInfo?.account?.bankName} autoComplete="text" 
+                  className="block h-10 w-full rounded-md border-0 mt-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
                 />
                 </div>
                 <label htmlFor="account"
@@ -482,8 +547,19 @@ export default function MypageEdit(){
               계좌번호
             </label>
                 <div>
-                <input id="account" name="account" type="text" placeholder={userInfo?.account?.accountNumber} autoComplete="text" 
-                className="block h-10 w-full rounded-md border-0 mt-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
+                <input
+                  value={userInfo?.account?.accountNumber}
+                  onChange={(event) => {
+                    const newUserInfo = {
+                      ...userInfo,
+                      account :{
+                        ...userInfo.account,
+                        accountNumber: event.target.value,
+                      }
+                    };
+                    setUserInfo(newUserInfo);}}
+                  id="account" name="account" type="text" placeholder={userInfo?.account?.accountNumber} autoComplete="text" 
+                  className="block h-10 w-full rounded-md border-0 mt-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
                 />
             </div>
             <button
