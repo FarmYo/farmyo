@@ -11,11 +11,13 @@ import BoardClick from '../../../image/component/boardclick.png';
 import ChatClick from '../../../image/component/chatclick.png';
 import MypageClick from '../../../image/component/mypageclick.png';
 import '../../../css/bottombar.css';
+import { jwtDecode } from 'jwt-decode';
 // import { useNavigate } from 'react-router-dom';
 
 export default function BottomBar() {
   // const navigate = useNavigate()
   const location = useLocation()
+  const im = jwtDecode(localStorage.getItem('access')).userJob
   const [home, setHome] = useState({ image: Home, clicked: false });
   const [trade, setTrade] = useState({ image: Trade, clicked: false });
   const [board, setBoard] = useState({ image: Board, clicked: false });
@@ -74,9 +76,9 @@ export default function BottomBar() {
               className='flex flex-col items-center justify-center' 
               onClick={() => handleImageClick(setMypage, mypage)}
             >
-              <Link to="/login">
+              <Link to={`/mypage/${im === 0 ? "seller" : "buyer"}`}>
                 <img src={mypage.clicked ? MypageClick : mypage.image} className="size" alt="" />
-                <p className='text-sm text-center font-bold mt-2'>마이</p>
+                <p className='text-sm text-center font-bold mt-2'>프로필</p>
               </Link>
             </div>
           </div>
