@@ -4,6 +4,12 @@ import { useState } from 'react'
 
 export default function BuyBoardList(){
 
+  const [quantity, setQuantity] = useState("")
+  const [price, setPrice] = useState("")
+  const [title, setTitle] = useState("")
+  const [content, setContent] = useState("")
+  const [cropCategory, setCropCategory] =useState([])
+
   const [buyOpen,setBuyOpen] = useState(false)
 
   const styles = {

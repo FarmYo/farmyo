@@ -67,7 +67,6 @@ export default function BottomBar() {
             </div>
             <div className='flex flex-col items-center justify-center' onClick={() => handleImageClick(setChat, chat)}>
               <Link to="/chat">
-              {/* <Link to='/mypage/buyer'> */}
               <img src={chat.clicked ? ChatClick : chat.image} className="size" alt="" />
               <p className='text-sm text-center font-bold mt-2'>채팅</p>
               </Link>
