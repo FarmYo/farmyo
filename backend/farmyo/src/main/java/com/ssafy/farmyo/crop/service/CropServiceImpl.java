@@ -102,7 +102,7 @@ public class CropServiceImpl implements CropService {
 
     //작물 사진 업데이트
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public void updateCropImgUrl(int cropId, MultipartFile cropImg, int userId) {
 
         Crop crop = cropRepository.findById(cropId).orElseThrow(() -> new CustomException(ExceptionType.CROP_NOT_EXIST));
