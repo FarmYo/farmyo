@@ -31,20 +31,20 @@ public class RedisConfig {
     @Bean
     @Primary
     public RedisConnectionFactory redisTokenConnectionFactory() {
-        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(host, port);
-        redisStandaloneConfiguration.setPassword(password);
-        redisStandaloneConfiguration.setDatabase(0);
+            RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(host, port);
+            redisStandaloneConfiguration.setPassword(password);
+            redisStandaloneConfiguration.setDatabase(0);
 
-        return new LettuceConnectionFactory(redisStandaloneConfiguration);
-    }
+            return new LettuceConnectionFactory(redisStandaloneConfiguration);
+        }
 
-    // redis 연결을 위한 Factory
+        // redis 연결을 위한 Factory
 
-    @Bean
-    @Qualifier("redisChatFactory")
-    public RedisConnectionFactory redisChatConnectionFactory() {
-        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(host, port);
-        redisStandaloneConfiguration.setPassword(password);
+        @Bean
+        @Qualifier("redisChatFactory")
+        public RedisConnectionFactory redisChatConnectionFactory() {
+            RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(host, port);
+            redisStandaloneConfiguration.setPassword(password);
         redisStandaloneConfiguration.setDatabase(1);
 
         return new LettuceConnectionFactory(redisStandaloneConfiguration);

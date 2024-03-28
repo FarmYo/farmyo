@@ -34,7 +34,7 @@ public class RedisSubscriber implements MessageListener {
 
     // 메세지를 받았을 때 MessageListener는 onMessage 메서드를 호출한다.
     @Override
-    public void onMessage(@NotNull Message message, byte[] pattern) {
+    public void onMessage(Message message, byte[] pattern) {
         log.info("String Message received: {}", message);
 
         try {
@@ -45,7 +45,7 @@ public class RedisSubscriber implements MessageListener {
             log.info("Sender : {}", chatMessageDto.getUserId());
             log.info("chatRoomId : {}", chatMessageDto.getChatId());
             log.info("Sender 가 보낸 내용 : {}", chatMessageDto.getContent());
-            log.info("Sender 가 보낸 시간 : {}", chatMessageDto.getCreatedAt());
+//            log.info("Sender 가 보낸 시간 : {}", chatMessageDto.getCreatedAt());
 
             // 웹소켓으로 연결된 곳에
             messagingTemplate.convertAndSend("/sub/chat/" + chatMessageDto.getChatId(), chatMessageDto);

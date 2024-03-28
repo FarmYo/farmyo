@@ -18,12 +18,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     }
 
     /**
-     * WebSocket 엔드포인트 등록하기
+     * WebSocket 연결을 위한 엔드포인트 등록하기  -> ws://주소:port/api/ws
      */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOrigins("*")
-                .withSockJS();
+                .setAllowedOriginPatterns("*");
+//                .withSockJS();
     }
 }
