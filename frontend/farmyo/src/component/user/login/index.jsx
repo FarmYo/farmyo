@@ -35,7 +35,7 @@ export default function LoginInput() {
       console.log('로그인 실패', err)
       setId("")
       setPassword("")
-      if (err.response.data.dataHeader?.resultCode === "U-000") {
+      if (err.response?.data?.dataHeader?.resultCode === "U-000") {
         Swal.fire({
           title: '탈퇴한 회원입니다.',
           confirmButtonColor: '#1B5E20',

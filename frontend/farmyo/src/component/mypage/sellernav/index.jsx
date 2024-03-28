@@ -22,9 +22,6 @@ export default function MypageNavbar() {
     setSelected(index)
   }
 
-  const handleLove = () =>{
-    setLove(!love)
-  }
 
   //수정페이지로가기
   const GoEdit= () => {
