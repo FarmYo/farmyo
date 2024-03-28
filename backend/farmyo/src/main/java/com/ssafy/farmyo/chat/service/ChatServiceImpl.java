@@ -74,6 +74,7 @@ public class ChatServiceImpl implements ChatService {
 
             chatDto = new ChatDto(chat.getId(), buyer.getId(), seller.getId());
         }
+
         return chatDto;
     }
 

@@ -17,7 +17,7 @@ public class RedisPublisher {
     }
 
     public void sendMessage(ChatMessageDto chatMessageDto) {
-        redisTemplate.convertAndSend("sub/chat/" + chatMessageDto.getChatId(), chatMessageDto);
+        redisTemplate.convertAndSend("/sub/chat/" + chatMessageDto.getChatId(), chatMessageDto);
     }
 
 }
