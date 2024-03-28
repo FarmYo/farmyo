@@ -21,11 +21,20 @@ public enum ExceptionType {
     DUPLICATE_BUSINESS_LICENSE(HttpStatus.BAD_REQUEST, "U-009", "중복된 사업자 등록 정보입니다."),
     LOGIN_ID_MISMATCH(HttpStatus.BAD_REQUEST, "U-010", "일치하는 회원 정보가 없습니다."),
     PASSWORD_NOT_MATCH(HttpStatus.BAD_REQUEST, "U-011", "현재 비밀번호가 일치하지 않습니다."),
+    FARMER_NOT_EXIST(HttpStatus.BAD_REQUEST, "U-012", "존재하지 않는 농부입니다."),
 
     // 작물
     CROP_NOT_EXIST(HttpStatus.BAD_REQUEST, "C-001", "존재하지 않는 작물입니다."),
     CATEGORY_NOT_EXIST(HttpStatus.BAD_REQUEST, "C-002", "존재하지 않는 작물 카테고리입니다."),
     USER_FARMER_REQUIRED(HttpStatus.BAD_REQUEST, "C-003", "농부만 작물 등록할 수 있습니다."),
+    BLOCKCHAIN_FAILED_TO_CREATE(HttpStatus.INTERNAL_SERVER_ERROR, "C-004", "블록체인 등록 중 내부 오류가 발생했습니다."),
+    PesticideName_INVALID(HttpStatus.BAD_REQUEST, "C-005", "농약이름이 입력되지 않았습니다."),
+    PesticideCode_INVALID(HttpStatus.BAD_REQUEST, "C-006", "농약종류가 입력되지 않았습니다."),
+    ContestName_INVALID(HttpStatus.BAD_REQUEST, "C-007", "대회이름이 입력되지 않았습니다."),
+    AWARDDETAILS_INVALID(HttpStatus.BAD_REQUEST, "C-008", "수상내역이 입력되지 않았습니다."),
+    EVENTDATE_INVALID(HttpStatus.BAD_REQUEST, "C-009", "발생일이 입력되지 않았습니다."),
+    TYPE_INVALID(HttpStatus.BAD_REQUEST, "C-010", "타입 값이 올바르지 않습니다."),
+
 
 
     // 토큰
@@ -55,9 +64,13 @@ public enum ExceptionType {
     USER_NOT_AUTHOR(HttpStatus.FORBIDDEN, "B-011", "작성자만 수정 또는 삭제할 수 있습니다."),
 
 
-
     // 채팅
-    CHAT_NOT_EXIST(HttpStatus.BAD_REQUEST, "M-001", "존재하지 않는 채팅방입니다.");
+    CHAT_NOT_EXIST(HttpStatus.BAD_REQUEST, "M-001", "존재하지 않는 채팅방입니다."),
+
+    // 즐겨찾기
+    ALREADY_EXIST_FAVORITE(HttpStatus.BAD_REQUEST, "F-001", "이미 존재하는 즐겨찾기 입니다."),
+    NOT_EXIST_FAVORITE(HttpStatus.BAD_REQUEST, "F-002", "존재하지 않는 즐겨찾기 입니다."),
+    INVALID_ACCESS_FAVORITE(HttpStatus.BAD_REQUEST, "F-003", "해당 즐겨찾기 삭제할 권한이 없습니다.");
 
     // 상태, 에러 코드, 메시지
     private final HttpStatus httpStatus;

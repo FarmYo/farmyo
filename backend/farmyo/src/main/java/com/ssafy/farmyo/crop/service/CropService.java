@@ -2,13 +2,14 @@ package com.ssafy.farmyo.crop.service;
 
 import com.ssafy.farmyo.crop.dto.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface CropService {
 
     //작물 등록
-    Integer addCrop(AddCropReqDto addCropReqDto, int farmerId);
+    int addCrop(AddCropReqDto addCropReqDto, int farmerId);
 
     //작물 상세조회
     CropDetailResDto getCropDetail(int cropId);
@@ -17,7 +18,7 @@ public interface CropService {
     List<CropListResDto> getCropsByFarmerLoginId(String loginId);
 
     //작물 이미지 수정
-    void updateCropImgUrl(int cropId, String cropImgUrl);
+    void updateCropImgUrl(int cropId, MultipartFile cropImg, int userId);
 
     //작물 인증 정보 조회
     List<CropCertResDto> getCropCertList(int cropId);
@@ -27,4 +28,7 @@ public interface CropService {
 
     //카테고리조회
     List<FindCropCategoryResDto> findAllCropCategories();
+
+    //블록체인 기록 등록
+    void createBlockChain(int cropId, int userId, CropBlockchainResDto cropBlockchainResDto);
 }

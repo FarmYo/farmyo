@@ -2,9 +2,9 @@ package com.ssafy.farmyo.crop.service;
 
 
 import com.ssafy.farmyo.blockchain.service.CropContractService;
-import com.ssafy.farmyo.common.auth.CustomUserDetails;
 import com.ssafy.farmyo.common.exception.CustomException;
 import com.ssafy.farmyo.common.exception.ExceptionType;
+import com.ssafy.farmyo.common.s3.AwsS3Service;
 import com.ssafy.farmyo.crop.dto.*;
 import com.ssafy.farmyo.crop.repository.CropCategoryRepository;
 import com.ssafy.farmyo.crop.repository.CropRepository;
@@ -14,10 +14,15 @@ import com.ssafy.farmyo.entity.Farmer;
 import com.ssafy.farmyo.user.repository.FarmerRepository;
 import com.ssafy.farmyo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,11 +35,13 @@ public class CropServiceImpl implements CropService {
     private final FarmerRepository farmerRepository;
     private final CropContractService cropContractService;
     private final UserRepository userRepository;
+    private final AwsS3Service awsS3Service;
 
 
     //작물 등록
     @Override
-    public Integer addCrop(AddCropReqDto addCropReqDto, int farmerId) {
+    @Transactional
+    public int addCrop(AddCropReqDto addCropReqDto, int farmerId) {
 
 
         //해당 id의 파머가 있는지 확인
@@ -60,8 +67,18 @@ public class CropServiceImpl implements CropService {
         crop = cropRepository.save(crop);
 
 
-        //블록체인기능 다듬어서 넣을곳
-//        cropContractService.addBasicInfo(BigInteger.valueOf(crop.getId()), crop.getCropName());
+        // LocalDate 타입의 날짜를 yyyyMMdd 형식의 String으로 변환
+        String formattedDate = crop.getCropPlantingDate().format(DateTimeFormatter.BASIC_ISO_DATE); // '20241031'
+
+        // String을 BigInteger로 변환
+        BigInteger plantingDate = new BigInteger(formattedDate);
+
+
+        try {
+            cropContractService.addPlantingInfo(BigInteger.valueOf(crop.getId()), crop.getCropName(), crop.getCropCultivationSite(), plantingDate);
+        } catch (Exception e) {
+            throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
+        }
 
         return crop.getId();
     }
@@ -85,15 +102,22 @@ public class CropServiceImpl implements CropService {
 
     //작물 사진 업데이트
     @Override
-    public void updateCropImgUrl(int cropId, String cropImgUrl) {
-        Optional<Crop> cropOptional = cropRepository.findById(cropId);
-        if (cropOptional.isPresent()) {
-            Crop crop = cropOptional.get();
-            crop.updateCropImgUrl(cropImgUrl);
-            cropRepository.save(crop);
-        } else {
-            throw new CustomException(ExceptionType.CROP_NOT_EXIST);
+    @Transactional
+    public void updateCropImgUrl(int cropId, MultipartFile cropImg, int userId) {
+
+        Crop crop = cropRepository.findById(cropId).orElseThrow(() -> new CustomException(ExceptionType.CROP_NOT_EXIST));
+        
+        if (!crop.getFarmer().getId().equals(userId)) {
+            throw new CustomException(ExceptionType.CROP_NOT_OWNED_BY_FARMER);
         }
+
+
+
+        String cropImgUrl = awsS3Service.uploadFile(cropImg);
+        crop.updateCropImgUrl(cropImgUrl);
+
+        cropRepository.save(crop);
+
 
     }
 
@@ -121,7 +145,7 @@ public class CropServiceImpl implements CropService {
 
     //작물 인증 정보 조회
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<CropCertResDto> getCropCertList(int cropId) {
         Crop crop = cropRepository.findById(cropId)
                 .orElseThrow(() -> new CustomException(ExceptionType.CROP_NOT_EXIST));
@@ -140,7 +164,7 @@ public class CropServiceImpl implements CropService {
 
     //작물 검사 정보 조회
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<CropInspectResDto> getCropInspectList(int cropId) {
         Crop crop = cropRepository.findById(cropId)
                 .orElseThrow(() -> new CustomException(ExceptionType.CROP_NOT_EXIST));
@@ -163,5 +187,68 @@ public class CropServiceImpl implements CropService {
         return cropCategoryRepository.findAll().stream()
                 .map(FindCropCategoryResDto::toDto)
                 .collect(Collectors.toList());
+    }
+
+
+    //블록체인 기록 등록
+
+    @Override
+    public void createBlockChain(int cropId, int userId, CropBlockchainResDto cropBlockchainResDto) {
+
+
+        Crop crop = cropRepository.findById(cropId)
+                .orElseThrow(() -> new CustomException(ExceptionType.CROP_NOT_EXIST));
+
+        //작물주인과 접속자가 다를 경우
+        if (!crop.getFarmer().getId().equals(userId)) {
+            throw new CustomException(ExceptionType.CROP_NOT_OWNED_BY_FARMER);
+        }
+
+        //작성일이 없을 경유
+        if (cropBlockchainResDto.getEventDate() == null) {
+            throw new CustomException(ExceptionType.EVENTDATE_INVALID);
+        }
+//        블록체인기능 다듬어서 넣을곳
+        // LocalDate 타입의 날짜를 yyyyMMdd 형식의 String으로 변환
+        String formattedDate = cropBlockchainResDto.getEventDate().format(DateTimeFormatter.BASIC_ISO_DATE); // '20241031'
+
+        // String을 BigInteger로 변환
+        BigInteger eventDate = new BigInteger(formattedDate);
+
+        if (cropBlockchainResDto.getType() == 1) {
+
+            if (cropBlockchainResDto.getContestName() == null || cropBlockchainResDto.getPesticideName().isEmpty()) {
+                throw new CustomException(ExceptionType.PesticideName_INVALID);
+            }
+            if (cropBlockchainResDto.getPesticideType() == null || cropBlockchainResDto.getPesticideType().isEmpty()) {
+                throw new CustomException(ExceptionType.PesticideCode_INVALID);
+            }
+            try {
+                cropContractService.addUsageInfo(BigInteger.valueOf(crop.getId()), cropBlockchainResDto.getPesticideName(), cropBlockchainResDto.getPesticideType(), eventDate);
+            } catch (Exception e) {
+                throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
+            }
+        } else if (cropBlockchainResDto.getType() == 2) {
+            if (cropBlockchainResDto.getContestName() == null || cropBlockchainResDto.getContestName().isEmpty()) {
+                throw new CustomException(ExceptionType.ContestName_INVALID);
+            }
+            if (cropBlockchainResDto.getAwardDetails() == null || cropBlockchainResDto.getAwardDetails().isEmpty()) {
+                throw new CustomException(ExceptionType.AWARDDETAILS_INVALID);
+            }
+            try {
+                cropContractService.addContestInfo(BigInteger.valueOf(crop.getId()), cropBlockchainResDto.getContestName(), cropBlockchainResDto.getAwardDetails(), eventDate);
+            } catch (Exception e) {
+                throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
+            }
+        } else if (cropBlockchainResDto.getType() == 3) {
+            try {
+                cropContractService.addHarvestInfo(BigInteger.valueOf(crop.getId()), eventDate);
+            } catch (Exception e) {
+                throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
+            }
+        } else {
+            throw new CustomException(ExceptionType.TYPE_INVALID);
+        }
+
     }
 }
