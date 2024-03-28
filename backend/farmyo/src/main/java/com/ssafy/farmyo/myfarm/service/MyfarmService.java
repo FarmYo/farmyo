@@ -9,7 +9,7 @@ public interface MyfarmService {
     void createFarm();
     void updateFarm();
     void deleteFarm(int id);
-    UpUserDto getUpUser(int id);
+    UpUserDto getUpUser(String loginId);
     MyfarmListDto getFarmList(int id);
     MyfarmDto getFarm(int id);
 

@@ -70,7 +70,11 @@ public enum ExceptionType {
     // 즐겨찾기
     ALREADY_EXIST_FAVORITE(HttpStatus.BAD_REQUEST, "F-001", "이미 존재하는 즐겨찾기 입니다."),
     NOT_EXIST_FAVORITE(HttpStatus.BAD_REQUEST, "F-002", "존재하지 않는 즐겨찾기 입니다."),
-    INVALID_ACCESS_FAVORITE(HttpStatus.BAD_REQUEST, "F-003", "해당 즐겨찾기 삭제할 권한이 없습니다.");
+    INVALID_ACCESS_FAVORITE(HttpStatus.BAD_REQUEST, "F-003", "해당 즐겨찾기 삭제할 권한이 없습니다."),
+
+    // 마이페이지(마이팜)
+    USER_NOT_FARMER(HttpStatus.BAD_REQUEST, "P-001", "해당 유저는 농부가 아닙니다.");
+
 
     // 상태, 에러 코드, 메시지
     private final HttpStatus httpStatus;
