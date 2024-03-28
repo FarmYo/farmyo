@@ -12,6 +12,8 @@ import SellerTradePage from "./pages/trade/sellerTradeDetail";
 import BuyerTradePage from "./pages/trade/buyerTradeDetail";
 import SellerMypage from "./pages/mypage/seller/index"
 import BuyerMypage from "./pages/mypage/buyer/index"
+import OpponentSellerMypage from "./pages/mypage/opseller/index"
+import OpponentBuyerMypage from "./pages/mypage/opbuyer/index"
 import MyFarmDetail from "./pages/mypage/myfarm/detail/index"
 import BoardNav from "./pages/board/navbar/index"
 import SellDetail from "./pages/board/selldetail/index"
@@ -19,6 +21,12 @@ import BuyDetail from "./pages/board/buydetail/index"
 import MypageEdit from "./pages/mypage/edit/index"
 import Chatting from "./pages/chat/index"
 import ChattingRoom from "./pages/chat/room/index"
+import Stanby from "./pages/stanby/index"
+import CropStanby from "./pages/stanby/cropstanby/index"
+import TradeStanby from "./pages/stanby/tradestanby/index"
+import Payment from "./pages/trade/kakaopay/index"
+
+
 
 export default function Router (){
   return(
@@ -49,6 +57,10 @@ export default function Router (){
       <Route path='/mypage/seller' element={<SellerMypage />} /> 
       {/* 구매자마이페이지 */}
       <Route path='/mypage/buyer' element={<BuyerMypage />} />
+      {/* 상대방판매자마이페이지 */}
+      <Route path='/mypage/seller/:id' element={<OpponentSellerMypage />} /> 
+      {/* 상대방구매자마이페이지 */}
+      <Route path='/mypage/buyer/:id' element={<OpponentBuyerMypage />} />
       {/* 마이팜디테일페이지 */}
       <Route path='/mypage/:myfarmId/detail' element={<MyFarmDetail />} />
       {/* 팜&삼 게시판페이지 */}
@@ -63,6 +75,15 @@ export default function Router (){
       <Route path='/chat' element={<Chatting />} />
       {/* 채팅방페이지 */}
       <Route path='/chat/:chatId' element={<ChattingRoom />} />
+      {/* 대기화면 */}
+      <Route path='/stanby' element={<Stanby />} />
+      {/* 작물대기화면 */}
+       <Route path='/stanby/crop' element={<CropStanby />} />
+      {/* 작물대기화면 */}
+       <Route path='/stanby/trade' element={<TradeStanby />} />
+       {/* 카카오페이대기화면 */}
+       <Route path='/trade/redirect' element={<Payment />} />
+
     </Routes>
   )
 }

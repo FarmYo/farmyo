@@ -28,6 +28,7 @@ function App() {
     /^\/signup\/business$/, 
     /^\/signup$/,
     /^\/login$/, // '/login' 경로 추가
+    /^\/stanby$/
 
   ];
 

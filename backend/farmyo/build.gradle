@@ -55,6 +55,11 @@ dependencies {
 	// Mail
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
+	// aws s3
+	implementation 'io.awspring.cloud:spring-cloud-aws-s3:3.0.2'
+	implementation 'org.springframework:spring-test:6.1.2'
+	implementation 'software.amazon.awssdk:s3:2.17.50'
+
 }
 
 tasks.named('test') {
