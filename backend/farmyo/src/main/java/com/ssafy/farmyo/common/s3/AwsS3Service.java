@@ -9,10 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.GetUrlRequest;
-import software.amazon.awssdk.services.s3.model.GetObjectRequest;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.*;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.ByteArrayOutputStream;
@@ -93,6 +90,35 @@ public class AwsS3Service {
         } catch (IOException e) {
             log.error("Error downloading file: " + fileName, e);
             throw new RuntimeException(e);
+        }
+    }
+
+    //삭제 테스트
+
+    //url에서 파일 이름 추출
+    private String extractFileNameFromUrl(String fileUrl) {
+        int lastIndexOfSlash = fileUrl.lastIndexOf("/");
+        if (lastIndexOfSlash >= 0 && lastIndexOfSlash < fileUrl.length() - 1) {
+            return fileUrl.substring(lastIndexOfSlash + 1);
+        } else {
+            throw new IllegalArgumentException("Invalid file URL format");
+        }
+    }
+
+    public void deleteFileByUrl(String fileUrl) {
+        String fileName = extractFileNameFromUrl(fileUrl);
+
+        try {
+            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(fileName)
+                    .build();
+
+            s3Client.deleteObject(deleteObjectRequest);
+            log.info("File deleted successfully from URL: {}", fileUrl);
+        } catch (Exception e) {
+            log.error("Error deleting file from URL: " + fileUrl, e);
+            throw new RuntimeException("Error deleting file from S3", e);
         }
     }
 }
