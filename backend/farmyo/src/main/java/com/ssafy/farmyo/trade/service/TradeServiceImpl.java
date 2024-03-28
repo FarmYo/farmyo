@@ -100,6 +100,7 @@ public class TradeServiceImpl implements TradeService {
             for (Trade trade : notFinish) {
                 TradeListDto tradeListDto = TradeListDto.builder()
                         .id(trade.getId())
+                        .cropImg(trade.getCrop().getCropImgUrl())
                         .nickname(trade.getBuyer().getNickname())
                         .boardTitle(trade.getBoard().getBoardTitle())
                         .tradePrice(trade.getTradePrice())
@@ -113,6 +114,7 @@ public class TradeServiceImpl implements TradeService {
             for (Trade trade : finish) {
                 TradeListDto tradeListDto = TradeListDto.builder()
                         .id(trade.getId())
+                        .cropImg(trade.getCrop().getCropImgUrl())
                         .nickname(trade.getBuyer().getNickname())
                         .boardTitle(trade.getBoard().getBoardTitle())
                         .tradePrice(trade.getTradePrice())
@@ -137,6 +139,7 @@ public class TradeServiceImpl implements TradeService {
             for (Trade trade : notFinish) {
                 TradeListDto tradeListDto = TradeListDto.builder()
                         .id(trade.getId())
+                        .cropImg(trade.getCrop().getCropImgUrl())
                         .nickname(trade.getSeller().getNickname())
                         .boardTitle(trade.getBoard().getBoardTitle())
                         .tradePrice(trade.getTradePrice())
@@ -150,6 +153,7 @@ public class TradeServiceImpl implements TradeService {
             for (Trade trade : finish) {
                 TradeListDto tradeListDto = TradeListDto.builder()
                         .id(trade.getId())
+                        .cropImg(trade.getCrop().getCropImgUrl())
                         .nickname(trade.getSeller().getNickname())
                         .boardTitle(trade.getBoard().getBoardTitle())
                         .tradePrice(trade.getTradePrice())

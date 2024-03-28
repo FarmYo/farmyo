@@ -1,6 +1,8 @@
 package com.ssafy.farmyo.myfarm.controller;
 
 import com.ssafy.farmyo.common.response.BaseResponseBody;
+import com.ssafy.farmyo.myfarm.dto.UpUserDto;
+import com.ssafy.farmyo.myfarm.service.MyfarmService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/farms")
 @Tag(name = "7. Farm", description = "Farm API")
 public class MyfarmController {
+
+    private final MyfarmService myfarmService;
 
     @PostMapping("")
     @Operation(summary = "마이팜 생성", description = "판매자는 userId와 사진, 게시글을 통해 마이팜 게시글을 생성한다.")
@@ -53,6 +57,17 @@ public class MyfarmController {
     public ResponseEntity<? extends BaseResponseBody> deleteFarm() {
 
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, 0));
+    }
+
+    @GetMapping("/user")
+    @Operation(summary = "마이페이지 유저 정보 조회", description = "유저 id를 통해 ")
+    public ResponseEntity<? extends  BaseResponseBody> getUpUser(
+            @RequestParam(name = "id")
+            @Parameter(description = "유저 아이디")
+            int id) {
+        UpUserDto upUserDto = myfarmService.getUpUser(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, upUserDto));
     }
 
 }

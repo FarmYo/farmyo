@@ -8,6 +8,7 @@ import lombok.Getter;
 @Builder
 public class TradeListDto {
 
+    private String cropImg;
     private int id;
     private String nickname;
     private String boardTitle;
