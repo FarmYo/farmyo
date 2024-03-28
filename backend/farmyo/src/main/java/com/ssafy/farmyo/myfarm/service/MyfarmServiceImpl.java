@@ -41,7 +41,19 @@ public class MyfarmServiceImpl implements MyfarmService {
     @Override
     @Transactional
     public UpUserDto getUpUser(String loginId) {
-        User user =  userRepository.findByLoginId(loginId).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+        User user;
+
+        if (userRepository.findByLoginId(loginId).isPresent()) {
+            user =  userRepository.findByLoginId(loginId).get();
+
+            if (user.getAddress() == null) {
+                throw new CustomException(ExceptionType.ADDRESS_NOT_EXIST);
+            }
+
+        } else {
+            throw new CustomException(ExceptionType.USER_NOT_EXIST);
+        }
+
 
         return UpUserDto.builder()
                 .userProfile(user.getProfile())
