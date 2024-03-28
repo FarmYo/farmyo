@@ -82,6 +82,7 @@ export default function SellBoardList(){
           </div>
         </div>
       </div>
+      
       {/* 팝니다게시글생성모달 */}
       <Modal open={sellOpen} onClose={sellCloseModal} styles={styles}>
         <div className="mt-10">
