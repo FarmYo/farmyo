@@ -62,10 +62,10 @@ public class MyfarmController {
     @GetMapping("/user")
     @Operation(summary = "마이페이지 유저 정보 조회", description = "유저 id를 통해 ")
     public ResponseEntity<? extends  BaseResponseBody> getUpUser(
-            @RequestParam(name = "id")
+            @RequestParam(name = "loginId")
             @Parameter(description = "유저 아이디")
-            int id) {
-        UpUserDto upUserDto = myfarmService.getUpUser(id);
+            String loginId) {
+        UpUserDto upUserDto = myfarmService.getUpUser(loginId);
 
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, upUserDto));
     }
