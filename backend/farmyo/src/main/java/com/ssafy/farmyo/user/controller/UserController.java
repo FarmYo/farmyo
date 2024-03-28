@@ -107,7 +107,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, userService.checkIdDuplicate(id)));
     }
 
-    @Operation(summary = "회원 정보 불러오기", description = "현재 로그인한 회원의 정보를 가져온다.")
+    @Operation(summary = "회원 정보 조회", description = "현재 로그인한 회원의 정보를 조회")
     @GetMapping("")
     @ApiResponse(responseCode = "200", description = "성공 \n\n 유저 정보를 담은 DTO 반환 ")
     public ResponseEntity<? extends BaseResponseBody> getUserInfo(Authentication authentication) {
