@@ -1,6 +1,5 @@
 package com.ssafy.farmyo.chat.repository;
 
-import com.ssafy.farmyo.chat.dto.MessageDto;
 import com.ssafy.farmyo.chat.dto.MessageListDto;
 import com.ssafy.farmyo.entity.Message;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -3,7 +3,7 @@ package com.ssafy.farmyo.chat.service;
 import com.ssafy.farmyo.board.repository.BoardRepository;
 import com.ssafy.farmyo.chat.dto.ChatDto;
 import com.ssafy.farmyo.chat.dto.ChatRoomDto;
-import com.ssafy.farmyo.chat.dto.MessageDto;
+import com.ssafy.farmyo.chat.dto.ChatMessageDto;
 import com.ssafy.farmyo.chat.dto.MessageListDto;
 import com.ssafy.farmyo.chat.repository.ChatRepository;
 import com.ssafy.farmyo.chat.repository.MessageRepository;
@@ -14,16 +14,12 @@ import com.ssafy.farmyo.entity.Chat;
 import com.ssafy.farmyo.entity.Message;
 import com.ssafy.farmyo.entity.User;
 import com.ssafy.farmyo.user.repository.UserRepository;
-import io.swagger.v3.oas.annotations.Operation;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +33,7 @@ public class ChatServiceImpl implements ChatService {
     private final MessageRepository messageRepository;
     private final BoardRepository boardRepository;
 
-    public ChatServiceImpl(@Qualifier("redisMsgTemplate")RedisTemplate<String, Object> redisTemplate,
+    public ChatServiceImpl(@Qualifier("redisChatTemplate")RedisTemplate<String, Object> redisTemplate,
                            UserRepository userRepository,
                            ChatRepository chatRepository,
                            MessageRepository messageRepository,
@@ -83,26 +79,23 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     @Transactional
-    public void publishMsg(MessageDto messageDto) {
+    public void sendMsg(ChatMessageDto chatMessageDto) {
         Chat chat;
 
-        if (chatRepository.findById(messageDto.getChatId()).isPresent()) {
-            chat = chatRepository.findById(messageDto.getChatId()).get();
+        if (chatRepository.findById(chatMessageDto.getChatId()).isPresent()) {
+            chat = chatRepository.findById(chatMessageDto.getChatId()).get();
         } else {
             throw new CustomException(ExceptionType.CHAT_NOT_EXIST);
         }
 
         Message message = Message.builder()
                 .chat(chat)
-                .content(messageDto.getContent())
-                .userId(messageDto.getUserId())
+                .content(chatMessageDto.getContent())
+                .userId(chatMessageDto.getUserId())
                 .build();
 
-        // 채팅 기록 DB에 저장하기
+        // 채팅 기록 DB에 저장하기  redis는 따로 저장함.
         Message savedMessage = messageRepository.save(message);
-
-        // 채팅 내용 redis 서버로 실시간 전송하기
-        redisTemplate.convertAndSend(Integer.toString(messageDto.getChatId()), messageDto.getContent());
     }
 
     @Override
