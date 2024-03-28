@@ -6,10 +6,7 @@ import com.ssafy.farmyo.common.exception.CustomException;
 import com.ssafy.farmyo.common.exception.ExceptionType;
 import com.ssafy.farmyo.crop.repository.CropRepository;
 import com.ssafy.farmyo.entity.*;
-import com.ssafy.farmyo.trade.dto.TradeListDto;
-import com.ssafy.farmyo.trade.dto.TradeListReqDto;
-import com.ssafy.farmyo.trade.dto.TradeReqDto;
-import com.ssafy.farmyo.trade.dto.TradeResDto;
+import com.ssafy.farmyo.trade.dto.*;
 import com.ssafy.farmyo.trade.repository.TradeDepositRepository;
 import com.ssafy.farmyo.trade.repository.TradeRepository;
 import com.ssafy.farmyo.trade.repository.TradeWithdrawalRepository;
@@ -103,6 +100,7 @@ public class TradeServiceImpl implements TradeService {
             for (Trade trade : notFinish) {
                 TradeListDto tradeListDto = TradeListDto.builder()
                         .id(trade.getId())
+                        .cropImg(trade.getCrop().getCropImgUrl())
                         .nickname(trade.getBuyer().getNickname())
                         .boardTitle(trade.getBoard().getBoardTitle())
                         .tradePrice(trade.getTradePrice())
@@ -116,6 +114,7 @@ public class TradeServiceImpl implements TradeService {
             for (Trade trade : finish) {
                 TradeListDto tradeListDto = TradeListDto.builder()
                         .id(trade.getId())
+                        .cropImg(trade.getCrop().getCropImgUrl())
                         .nickname(trade.getBuyer().getNickname())
                         .boardTitle(trade.getBoard().getBoardTitle())
                         .tradePrice(trade.getTradePrice())
@@ -140,6 +139,7 @@ public class TradeServiceImpl implements TradeService {
             for (Trade trade : notFinish) {
                 TradeListDto tradeListDto = TradeListDto.builder()
                         .id(trade.getId())
+                        .cropImg(trade.getCrop().getCropImgUrl())
                         .nickname(trade.getSeller().getNickname())
                         .boardTitle(trade.getBoard().getBoardTitle())
                         .tradePrice(trade.getTradePrice())
@@ -153,6 +153,7 @@ public class TradeServiceImpl implements TradeService {
             for (Trade trade : finish) {
                 TradeListDto tradeListDto = TradeListDto.builder()
                         .id(trade.getId())
+                        .cropImg(trade.getCrop().getCropImgUrl())
                         .nickname(trade.getSeller().getNickname())
                         .boardTitle(trade.getBoard().getBoardTitle())
                         .tradePrice(trade.getTradePrice())
@@ -186,6 +187,7 @@ public class TradeServiceImpl implements TradeService {
                 .buyer(trade.getBuyer().getNickname())
                 .tradeStatus(trade.getTradeStatus())
                 .tradeLocation(trade.getTradeLocation())
+                .tradeLocationDetail(trade.getTradeLocationDetail())
                 .tradeShipment(trade.getTradeShipment())
                 .tradeShipcom(trade.getTradeShipcom())
                 .build();
@@ -193,9 +195,27 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     @Transactional
-    public void updateTradeLocation(int id, String location) {
+    public void updateTradeLocation(int id, TradeLocationDto tradeLocationDto) {
         // 거래 테이블 주소 업데이트
-        tradeRepository.updateLocation(id, location);
+        String location = tradeLocationDto.getLocation();
+        String locationDetail = tradeLocationDto.getLocationDetail();
+
+        tradeRepository.updateLocation(id, location, locationDetail);
+    }
+
+    @Override
+    @Transactional
+    public TradeLocationDto updateTradeOriginalLocation(int id, int userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+        String location = user.getAddress().getAddressLegal();
+        String locationDetail = user.getAddress().getAddressDetail();
+
+        tradeRepository.updateLocation(id, location, locationDetail);
+
+        return TradeLocationDto.builder()
+                .location(location)
+                .locationDetail(locationDetail)
+                .build();
     }
 
     @Override
@@ -219,7 +239,10 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     @Transactional
-    public void updateTradeDeal(int id, String tradeShipment, String tradeShipcom) {
+    public void updateTradeDeal(int id, TradeShipDto tradeShipDto) {
+        String tradeShipcom = tradeShipDto.getTradeShipcom();
+        String tradeShipment = tradeShipDto.getTradeShipment();
+
         // 거래 테이블 송장번호, 택배사 업데이트
         tradeRepository.updateShip(id, tradeShipment, tradeShipcom);
         // 거래 테이블 상태 업데이트
@@ -243,6 +266,11 @@ public class TradeServiceImpl implements TradeService {
                 .withdrawalName(seller.getAccount().getDepositor())
                 .build();
 
+        // 새로 업데이트 될 잔액
+        int sellerBalance = trade.getSeller().getAccount().getAccountBalance() + trade.getTradePrice();
+
+        // 잔액 업데이트
+        userRepository.updateAccount(trade.getSeller().getId(), sellerBalance);
         // 출금 테이블 저장
         tradeWithdrawalRepository.save(tradeWithdrawal);
         // 거래 테이블 상태 업데이트

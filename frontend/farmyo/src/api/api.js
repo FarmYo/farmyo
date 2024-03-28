@@ -1,4 +1,8 @@
 import axios from 'axios';
+// import { useCookies } from 'react-cookie';
+
+// refreshToken을 cookie에서 받기
+axios.defaults.withCredentials = true;
 
 // Axios 인스턴스 생성
 const api = axios.create({

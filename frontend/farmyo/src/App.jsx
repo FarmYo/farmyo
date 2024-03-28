@@ -1,12 +1,17 @@
-import React from 'react'
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom';
 import Router from './router'
 import BottomBar from './component/common/bottombar'
 // import { useHistory } from 'react-router-dom'
 
 function App() {
   const location = useLocation()
+  const navigate = useNavigate()
 
+  useEffect(() => {
+    if (!localStorage.getItem('access')) {
+      navigate('/login')
+    }}, [])
   // let history = useHistory();
   
   // useEffect(() => {
@@ -23,6 +28,7 @@ function App() {
     /^\/signup\/business$/, 
     /^\/signup$/,
     /^\/login$/,
+    /^\/stanby$/,
     /^\/password$/,
   ];
 
