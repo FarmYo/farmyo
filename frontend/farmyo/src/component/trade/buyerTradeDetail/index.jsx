@@ -6,10 +6,10 @@ import api from '../../../api/api'
 import DaumPostcode from 'react-daum-postcode';
 import Swal from 'sweetalert2'
 import { jwtDecode } from 'jwt-decode'
-
-
+import { useNavigate } from 'react-router-dom';
 
 export default function BuyerTrade() {
+  const navigate = useNavigate()
   const params = useParams()
   const tradeId = params.tradeId
   const userId = jwtDecode( localStorage.getItem("access") ).userId 
@@ -53,7 +53,7 @@ export default function BuyerTrade() {
     .catch((err)=>{
       console.log(err)
     })
-  },[tradeId,info.tradeLocation,tradeUpdated])
+  },[])
 
   const tradeStatusToText = {
     0: '입금 대기중',
@@ -66,8 +66,14 @@ export default function BuyerTrade() {
   const deleteTrade = () =>{
     api.delete(`trades/${tradeId}`)
     .then((res)=>{
-      console.log(res)
+      // console.log(res)
+      Swal.fire({
+        html: '<h1 style="font-weight: bold;">거래가 취소되었습니다</h1>',
+        icon: 'success',
+        showConfirmButton: false,
+      })
       console.log('거래취소됨')
+      navigate(`trade/buyer/${tradeId}`)
     })
     .catch((err)=>{
       console.log(err)
@@ -85,10 +91,8 @@ export default function BuyerTrade() {
     } else {
       // 신규주소등록 로직
       api.patch(`trades/location/${tradeId}`,{
-        requestBody:{
         location:address,
         locationDetail:detailAddress
-        }
       })
       .then((res)=>{
         console.log(res)
@@ -111,24 +115,27 @@ export default function BuyerTrade() {
   };
 
 
-  // 기존주소사용하기로직
+  // 기존주소사용하기로직//확인다시하기
   const noChange = () =>{
     api.patch(`trades/originalLocation/${tradeId}`,{},{
       params:{
         userId:userId
-      }
+      }  
     })
     .then((res)=>{
       console.log(res)
       console.log('기존주소사용완료')
-      setAddress(res.data.dataBody.location)
-      setDetailAddress(res.data.dataBody.locationDetail)
-
-      // 여기서 info 상태 업데이트
+      const newAddress = res.data.dataBody.location;
+      const newDetailAddress = res.data.dataBody.locationDetail;
+    
+      setAddress(newAddress);
+      setDetailAddress(newDetailAddress);
+    
+      // info 상태 업데이트에 직접 응답 값을 사용
       setInfo(prevInfo => ({
         ...prevInfo,
-        tradeLocation: address,
-        tradeLocationDetail: detailAddress
+        tradeLocation: newAddress,
+        tradeLocationDetail: newDetailAddress
       }));
 
       document.getElementById('addressselect').close()
@@ -138,29 +145,46 @@ export default function BuyerTrade() {
     })
   }
 
-  // 결제하기(입금완료) 로직 입금대기중0->입금완료1로바꾼다
-  const goTrade = () =>{
-    if (!info.tradeLocation && !info.tradeLocationDetail) {
+  // 결제하기-카카오페이 로직       (입금대기중0->입금완료1로바꾼다)
+  const handleKakaoPay = () =>{
+    if (!info.tradeLocation || !info.tradeLocationDetail) {
       Swal.fire({
         html: '<h1 style="font-weight: bold;">주소를 입력해주세요</h1>',
         icon: 'warning',
         showConfirmButton: false,
       })
     }else{
-      api.patch(`trades/deposit/${tradeId}`,{},{
-        params:{
-          depositName:info.seller
+      // console.log("handleKakaoPay 시작")
+      const IMP = window.IMP; 
+      // console.log(IMP)
+      IMP.init("imp22683217"); // 아임포트 가맹점 식별코드를 "imp22683217"로 설정
+
+      // 결제 요청 파라미터
+      IMP.request_pay({
+        pg: "kakaopay", // 카카오페이 사용
+        pay_method: "card", // 결제수단
+        merchant_uid: `mid_${new Date().getTime()}`, // 주문번호
+        name: "팜요", // 서비스명
+        amount: info.tradePrice*info.tradeQuantity , // 결제 금액
+        buyer_name: info.seller, // 구매자 이름
+        m_redirect_url: 'http://localhost:3000/trade/redirect',
+      }, function(rsp) {
+        console.log("결제응답:",rsp)
+        if (rsp.success) {
+          Swal.fire({
+            html: '<h1 style="font-weight: bold;">결제가 정상적으로 완료되었습니다</h1>',
+            icon: 'success',
+            showConfirmButton: false,
+          })
+          navigate('/trade/redirect', { state: { tradeId: tradeId, seller: info.seller } })
+          // 결제 성공 시 로직,
+        } else {
+          alert('결제실패');
+          // 결제 실패 시 로직,
         }
-      })
-      .then((res)=>{
-        console.log(res)
-        console.log("입금완료")
-        setTradeUpdated(!tradeUpdated)
-      })
-      .catch((err)=>{
-        console.log(err)
-      })
+      });
     }}
+
 
     // 구매확정하기
     const goConfirm = () =>{
@@ -238,7 +262,11 @@ export default function BuyerTrade() {
         { info.tradeStatus === 0 && (
           <div className="pt-1 flex justify-between space-x-2">
             <div className='flex-grow' onClick={deleteTrade}><button className="btn w-full">거래취소</button></div>
-            <div className='flex-grow' onClick={goTrade}><button className="btn w-full" style={{backgroundColor:'#1B5E20',color:'white'}}>결제</button></div>
+            <div className='flex-grow' 
+              onClick={handleKakaoPay}>
+              <button className="btn w-full" style={{backgroundColor:'#1B5E20',color:'white'}}>
+              결제</button>
+            </div>
           </div>
         )}
         {/* 배송중이면 구매확정 나옴 */}
