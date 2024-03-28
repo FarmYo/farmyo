@@ -55,4 +55,11 @@ public class MyfarmController {
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, 0));
     }
 
+    @GetMapping("/user")
+    @Operation(summary = "마이페이지 유저 정보 조회", description = "유저 id를 통해 ")
+    public ResponseEntity<? extends  BaseResponseBody> getUpUser() {
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, 0));
+    }
+
 }
