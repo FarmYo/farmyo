@@ -9,12 +9,21 @@ import '../../../../css/signup.css';
 
 export default function SignUpSecond() {
   const navigate = useNavigate()
+  // const customModal = {  
+  //   maxWidth: "100%",
+  //   maxHeight: "100vh", /* 화면 높이에 맞춰 설정 */ 
+  //   width: "90%",
+  //   position: "fixed",
+  //   top: "30%",
+  //   left: 0,
+  //   borderRadius: "5%",
+  // }
 
   const location = useLocation()
   const { isSeller, id, email, password } = location.state;
   const alerter = () => {
     Swal.fire({
-      title: '숫자 외에 입력할 수 없습니다.',
+      title: '숫자 외에는 <br>입력할 수 없습니다.',
       confirmButtonColor: '#1B5E20',
     });
   };
@@ -44,7 +53,7 @@ export default function SignUpSecond() {
     }
   })
   
-  const [zoomNumber, setZoomNumber] = useState("")
+  const [zoomNumber, setZoomNumber] = useState("00000")
 
   const [address, setAddress] = useState("")
   const [isAddress, setIsAddress] = useState(false)
@@ -60,7 +69,7 @@ export default function SignUpSecond() {
     setZoomNumber(data.zonecode)
     setIsAddress(true)
     // setDetailAddress('');
-    // setIsOpen(false)
+    setIsOpen(false)
   }
   const [detailAddress, setDetailAddress] = useState("")
   const [isDetailAddress, setIsDetailAddress] = useState(false)
@@ -79,7 +88,7 @@ export default function SignUpSecond() {
       } else {
         console.log('로그인 실패 화면 확인해보기', isNickName, isPhoneNumber, isAddress, isDetailAddress)
         Swal.fire({
-          html: '<br>입력 정보를<br>확인해주세요',
+          title: '<br>입력 정보를<br>확인해주세요',
           confirmButtonColor: '#1B5E20',
         })
       }
@@ -204,6 +213,7 @@ export default function SignUpSecond() {
       <Modal
         open={isOpen}
         showCloseIcon={false}
+        // style={customModal}
         className={{
           modal: 'customModal',
         }}
