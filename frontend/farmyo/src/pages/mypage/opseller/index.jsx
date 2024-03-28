@@ -18,22 +18,22 @@ export default function OpponentSeller (){
 
 
   // 프로필 상단바조회
-  useEffect(()=>{
-    console.log(profileId)
-    setSelected(0);
-    api.get('farms/user', {
-      params: {
-        id: 
-      }
-    })    
-    .then((res)=>{
-      console.log(res)
-      console.log('마이페이지 상단정보조회성공')
-    })
-    .catch((err)=>{
-      console.log(err)
-    })
-  },[])
+  // useEffect(()=>{
+  //   console.log(profileId)
+  //   setSelected(0);
+  //   api.get('farms/user', {
+  //     params: {
+  //       id: 
+  //     }
+  //   })    
+  //   .then((res)=>{
+  //     console.log(res)
+  //     console.log('마이페이지 상단정보조회성공')
+  //   })
+  //   .catch((err)=>{
+  //     console.log(err)
+  //   })
+  // },[])
 
   const handleClick = (index) => {
     setSelected(index)
