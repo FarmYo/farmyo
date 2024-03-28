@@ -170,4 +170,71 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
     }
+
+    @Operation(summary = "계좌 수정", description = "수정 정보를 받아 해당 유저의 계좌를 변경")
+    @PatchMapping("/account")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환 ")
+    public ResponseEntity<? extends BaseResponseBody> modifyAccountInfo(@Parameter(description = "계좌 수정 정보") @Valid @RequestBody AccountModifyDto accountModifyDto,
+            Authentication authentication) {
+
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        userService.modifyAccountInfo(customUserDetails.getId(), accountModifyDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
+    }
+
+    @Operation(summary = "주소 수정", description = "수정 정보를 받아 해당 유저의 주소를 변경")
+    @PatchMapping("/address")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환 ")
+    public ResponseEntity<? extends BaseResponseBody> modifyAddressInfo(@Parameter(description = "주소 수정 정보") @Valid @RequestBody AddressModifyDto addressModifyDto,
+            Authentication authentication) {
+
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        userService.modifyAddressInfo(customUserDetails.getId(), addressModifyDto);
+
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
+    }
+
+    @Operation(summary = "즐겨찾기 추가", description = "현재 로그인한 회원이 해당 농부를 즐겨찾기 추가")
+    @PostMapping("/bookmarks")
+    @ApiResponse(responseCode = "201", description = "성공 \n\n Success 반환 ")
+    public ResponseEntity<? extends BaseResponseBody> addBookmark(
+            @Parameter(description = "즐겨찾기 관련 농부 정보") @RequestBody BookmarkReqDto bookmarkReqDto,
+            Authentication authentication) {
+
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        userService.addBookmark(customUserDetails.getId(), bookmarkReqDto.getFarmerId());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, "Success"));
+    }
+
+    @Operation(summary = "즐겨찾기 조회", description = "소비자가 자신이 즐겨찾기한 농부 리스트를 조회")
+    @GetMapping("/bookmarks")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환 ")
+    public ResponseEntity<? extends BaseResponseBody> getBookmarkList(Authentication authentication) {
+
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, userService.getBookmarkList(customUserDetails.getId())));
+    }
+
+    @Operation(summary = "즐겨찾기 삭제", description = "현재 로그인한 회원이 해당 농부를 즐겨찾기 삭제")
+    @DeleteMapping("/bookmarks")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환 ")
+    public ResponseEntity<? extends BaseResponseBody> removeBookmark(
+            @Parameter(description = "삭제하고자 하는 즐겨찾기 PK값") @RequestParam("bookmarkId") int bookmarkId,
+            Authentication authentication) {
+
+        log.info("{}", bookmarkId);
+
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        userService.removeBookmark(customUserDetails.getId(), bookmarkId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
+    }
 }
