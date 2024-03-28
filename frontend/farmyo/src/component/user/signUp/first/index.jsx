@@ -33,15 +33,12 @@ export default function SignUpFirst() {
           if (res.data.dataBody === 1) {
             setCheckIsId(true)
             setCheckIdMessage("")
-          } else {
-            console.log(res.data)
-            setCheckIsId(false)
-            setCheckIdMessage('이미 사용중인 아이디입니다.')
           }
         })
         .catch((err) => {
           console.log('아이디 중복검사 실패', err)
-          navigate('/signup')
+          setCheckIsId(false)
+          setCheckIdMessage('이미 사용중인 아이디입니다.')
         })
       } else {
         setCheckIsId(false)
@@ -53,7 +50,7 @@ export default function SignUpFirst() {
         }
       }
     }
-  },[navigate])
+  },[])
 
   const [email, setEmail] = useState("")
   const [checkEmailMessage, setCheckEmailMessage] = useState("")

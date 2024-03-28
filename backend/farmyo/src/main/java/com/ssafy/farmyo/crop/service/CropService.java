@@ -18,7 +18,7 @@ public interface CropService {
     List<CropListResDto> getCropsByFarmerLoginId(String loginId);
 
     //작물 이미지 수정
-    void updateCropImgUrl(int cropId, MultipartFile cropImg);
+    void updateCropImgUrl(int cropId, MultipartFile cropImg, int userId);
 
     //작물 인증 정보 조회
     List<CropCertResDto> getCropCertList(int cropId);
