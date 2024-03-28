@@ -67,8 +67,6 @@ public class CropServiceImpl implements CropService {
         crop = cropRepository.save(crop);
 
 
-
-
         // LocalDate 타입의 날짜를 yyyyMMdd 형식의 String으로 변환
         String formattedDate = crop.getCropPlantingDate().format(DateTimeFormatter.BASIC_ISO_DATE); // '20241031'
 
@@ -104,18 +102,22 @@ public class CropServiceImpl implements CropService {
 
     //작물 사진 업데이트
     @Override
-    public void updateCropImgUrl(int cropId, MultipartFile cropImg) {
-        Optional<Crop> cropOptional = cropRepository.findById(cropId);
-        if (cropOptional.isPresent()) {
+    @Transactional(readOnly = true)
+    public void updateCropImgUrl(int cropId, MultipartFile cropImg, int userId) {
 
-            String cropImgUrl = awsS3Service.uploadFile(cropImg);
-
-            Crop crop = cropOptional.get();
-            crop.updateCropImgUrl(cropImgUrl);
-            cropRepository.save(crop);
-        } else {
-            throw new CustomException(ExceptionType.CROP_NOT_EXIST);
+        Crop crop = cropRepository.findById(cropId).orElseThrow(() -> new CustomException(ExceptionType.CROP_NOT_EXIST));
+        
+        if (!crop.getFarmer().getId().equals(userId)) {
+            throw new CustomException(ExceptionType.CROP_NOT_OWNED_BY_FARMER);
         }
+
+
+
+        String cropImgUrl = awsS3Service.uploadFile(cropImg);
+        crop.updateCropImgUrl(cropImgUrl);
+
+        cropRepository.save(crop);
+
 
     }
 
@@ -215,10 +217,10 @@ public class CropServiceImpl implements CropService {
 
         if (cropBlockchainResDto.getType() == 1) {
 
-            if (cropBlockchainResDto.getPesticideName().isEmpty()) {
+            if (cropBlockchainResDto.getContestName() == null || cropBlockchainResDto.getPesticideName().isEmpty()) {
                 throw new CustomException(ExceptionType.PesticideName_INVALID);
             }
-            if (cropBlockchainResDto.getPesticideType().isEmpty()) {
+            if (cropBlockchainResDto.getPesticideType() == null || cropBlockchainResDto.getPesticideType().isEmpty()) {
                 throw new CustomException(ExceptionType.PesticideCode_INVALID);
             }
             try {
@@ -227,11 +229,11 @@ public class CropServiceImpl implements CropService {
                 throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
             }
         } else if (cropBlockchainResDto.getType() == 2) {
-            if (cropBlockchainResDto.getContestName().isEmpty()) {
+            if (cropBlockchainResDto.getContestName() == null || cropBlockchainResDto.getContestName().isEmpty()) {
                 throw new CustomException(ExceptionType.ContestName_INVALID);
             }
-            if (cropBlockchainResDto.getAwardDetails().isEmpty()) {
-                throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
+            if (cropBlockchainResDto.getAwardDetails() == null || cropBlockchainResDto.getAwardDetails().isEmpty()) {
+                throw new CustomException(ExceptionType.AWARDDETAILS_INVALID);
             }
             try {
                 cropContractService.addContestInfo(BigInteger.valueOf(crop.getId()), cropBlockchainResDto.getContestName(), cropBlockchainResDto.getAwardDetails(), eventDate);
@@ -244,8 +246,7 @@ public class CropServiceImpl implements CropService {
             } catch (Exception e) {
                 throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
             }
-        }
-        else {
+        } else {
             throw new CustomException(ExceptionType.TYPE_INVALID);
         }
 
