@@ -17,6 +17,9 @@ import Award from '../../form/award'
 import '../../../css/liferecord.css'
 import api from "../../../api/api"
 import '../../../css/pagenation.css'
+import Web3 from "web3"
+
+import { jwtDecode } from 'jwt-decode';
 
 
 function classNames(...classes) {
@@ -24,7 +27,10 @@ function classNames(...classes) {
 }
 
 
-export default function MyCrops() {
+export default function MyCrops(props) {
+  const loginNickname = jwtDecode( localStorage.getItem("access") ).nickname
+
+
   const styles = {
     modal: {
       maxWidth: '100%',
@@ -49,6 +55,503 @@ export default function MyCrops() {
   //전체 페이지수 계산
   const totalItems = cropsList.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
+  
+
+  //작물 블록체인 기록 조회
+  //새로운 web3객체생성
+  const web3 = new Web3('https://rpc2.sepolia.org'); // 이더리움 노드 주소를 설정합니다.
+  // solidity로 배포한 파일 정보 기록
+  const contractABI = [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_cropPK",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "_contestName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_awardDetails",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_eventDate",
+          "type": "uint256"
+        }
+      ],
+      "name": "addContestInfo",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_cropPK",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_eventDate",
+          "type": "uint256"
+        }
+      ],
+      "name": "addHarvestInfo",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_cropPK",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "_cropName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_land",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_eventDate",
+          "type": "uint256"
+        }
+      ],
+      "name": "addPlantingInfo",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_cropPK",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "_pesticideName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_pesticideType",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_eventDate",
+          "type": "uint256"
+        }
+      ],
+      "name": "addUsageInfo",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "contestInfos",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "infoType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "string",
+          "name": "contestName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "awardDetails",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "eventDate",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_cropPK",
+          "type": "uint256"
+        }
+      ],
+      "name": "getContestInfos",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint8",
+              "name": "infoType",
+              "type": "uint8"
+            },
+            {
+              "internalType": "string",
+              "name": "contestName",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "awardDetails",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "eventDate",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct CropData.ContestInfo[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_cropPK",
+          "type": "uint256"
+        }
+      ],
+      "name": "getHarvestInfos",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint8",
+              "name": "infoType",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "eventDate",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct CropData.HarvestInfo[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_cropPK",
+          "type": "uint256"
+        }
+      ],
+      "name": "getPlantingInfos",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint8",
+              "name": "infoType",
+              "type": "uint8"
+            },
+            {
+              "internalType": "string",
+              "name": "cropName",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "land",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "eventDate",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct CropData.PlantingInfo",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_cropPK",
+          "type": "uint256"
+        }
+      ],
+      "name": "getUsageInfos",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint8",
+              "name": "infoType",
+              "type": "uint8"
+            },
+            {
+              "internalType": "string",
+              "name": "pesticideName",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "pesticideType",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "eventDate",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct CropData.UsageInfo[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "harvestInfos",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "infoType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "eventDate",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "plantingInfos",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "infoType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "string",
+          "name": "cropName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "land",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "eventDate",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "usageInfos",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "infoType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "string",
+          "name": "pesticideName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "pesticideType",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "eventDate",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ]
+  //접근할 계약 주소
+  const contractAddress = '0xE8448EEB2629E3e96f96f8EBedc9Fd2faa6fe20c';
+  //계약 객체 생성
+  const contract = new web3.eth.Contract(contractABI, contractAddress);
+
+  //모든 정보 호출하여 데이터 가져와서 시간 순으로 정렬
+  async function fetchData(cropPK) {
+    try {
+      const contestInfos = await contract.methods.getContestInfos(cropPK).call();
+      const harvestInfos = await contract.methods.getHarvestInfos(cropPK).call();
+      const plantingInfo = await contract.methods.getPlantingInfos(cropPK).call();
+      const usageInfos = await contract.methods.getUsageInfos(cropPK).call();
+
+      let allInfos = [];
+
+      // 작물 재배 정보 추가 (단일 객체일 경우 배열에 직접 추가)
+      if (plantingInfo && plantingInfo.eventDate !== undefined) {
+        allInfos.push({
+          ...plantingInfo,
+          infoType: Number(plantingInfo.infoType),
+          eventDate: Number(plantingInfo.eventDate)
+        });
+      }
+
+      // 작물 사용 정보 추가
+      usageInfos.forEach(info => {
+        if (info.eventDate !== undefined) {
+          allInfos.push({
+            ...info,
+            infoType: Number(info.infoType),
+            eventDate: Number(info.eventDate)
+          });
+        }
+      });
+
+      // 작물 대회 정보 추가
+      contestInfos.forEach(info => {
+        if (info.eventDate !== undefined) {
+          allInfos.push({
+            ...info,
+            infoType: Number(info.infoType),
+            eventDate: Number(info.eventDate)
+          });
+        }
+      });
+
+      // 작물 수확 정보 추가 (배열일 경우 각 항목을 처리)
+      harvestInfos.forEach(info => {
+        if (info.eventDate !== undefined) {
+          allInfos.push({
+            ...info,
+            infoType: Number(info.infoType),
+            eventDate: Number(info.eventDate)
+          });
+        }
+      });
+
+      // eventDate를 기준으로 정렬
+      const sortedInfos = allInfos.sort((a, b) => a.eventDate - b.eventDate);
+
+      return sortedInfos;
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      throw error;
+    }
+  }
+
+  // const cropPK = 32; // 예시 CropPK
+  // fetchData(cropPK).then(sortedInfos => {
+  //   console.log(sortedInfos); // 정렬된 정보 출력
+  // }).catch(error => {
+  //   console.error('Error fetching data:', error);
+  // });
+
 
 
 
@@ -288,6 +791,7 @@ export default function MyCrops() {
       </div>  
       )}
   
+      { loginNickname === props.nickname && (
       <div style={{ position: 'absolute', bottom: 0, right: 10}}>
         <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
           <div style={{ position: 'absolute', top: '44%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}
@@ -295,6 +799,7 @@ export default function MyCrops() {
             +</div>
         </div>
       </div>
+      )}
       
 
       {/* ********모달모음************ */}
