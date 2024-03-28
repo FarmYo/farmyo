@@ -232,18 +232,23 @@ public class BoardServiceImpl implements BoardService {
             throw new CustomException(ExceptionType.BOARDTYPE_INVALID);
         }
         Page<Board> boards = boardRepository.getArticleList(boardType, PageRequest.of(page, size));
-        return boards.stream().map(board -> BoardListResDto.builder()
-                        .boardId(board.getId())
-                        .boardType(boardType)
-                        .title(board.getBoardTitle())
-                        .quantity(board.getBoardQuantity())
-                        .price(board.getBoardPrice())
-                        .userId(board.getUser().getId())
-                        .userNickname(board.getUser().getNickname())
-                        .cropCategory(board.getCropCategory().getCategoryName())
-                        .imgUrl(boardType == 0 ? board.getCrop().getCropImgUrl() : null)
-                        .build())
-                .collect(Collectors.toList());
+        return boards.stream().map(board -> {
+            String imgUrl = null;
+            if (boardType == 0 && Optional.ofNullable(board.getCrop()).map(Crop::getCropImgUrl).isPresent()) {
+                imgUrl = board.getCrop().getCropImgUrl();
+            }
+            return BoardListResDto.builder()
+                    .boardId(board.getId())
+                    .boardType(boardType)
+                    .title(board.getBoardTitle())
+                    .quantity(board.getBoardQuantity())
+                    .price(board.getBoardPrice())
+                    .userId(board.getUser().getId())
+                    .userNickname(board.getUser().getNickname())
+                    .cropCategory(board.getCropCategory().getCategoryName())
+                    .imgUrl(imgUrl)
+                    .build();
+        }).collect(Collectors.toList());
     }
 
     //게시판 수정
