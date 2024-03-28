@@ -19,12 +19,18 @@ import api from "../../../api/api"
 import '../../../css/pagenation.css'
 import Web3 from "web3"
 
+import { jwtDecode } from 'jwt-decode';
+
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 
-export default function MyCrops() {
+export default function MyCrops(props) {
+  const loginNickname = jwtDecode( localStorage.getItem("access") ).nickname
+
+
   const styles = {
     modal: {
       maxWidth: '100%',
@@ -785,6 +791,7 @@ export default function MyCrops() {
       </div>  
       )}
   
+      { loginNickname === props.nickname && (
       <div style={{ position: 'absolute', bottom: 0, right: 10}}>
         <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
           <div style={{ position: 'absolute', top: '44%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}
@@ -792,6 +799,7 @@ export default function MyCrops() {
             +</div>
         </div>
       </div>
+      )}
       
 
       {/* ********모달모음************ */}

@@ -1,6 +1,7 @@
 package com.ssafy.farmyo.chat.repository;
 
 import com.ssafy.farmyo.chat.dto.ChatDto;
+import com.ssafy.farmyo.chat.dto.MessageListDto;
 import com.ssafy.farmyo.entity.Chat;
 import com.ssafy.farmyo.entity.User;
 import io.lettuce.core.dynamic.annotation.Param;
@@ -19,5 +20,6 @@ public interface ChatRepository extends JpaRepository<Chat, Integer> {
     List<ChatDto> findAllBySellerId(int userId);
 
     List<ChatDto> findAllByBuyerId(int userId);
+
 
 }

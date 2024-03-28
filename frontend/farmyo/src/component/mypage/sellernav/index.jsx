@@ -25,9 +25,6 @@ export default function MypageNavbar() {
     setSelected(index)
   }
 
-  const handleLove = () =>{
-    setLove(!love)
-  }
 
   const getUserInfo = (() => {
     api.get('users')
