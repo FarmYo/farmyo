@@ -19,6 +19,15 @@ export default function MypageEdit(){
   const [pastPassword, setPastPassword] =useState("")
   const [newPassword, setNewPassword] = useState("")
   const [isOpen, setIsOpen] = useState(false);
+
+  const [open,setOpen] = useState(false)
+  const onOpenModal = () => {
+    setOpen(true);
+  };
+  const onCloseModal = () => {
+    setOpen(false);
+  };
+
   const addressSearch = (data) => {
     console.log(data)
     const newUserInfo = {
@@ -54,6 +63,33 @@ export default function MypageEdit(){
   //     </select>
   //   )
   // }
+
+  const isNumber = ((number) => {
+    if (isNaN(number)) {
+      Swal.fire({
+        title: '숫자 외에 입력할 수 없습니다.',
+        confirmButtonColor: '#1B5E20',
+      });
+      const numbers = number.replace(/[^0-9]/g, "");
+      const newUserInfo = {
+        ...userInfo,
+        account :{
+          ...userInfo.account,
+          accountNumber: numbers,
+        }
+      };
+      setUserInfo(newUserInfo);
+    } else {
+      const newUserInfo = {
+        ...userInfo,
+        account :{
+          ...userInfo.account,
+          accountNumber: number,
+        }
+      };
+      setUserInfo(newUserInfo);
+    }
+  })
 
   const getUserInfo = (() => {
     api.get('users')
@@ -369,7 +405,7 @@ export default function MypageEdit(){
             </div>
             <label htmlFor="message"
               className="block text-sm leading-6 text-gray-900 mt-2">
-              상태메시지
+              상태메세지
             </label>
             <div>
               <input 
@@ -421,7 +457,6 @@ export default function MypageEdit(){
         />
       </Modal>
 
-      <Modal></Modal>
       <dialog id="changeAddress" className="modal">
         <div className="modal-box" style={{ height:'250px'}}>
           <form method="dialog">
@@ -480,6 +515,9 @@ export default function MypageEdit(){
       </dialog>
 
       {/* 계좌 수정 모달 */}
+      <Modal>
+        
+      </Modal>
       <dialog id="changeAccount" className="modal">
         <div className="modal-box" style={{ height:'350px'}}>
           <form method="dialog">
@@ -593,15 +631,7 @@ export default function MypageEdit(){
                 <div>
                 <input
                   value={userInfo?.account?.accountNumber}
-                  onChange={(event) => {
-                    const newUserInfo = {
-                      ...userInfo,
-                      account :{
-                        ...userInfo.account,
-                        accountNumber: event.target.value,
-                      }
-                    };
-                    setUserInfo(newUserInfo);}}
+                  onChange={(event) => {isNumber(event.target.value)}}
                   id="account" name="account" type="text" placeholder={userInfo?.account?.accountNumber} autoComplete="text" 
                   className="block h-10 w-full rounded-md border-0 mt-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
                 />
