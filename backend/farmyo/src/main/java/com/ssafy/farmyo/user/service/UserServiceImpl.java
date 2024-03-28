@@ -54,7 +54,6 @@ public class UserServiceImpl implements UserService {
                 .job(joinReqDto.getJob())
                 .status(UserStatus.ACTIVE)
                 .account(account)
-                .profile("기본 이미지 URL이 들어갈 자리입니다.")
                 .comment("기본 메세지입니다.")
                 .build();
 
@@ -106,7 +105,6 @@ public class UserServiceImpl implements UserService {
                 .job(joinReqDto.getJob())
                 .status(UserStatus.ACTIVE)
                 .account(account)
-                .profile("기본 이미지 URL이 들어갈 자리입니다.")
                 .comment("기본 메세지입니다.")
                 .farmerLicense(joinReqDto.getLicenseNum())
                 .build();
