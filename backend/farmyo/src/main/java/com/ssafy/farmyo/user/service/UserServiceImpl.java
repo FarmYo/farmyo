@@ -128,7 +128,7 @@ public class UserServiceImpl implements UserService {
     public int checkIdDuplicate(String id) {
 
         // 해당 아이디의 유저가 있다면 0(False) 반환
-        if(userRepository.findByLoginId(id).isPresent()) return 0;
+        if(userRepository.findByLoginId(id).isPresent()) throw new CustomException(ExceptionType.DUPLICATE_LOGIN_ID);
 
         return 1;
     }
