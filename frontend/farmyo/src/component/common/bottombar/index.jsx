@@ -17,7 +17,8 @@ import { jwtDecode } from 'jwt-decode';
 export default function BottomBar() {
   // const navigate = useNavigate()
   const location = useLocation()
-  const im = jwtDecode(localStorage.getItem('access')).userJob
+  // const im = jwtDecode(localStorage.getItem('access')).userJob
+  const im = localStorage.getItem('access') ? jwtDecode(localStorage.getItem('access')).userJob : null;
   const [home, setHome] = useState({ image: Home, clicked: false });
   const [trade, setTrade] = useState({ image: Trade, clicked: false });
   const [board, setBoard] = useState({ image: Board, clicked: false });
