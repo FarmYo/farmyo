@@ -1,14 +1,17 @@
 import Me from "../../../image/component/me.png"
 import Back from "../../../image/component/leftarrow.png"
+import Dropdown from '../../../image/component/dropdown.png'
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import api from "../../../api/api"
 import Modal from "react-responsive-modal"
+import { Menu, Transition } from '@headlessui/react'
 import DaumPostcode from 'react-daum-postcode';
 // import { Dropdown } from 'primereact/dropdown';
 // import BankNameList from "../../../store"
 import Swal from "sweetalert2"
 import { jwtDecode } from "jwt-decode"
+import { Fragment } from 'react'
 
 export default function MypageEdit(){
   const navigate = useNavigate()
@@ -25,17 +28,18 @@ export default function MypageEdit(){
     };
     setUserInfo(newUserInfo)}
 
-  // const [bankList, setBankList] = useState([]);
-  // const BankList = () => {
-  //     api.get('banks')
-  //     .then((res) => {
-  //       console.log('은행 리스트 받아오기 성공', res.data.dataBody)
-  //       setBankList(res.data.dataBody)
-  //     })
-  //     .catch((err) => {
-  //       console.log('은행 리스트 받아오기 실패', err)
-  //     })
-  // }
+  const [bankList, setBankList] = useState([]);
+  const BankList = () => {
+      api.get('banks')
+      .then((res) => {
+        console.log('은행 리스트 받아오기 성공', res.data.dataBody)
+        setBankList(res.data.dataBody)
+      })
+      .catch((err) => {
+        console.log('은행 리스트 받아오기 실패', err)
+      })
+  }
+  const [selectedBank, setSelectedBank] = useState('전체');
   // const banks = (bank) => {
   //   return (
   //     <select>
@@ -525,6 +529,46 @@ export default function MypageEdit(){
                 <Dropdown value={selectedCountry} onChange={(e) => setSelectedCountry(e.value)} options={countries} optionLabel="name" placeholder="은행명" filter valueTemplate={selectedCountryTemplate} itemTemplate={countryOptionTemplate} className="w-full md:w-14rem" /> */}
 
               {/* </span> */}
+{/* 드롭다운 */}
+      {/* <Menu as="div" className="relative inline-block text-left">
+        <div>
+          <Menu.Button className="inline-flex w-32 h-12 justify-between items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50"
+          style={{ border: '0.5px solid', backgroundColor: 'transparent'}}>
+            <div className='pl-3'>{selectedBank}</div>
+            <img src={Dropdown} alt="" style={{width:15,height:10}}/>
+          </Menu.Button>
+        </div>
+        <Transition
+          as={Fragment}
+          enter="transition ease-out duration-100"
+          enterFrom="transform opacity-0 scale-95"
+          enterTo="transform opacity-100 scale-100"
+          leave="transition ease-in duration-75"
+          leaveFrom="transform opacity-100 scale-100"
+          leaveTo="transform opacity-0 scale-95"
+        >
+          <Menu.Items className="absolute left-0 z-10 mt-2 w-28 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <div className="py-1">
+              {bankList.map((item) => (
+                <Menu.Item key={item.id}>
+                  {({ active }) => (
+                    <a
+                      href="#"
+                      className={`${
+                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
+                      } block px-4 py-2 text-sm`}
+                      onClick={() => setSelectedBank(item)}
+                    >
+                      {item.bankName}
+                    </a>
+                  )}
+                </Menu.Item>
+              ))}
+            </div>
+          </Menu.Items>
+        </Transition>
+      </Menu> */}
+
             <div>
 
                 <input
