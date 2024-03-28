@@ -62,6 +62,9 @@ public enum ExceptionType {
     CONTENT_NOT_EXIST(HttpStatus.BAD_REQUEST, "B-009", "글 내용이 없습니다."),
     BOARDTYPE_INVALID(HttpStatus.BAD_REQUEST, "B-010", "보드타입이 잘못되었습니다."),
     USER_NOT_AUTHOR(HttpStatus.FORBIDDEN, "B-011", "작성자만 수정 또는 삭제할 수 있습니다."),
+    BOARD_ALREADY_EXISTS(HttpStatus.CONFLICT, "B-012", "이미 이 작물과 관련된 게시판이 있습니다."),
+
+
 
 
     // 채팅
