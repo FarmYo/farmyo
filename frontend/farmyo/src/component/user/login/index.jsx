@@ -5,9 +5,19 @@ import Swal from 'sweetalert2';
 import Logo from '../../../image/component/user/logo.png';
 import '../../../css/signup.css'
 import { jwtDecode } from 'jwt-decode';
+// import { useCookies } from 'react-cookie';
 
 export default function LoginInput() {
   const navigate = useNavigate()
+  // const [cookies, setCookie, removeCookie] = useCookies(['refresh'])
+
+  // const handleCookie = () => {
+  //   const expireDate = Date()
+  //   expireDate.setMinutes(expireDate.getMinutes() + 10)
+  //   setCookie(
+  //     'refresh',
+  //   )
+  // }
 
   const [id, setId] = useState("")
   const [password, setPassword] = useState("")
@@ -24,8 +34,9 @@ export default function LoginInput() {
       }
     )
     .then((res) => {
-      console.log('로그인 완료')
+      console.log('로그인 완료', res)
       const accessToken = res.headers.access
+
       localStorage.setItem("access", accessToken) // 토큰 저장
       navigate("/", { replace : true })
       const decodeToken = jwtDecode(accessToken)

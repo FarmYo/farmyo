@@ -4,6 +4,7 @@ import com.ssafy.farmyo.entity.User;
 import com.ssafy.farmyo.user.dto.UserResDto;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -23,4 +24,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             "ON u.id = a.user.id " +
             "WHERE u.id = :id ")
     UserResDto getUserInfoById(@Param("id") Integer id);
+
+    @Modifying
+    @Query("UPDATE User u SET u.account.accountBalance = :balance WHERE u.id = :userId")
+    void updateAccount(Integer userId, Integer balance);
 }
