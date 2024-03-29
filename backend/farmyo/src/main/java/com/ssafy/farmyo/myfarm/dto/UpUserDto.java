@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 public class UpUserDto {
 
+    private int job;
     private String userProfile;
     private String nickname;
     private String comment;
