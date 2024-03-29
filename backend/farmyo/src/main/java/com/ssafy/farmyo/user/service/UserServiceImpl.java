@@ -178,8 +178,6 @@ public class UserServiceImpl implements UserService {
         user.updateAll(userModifyDto.getNickname(), userModifyDto.getTelephone(), userModifyDto.getComment());
     }
 
-    @Override
-    @Transactional
     public void deactivateUser(int id) {
 
         User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
@@ -187,6 +185,7 @@ public class UserServiceImpl implements UserService {
         user.updateStatus(UserStatus.WITHDRAWN);
 
     }
+
 
     @Override
     @Transactional
@@ -216,18 +215,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void addBookmark(int userId, int farmerId) {
-        // 이미 즐겨찾기가 있다면 예외 처리
-        if (favoriteRepository.checkFavoriteExistence(userId, farmerId).isPresent()) {
-            throw new CustomException(ExceptionType.ALREADY_EXIST_FAVORITE);
-        }
-        ;
+    public void addBookmark(int userId, String farmerId) {
+
+        log.info("{}", userId);
+        log.info("{}", farmerId);
 
         // 현재 로그인한 유저 엔티티 조회
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
 
         // 즐겨찾기한 농부 엔티티 조회
-        Farmer farmer = farmerRepository.findById(farmerId).orElseThrow(() -> new CustomException(ExceptionType.FARMER_NOT_EXIST));
+        Farmer farmer = farmerRepository.findByLoginId(farmerId).orElseThrow(() -> new CustomException(ExceptionType.FARMER_NOT_EXIST));
+
+        log.info("{}", farmer.getId());
+
+        // 이미 즐겨찾기가 있다면 예외 처리
+        if(favoriteRepository.checkFavoriteExistence(userId, farmer.getId()).isPresent()){
+            throw new CustomException(ExceptionType.ALREADY_EXIST_FAVORITE);
+        };
 
         // 즐겨찾기 엔티티 생성
         Favorite favorite = Favorite.builder()
