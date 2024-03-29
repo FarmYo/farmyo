@@ -18,7 +18,6 @@ import '../../../css/liferecord.css'
 import api from "../../../api/api"
 import '../../../css/pagenation.css'
 import Web3 from "web3"
-
 import { jwtDecode } from 'jwt-decode';
 
 
@@ -29,7 +28,7 @@ function classNames(...classes) {
 
 export default function MyCrops(props) {
   const loginNickname = jwtDecode( localStorage.getItem("access") ).nickname
-
+  const loginId = jwtDecode( localStorage.getItem("access") ).loginId
 
   const styles = {
     modal: {
@@ -578,8 +577,8 @@ export default function MyCrops(props) {
 
   useEffect(()=>{
     setSelected('구분')
-    // 작물 리스트 조회(수정필요) 지금은 임시로 ssafy1의 작물리스트르 조회함
-    api.get('crops/list/ssafy1')
+    // 작물 리스트 조회
+    api.get(`crops/list/${loginId}`)
     .then((res)=>{
       console.log(res)
       setCropsList(res.data.dataBody)
@@ -791,7 +790,7 @@ export default function MyCrops(props) {
       </div>  
       )}
   
-      { loginNickname === props.nickname && (
+      { !props.profileId && (
       <div style={{ position: 'absolute', bottom: 0, right: 10}}>
         <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
           <div style={{ position: 'absolute', top: '44%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}

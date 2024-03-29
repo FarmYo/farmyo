@@ -128,7 +128,7 @@ public class UserServiceImpl implements UserService {
     public int checkIdDuplicate(String id) {
 
         // 해당 아이디의 유저가 있다면 0(False) 반환
-        if(userRepository.findByLoginId(id).isPresent()) return 0;
+        if(userRepository.findByLoginId(id).isPresent()) throw new CustomException(ExceptionType.DUPLICATE_LOGIN_ID);
 
         return 1;
     }
@@ -195,8 +195,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
 
         // 계좌 수정
-        if(!user.getAccount().getAccountNumber().equals(accountModifyDto.getAccount()))
-            user.getAccount().updateAll(accountModifyDto.getDepositor(), accountModifyDto.getBank(), accountModifyDto.getAccount());
+        user.getAccount().updateAll(accountModifyDto.getDepositor(), accountModifyDto.getBank(), accountModifyDto.getAccount());
     }
 
 
