@@ -13,10 +13,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Slf4j
 @Controller
 @RequiredArgsConstructor
+@CrossOrigin(origins = {"http://localhost:3000/", "http://localhost:3001/"})
 public class RedisChatController {
 
     private final ChatService chatService;
@@ -26,12 +29,15 @@ public class RedisChatController {
     private final SimpMessageSendingOperations messagingTemplate;
 
     @MessageMapping("/chat/message")
+//    @CrossOrigin(origins = {"http://localhost:3001/", "http://localhost:3000/"})
     public void getMessage(ChatMessageDto chatMessageDto) {
-        User user = userRepository.findById(chatMessageDto.getUserId()).orElseThrow(()-> new CustomException(ExceptionType.USER_NOT_EXIST));
+//        User user = userRepository.findById(chatMessageDto.getUserId()).orElseThrow(()-> new CustomException(ExceptionType.USER_NOT_EXIST));
 
-        log.info("socket get user : {}", user);
+//        log.info("socket get user : {}", user);
 
-        messagingTemplate.convertAndSend("/sub/chat/" + chatMessageDto.getChatId(), chatMessageDto);
+        log.info("chatMsgDto : {} ", chatMessageDto);
+
+        messagingTemplate.convertAndSend("/sub/chat/room/" + chatMessageDto.getChatId(), chatMessageDto);
     }
 
 }
