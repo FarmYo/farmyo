@@ -2,10 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 import api from "../../../../api/api"
+import Back from "../../../../image/component/leftarrow.png"
 import '../../../../css/signup.css';
 
 export default function SignUpSecond() {
   const navigate = useNavigate()
+  const goBack = () => {
+    navigate(-1)
+  };
   const location = useLocation()
   const { isSeller, id, email, password, nickName, phoneNumber, zoomNumber, address, detailAddress } = location.state;
   const [account, setAccount] = useState("")
@@ -115,6 +119,7 @@ export default function SignUpSecond() {
   }, []);
   return(
     <div>
+      <img src={Back} alt="" style={{ width:20}} onClick={goBack}/>
     <div className="main2 mx-auto w-auto max-w-sm p-10">
       <label 
         htmlFor="account"
