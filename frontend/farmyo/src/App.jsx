@@ -39,7 +39,7 @@ function App() {
   return (
     <div >
         <Router />
-        {!shouldHideBottomBar() && <BottomBar />}
+        {!shouldHideBottomBar() && <BottomBar className="bottomBar" />}
     </div>
   );
 }
