@@ -30,6 +30,7 @@ function App() {
     /^\/login$/,
     /^\/stanby$/,
     /^\/password$/,
+    /^\/trade$/,
   ];
 
     // 현재 경로가 숨겨야 하는 경로 중 하나와 일치하는지 확인합니다.
