@@ -1,5 +1,6 @@
 import React, { useState,useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import api from '../../../api/api'
 import Me from '../../../image/component/me.png'
 import Next from '../../../image/component/next.png'
 import Sae from '../../../image/component/sae.png'
@@ -10,21 +11,43 @@ import ArticleList from '../articlelist'
 
 
 export default function MypageNavbar() {
+  const [userInfo, setUserInfo] = useState([])
   const [selected,setSelected] = useState(null)
   const [love,setLove] = useState(false)
   const navigate = useNavigate()
 
   useEffect(()=>{
     setSelected(0);
+    getUserInfo();
   },[])
 
   const handleClick = (index) => {
     setSelected(index)
   }
 
-  const handleLove = () =>{
-    setLove(!love)
-  }
+
+  const getUserInfo = (() => {
+    api.get('users')
+    .then((res) => {
+      console.log('정보 받아오기 성공', res.data, res.data.dataBody)
+      setUserInfo(res.data.dataBody)
+    })
+    .catch((err) => {
+      console.log('정보 받아오기 실패', err)
+    })
+  })
+
+  const logOut = (() => {
+    api.post('users/logout')
+    .then((res) => {
+      console.log('로그아웃!')
+      localStorage.clear()
+      navigate('/login')
+    })
+    .catch((err) => {
+      console.log('로그아웃 안된다 영원히..로그인..상태', err)
+    })
+  })
 
   //수정페이지로가기
   const GoEdit= () => {
@@ -38,7 +61,7 @@ export default function MypageNavbar() {
           {/* 마이라는 이름은 자기프로필일때만이고 다른사람이면 상대방 닉네임이름으로 뜨게 */}
           <h1 className="text-xl font-bold" style={{color:"white"}}>마이페이지</h1>
           {/* 마이페이지유저와 로그인유저가 일치해야 보이는것 */}
-          <h1 className="text-sm font-bold flex items-center" style={{color:"white"}}>로그아웃</h1>
+          <button onClick={() => logOut()} className="text-sm font-bold flex items-center" style={{color:"white"}}>로그아웃</button>
         </div>
       </div>
       <div className='flex border-b-2 border-gray-300' style={{height:140}}>
@@ -46,9 +69,9 @@ export default function MypageNavbar() {
           <img src={Me} alt="" style={{ height:80,width:80}}/>
         </div>
         <div className='p-7 pl-3'>
-          <h1 className='font-bold'>오승현</h1>
-          <h4 className='text-sm'>대구광역시 달서구 호산로 126</h4>
-          <h4 className='text-sm'style={{color:'gray'}}>상태메시지 입니다</h4>
+        <h1 className='font-bold'>{userInfo?.nickname}</h1>
+        <h4 className='text-sm'>{userInfo?.addressLegal}</h4>
+        <h4 className='text-sm'style={{color:'gray'}}>{userInfo?.comment}</h4>
         </div>
         {/* 아래의 디브는 본인의 마이페이지일경우만 보이고 , 즐찾이미지는 구매자일경우만 보임 */}
         <div className='flex justify-center items-center'>

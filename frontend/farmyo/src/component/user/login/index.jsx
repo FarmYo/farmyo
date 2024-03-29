@@ -3,10 +3,21 @@ import { useNavigate, Link } from "react-router-dom";
 import api from "../../../api/api"
 import Swal from 'sweetalert2';
 import Logo from '../../../image/component/user/logo.png';
-import '../../../css/signup.css';
+import '../../../css/signup.css'
+import { jwtDecode } from 'jwt-decode';
+// import { useCookies } from 'react-cookie';
 
 export default function LoginInput() {
   const navigate = useNavigate()
+  // const [cookies, setCookie, removeCookie] = useCookies(['refresh'])
+
+  // const handleCookie = () => {
+  //   const expireDate = Date()
+  //   expireDate.setMinutes(expireDate.getMinutes() + 10)
+  //   setCookie(
+  //     'refresh',
+  //   )
+  // }
 
   const [id, setId] = useState("")
   const [password, setPassword] = useState("")
@@ -23,17 +34,30 @@ export default function LoginInput() {
       }
     )
     .then((res) => {
-      console.log('로그인 완료')
+      console.log('로그인 완료', res)
       const accessToken = res.headers.access
-      localStorage.setItem("access", accessToken)
+
+      localStorage.setItem("access", accessToken) // 토큰 저장
       navigate("/", { replace : true })
+      const decodeToken = jwtDecode(accessToken)
+      console.log(decodeToken)
     })
     .catch((err) => {
       console.log('로그인 실패', err)
       setId("")
       setPassword("")
-      Swal.fire('아이디·비밀번호를<br>확인해주세요')
-    })
+      if (err.response?.data?.dataHeader?.resultCode === "U-000") {
+        Swal.fire({
+          title: '탈퇴한 회원입니다.',
+          confirmButtonColor: '#1B5E20',
+        });
+      } else {
+        Swal.fire({
+          title: '아이디·비밀번호를<br>확인해주세요',
+          confirmButtonColor: '#1B5E20',
+        });
+    }
+  })
   }}
 
 

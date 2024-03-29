@@ -1,8 +1,28 @@
 import Chatting from '../../../image/component/chatting.png'
 import { Modal } from "react-responsive-modal"
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import api from '../../../api/api'
+import { jwtDecode } from 'jwt-decode'
 
 export default function BuyBoardList(){
+  // const im = jwtDecode(localStorage.getItem('access')).userJob
+  const [boardInfo, setBoardInfo] = useState([])
+  const [quantity, setQuantity] = useState("")
+  const [price, setPrice] = useState("")
+  const [title, setTitle] = useState("")
+  const [content, setContent] = useState("")
+  const [cropCategory, setCropCategory] =useState([])
+
+  const BoardInfo = () => {
+    api.get("boards?type=1&page=0&size=100")
+    .then((res) => {
+      setBoardInfo(res.data.dataBody)
+      console.log('게시글 불러오기 성공', res)
+    })
+    .catch((err) => {
+      console.log('게시글 불러오기 실패', err)
+    })
+  }
 
   const [buyOpen,setBuyOpen] = useState(false)
 
@@ -26,36 +46,28 @@ export default function BuyBoardList(){
     setBuyOpen(false);
   };
 
+  useEffect(() => {
+    BoardInfo()
+  }, [])
+
   return(
     
 
     <div style={{height:'420px',position:'relative'}}>
-      {/* 삽니다게시글한개 */}
-      <div className="p-4 flex">
-        <div className="w-full ml-2">
-          <h1 className="text-lg font-bold">감자 샘플 받아보고 싶어요!</h1>
-          <h1 className="text-sm">작성자</h1>
-          <h1 style={{ color:'#1B5E20' }} className="font-bold">1kg</h1>
-          <div className='flex justify-between'>
-            <h1 style={{ color:'#1B5E20' }} className="font-bold">10000원/kg</h1>
-            <img src={Chatting} alt="" style={{width:30}}/> 
-          </div>     
+      {/* 삽니다 게시글 목록 */}
+      {boardInfo.map((article) => (
+        <div className="p-4 flex">
+          <div className="w-full ml-2">
+            <h1 className="text-lg font-bold">{article.title}</h1> 
+            <h1 className="text-sm">{article.userNickname}</h1>
+            <h1 style={{ color:'#1B5E20' }} className="font-bold">{article.quantity}kg</h1>
+            <div className='flex justify-between'>
+              <h1 style={{ color:'#1B5E20' }} className="font-bold">{article.price}원/kg</h1>
+              <img src={Chatting} alt="" style={{width:30}}/> 
+            </div>     
+          </div>
         </div>
-      </div>
-
-      <div className="p-4 flex">
-        <div className="w-full ml-2">
-          <h1 className="text-lg font-bold">감자 샘플 받아보고 싶어요!</h1>
-          <h1 className="text-sm">작성자</h1>
-          <h1 style={{ color:'#1B5E20' }} className="font-bold">1kg</h1>
-          <div className='flex justify-between'>
-            <h1 style={{ color:'#1B5E20' }} className="font-bold">10000원/kg</h1>
-            <img src={Chatting} alt="" style={{width:30}}/> 
-          </div>     
-        </div>
-      </div>
-
-
+      ))}
 
       <div style={{ position: 'absolute', bottom: 0, right: 10}}>
         <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>

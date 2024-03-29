@@ -21,5 +21,7 @@ public interface BoardRepository extends JpaRepository<Board, Integer> {
     @Query("SELECT b FROM Board b WHERE b.boardType = :boardType AND b.boardQuantity > 0 ORDER BY b.updatedAt DESC")
     Page<Board> getArticleList(@Param("boardType") int boardType, Pageable pageable);
 
+    Optional<Board> findByCropId(Integer cropId);
+
 
 }

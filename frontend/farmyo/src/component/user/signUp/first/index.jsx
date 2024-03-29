@@ -3,10 +3,14 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Modal } from "react-responsive-modal"
 import api from "../../../../api/api"
 import Swal from "sweetalert2";
+import Back from "../../../../image/component/leftarrow.png"
 import '../../../../css/signup.css';
 
 export default function SignUpFirst() {
   const navigate = useNavigate()
+  const goBack = () => {
+    navigate(-1)
+  };
   // const { search } = useLocation()
   // const params = new URLSearchParams(search);
   // const isSeller = params.get("seller") === "true";
@@ -32,16 +36,17 @@ export default function SignUpFirst() {
           console.log('아이디 중복검사 완료', res)
           if (res.data.dataBody === 1) {
             setCheckIsId(true)
-            setCheckIdMessage("")
-          } else {
-            console.log(res.data)
-            setCheckIsId(false)
-            setCheckIdMessage('이미 사용중인 아이디입니다.')
+            setCheckIdMessage("올바른 아이디입니다.")
           }
         })
         .catch((err) => {
           console.log('아이디 중복검사 실패', err)
-          navigate('/signup')
+          setCheckIsId(false)
+          if (err.response.data.dataHeader.resultCode === "U-013") {
+            setCheckIdMessage('이미 사용중인 아이디입니다.')
+          } else {
+            setCheckIdMessage('다른 아이디를 입력해주세요.')
+          }
         })
       } else {
         setCheckIsId(false)
@@ -53,7 +58,7 @@ export default function SignUpFirst() {
         }
       }
     }
-  },[navigate])
+  },[])
 
   const [email, setEmail] = useState("")
   const [checkEmailMessage, setCheckEmailMessage] = useState("")
@@ -87,10 +92,12 @@ export default function SignUpFirst() {
       if (res.data.dataHeader.successCode === 0) {
         setCheckEmailMessage("")
         onOpenModal();
+        setCheckEmailMessage('올바른 이메일입니다.')
       }
     })
     .catch((err) => {
-      if (err.response.data.dataHeader.resultCode === "U-003") {
+      setCheckIsEmail(false)
+      if (err.response.data.dataHeader.resultCode === "U-004") {
         setCheckEmailMessage('중복된 이메일입니다.')
       } else {
       console.log('이메일 인증 발송 실패', err)
@@ -132,21 +139,22 @@ export default function SignUpFirst() {
             title:'인증완료',
             confirmButtonColor: '#1B5E20',
           })
-        } else if (res.data.dataHeader.resultCode === "U-004") {
-          setCheckIsEmail(false)
-          alerter1()
-          onCloseModal();
-          setCheckEmailMessage('이메일 전송 버튼을 다시 눌러주세요')
-        } else if (res.data.dataHeader.resultCode === "U-005") {
-          setCheckIsEmail(false)
-          setCode("")
-          alerter2()
+        } else {
+          console.log('여기로 온다는 것? 로직을 확인해야한다는 것')
         }
       })
       .catch((err) => {
         console.log('인증번호 확인 실패', err)
-        setCode("")
-        alerter2()
+        if (err.response.data.dataHeader.resultCode === "U-004") {
+          setCheckIsEmail(false)
+          alerter1()
+          onCloseModal();
+          setCheckEmailMessage('이메일 전송 버튼을 다시 눌러주세요')
+        } else if (err.response.data.dataHeader.resultCode === "U-005") {
+          setCheckIsEmail(false)
+          setCode("")
+          alerter2()
+        }
       })
     }
   },[email])
@@ -198,35 +206,6 @@ export default function SignUpFirst() {
   const onCloseModal = () => {
     setOpen(false);
   };
-  const CheckModal = () => {
-    return (
-      <div>
-      <div className="mt-5">
-        <input
-          value={code}
-          onChange={(event) => setCode(event.target.value)}
-          id="authenticationCode"
-          name="authenticationCode"
-          type="text"
-          autoComplete="text"
-          required
-          className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-          placeholder="인증번호"
-          />
-      </div>
-        <button
-          // disabled={!checkIsEmail}
-          onClick={(event) => {
-            event.preventDefault();
-            checkCode(code)
-          }}
-          className="flex justify-center w-full h-10 rounded-md px-3 py-2 mt-5 text-sm font-bold leading-6 text-white shadow-sm hover:bg-lime-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-950"
-          style={{backgroundColor:'#1B5E20'}}
-          >
-          인증번호 확인
-        </button>
-      </div>
-    )}
 
   const changePage = () => {
     if (checkIsId === true && checkIsEmail === true && checkIsPassword === true) {
@@ -264,6 +243,7 @@ export default function SignUpFirst() {
     
     return(
       <div>
+          <img src={Back} alt="" style={{ width:20}} onClick={goBack}/>
     <div className="main mx-auto w-auto max-w-sm p-10">
       <div className="text">{changeIsSeller(isSeller)} 회원가입</div>
       <label 
@@ -290,7 +270,7 @@ export default function SignUpFirst() {
           required
           className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
         />
-        <p className="warningmessage">{checkIdMessage}</p>
+        <p className={checkIsId ? "successmessage" : "warningmessage"}>{checkIdMessage}</p>
       </div>
 
 <div className="mt-8">
@@ -304,7 +284,6 @@ export default function SignUpFirst() {
         <input 
           value={email}
           onChange={(event) => setEmail(event.target.value)}
-          
           id="email" 
           name="email" 
           type="email" 
@@ -324,7 +303,7 @@ export default function SignUpFirst() {
           인증번호 발송
         </button>
       </div>
-          <p className="warningmessage">{checkEmailMessage}</p>
+          <p className={checkIsEmail ? "successmessage" : "warningmessage"}>{checkEmailMessage}</p>
       </div>
 
       <div className="mt-8">
@@ -380,7 +359,30 @@ export default function SignUpFirst() {
       modal: 'customModal',
     }}
   >
-    <CheckModal />
+    <div className="mt-5">
+        <input
+          value={code}
+          onChange={(event) => setCode(event.target.value)}
+          id="authenticationCode"
+          name="authenticationCode"
+          type="text"
+          autoComplete="text"
+          required
+          className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
+          placeholder="인증번호"
+          />
+      </div>
+        <button
+          // disabled={!checkIsEmail}
+          onClick={(event) => {
+            event.preventDefault();
+            checkCode(code)
+          }}
+          className="flex justify-center w-full h-10 rounded-md px-3 py-2 mt-5 text-sm font-bold leading-6 text-white shadow-sm hover:bg-lime-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-950"
+          style={{backgroundColor:'#1B5E20'}}
+          >
+          인증번호 확인
+        </button>
   </Modal>
 
     </div>

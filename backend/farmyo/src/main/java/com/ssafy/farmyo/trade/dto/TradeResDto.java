@@ -17,6 +17,7 @@ public class TradeResDto {
     private String buyer;
     private int tradeStatus;
     private String tradeLocation;
+    private String tradeLocationDetail;
     private String tradeShipment;
     private String tradeShipcom;
 

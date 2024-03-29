@@ -1,9 +1,6 @@
 package com.ssafy.farmyo.board.controller;
 
-import com.ssafy.farmyo.board.dto.AddBuyBoardReqDto;
-import com.ssafy.farmyo.board.dto.AddFarmerBoardReqDto;
-import com.ssafy.farmyo.board.dto.BoardDetailResDto;
-import com.ssafy.farmyo.board.dto.BoardListResDto;
+import com.ssafy.farmyo.board.dto.*;
 import com.ssafy.farmyo.board.service.BoardService;
 import com.ssafy.farmyo.common.auth.CustomUserDetails;
 import com.ssafy.farmyo.common.exception.CustomException;
@@ -13,7 +10,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -38,7 +35,7 @@ public class BoardController {
     @Operation(summary = "삼요게시물작성", description = "/boards/buy\n\n 삼요게시물 작성")
     @PostMapping("/buy")
     @ApiResponse(responseCode = "201", description = "성공 \n\n Success 반환")
-    public ResponseEntity<? extends BaseResponseBody> addBuyBoard(@RequestBody @Validated AddBuyBoardReqDto addBuyBoardReqDto, Authentication authentication) {
+    public ResponseEntity<? extends BaseResponseBody> createBuyBoard(@RequestBody @Validated AddBuyBoardReqDto addBuyBoardReqDto, Authentication authentication) {
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
@@ -55,19 +52,23 @@ public class BoardController {
     }
 
     //    팜요게시물 작성
+
     @Operation(summary = "팜요게시물작성", description = "/boards/sell\n\n 팜요게시글 작성")
-    @PostMapping("/sell")
+    @PostMapping(value = "/sell", consumes = "multipart/form-data")
     @ApiResponse(responseCode = "201", description = "성공 \n\n Success 반환")
-    public ResponseEntity<? extends BaseResponseBody> addFarmerBoard(@RequestBody @Validated AddFarmerBoardReqDto addFarmerBoardReqDto, Authentication authentication) {
+    public ResponseEntity<? extends BaseResponseBody> createFarmerBoard(@ModelAttribute @Valid AddFarmerBoardReqDto addFarmerBoardReqDto, @RequestPart(name = "images", required = false) List<MultipartFile> images, Authentication authentication) {
+        // DTO 객체를 수동으로 생성
+
+        System.out.println("images = " + images);
+
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        System.out.println("userDetails.getJob() = " + userDetails.getJob());
 
         //농부인지 구매자인지 확인 농부만 가능
         if (userDetails.getJob() == 1) {
             throw new CustomException(ExceptionType.USER_FARMER_REQUIRED);
         }
 
-        int boardId = boardService.addFarmerBoard(addFarmerBoardReqDto, userDetails.getId());
+        int boardId = boardService.addFarmerBoard(addFarmerBoardReqDto, images, userDetails.getId());
         log.info("팜요 게시판 작성 boardId = {}", boardId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, boardId));
@@ -88,10 +89,7 @@ public class BoardController {
     @Operation(summary = "게시물목록조회", description = "/boards \n\n 게시물 목록 조회")
     @GetMapping("")
     @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환")
-    public ResponseEntity<? extends BaseResponseBody> getBoardList(
-            @RequestParam("type") int boardType,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size) {
+    public ResponseEntity<? extends BaseResponseBody> getBoardList(@RequestParam("type") int boardType, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "10") int size) {
         List<BoardListResDto> boardListResDtoList = boardService.findBoardListByType(boardType, page, size);
         if (boardType == 0) {
             log.info("팜요 게시물 목록조회 API 호출");
@@ -99,6 +97,19 @@ public class BoardController {
             log.info("삼요 게시물 목록조회 API 호출");
         }
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, boardListResDtoList));
+    }
+
+    //게시물수정
+    @Operation(summary = "게시물수정", description = "/boards/{boardId} \n\n 게시물 수정")
+    @PatchMapping("/{boardId}")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환")
+    public ResponseEntity<? extends BaseResponseBody> updateBoard(@PathVariable int boardId, @RequestBody @Validated PatchBoardReqDto patchBoardReqDto, Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        int patchBoardId = boardService.patchBoard(boardId, patchBoardReqDto, userDetails.getId());
+        log.info("{}번 게시물 업데이트", boardId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, patchBoardId));
+
     }
 
 }
