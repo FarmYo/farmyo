@@ -3,10 +3,14 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Modal } from "react-responsive-modal"
 import api from "../../../../api/api"
 import Swal from "sweetalert2";
+import Back from "../../../../image/component/leftarrow.png"
 import '../../../../css/signup.css';
 
 export default function SignUpFirst() {
   const navigate = useNavigate()
+  const goBack = () => {
+    navigate(-1)
+  };
   // const { search } = useLocation()
   // const params = new URLSearchParams(search);
   // const isSeller = params.get("seller") === "true";
@@ -239,6 +243,7 @@ export default function SignUpFirst() {
     
     return(
       <div>
+          <img src={Back} alt="" style={{ width:20}} onClick={goBack}/>
     <div className="main mx-auto w-auto max-w-sm p-10">
       <div className="text">{changeIsSeller(isSeller)} 회원가입</div>
       <label 
