@@ -22,6 +22,7 @@ public enum ExceptionType {
     LOGIN_ID_MISMATCH(HttpStatus.BAD_REQUEST, "U-010", "일치하는 회원 정보가 없습니다."),
     PASSWORD_NOT_MATCH(HttpStatus.BAD_REQUEST, "U-011", "현재 비밀번호가 일치하지 않습니다."),
     FARMER_NOT_EXIST(HttpStatus.BAD_REQUEST, "U-012", "존재하지 않는 농부입니다."),
+    DUPLICATE_LOGIN_ID(HttpStatus.BAD_REQUEST, "U-013", "아이디가 중복되었습니다."),
 
     // 작물
     CROP_NOT_EXIST(HttpStatus.BAD_REQUEST, "C-001", "존재하지 않는 작물입니다."),
@@ -76,7 +77,9 @@ public enum ExceptionType {
     INVALID_ACCESS_FAVORITE(HttpStatus.BAD_REQUEST, "F-003", "해당 즐겨찾기 삭제할 권한이 없습니다."),
 
     // 마이페이지(마이팜)
-    USER_NOT_FARMER(HttpStatus.BAD_REQUEST, "P-001", "해당 유저는 농부가 아닙니다.");
+    USER_NOT_FARMER(HttpStatus.BAD_REQUEST, "P-001", "해당 유저는 농부가 아닙니다."),
+    ADDRESS_NOT_EXIST(HttpStatus.BAD_REQUEST, "P-002", "해당 유저의 주소가 없습니다.");
+
 
 
     // 상태, 에러 코드, 메시지
