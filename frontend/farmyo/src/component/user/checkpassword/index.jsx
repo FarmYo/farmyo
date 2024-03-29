@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Logo from '../../../image/component/user/logo.png';
+import Back from "../../../image/component/leftarrow.png"
 import "react-responsive-modal/styles.css"
 import { Modal } from "react-responsive-modal"
 import Swal from "sweetalert2";
@@ -9,7 +10,9 @@ import "../../../css/checkpassword.css";
 
 export default function CheckPassword() {
   const navigate = useNavigate()
-
+  const goBack = () => {
+    navigate(-1)
+  };
   const [id, setId] = useState("")
 
   const [email, setEmail] = useState("")
@@ -72,36 +75,6 @@ export default function CheckPassword() {
       setOpen(false);
     };
     
-    const FirstModal = () => {
-      return(
-        <div>
-        <div className="mt-5">
-          <input
-            value={code}
-            onChange={(event) => setCode(event.target.value)}
-            id="authenticationCode"
-            name="authenticationCode"
-            type="text"
-            autoComplete="text"
-            required
-            className="inputstyle block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-            placeholder="인증코드"
-          />
-        </div>
-
-          <button
-            onClick={(event) => {
-              event.preventDefault();
-              checkCode(code);
-            }} // 모달로 비밀번호 입력창 띄우기
-            className="flex justify-center w-full h-10 rounded-md px-3 py-2 mt-5 text-sm font-bold leading-6 text-white shadow-sm hover:bg-lime-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-950"
-            style={{backgroundColor:'#1B5E20'}}
-            >
-            확인
-          </button>
-      </div>
-    )}
-    
     const alerter1 = () => {
       Swal.fire({
         title: '인증시간이 초과하였습니다',
@@ -147,6 +120,10 @@ const checkCode = useCallback((code) => {
     .catch((err) => {
       console.log('인증번호 확인 실패', err)
       setCode("")
+      Swal.fire({
+        title:'인증번호를<br>확인해주세요',
+        confirmButtonColor: '#1B5E20',
+      })
       if (err.response.data.dataHeader.resultCode === "U-004") {
         alerter1()
         onCloseModal();
@@ -215,6 +192,8 @@ const checkPassword = () => {
 }
 
   return(
+    <div>
+    <img src={Back} alt="" style={{ width:20}} onClick={goBack}/>
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 main">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm mb-0">
         <img
@@ -358,6 +337,7 @@ const checkPassword = () => {
         </button>
       </div>
     </Modal>
+  </div>
   </div>
   )
 }
