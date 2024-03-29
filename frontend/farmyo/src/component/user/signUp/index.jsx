@@ -1,6 +1,7 @@
 import React from 'react'
 import { useNavigate } from "react-router-dom";
 import '../../../css/signup.css';
+import Back from "../../../image/component/leftarrow.png"
 import Logo from '../../../image/component/user/logo.png';
 
 export default function SignUp() {
@@ -11,7 +12,14 @@ export default function SignUp() {
   const handleBuyerClick = () => {
     navigate("/signup/first", { state: { seller:1 } });
   };
+
+  const goBack = () => {
+      navigate('/login')
+  };
+
   return(
+    <div>
+    <img src={Back} alt="" style={{ width:20}} onClick={goBack}/>
   <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 logo">
     <div className="mx-auto w-full max-w-sm mb-0">
       <img
@@ -34,6 +42,7 @@ export default function SignUp() {
         구매자
       </button>
     </div>
+  </div>
   </div>
   )
 }
