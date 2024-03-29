@@ -1,6 +1,7 @@
 package com.ssafy.farmyo.myfarm.controller;
 
 import com.ssafy.farmyo.common.response.BaseResponseBody;
+import com.ssafy.farmyo.myfarm.dto.MyfarmListDto;
 import com.ssafy.farmyo.myfarm.dto.MyfarmReqDto;
 import com.ssafy.farmyo.myfarm.dto.MyfarmDto;
 import com.ssafy.farmyo.myfarm.dto.UpUserDto;
@@ -47,6 +48,8 @@ public class MyfarmController {
             @RequestParam(name = "loginId")
             @Parameter(description = "유저 아이디")
             String loginId) {
+
+        List<MyfarmListDto> resultList = myfarmService.getFarmList(loginId);
 
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, 0));
     }

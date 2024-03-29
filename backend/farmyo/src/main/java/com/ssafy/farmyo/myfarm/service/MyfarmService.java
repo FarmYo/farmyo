@@ -13,7 +13,7 @@ public interface MyfarmService {
     void updateFarm();
     void deleteFarm(int id);
     UpUserDto getUpUser(String loginId);
-    MyfarmListDto getFarmList(int id);
+    List<MyfarmListDto> getFarmList(String loginId);
     MyfarmDto getFarm(int id);
 
 }
