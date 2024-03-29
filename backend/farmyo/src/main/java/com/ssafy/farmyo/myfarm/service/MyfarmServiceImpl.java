@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -101,16 +102,26 @@ public class MyfarmServiceImpl implements MyfarmService {
     }
 
     @Override
-    public MyfarmListDto getFarmList(int id) {
-        User user =  userRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+    public List<MyfarmListDto> getFarmList(String loginId) {
+        User user =  userRepository.findByLoginId(loginId).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
         if (user.getJob() != 0) {
             throw new CustomException(ExceptionType.USER_NOT_FARMER);
         }
 
-        List<Farm> farmList = myfarmRepository.findAllByUserId(id);
+        List<Farm> farmList = myfarmRepository.findAllByUserId(user.getId());
+        List<MyfarmListDto> resultList = new ArrayList<>();
 
+        for (Farm farm : farmList) {
 
-        return null;
+            MyfarmListDto myfarmListDto = MyfarmListDto.builder()
+                    .id(farm.getId())
+                    .imgUrl(myfarmImageRepository.getFirstUrl(farm.getId()))
+                    .build();
+
+            resultList.add(myfarmListDto);
+        }
+
+        return resultList;
     }
 
     @Override
