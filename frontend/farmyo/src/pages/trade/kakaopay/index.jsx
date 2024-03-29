@@ -10,12 +10,9 @@ export default function PaymentRedirectPage() {
   const { tradeId,seller } = location.state
 
   useEffect(()=>{
-    if (!location.state) {
-
-
-      return;
-    }
-
+    // if (!location.state) {
+    //   return;
+    // }
     api.patch(`trades/deposit/${tradeId}`,{},{
       params:{
         depositName:seller
@@ -28,6 +25,7 @@ export default function PaymentRedirectPage() {
     })
     .catch((err)=>{
       console.log(err)
+      navigate('/trade')
     })
 
   },[])
