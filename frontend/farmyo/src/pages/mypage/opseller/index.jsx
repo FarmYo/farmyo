@@ -18,22 +18,22 @@ export default function OpponentSeller (){
 
 
   // 프로필 상단바조회
-  // useEffect(()=>{
-  //   console.log(profileId)
-  //   setSelected(0);
-  //   api.get('farms/user', {
-  //     params: {
-  //       id: 
-  //     }
-  //   })    
-  //   .then((res)=>{
-  //     console.log(res)
-  //     console.log('마이페이지 상단정보조회성공')
-  //   })
-  //   .catch((err)=>{
-  //     console.log(err)
-  //   })
-  // },[])
+  useEffect(()=>{
+    console.log(profileId)
+    setSelected(0);
+    api.get('farms/user',{
+      params: {
+      loginId: profileId
+      }
+    })    
+    .then((res)=>{
+      console.log(res)
+      console.log('마이페이지 상단정보조회성공')
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  },[])
 
   const handleClick = (index) => {
     setSelected(index)
@@ -81,9 +81,9 @@ export default function OpponentSeller (){
         <h1 className='font-bold' style={{ color: selected === 2 ? 'black' : 'gray' }} onClick={()=>{handleClick(2)}}>게시글</h1>
       </div>
       {/* 선택된 컴포넌트 조건부 렌더링 */}
-      {/* {selected === 0 && <Myfarm nickname={nickname}/>}
-      {selected === 1 && <Mycrops nickname={nickname}/>}
-      {selected === 2 && <ArticleList />} */}
+      {selected === 0 && <Myfarm profileId={profileId}/>}
+      {selected === 1 && <Mycrops profileId={profileId}/>}
+      {selected === 2 && <ArticleList />}
     </div>
   )
 }
