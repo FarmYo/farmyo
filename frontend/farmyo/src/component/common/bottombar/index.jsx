@@ -15,28 +15,28 @@ import { jwtDecode } from 'jwt-decode';
 // import { useNavigate } from 'react-router-dom';
 
 export default function BottomBar() {
-  // const navigate = useNavigate()
   const location = useLocation()
+  const [currentPage, setCurrentPage] = useState('');
   // const im = jwtDecode(localStorage.getItem('access')).userJob
   const im = localStorage.getItem('access') ? jwtDecode(localStorage.getItem('access')).userJob : null;
-  const [home, setHome] = useState({ image: Home, clicked: false });
-  const [trade, setTrade] = useState({ image: Trade, clicked: false });
-  const [board, setBoard] = useState({ image: Board, clicked: false });
-  const [chat, setChat] = useState({ image: Chat, clicked: false });
-  const [mypage, setMypage] = useState({ image: Mypage, clicked: false });
+ 
 
-  const handleImageClick = (setState, state) => {
-    setState({ ...state, clicked: true });
-    // 나머지 이미지들의 clicked 상태를 false로 설정
-    const otherStates = [setHome, setTrade, setBoard, setChat, setMypage].filter(setStateFunc => setStateFunc !== setState);
-    otherStates.forEach(setStateFunc => setStateFunc(prevState => ({ ...prevState, clicked: false })));
-  };
 
-  useEffect(()=>{
-    if (location.pathname === "/board" && location.state && location.state.selected !== undefined) {
-      handleImageClick(setBoard, { ...board, clicked: true });
-    }
-  },[location])
+  useEffect(() => {
+    // 현재 경로를 기반으로 currentPage 상태를 업데이트
+    const path = location.pathname.split('/')[1];
+    setCurrentPage(path);
+  }, [location]);
+
+
+  const menuItems = [
+    { key: 'home', to: '/', text: '홈', image: currentPage === '' ? HomeClick : Home },
+    { key: 'trade', to: '/trade', text: '거래', image: currentPage.startsWith('trade') ? TradeClick : Trade },
+    { key: 'board', to: '/board', text: '팜&삼', image: currentPage.startsWith('board') ? BoardClick : Board },
+    { key: 'chat', to: '/chat', text: '채팅', image: currentPage.startsWith('chat') ? ChatClick : Chat },
+    { key: 'mypage', to: `/mypage/${im === 0 ? "seller" : "buyer"}`, text: '프로필', image: currentPage.startsWith('mypage') ? MypageClick : Mypage },
+  ];
+
 
   
   return (
@@ -44,46 +44,17 @@ export default function BottomBar() {
       <nav className="bg-white border-t-2 border-gray-300 fixed bottom-0 w-full h-20">
         <div className='p-3'>
           <div className="flex justify-between">
-            <div className='flex flex-col items-center justify-center'
-            onClick={() => handleImageClick(setHome, home)}>
-              <Link to="/">
-                <img src={home.clicked ? HomeClick : home.image} className="size" alt="" />
-                <p className='text-sm text-center font-bold mt-2'>홈</p>
-              </Link>
-            </div>
-            <div 
-              className='flex flex-col items-center justify-center' 
-              onClick={() => handleImageClick(setTrade, trade)}
-            >
-              <Link to="/trade">
-                <img src={trade.clicked ? TradeClick : trade.image} className="size" alt="" />
-                <p className='text-sm text-center font-bold mt-2'>거래</p>
-              </Link>
-            </div>
-            <div className='flex flex-col items-center justify-center' onClick={() => handleImageClick(setBoard, board)}>
-              <Link to="/board">
-              <img src={board.clicked ? BoardClick : board.image} className="size" alt="" />
-              <p className='text-sm text-center font-bold mt-2'>팜&삼</p>
-              </Link>
-            </div>
-            <div className='flex flex-col items-center justify-center' onClick={() => handleImageClick(setChat, chat)}>
-              <Link to="/chat">
-              <img src={chat.clicked ? ChatClick : chat.image} className="size" alt="" />
-              <p className='text-sm text-center font-bold mt-2'>채팅</p>
-              </Link>
-            </div>
-            <div 
-              className='flex flex-col items-center justify-center' 
-              onClick={() => handleImageClick(setMypage, mypage)}
-            >
-              <Link to={`/mypage/${im === 0 ? "seller" : "buyer"}`}>
-                <img src={mypage.clicked ? MypageClick : mypage.image} className="size" alt="" />
-                <p className='text-sm text-center font-bold mt-2'>프로필</p>
-              </Link>
-            </div>
+            {menuItems.map(({ key, to, text, image }) => (
+              <div key={key} className='flex flex-col items-center justify-center'>
+                <Link to={to}>
+                  <img src={image} className="size" alt="" />
+                  <p className='text-sm text-center font-bold mt-2'>{text}</p>
+                </Link>
+              </div>
+            ))}
           </div>
         </div>
       </nav>
     </div>
   );
-};
+}
