@@ -5,10 +5,14 @@ import { useNavigate, useLocation } from "react-router-dom";
 import DaumPostcode from 'react-daum-postcode';
 import Modal from 'react-responsive-modal';
 import Swal from "sweetalert2";
+import Back from "../../../../image/component/leftarrow.png"
 import '../../../../css/signup.css';
 
 export default function SignUpSecond() {
   const navigate = useNavigate()
+  const goBack = () => {
+    navigate(-1)
+  };
   // const customModal = {  
   //   maxWidth: "100%",
   //   maxHeight: "100vh", /* 화면 높이에 맞춰 설정 */ 
@@ -113,6 +117,7 @@ export default function SignUpSecond() {
 
   return(
     <div>
+      <img src={Back} alt="" style={{ width:20}} onClick={goBack}/>
     <div className="main mx-auto w-auto max-w-sm p-10">
       <label 
         htmlFor="nickname"
