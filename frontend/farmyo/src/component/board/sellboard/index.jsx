@@ -1,7 +1,8 @@
 import Chatting from '../../../image/component/chatting.png'
 import { Modal } from "react-responsive-modal"
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Fragment } from 'react'
+import api from '../../../api/api'
 import { Menu,Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import Gallery from '../../../image/component/gallery.png'
@@ -9,6 +10,23 @@ import Gallery from '../../../image/component/gallery.png'
 export default function SellBoardList(){
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
+  }
+  const [boardInfo, setBoardInfo] = useState([])
+  const [quantity, setQuantity] = useState("")
+  const [price, setPrice] = useState("")
+  const [title, setTitle] = useState("")
+  const [content, setContent] = useState("")
+  const [cropCategory, setCropCategory] =useState([])
+
+  const BoardInfo = () => {
+    api.get("boards?type=0&page=0&size=100")
+    .then((res) => {
+      setBoardInfo(res.data.dataBody)
+      console.log('게시글 불러오기 성공', res)
+    })
+    .catch((err) => {
+      console.log('게시글 불러오기 실패', err)
+    })
   }
 
   const [sellOpen,setSellOpen] = useState(false)
@@ -33,33 +51,29 @@ export default function SellBoardList(){
     setSellOpen(false);
   };
 
+  useEffect(() => {
+    BoardInfo()
+  }, [])
+
+
   return(
     <div style={{height:'420px',position:'relative'}}>
-      {/* 팝니다 게시글목록하나 */}
+      {/* 팝니다 게시글 목록 */}
+      {boardInfo.map((article) => (
       <div className="p-4 flex">
-        <div style={{backgroundColor:'#bbbbbb'}} className="w-32"></div>
+        <img src={article.imgUrl} alt="작물이미지" className="w-32" />
+        {/* <div style={{backgroundColor:'#bbbbbb'}} className="w-32"></div> */}
         <div className="w-full ml-2">
-          <h1 className="text-lg font-bold">감자감자왕감자</h1>
-          <h1 className="text-sm">작성자</h1>
-          <h1 style={{ color:'#1B5E20' }} className="font-bold">50kg</h1>
+          <h1 className="text-lg font-bold">{article.title}</h1>
+          <h1 className="text-sm">{article.userNickname}</h1>
+          <h1 style={{ color:'#1B5E20' }} className="font-bold">{article.quantity}kg</h1>
           <div className='flex justify-between'>
-            <h1 style={{ color:'#1B5E20' }} className="font-bold">10000원/kg</h1>
+            <h1 style={{ color:'#1B5E20' }} className="font-bold">{article.price}원/kg</h1>
             <img src={Chatting} alt="" style={{width:30}}/> 
           </div>     
         </div>
       </div>
-      <div className="p-4 flex">
-        <div style={{backgroundColor:'#bbbbbb'}} className="w-32"></div>
-        <div className="w-full ml-2">
-          <h1 className="text-lg font-bold">감자감자왕감자</h1>
-          <h1 className="text-sm">작성자</h1>
-          <h1 style={{ color:'#1B5E20' }} className="font-bold">50kg</h1>
-          <div className='flex justify-between'>
-            <h1 style={{ color:'#1B5E20' }} className="font-bold">10000원/kg</h1>
-            <img src={Chatting} alt="" style={{width:30}}/> 
-          </div>     
-        </div>
-      </div>
+      ))}
 
       <div style={{ position: 'absolute', bottom: 0, right: 10}}>
         <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
@@ -68,6 +82,7 @@ export default function SellBoardList(){
           </div>
         </div>
       </div>
+      
       {/* 팝니다게시글생성모달 */}
       <Modal open={sellOpen} onClose={sellCloseModal} styles={styles}>
         <div className="mt-10">
@@ -139,20 +154,20 @@ export default function SellBoardList(){
 
 
 
-          <label for="price" class="block text-md leading-6 mt-4 text-gray-900">수량</label>
-          <div class="relative rounded-md mt-1">
-            <input type="number" name="price" id="price" class="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="수량을 입력하세요(kg)"/>
+          <label htmlFor="price" className="block text-md leading-6 mt-4 text-gray-900">수량</label>
+          <div className="relative rounded-md mt-1">
+            <input type="number" name="price" id="price" className="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="수량을 입력하세요(kg)"/>
           </div>
-          <label for="price" class="block text-md mt-2 leading-6 text-gray-900">가격</label>
-          <div class="relative rounded-md mt-1">
-            <input type="number" name="price" id="price" class="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="가격을 입력하세요(/kg)"/>
+          <label htmlFor="price" className="block text-md mt-2 leading-6 text-gray-900">가격</label>
+          <div className="relative rounded-md mt-1">
+            <input type="number" name="price" id="price" className="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="가격을 입력하세요(/kg)"/>
           </div>
-          <label for="price" class="block text-md mt-2 leading-6 text-gray-900">제목</label>
-          <div class="relative rounded-md mt-1">
-            <input type="text" name="price" id="price" class="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="제목을 입력하세요"/>
+          <label htmlFor="price" className="block text-md mt-2 leading-6 text-gray-900">제목</label>
+          <div className="relative rounded-md mt-1">
+            <input type="text" name="price" id="price" className="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="제목을 입력하세요"/>
           </div>
-          <label for="price" class="block text-md mt-2 leading-6 text-gray-900">내용</label>
-          <div class="relative rounded-md mt-1">
+          <label htmlFor="price" className="block text-md mt-2 leading-6 text-gray-900">내용</label>
+          <div className="relative rounded-md mt-1">
             <textarea className="textarea textarea-bordered w-full h-24" placeholder="내용을 입력하세요"></textarea>
           </div>
           <div className="mt-10">

@@ -14,10 +14,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -35,7 +37,7 @@ public class CropController {
     @Operation(summary = "작물등록", description = "/crops\n\n 작물을 등록한다.")
     @PostMapping("")
     @ApiResponse(responseCode = "201", description = "성공 \n\n Success 반환")
-    public ResponseEntity<? extends BaseResponseBody> addCrop(@RequestBody @Valid AddCropReqDto addCropReqDto, Authentication authentication) {
+    public ResponseEntity<? extends BaseResponseBody> createCrop(@RequestBody @Valid AddCropReqDto addCropReqDto, Authentication authentication) {
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
@@ -71,17 +73,20 @@ public class CropController {
         log.info("{} : 작물 상세 조회 실행", cropId);
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, cropDetail));
     }
+    
 
 
-
-    //대표사진수정  사진 넣는걸로 바꿔야한다 url이 아니라 수정해야함 임시용
-    @Operation(summary = "대표사진수정 아직 미완성", description = "/crops\n\n 작물의 대표 사진을 변경한다.")
-    @PatchMapping("/{cropId}")
+    //대표사진수정
+    @Operation(summary = "대표사진수정", description = "/crops\n\n 작물의 대표 사진을 변경한다.")
+    @PatchMapping(value = "/{cropId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiResponse(responseCode = "204", description = "성공 \n\n Success 반환")
-    public ResponseEntity<? extends BaseResponseBody> updateCropImg(@PathVariable int cropId, @RequestBody UpdateImgReqDto updateImgReqDto) {
-        cropService.updateCropImgUrl(cropId, updateImgReqDto.getCropImgUrl());
+    public ResponseEntity<? extends BaseResponseBody> updateCropImg(
+            @PathVariable int cropId,
+            @RequestParam(name = "cropImg") MultipartFile cropImg, Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        cropService.updateCropImgUrl(cropId, cropImg, userDetails.getId());
         log.info("{} : 대표 사진 수정 실행", cropId);
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "성공적으로 변경되었습니다."));
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(BaseResponseBody.of(0, "성공적으로 변경되었습니다."));
     }
 
     //작물인증정보 조회
@@ -112,6 +117,23 @@ public class CropController {
         List<FindCropCategoryResDto> categories = cropService.findAllCropCategories();
         log.info("작물 카테고리 전체 조회 실행");
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, categories));
+    }
+
+    //작물블록체인 등록
+    @Operation(summary = "작물블록체인등록", description = "/crops/{cropId}\n\n 작물 블록체인등록(1:농약,2:대회,3:수확)")
+    @PostMapping("/{cropId}")
+    @ApiResponse(responseCode = "201", description = "성공 \n\n Success 반환")
+    public ResponseEntity<? extends BaseResponseBody> createCropBlockchain(@PathVariable int cropId, @RequestBody CropBlockchainResDto cropBlockchainResDto, Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        // 농부인지 구매자인지 확인
+        if (userDetails.getJob() == 1) {
+            throw new CustomException(ExceptionType.USER_FARMER_REQUIRED);
+        }
+
+        cropService.createBlockChain(cropId, userDetails.getId(), cropBlockchainResDto);
+        log.info("작물 블록체인 등록 실행 {}, 등록 타입 {}", cropId, cropBlockchainResDto.getType());
+        return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, "성공적으로 블록체인에 저장되었습니다."));
+
     }
 }
 

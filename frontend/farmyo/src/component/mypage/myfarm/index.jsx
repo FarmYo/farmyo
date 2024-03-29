@@ -1,12 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import "react-responsive-modal/styles.css"
 import { Modal } from "react-responsive-modal"
 import Gallery from "../../../image/component/gallery.png"
+import { jwtDecode } from 'jwt-decode';
 
-export default function MyFarm() {
+export default function MyFarm(props) {
+  const loginId = jwtDecode( localStorage.getItem("access") ).loginId
+  
+  // console.log(loginId)
+  // console.log(props.profileId)
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
@@ -21,6 +26,8 @@ export default function MyFarm() {
       margin: '0',
     },
   };
+
+
   
   const [open,setOpen] = useState(false)
   const [photoOpen,setPhotoOpen] = useState(false)
@@ -96,11 +103,8 @@ export default function MyFarm() {
       </Transition>
     </Menu>
     </div>
-    <div>
-     
-  
-    </div>
 
+    { !props.profileId  && (
     <div style={{ position: 'absolute', bottom: 0, right: 10}}>
       <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
         <div style={{ position: 'absolute', top: '44%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}
@@ -108,6 +112,7 @@ export default function MyFarm() {
           +</div>
       </div>
     </div>
+    )}
  
 
     {/* ******모달창들******** */}

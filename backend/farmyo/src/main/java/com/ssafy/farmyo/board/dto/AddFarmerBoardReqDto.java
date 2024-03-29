@@ -4,14 +4,17 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @Getter
 @Builder
+
 public class AddFarmerBoardReqDto {
     //작물id
     @Min(value = 1)
@@ -28,8 +31,8 @@ public class AddFarmerBoardReqDto {
     //가격
     @Min(value = 1, message = "가격은 0보다 커야합니다.")
     private int price;
-    //이미지들
-    private List<MultipartFile> files;
+//    //이미지들
+//    private List<MultipartFile> images;
 
 
 }

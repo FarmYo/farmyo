@@ -2,6 +2,7 @@ package com.ssafy.farmyo.chat.controller;
 
 import com.ssafy.farmyo.chat.dto.ChatDto;
 import com.ssafy.farmyo.chat.dto.MessageDto;
+import com.ssafy.farmyo.chat.dto.MessageListDto;
 import com.ssafy.farmyo.chat.service.ChatService;
 import com.ssafy.farmyo.common.response.BaseResponseBody;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,5 +46,17 @@ public class ChatController {
     ) {
         List<ChatDto> chatList = chatService.getChatRooms(loginId);
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, chatList));
+    }
+
+    @GetMapping("/message/{chatId}")
+    @Operation(summary = "채팅 내역 조회", description = "해당 채팅방의 채팅 내역들을 조회한다.")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n 채팅 내역 리스트 반환")
+    public ResponseEntity<? extends BaseResponseBody> getMessages (
+            @PathVariable
+            @Parameter(description = "채팅 내역을 조회할 채팅방 아이디")
+            int chatId
+    ) {
+        List<MessageListDto> messageList = chatService.getMessages(chatId);
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, messageList));
     }
 }

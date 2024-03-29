@@ -14,11 +14,29 @@ export default function Business() {
 
   const [ownerName, setOwnerName] = useState("")
   const [isOwnerName, setIsOwnerName] = useState(false)
-
+  
   const [openDay, setOpenDay] = useState("")
+  const [strOpenDay, setStrOpenDay] = useState("")
   const [isOpenDay, setIsOpenDay] = useState(false)
+  
+    const changeString = ((date) => {
+      const changeString = date.replace(/-/g, '');
+      console.log(changeString)
+      setStrOpenDay(changeString)
+    })
 
-  const changePage = (() => {
+  const checkAll = (() => {
+    if (businessNumber) {
+      setIsBusinessNumber(true)
+    } if (ownerName) {
+      setIsOwnerName(true)
+    } if (strOpenDay) {
+      setIsOpenDay(true)
+    }
+  })
+
+  const changePage = async() => {
+    await checkAll()
     if (isBusinessNumber === true && isOwnerName === true && isOpenDay === true) {
     api.post('users', {
       loginId : id,              
@@ -35,7 +53,7 @@ export default function Business() {
       job : isSeller,
       licenseNum : businessNumber,
       representative : ownerName,
-      startDate : openDay,
+      startDate : strOpenDay,
     }
   )
   .then((res) => {
@@ -74,13 +92,13 @@ export default function Business() {
     })}
   })
 } else {
-  console.log('판매자 회원가입 실패 화면 확인해보기', '우편번호 : ', zoomNumber, '주소 :', address, '상세주소 :', detailAddress, '예금주 :', account, '계좌번호 :', accountNumber, '은행명 :', bankName, '사업자등록번호 :', businessNumber, '대표자 :', ownerName, '개업일 :', openDay)
+  console.log(isOpenDay,isOwnerName,isBusinessNumber)
+  console.log('판매자 회원가입 실패 화면 확인해보기', '우편번호 : ', zoomNumber, '주소 :', address, '상세주소 :', detailAddress, '예금주 :', account, '계좌번호 :', accountNumber, '은행명 :', bankName, '사업자등록번호 :', businessNumber, '대표자 :', ownerName, '개업일 :', strOpenDay)
   Swal.fire({
     html: '<br>입력 정보를<br>확인해주세요',
     confirmButtonColor: '#1B5E20',
   })
-}
-  })
+}}
 
   useEffect(() => {
     const allInputs = document.querySelectorAll('input');
@@ -96,6 +114,7 @@ export default function Business() {
       });
     });
   }, []);
+
   return(
     <div>
     <div className="main2 mx-auto w-auto max-w-sm p-10">
@@ -108,6 +127,8 @@ export default function Business() {
 
       <div>
         <input 
+          value={businessNumber}
+          onChange={(event) => setBusinessNumber(event.target.value)}
           id="businessnumber" 
           name="businessnumber"
           type="text" 
@@ -119,6 +140,8 @@ export default function Business() {
       </div>
       <div>
         <input 
+          value={ownerName}
+          onChange={(event) => setOwnerName(event.target.value)}
           id="businessname" 
           name="businessname" 
           type="text" 
@@ -136,6 +159,11 @@ export default function Business() {
       </label>
       <div>
         <input 
+          value={openDay}
+          onChange={(event) => {
+            setOpenDay(event.target.value)
+            changeString(event.target.value)
+          }}
           id="businessopenday" 
           name="businessopenday" 
           type="date" 
