@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Menu, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
-import Dropdown from '../../../image/component/dropdown.png'
+// import Dropdown from '../../../image/component/dropdown.png'
+import Dropdown from '../../../image/component/trade/downarrow.png'
 import Up from '../../../image/component/up.png'
 import api from '../../../api/api'
 import { useEffect } from "react"
@@ -71,8 +72,8 @@ export default function OngoingTrade({ ongoingData }) {
           onClick={()=>setIsOpen(!isOpen)}>
             <div className='pl-2'>{selectedItem}</div>
             <div className="flex items-center justify-center"><img src={isOpen ? Up : Dropdown} alt="" style={{
-              width: isOpen ? 27 : 20, 
-              height: isOpen ? 27 : 10 
+              width: isOpen ? 32 : 24, 
+              height: isOpen ? 32 : 24 
             }} className="mt-0.5"/></div>
           </Menu.Button>
         </div>
