@@ -16,10 +16,9 @@ export default function BuyerTrade() {
   const [info,setInfo] = useState([])
   const [address, setAddress] = useState(info.tradeLocation);
   const [detailAddress, setDetailAddress] = useState(info.tradeLocationDetail);
-
   const [showAddressModal, setShowAddressModal] = useState(false) // 우편번호입력모달
   const [showNewAddressModal, setShowNewAddressModal] = useState(false); // 새 주소 등록 모달
-  const [tradeUpdated, setTradeUpdated] = useState(false); //트리거
+
 
   const handleAddressSelect = (data) => {
     let fullAddress = data.address;
@@ -73,7 +72,7 @@ export default function BuyerTrade() {
         showConfirmButton: false,
       })
       console.log('거래취소됨')
-      navigate(`trade/buyer/${tradeId}`)
+      navigate('/trade')
     })
     .catch((err)=>{
       console.log(err)
@@ -190,16 +189,20 @@ export default function BuyerTrade() {
     const goConfirm = () =>{
       api.patch(`trades/final/${tradeId}`)
       .then((res)=>{
-        console.log(res)
+        // console.log(res)
         console.log('구매확정완료')
         Swal.fire({
           html: '<h1 style="font-weight: bold;">구매확정되었습니다</h1>',
           icon: 'success',
           showConfirmButton: false,
         });
-        setTradeUpdated(!tradeUpdated)
-      })
-      .catch((err)=>{
+         // info 상태 업데이트로 거래 상태 직접 변경
+        setInfo(prevInfo => ({
+          ...prevInfo,
+          tradeStatus: 3 // 거래완료 상태로 변경
+        }));
+        })
+        .catch((err)=>{
         console.log(err)
       })
     }
