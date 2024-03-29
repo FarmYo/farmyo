@@ -15,11 +15,14 @@ export default function OpponentSeller (){
   const [love,setLove] = useState(false)
   const param = useParams()
   const profileId= param.id
+  const [profileNickname,setProfileNickname] = useState(null)
+  const [profileAddress,setProfileAddress] = useState(null)
+  const [profileComment,setProfileComment] = useState(null)
 
 
   // 프로필 상단바조회
   useEffect(()=>{
-    console.log(profileId)
+    // console.log(profileId)
     setSelected(0);
     api.get('farms/user',{
       params: {
@@ -29,6 +32,9 @@ export default function OpponentSeller (){
     .then((res)=>{
       console.log(res)
       console.log('마이페이지 상단정보조회성공')
+      setProfileNickname(res.data.dataBody.nickname)
+      setProfileAddress(res.data.dataBody.location)
+      setProfileComment(res.data.dataBody.comment)
     })
     .catch((err)=>{
       console.log(err)
@@ -41,18 +47,18 @@ export default function OpponentSeller (){
 
   //즐겨찾기하기
   const handleLove = () =>{
-    api.post('users/bookmarks',{
-      farmerId:"33", // 페이지주인농부pk값 넣기
-      farmerLoginId: loginId
-    })
-    .then((res)=>{
-      console.log(res)
-      console.log('즐겨찾기성공')
-      setLove(!love)
-    })
-    .catch((err)=>{
-      console.log(err)
-    })
+    // api.post('users/bookmarks',{
+    //   farmerId:"33", // 페이지주인농부pk값 넣기
+    //   farmerLoginId: loginId
+    // })
+    // .then((res)=>{
+    //   console.log(res)
+    //   console.log('즐겨찾기성공')
+    //   setLove(!love)
+    // })
+    // .catch((err)=>{
+    //   console.log(err)
+    // })
   }
 
   
@@ -62,7 +68,7 @@ export default function OpponentSeller (){
     <div>
       <div style={{height:50,backgroundColor:'#1B5E20'}}>
         <div className="p-2 flex justify-between">
-          <h1 className="text-xl font-bold" style={{color:"white"}}>님의 페이지</h1>
+          <h1 className="text-xl font-bold" style={{color:"white"}}>{profileNickname}님의 페이지</h1>
         </div>
       </div>
       <div className='flex border-b-2 border-gray-300' style={{height:140}}>
@@ -70,9 +76,12 @@ export default function OpponentSeller (){
           <img src={Me} alt="" style={{ height:80,width:80}}/>
         </div>
         <div className='p-7 pl-3'>
-          <h1 className='font-bold'></h1>
-          <h4 className='text-sm'>대구광역시 달서구 호산로 126</h4>
-          <h4 className='text-sm'style={{color:'gray'}}>상태메시지 입니다</h4>
+          <h1 className='font-bold'>{profileNickname}</h1>
+          <h4 className='text-sm'>{profileAddress}</h4>
+          <h4 className='text-sm'style={{color:'gray'}}>{profileComment}</h4>
+        </div>
+        <div className='flex justify-center items-center p-4' onClick={handleLove}>
+          <img src={ love ? SaeClick : Sae} alt="" style={{width:50,height:50}} />
         </div>
       </div>
       <div className='flex justify-around p-3' style={{height:50}}>
