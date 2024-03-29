@@ -2,6 +2,7 @@ package com.ssafy.farmyo.user.service;
 
 import com.ssafy.farmyo.common.exception.CustomException;
 import com.ssafy.farmyo.common.exception.ExceptionType;
+import com.ssafy.farmyo.common.s3.AwsS3Service;
 import com.ssafy.farmyo.entity.*;
 import com.ssafy.farmyo.user.dto.*;
 import com.ssafy.farmyo.user.openApi.OpenApiManager;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,6 +30,7 @@ public class UserServiceImpl implements UserService {
     private final AddressRepository addressRepository;
     private final FavoriteRepository favoriteRepository;
     private final OpenApiManager openApiManager;
+    private final AwsS3Service awsS3Service;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
@@ -51,7 +54,6 @@ public class UserServiceImpl implements UserService {
                 .job(joinReqDto.getJob())
                 .status(UserStatus.ACTIVE)
                 .account(account)
-                .profile("기본 이미지 URL이 들어갈 자리입니다.")
                 .comment("기본 메세지입니다.")
                 .build();
 
@@ -103,7 +105,6 @@ public class UserServiceImpl implements UserService {
                 .job(joinReqDto.getJob())
                 .status(UserStatus.ACTIVE)
                 .account(account)
-                .profile("기본 이미지 URL이 들어갈 자리입니다.")
                 .comment("기본 메세지입니다.")
                 .farmerLicense(joinReqDto.getLicenseNum())
                 .build();
@@ -177,8 +178,6 @@ public class UserServiceImpl implements UserService {
         user.updateAll(userModifyDto.getNickname(), userModifyDto.getTelephone(), userModifyDto.getComment());
     }
 
-    @Override
-    @Transactional
     public void deactivateUser(int id) {
 
         User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
@@ -186,6 +185,7 @@ public class UserServiceImpl implements UserService {
         user.updateStatus(UserStatus.WITHDRAWN);
 
     }
+
 
     @Override
     @Transactional
@@ -195,8 +195,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
 
         // 계좌 수정
-        if(!user.getAccount().getAccountNumber().equals(accountModifyDto.getAccount()))
-            user.getAccount().updateAll(accountModifyDto.getDepositor(), accountModifyDto.getBank(), accountModifyDto.getAccount());
+        user.getAccount().updateAll(accountModifyDto.getDepositor(), accountModifyDto.getBank(), accountModifyDto.getAccount());
     }
 
 
@@ -216,18 +215,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void addBookmark(int userId, int farmerId) {
-        // 이미 즐겨찾기가 있다면 예외 처리
-        if (favoriteRepository.checkFavoriteExistence(userId, farmerId).isPresent()) {
-            throw new CustomException(ExceptionType.ALREADY_EXIST_FAVORITE);
-        }
-        ;
+    public void addBookmark(int userId, String farmerId) {
+
+        log.info("{}", userId);
+        log.info("{}", farmerId);
 
         // 현재 로그인한 유저 엔티티 조회
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
 
         // 즐겨찾기한 농부 엔티티 조회
-        Farmer farmer = farmerRepository.findById(farmerId).orElseThrow(() -> new CustomException(ExceptionType.FARMER_NOT_EXIST));
+        Farmer farmer = farmerRepository.findByLoginId(farmerId).orElseThrow(() -> new CustomException(ExceptionType.FARMER_NOT_EXIST));
+
+        log.info("{}", farmer.getId());
+
+        // 이미 즐겨찾기가 있다면 예외 처리
+        if(favoriteRepository.checkFavoriteExistence(userId, farmer.getId()).isPresent()){
+            throw new CustomException(ExceptionType.ALREADY_EXIST_FAVORITE);
+        };
 
         // 즐겨찾기 엔티티 생성
         Favorite favorite = Favorite.builder()
@@ -253,5 +257,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<BookmarkResDto> getBookmarkList(int userId) {
         return favoriteRepository.getCustomerBookmarkList(userId);
+    }
+
+
+    @Override
+    @Transactional
+    public void modifyProfileImg(int userId, MultipartFile profileImg) {
+        // 현재 로그인한 유저 엔티티 조회
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+
+        String profileImgUrl = awsS3Service.uploadFile(profileImg);
+        log.info("{}", profileImgUrl);
+
+        user.updateProfile(profileImgUrl);
     }
 }
