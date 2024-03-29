@@ -78,7 +78,8 @@ public enum ExceptionType {
 
     // 마이페이지(마이팜)
     USER_NOT_FARMER(HttpStatus.BAD_REQUEST, "P-001", "해당 유저는 농부가 아닙니다."),
-    ADDRESS_NOT_EXIST(HttpStatus.BAD_REQUEST, "P-002", "해당 유저의 주소가 없습니다.");
+    ADDRESS_NOT_EXIST(HttpStatus.BAD_REQUEST, "P-002", "해당 유저의 주소가 없습니다."),
+    ORDERS_NOT_MATCH(HttpStatus.BAD_REQUEST, "P-003", "사진과 순서의 개수가 맞지 않습니다.");
 
 
 
