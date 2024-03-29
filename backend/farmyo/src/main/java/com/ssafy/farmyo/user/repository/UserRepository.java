@@ -19,7 +19,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByEmail(String email);
 
     // 회원 정보 조회
-    @Query("SELECT new com.ssafy.farmyo.user.dto.UserResDto(u.loginId, u.email, u.nickname, u.telephone, u.comment, u.account, a.addressCode, a.addressLegal, a.addressDetail) " +
+    @Query("SELECT new com.ssafy.farmyo.user.dto.UserResDto(u.loginId, u.email, u.nickname, u.telephone, u.comment, u.account, a.addressCode, a.addressLegal, a.addressDetail, u.profile) " +
             "FROM User u join Address a " +
             "ON u.id = a.user.id " +
             "WHERE u.id = :id ")
