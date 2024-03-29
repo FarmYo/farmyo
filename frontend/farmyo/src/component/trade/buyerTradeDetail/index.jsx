@@ -153,7 +153,11 @@ export default function BuyerTrade() {
         showConfirmButton: false,
       })
     }else{
-      // console.log("handleKakaoPay 시작")
+      console.log("handleKakaoPay 시작")
+
+      localStorage.setItem('tradeId', tradeId.toString());
+      localStorage.setItem('seller', info.seller);
+
       const IMP = window.IMP; 
       // console.log(IMP)
       IMP.init("imp22683217"); // 아임포트 가맹점 식별코드를 "imp22683217"로 설정
@@ -165,8 +169,8 @@ export default function BuyerTrade() {
         merchant_uid: `mid_${new Date().getTime()}`, // 주문번호
         name: "팜요", // 서비스명
         amount: info.tradePrice*info.tradeQuantity , // 결제 금액
-        buyer_name: info.seller, // 구매자 이름
-        m_redirect_url: 'http://localhost:3000/trade/redirect',
+        buyer_name: info.seller, // 판매자 이름
+        m_redirect_url: 'https://j10d209.p.ssafy.io/trade/redirect',
       }, function(rsp) {
         console.log("결제응답:",rsp)
         if (rsp.success) {

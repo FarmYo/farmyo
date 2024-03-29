@@ -10,8 +10,8 @@ import { jwtDecode } from 'jwt-decode';
 export default function MyFarm(props) {
   const loginId = jwtDecode( localStorage.getItem("access") ).loginId
   
-  console.log(loginId)
-  console.log(props.profileId)
+  // console.log(loginId)
+  // console.log(props.profileId)
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
