@@ -30,7 +30,7 @@ public interface UserService {
     void deactivateUser(int id);
 
     // 즐겨찾기 추가
-    void addBookmark(int userId, int farmerId);
+    void addBookmark(int userId, String farmerId);
 
     // 즐겨찾기 조회
     List<BookmarkResDto> getBookmarkList(int userId);

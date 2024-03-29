@@ -180,7 +180,7 @@ public class UserController {
 
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        userService.addBookmark(customUserDetails.getId(), bookmarkReqDto.getFarmerId());
+        userService.addBookmark(customUserDetails.getId(), bookmarkReqDto.getFarmerLoginId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, "Success"));
     }
