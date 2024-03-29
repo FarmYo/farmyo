@@ -2,6 +2,7 @@ package com.ssafy.farmyo.user.service;
 
 import com.ssafy.farmyo.common.exception.CustomException;
 import com.ssafy.farmyo.common.exception.ExceptionType;
+import com.ssafy.farmyo.common.s3.AwsS3Service;
 import com.ssafy.farmyo.entity.*;
 import com.ssafy.farmyo.user.dto.*;
 import com.ssafy.farmyo.user.openApi.OpenApiManager;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,6 +30,7 @@ public class UserServiceImpl implements UserService {
     private final AddressRepository addressRepository;
     private final FavoriteRepository favoriteRepository;
     private final OpenApiManager openApiManager;
+    private final AwsS3Service awsS3Service;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
@@ -51,7 +54,6 @@ public class UserServiceImpl implements UserService {
                 .job(joinReqDto.getJob())
                 .status(UserStatus.ACTIVE)
                 .account(account)
-                .profile("기본 이미지 URL이 들어갈 자리입니다.")
                 .comment("기본 메세지입니다.")
                 .build();
 
@@ -103,7 +105,6 @@ public class UserServiceImpl implements UserService {
                 .job(joinReqDto.getJob())
                 .status(UserStatus.ACTIVE)
                 .account(account)
-                .profile("기본 이미지 URL이 들어갈 자리입니다.")
                 .comment("기본 메세지입니다.")
                 .farmerLicense(joinReqDto.getLicenseNum())
                 .build();
@@ -252,5 +253,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<BookmarkResDto> getBookmarkList(int userId) {
         return favoriteRepository.getCustomerBookmarkList(userId);
+    }
+
+
+    @Override
+    @Transactional
+    public void modifyProfileImg(int userId, MultipartFile profileImg) {
+        // 현재 로그인한 유저 엔티티 조회
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+
+        String profileImgUrl = awsS3Service.uploadFile(profileImg);
+        log.info("{}", profileImgUrl);
+
+        user.updateProfile(profileImgUrl);
     }
 }

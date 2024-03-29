@@ -13,10 +13,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/users")
@@ -105,7 +107,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, userService.checkIdDuplicate(id)));
     }
 
-    @Operation(summary = "회원 정보 불러오기", description = "현재 로그인한 회원의 정보를 가져온다.")
+    @Operation(summary = "회원 정보 조회", description = "현재 로그인한 회원의 정보를 조회")
     @GetMapping("")
     @ApiResponse(responseCode = "200", description = "성공 \n\n 유저 정보를 담은 DTO 반환 ")
     public ResponseEntity<? extends BaseResponseBody> getUserInfo(Authentication authentication) {
@@ -236,5 +238,20 @@ public class UserController {
         userService.removeBookmark(customUserDetails.getId(), bookmarkId);
 
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
+    }
+
+    // 프로필 사진 수정
+    @Operation(summary = "프로필 사진 수정", description = "/users\n\n 프로필의 대표 사진을 변경한다.")
+    @PatchMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ApiResponse(responseCode = "204", description = "성공 \n\n Success 반환")
+    public ResponseEntity<? extends BaseResponseBody> updateProfileImg(
+            @RequestParam(name = "profileImg") MultipartFile profileImg,
+            Authentication authentication) {
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        userService.modifyProfileImg(userDetails.getId(), profileImg);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(BaseResponseBody.of(0, "Success"));
     }
 }
