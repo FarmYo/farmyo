@@ -28,6 +28,9 @@ export default function Favorite() {
   };
 
   // 즐겨찾기 조회
+  // 이게 로그인한 유저를 기반으로 그냥 조회해버리는데 
+  // 나말고 다른 구매자유저의 목록에도 내가 즐찾한 사람목록이 나와버림
+  // 나의아이디를 가지고 조회하던지 그런방향으로 바꾸기
   useEffect(()=>{
     api.get('users/bookmarks')
     .then((res)=>{
