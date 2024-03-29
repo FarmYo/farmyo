@@ -15,6 +15,7 @@ import { Fragment } from 'react'
 
 export default function MypageEdit(){
   const navigate = useNavigate()
+  const im = jwtDecode(localStorage.getItem('access')).userJob
   const [userInfo, setUserInfo] = useState([])
   const [pastPassword, setPastPassword] =useState("")
   const [newPassword, setNewPassword] = useState("")
@@ -214,7 +215,6 @@ export default function MypageEdit(){
 
   // 이전페이지로
   const goBack = () => {
-    const im = jwtDecode(localStorage.getItem('access')).userJob
     if (im === 0) {
       navigate('/mypage/seller')
     } else {
@@ -252,12 +252,13 @@ export default function MypageEdit(){
         <p>{userInfo?.loginId}</p>
       </div>
       <div>
+        {/* 농부일때만 보이게하기
         <button
           className="btn rounded-md" style={{ backgroundColor:'#81C784'}}
           onClick={()=>document.getElementById('checkPoint').showModal()}
         >
-          <h1 style={{ color:'white' }} className="text-sm" >내 포인트 확인</h1>
-        </button>
+          <h1 style={{ color:'white' }} className="text-sm" >내 지갑</h1>
+        </button> */}
       </div>
       </div>
       <div>
@@ -348,7 +349,7 @@ export default function MypageEdit(){
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
           </form>
           <div>
-            내 포인트 : {userInfo?.account?.accountBalance}
+            내 판매액 : {userInfo?.account?.accountBalance}원
           </div>
         </div>
       </dialog>
