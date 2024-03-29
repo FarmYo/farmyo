@@ -1,6 +1,7 @@
 package com.ssafy.farmyo.user.service;
 
 import com.ssafy.farmyo.user.dto.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -36,7 +37,7 @@ public interface UserService {
     void modifyAddressInfo(int id, AddressModifyDto addressModifyDto);
 
     // 즐겨찾기 추가
-    void addBookmark(int userId, int farmerId);
+    void addBookmark(int userId, String farmerId);
 
     // 즐겨찾기 조회
     List<BookmarkResDto> getBookmarkList(int userId);
@@ -44,4 +45,6 @@ public interface UserService {
     // 즐겨찾기 삭제
     void removeBookmark(int userId, int farmerId);
 
+    // 프로필 이미지 수정
+    void modifyProfileImg(int userId, MultipartFile profileImg);
 }
