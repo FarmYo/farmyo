@@ -5,11 +5,14 @@ import { Modal } from "react-responsive-modal"
 import Swal from "sweetalert2";
 import "../../../css/trade.css";
 import api from '../../../api/api'
+import BackArrow from '../../../image/component/trade/backarrow.png'
+import { useNavigate } from "react-router-dom";
 
 
 
 
 export default function SellerTrade() {
+  const navigate = useNavigate()
   const params = useParams()
   const tradeId = params.tradeId
   const [open,setOpen] = useState(false)
@@ -78,11 +81,19 @@ export default function SellerTrade() {
     })
   }
 
+  const goTradeList = ()=>{
+    navigate('/trade')
+  }
+
   return(
     <div>
       <div>
         <div className="p-3 flex justify-between border-b-2 border-gray-100 h-20">
-          <div className="font-bold text-xl flex items-center">{info.board}</div>
+        <div className='flex'>
+            <div className='flex items-center mr-5'
+              onClick={goTradeList}><img src={BackArrow} alt="" style={{ width:30,height:30}}/></div>
+            <div className="font-bold text-xl flex items-center">{info.board}</div>
+          </div>
           <div className="font-bold text-lg flex items-center" style={{color:'gray'}}>{tradeStatusToText[info.tradeStatus]}</div>
         </div>
         <div className="p-3 border-b-2 space-y-2 border-gray-100">
