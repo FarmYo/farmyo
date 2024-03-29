@@ -10,14 +10,19 @@ import { jwtDecode } from 'jwt-decode'
 import api from '../../../api/api'
 
 export default function OpponentSeller (){
-  const loginId = jwtDecode( localStorage.getItem("access") ).loginId
+  const loginJob = jwtDecode( localStorage.getItem("access") ).userJob
   const [selected,setSelected] = useState(null)
-  const [love,setLove] = useState(false)
+  const [love,setLove] = useState(false) // 즐겨찾기 여부
   const param = useParams()
   const profileId= param.id
   const [profileNickname,setProfileNickname] = useState(null)
   const [profileAddress,setProfileAddress] = useState(null)
   const [profileComment,setProfileComment] = useState(null)
+  const [profileJob,setProfileJob] = useState(null)
+  // 아직 프로필url없음
+  const [profileUrl,setProfileUrl] = useState(null)
+  // 본인이 즐찾한 농부받기
+  const [bookmarks, setBookmarks] = useState([])
 
 
   // 프로필 상단바조회
@@ -35,11 +40,29 @@ export default function OpponentSeller (){
       setProfileNickname(res.data.dataBody.nickname)
       setProfileAddress(res.data.dataBody.location)
       setProfileComment(res.data.dataBody.comment)
+      setProfileJob(res.data.dataBody.job)
     })
     .catch((err)=>{
       console.log(err)
     })
-  },[])
+  },[profileId])
+
+  useEffect(()=>{
+    if (profileNickname) {
+    api.get('users/bookmarks')
+    .then((res)=>{
+      console.log(res)
+      console.log('즐찾농부목록확인')
+      const bookmarksData = res.data.dataBody;
+      setBookmarks(bookmarksData)
+      const isLoved = bookmarksData.some(b => b.farmerName === profileNickname);
+      setLove(isLoved); // 즐겨찾기 상태 업데이트
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  }
+  },[profileNickname])
 
   const handleClick = (index) => {
     setSelected(index)
@@ -47,20 +70,51 @@ export default function OpponentSeller (){
 
   //즐겨찾기하기
   const handleLove = () =>{
-    // api.post('users/bookmarks',{
-    //   farmerId:"33", // 페이지주인농부pk값 넣기
-    //   farmerLoginId: loginId
-    // })
-    // .then((res)=>{
-    //   console.log(res)
-    //   console.log('즐겨찾기성공')
-    //   setLove(!love)
-    // })
-    // .catch((err)=>{
-    //   console.log(err)
-    // })
+    api.post('users/bookmarks',{
+      farmerLoginId: profileId
+    })
+    .then((res)=>{
+      console.log('즐겨찾기성공')
+      setLove(true)
+         api.get('users/bookmarks')
+        .then((res)=>{
+        console.log('즐찾농부목록확인')
+        setBookmarks(res.data.dataBody)
+        })
+        .catch((err)=>{
+          console.log(err)
+        })
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
   }
 
+  // 즐겨찾기삭제하기
+  const handleDelete = () => {
+    const bookmark = bookmarks.find(b => b.farmerName === profileNickname);
+    if (bookmark) { // bookmark 객체가 존재하는지 확인
+      console.log(bookmark.id);
+      api.delete('users/bookmarks', {
+        params: {
+          bookmarkId: bookmark.id
+        }
+      })
+      .then((res) => {
+        console.log(res);
+        console.log('즐겨찾기삭제성공');
+        setLove(false);
+        // 즐겨찾기 목록에서 삭제된 항목 제거
+        setBookmarks(bookmarks.filter(b => b.farmerName !== profileNickname));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    } else {
+      console.log('즐겨찾기에서 해당 농부를 찾을 수 없습니다.');
+    }
+  };
+  
   
 
 
@@ -80,9 +134,12 @@ export default function OpponentSeller (){
           <h4 className='text-sm'>{profileAddress}</h4>
           <h4 className='text-sm'style={{color:'gray'}}>{profileComment}</h4>
         </div>
-        <div className='flex justify-center items-center p-4' onClick={handleLove}>
-          <img src={ love ? SaeClick : Sae} alt="" style={{width:50,height:50}} />
-        </div>
+        { loginJob !== profileJob && (
+          <div className='flex justify-center items-center p-4'
+          onClick={love ? handleDelete : handleLove}>
+            <img src={love ? SaeClick : Sae } alt="" style={{width:50,height:50}} />
+          </div>
+        )}
       </div>
       <div className='flex justify-around p-3' style={{height:50}}>
         <h1 className='font-bold' style={{ color: selected === 0 ? 'black' : 'gray' }} onClick={()=>{handleClick(0)}}>마이팜</h1>
