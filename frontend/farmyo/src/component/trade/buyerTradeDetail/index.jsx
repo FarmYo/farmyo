@@ -170,7 +170,7 @@ export default function BuyerTrade() {
         name: "팜요", // 서비스명
         amount: info.tradePrice*info.tradeQuantity , // 결제 금액
         buyer_name: info.seller, // 판매자 이름
-        m_redirect_url: 'http://localhost:3000/trade/redirect',
+        m_redirect_url: 'https://j10d209.p.ssafy.io/trade/redirect',
       }, function(rsp) {
         console.log("결제응답:",rsp)
         if (rsp.success) {
