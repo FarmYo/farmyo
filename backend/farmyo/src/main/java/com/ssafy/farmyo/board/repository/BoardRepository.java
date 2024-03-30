@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -22,6 +23,11 @@ public interface BoardRepository extends JpaRepository<Board, Integer> {
     Page<Board> getArticleList(@Param("boardType") int boardType, Pageable pageable);
 
     Optional<Board> findByCropId(Integer cropId);
+
+    //로그인 아이디로 그 유저의 게시판 목록 조회
+    @Query("SELECT b FROM Board b WHERE b.user.loginId = :loginId ORDER BY b.createdAt DESC")
+    List<Board> findByUserLoginId(String loginId, Pageable pageable);
+
 
 
 }

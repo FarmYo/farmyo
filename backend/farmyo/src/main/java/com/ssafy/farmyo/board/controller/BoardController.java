@@ -108,8 +108,21 @@ public class BoardController {
         int patchBoardId = boardService.patchBoard(boardId, patchBoardReqDto, images,userDetails.getId());
         log.info("{}번 게시물 업데이트", boardId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(boardId, patchBoardId));
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, patchBoardId));
 
+    }
+
+
+    //유저로그인아이디로 게시물 목록 조회
+    @Operation(summary = "로그인ID로 게시물 조회", description = "/boards/list/{loginId} \n\n 유저 게시물 목록 조회")
+    @GetMapping("/list/{loginId}")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환")
+    public ResponseEntity<? extends BaseResponseBody> getBoardListbyLoginId(@PathVariable String loginId, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "10") int size,Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        List<BoardListFindByUserResDto> boardListByLoginId= boardService.findBoardListByLoginId(loginId,page, size, userDetails.getId());
+        log.info("{}의 게시물 목록 조회",loginId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, boardListByLoginId));
     }
 
 }
