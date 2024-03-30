@@ -1,13 +1,14 @@
 import Chatting from '../../../image/component/chatting.png'
 import { Modal } from "react-responsive-modal"
-import { useEffect, useState } from 'react'
-import { Fragment } from 'react'
+import { useEffect, useState, Fragment } from 'react'
+import { useNavigate } from 'react-router-dom'
 import api from '../../../api/api'
 import { Menu,Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import Gallery from '../../../image/component/gallery.png'
 
 export default function SellBoardList(){
+  const navigate = useNavigate()
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
@@ -60,7 +61,7 @@ export default function SellBoardList(){
     <div style={{height:'420px',position:'relative'}}>
       {/* 팝니다 게시글 목록 */}
       {boardInfo.map((article) => (
-      <div className="p-4 flex">
+      <div className="p-4 flex" onClick={() => navigate(`sell/${article.boardId}/detail`)}>
         <img src={article.imgUrl} alt="작물이미지" className="w-32" />
         {/* <div style={{backgroundColor:'#bbbbbb'}} className="w-32"></div> */}
         <div className="w-full ml-2">

@@ -2,9 +2,7 @@ package com.ssafy.farmyo.board.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,20 +18,20 @@ public class BoardDetailResDto {
     //작성자 로그인id
     private String userLoginId;
     //작물Id
-    private int cropId;
+    private Integer cropId;
     //작물카테고리이름
     private String cropCategory;
     //게시판 타입
     //  private int boardType;
 
     //게시판 제목
-    private String boardTitle;
+    private String title;
     //게시판 내용
-    private String boardContent;
+    private String content;
     //게시판 수량
-    private int boardQuantity;
+    private int quantity;
     //게시판 가격
-    private int boardPrice;
+    private int price;
     //게시판 이미지링크들
     private List<String> boardImgUrls;
     //게시판 생성시간
