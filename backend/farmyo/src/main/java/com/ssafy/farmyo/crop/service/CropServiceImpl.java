@@ -106,19 +106,25 @@ public class CropServiceImpl implements CropService {
     public void updateCropImgUrl(int cropId, MultipartFile cropImg, int userId) {
 
         Crop crop = cropRepository.findById(cropId).orElseThrow(() -> new CustomException(ExceptionType.CROP_NOT_EXIST));
-        
+
         if (!crop.getFarmer().getId().equals(userId)) {
             throw new CustomException(ExceptionType.CROP_NOT_OWNED_BY_FARMER);
         }
 
 
+        String oldCropImgUrl = null;
+        if (crop.getCropCategory() != null) {
+            oldCropImgUrl = crop.getCropImgUrl();
+
+        }
+
 
         String cropImgUrl = awsS3Service.uploadFile(cropImg);
         crop.updateCropImgUrl(cropImgUrl);
-
-        cropRepository.save(crop);
-
-
+        if (oldCropImgUrl != null) {
+            awsS3Service.deleteFileByUrl(oldCropImgUrl);
+        }
+        
     }
 
 
