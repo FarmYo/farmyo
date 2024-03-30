@@ -1,8 +1,9 @@
 package com.ssafy.farmyo.myfarm.controller;
 
 import com.ssafy.farmyo.common.response.BaseResponseBody;
-import com.ssafy.farmyo.myfarm.dto.MyfarmReqDto;
+import com.ssafy.farmyo.myfarm.dto.MyfarmListDto;
 import com.ssafy.farmyo.myfarm.dto.MyfarmDto;
+import com.ssafy.farmyo.myfarm.dto.MyfarmReqDto;
 import com.ssafy.farmyo.myfarm.dto.UpUserDto;
 import com.ssafy.farmyo.myfarm.service.MyfarmService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,7 +39,7 @@ public class MyfarmController {
 
         myfarmService.createFarm(loginId, content, files, orders);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, 0));
+        return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, "success createFarm"));
     }
 
     @GetMapping("/list")
@@ -47,8 +48,11 @@ public class MyfarmController {
             @RequestParam(name = "loginId")
             @Parameter(description = "유저 아이디")
             String loginId) {
+        log.info("{} : getFarms 실행", loginId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, 0));
+        List<MyfarmListDto> resultList = myfarmService.getFarmList(loginId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, resultList));
     }
 
     @GetMapping("")
@@ -57,8 +61,11 @@ public class MyfarmController {
             @RequestParam(name = "id")
             @Parameter(description = "마이팜 게시글 id")
             int id) {
+        log.info("{} : getFarm 실행", id);
 
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, 0));
+        MyfarmReqDto myfarmReqDto = myfarmService.getFarm(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, myfarmReqDto));
     }
 
     @PatchMapping("")

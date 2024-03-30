@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -89,7 +90,6 @@ public class MyfarmServiceImpl implements MyfarmService {
             throw new CustomException(ExceptionType.USER_NOT_EXIST);
         }
 
-
         return UpUserDto.builder()
                 .job(user.getJob())
                 .userProfile(user.getProfile())
@@ -101,21 +101,50 @@ public class MyfarmServiceImpl implements MyfarmService {
     }
 
     @Override
-    public MyfarmListDto getFarmList(int id) {
-        User user =  userRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+    public List<MyfarmListDto> getFarmList(String loginId) {
+        User user =  userRepository.findByLoginId(loginId).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
         if (user.getJob() != 0) {
             throw new CustomException(ExceptionType.USER_NOT_FARMER);
         }
 
-        List<Farm> farmList = myfarmRepository.findAllByUserId(id);
+        List<Farm> farmList = myfarmRepository.findAllByUserId(user.getId());
+        List<MyfarmListDto> resultList = new ArrayList<>();
 
+        for (Farm farm : farmList) {
 
-        return null;
+            MyfarmListDto myfarmListDto = MyfarmListDto.builder()
+                    .id(farm.getId())
+                    .imgUrl(myfarmImageRepository.getFirstUrl(farm.getId()))
+                    .build();
+
+            resultList.add(myfarmListDto);
+        }
+
+        return resultList;
     }
 
     @Override
-    public MyfarmDto getFarm(int id) {
+    public MyfarmReqDto getFarm(int id) {
+        Farm farm = myfarmRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.FARM_NOT_EXIST));
+        User user = userRepository.findByLoginId(farm.getFarmer().getLoginId()).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
 
-        return null;
+        List<FarmImg> farmImgList = myfarmImageRepository.getFarmImgeList(id);
+        List<MyfarmImageDto> imageDtoList = new ArrayList<>();
+
+        for (FarmImg farmImg : farmImgList) {
+            MyfarmImageDto myfarmImageDto = MyfarmImageDto.builder()
+                    .imageUrl(farmImg.getImgUrl())
+                    .order(farmImg.getImgOrder())
+                    .build();
+
+            imageDtoList.add(myfarmImageDto);
+        }
+
+        return MyfarmReqDto.builder()
+                .nickname(user.getNickname())
+                .farmContent(farm.getContent())
+                .updatedAt(farm.getUpdatedAt())
+                .myfarmImageDtoList(imageDtoList)
+                .build();
     }
 }
