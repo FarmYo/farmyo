@@ -4,22 +4,56 @@ import Three from "../../../image/component/three.png"
 import Trash from "../../../image/component/trash.png"
 import Edit from "../../../image/component/edit.PNG"
 import Back from '../../../image/component/leftarrow.png'
+import { useState } from "react"
+import api from '../../../api/api'
+import { useParams } from "react-router-dom"
+import { useEffect } from 'react'
+import { useNavigate } from "react-router-dom"
 
 export default function BuyDetail(){
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
 
+  const params = useParams()
+  const boardId = params.boardId
+  const [boardInfo, setBoardInfo] =useState([])
+
+  const navigate = useNavigate()
+  const goList = () => {
+    navigate("/board",{state:{selected:1}})
+  }
+
+
+
+  // 게시판 상세보기
+  const getDetail = () => {
+    api.get(`boards/${boardId}`)
+    .then((res) => {
+      console.log('상세 게시판 조회 성공')
+      setBoardInfo(res.data.dataBody)
+    })
+    .catch((err) => {
+      console.log(boardId)
+      console.error('상세 게시판 조회 실패', err)
+    })
+    }
+
+useEffect(() => {
+  getDetail()
+}, [])
+
+
   return(
     <div>
       <div className="p-5 flex justify-between border-b-2 border-gray-300">
         <div className='flex'>
           <div className='flex items-center'>
-            <img src={Back} alt="" style={{ width:30,height:30 }}/>
+            <img src={Back} alt="" style={{ width:30,height:30 }} onClick={goList}/>
           </div>
           <div className='ml-4'>
-            <h1 className='font-bold text-lg'>감자감자왕감자</h1>
-            <h1 className=''>조현제</h1>
+            <h1 className='font-bold text-lg'>{boardInfo.title}</h1>
+            <h1 className=''>{boardInfo.userNickname}</h1>
           </div>
         </div>      
         {/* 아래의 메뉴바(수정,삭제)는 본인만 보이게 */}
@@ -78,17 +112,15 @@ export default function BuyDetail(){
     </div>
     <div className="p-2 pl-5">
       <h1>
-      안녕하세요 감자를 살려고 하는데 우선 1kg만 사고 상태랑
-      가격 보고 거래처를 구할려고 합니다. 관심 있으신 농부님
-      채팅주세요 !!
+{boardInfo.content}
       </h1>
     </div>
 
     <div style={{ position:'fixed',bottom:120,right:0,left:0}}>
       <div className='flex justify-between border-t-2 border-gray-300 p-3'>
         <div>
-          <h1 className="font-bold">10,000원/kg</h1>
-          <h1 className="font-bold">50kg</h1>
+          <h1 className="font-bold">{boardInfo.price}원/kg</h1>
+          <h1 className="font-bold">{boardInfo.quantity}kg</h1>
         </div>
         <div>
           <button className="btn" style={{ backgroundColor: '#1B5E20'}}> 

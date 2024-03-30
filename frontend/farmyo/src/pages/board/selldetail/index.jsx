@@ -1,14 +1,14 @@
 import Three from "../../../image/component/three.png"
 import Trash from "../../../image/component/trash.png"
 import Edit from "../../../image/component/edit.PNG"
-import { Fragment } from 'react'
+import { Fragment, useEffect } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import '../../../css/barchart.css'
 import Back from '../../../image/component/leftarrow.png'
 import { useParams } from "react-router-dom"
 import api from '../../../api/api'
 import { useState } from "react"
-
+import { useNavigate } from "react-router-dom"
 
 
 function classNames(...classes) {
@@ -19,7 +19,25 @@ export default function SellDetail(){
   const params = useParams()
   const boardId = params.boardId
   const [tradeQuantity,setTradeQuantity] = useState(null)
+  const [boardInfo, setBoardInfo] =useState([])
+  const navigate = useNavigate()
+  const goList = () => {
+    navigate("/board",{state:{selected:0}})
+  }
 
+
+  // 게시판 상세보기
+  const getDetail = () => {
+    api.get(`boards/${boardId}`)
+    .then((res) => {
+      console.log('상세 게시판 조회 성공')
+      setBoardInfo(res.data.dataBody)
+    })
+    .catch((err) => {
+      console.log(boardId)
+      console.error('상세 게시판 조회 실패', err)
+    })
+    }
 
   // 게시판에서 바로 거래생성 로직
   const goTrade = () =>{
@@ -41,19 +59,21 @@ export default function SellDetail(){
     })
   }
 
-
+useEffect(() => {
+  getDetail()
+}, [])
 
   return(
     <div>
        {/* 팝니다 상세게시글사진 */}
-       <div style={{height:240,backgroundColor:'#bbbbbb'}}>
+      <div style={{height:240,backgroundColor:'#bbbbbb'}}>
         {/* 뒤로가기버튼 */}
-        <img src={Back} alt="" style={{ width:40,height:40 }} className="p-2"/>
-       </div>
+        <img src={Back} alt="" style={{ width:40,height:40 }} className="p-2" onClick={goList}/>
+      </div>
       <div className="p-5 flex justify-between">
         <div>
-          <h1 className='font-bold text-lg'>감자감자왕감자</h1>
-          <h1 className=''>조현제</h1>
+          <h1 className='font-bold text-lg'>{ boardInfo.title }</h1>
+          <h1 className=''>{boardInfo.userNickname}</h1>
         </div>
         <div>
           <button className="btn flex w-32 justify-around" style={{ backgroundColor: '#2E8B57'}}> 
@@ -115,8 +135,7 @@ export default function SellDetail(){
         </Menu>
     </div>
     <div className="p-2 pl-5">
-      <h1>안녕안녕 안녕 하십니까. 3월 8일이 무슨 날인 줄 아십니까?
-        바로 우리팀 외모담당 오승현씨의 생일입니다.
+      <h1>{boardInfo.content}
       </h1>
     </div>
 
@@ -124,12 +143,12 @@ export default function SellDetail(){
       <div className="p-3">
         {/* max : 총수량 value : 거래가능량 */}
         <progress className="progress custom-progress w-full h-3" value="50" max="100" style={{ color:'#1B5E20'}}></progress>
-        <div className="text-sm">거래가능량 : </div>
+        <div className="text-sm">거래가능량 : { boardInfo.quantity }kg</div>
       </div>
       <div className='flex justify-between border-t-2 border-gray-300 p-3'>
         <div>
-          <h1 className="font-bold">10,000원/kg</h1>
-          <h1 className="font-bold">50kg</h1>
+          <h1 className="font-bold">{boardInfo.price}원/kg</h1>
+          {/* <h1 className="font-bold">50kg</h1> */}
         </div>
         <div>
           <button className="btn mr-2" style={{ backgroundColor: '#1B5E20'}} 

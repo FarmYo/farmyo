@@ -64,6 +64,9 @@ public enum ExceptionType {
     BOARDTYPE_INVALID(HttpStatus.BAD_REQUEST, "B-010", "보드타입이 잘못되었습니다."),
     USER_NOT_AUTHOR(HttpStatus.FORBIDDEN, "B-011", "작성자만 수정 또는 삭제할 수 있습니다."),
     BOARD_ALREADY_EXISTS(HttpStatus.CONFLICT, "B-012", "이미 이 작물과 관련된 게시판이 있습니다."),
+    BUYER_ONLY_ACCESS(HttpStatus.FORBIDDEN, "B-013", "구매자 게시판 목록은 오직 구매자만 볼 수 있습니다."),
+
+
 
 
 
