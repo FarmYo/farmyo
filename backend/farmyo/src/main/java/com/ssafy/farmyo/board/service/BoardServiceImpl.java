@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -313,6 +314,32 @@ public class BoardServiceImpl implements BoardService {
             }
         }
         return board.getId();
+    }
+
+    //로그인id로 게시물 목록 조회
+    @Override
+    @Transactional(readOnly = true)
+    public List<BoardListFindByUserResDto> findBoardListByLoginId(String loginId, int page, int size, int userId) {
+        //입력받은 로그인 아이디를 가진 user가 없을 때
+        User user = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+
+        //구매자의 경우 본인만 볼 수 있음
+        if (user.getJob() == 1) {
+            if (!user.getId().equals(userId)) {
+                throw new CustomException(ExceptionType.BUYER_ONLY_ACCESS);
+            }
+        }
+
+        List<Board> boards = boardRepository.findByUserLoginId(loginId,PageRequest.of(page,size));
+        return boards.stream()
+                .map(board -> BoardListFindByUserResDto.builder()
+                        .boardId(board.getId())
+                        .title(board.getBoardTitle())
+                        .boardType(board.getBoardType())
+                        .createdAt(board.getCreatedAt())
+                        .build())
+                .collect(Collectors.toList());
     }
 
 
