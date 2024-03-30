@@ -68,13 +68,19 @@ public class MyfarmController {
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, myfarmReqDto));
     }
 
-    @PutMapping("")
+    @PutMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "마이팜 게시글 수정", description = "마이팜 id와 수정할 정보를 통해 마이팜 게시글을 수정한다.")
     public ResponseEntity<? extends BaseResponseBody> updateFarm(
-            @RequestBody
-            MyfarmDto myfarmDto) {
+            @RequestParam("id") int id,
+            @RequestParam("content") String content,
+            @RequestParam("status") int status,
+            @RequestParam("files") List<MultipartFile> files,
+            @RequestParam("orders") List<Integer> orders) {
+        log.info("{}, {}, {}, {} : updateFarm 실행", id, content, orders, status);
 
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, 0));
+        myfarmService.updateFarm(id, content, status, files, orders);
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "success updateFarm"));
     }
 
     @DeleteMapping("")
@@ -87,7 +93,7 @@ public class MyfarmController {
 
         myfarmService.deleteFarm(id);
 
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "success delete farm"));
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "success deleteFarm"));
     }
 
     @GetMapping("/user")

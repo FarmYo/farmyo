@@ -11,7 +11,7 @@ import java.util.List;
 public interface MyfarmService {
 
     void createFarm(String loginId, String content, List<MultipartFile> files, List<Integer> orders);
-    void updateFarm();
+    void updateFarm(int id, String content, int status, List<MultipartFile> files, List<Integer> orders);
     void deleteFarm(int id);
     UpUserDto getUpUser(String loginId);
     List<MyfarmListDto> getFarmList(String loginId);
