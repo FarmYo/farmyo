@@ -6,12 +6,36 @@ import "react-responsive-modal/styles.css"
 import { Modal } from "react-responsive-modal"
 import Gallery from "../../../image/component/gallery.png"
 import { jwtDecode } from 'jwt-decode';
+import api from "../../../api/api"
+import { useNavigate } from 'react-router-dom'
 
 export default function MyFarm(props) {
-  const loginId = jwtDecode( localStorage.getItem("access") ).loginId
-  
+  const navigate = useNavigate()
+  const loginId = jwtDecode( localStorage.getItem("access") ).loginId 
+  const [farmList,setFarmList] = useState([])
+
   // console.log(loginId)
   // console.log(props.profileId)
+   useEffect(()=>{
+    console.log(loginId)
+    api.get('farms/list',{
+      params:{
+        loginId: loginId
+      }
+    })
+    .then((res)=>{
+      console.log(res)
+      console.log('마이팜게시글조회 성공')
+      setFarmList(res.data.dataBody)
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  },[])
+
+
+
+
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
@@ -27,6 +51,9 @@ export default function MyFarm(props) {
     },
   };
 
+  const goMyfarmDeail = (farmId) =>{
+    navigate(`/mypage/myfarm/${farmId}`)
+  }
 
   
   const [open,setOpen] = useState(false)
@@ -103,6 +130,16 @@ export default function MyFarm(props) {
       </Transition>
     </Menu>
     </div>
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(3, 1fr)', // 세 개의 컬럼으로 나눕니다.
+    }} className='mt-2'>
+      {farmList.map((farm, index) => (
+        <img key={index} src={farm.imgUrl} alt="Farm" style={{width:'100%', height:'120px'}}
+        onClick={()=>goMyfarmDeail(farm.id)}/>
+      ))}
+    </div>
+
 
     { !props.profileId  && (
     <div style={{ position: 'absolute', bottom: 0, right: 10}}>

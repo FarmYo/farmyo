@@ -1,0 +1,13 @@
+.slick-slider, .slick-list, .slick-track {
+  height: 350px !important;
+}
+
+.slick-slide > div {
+  height: 350px !important;
+}
+
+.slick-slide img {
+  height: 350px !important;
+  width: 100% !important;
+  object-fit: cover !important;
+}

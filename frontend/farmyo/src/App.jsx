@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import Router from './router'
 import BottomBar from './component/common/bottombar'
-// import { useHistory } from 'react-router-dom'
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
+
 
 function App() {
   const location = useLocation()
@@ -28,6 +30,7 @@ function App() {
     /^\/password$/,
     /^\/trade\/.+$/,
     /^\/stanby\/.*/,
+    /^\/mypage\/myfarm\/\d+$/,
   ];
 
   const definedRoutes = [
@@ -45,7 +48,7 @@ function App() {
     '/mypage/seller',
     '/mypage/buyer',
     '/mypage/seller/:id',
-    '/mypage/:myfarmId/detail',
+    '/mypage/myfarm/:farmId',
     '/board',
     '/board/sell/:boardId/detail',
     '/board/buy/:boardId/detail',

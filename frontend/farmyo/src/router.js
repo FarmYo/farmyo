@@ -60,7 +60,7 @@ export default function Router (){
       {/* 상대방판매자마이페이지 */}
       <Route path='/mypage/seller/:id' element={<OpponentSellerMypage />} /> 
       {/* 마이팜디테일페이지 */}
-      <Route path='/mypage/:myfarmId/detail' element={<MyFarmDetail />} />
+      <Route path='/mypage/myfarm/:farmId' element={<MyFarmDetail />} />
       {/* 팜&삼 게시판페이지 */}
       <Route path='/board' element={<BoardNav />} />
       {/* 팝니다상세페이지 */}
