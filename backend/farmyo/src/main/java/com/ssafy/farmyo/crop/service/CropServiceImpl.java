@@ -43,6 +43,8 @@ public class CropServiceImpl implements CropService {
     @Transactional
     public int addCrop(AddCropReqDto addCropReqDto, int farmerId) {
 
+        String basicUrl = "https://yeopbucket.s3.ap-northeast-2.amazonaws.com/%EA%B8%B0%EB%B3%B8%20%EC%9D%B4%EB%AF%B8%EC%A7%80_1711798541181.png";
+
 
         //해당 id의 파머가 있는지 확인
         Optional<Farmer> optionalFarmer = farmerRepository.findById(farmerId);
@@ -63,7 +65,9 @@ public class CropServiceImpl implements CropService {
                 .cropCultivationSite(addCropReqDto.getCultivation())
                 .cropPlantingDate(addCropReqDto.getPlantingDate())
                 .cropStatus(0)
+                .cropImgUrl(basicUrl)
                 .build();
+        
         crop = cropRepository.save(crop);
 
 
