@@ -84,20 +84,22 @@ export default function BuyBoardList(){
       {/* 삽니다게시글생성모달 */}
       <Modal open={buyOpen} onClose={buyCloseModal} styles={styles}>
         <div className="mt-24">
-          <label for="price" class="block text-md leading-6 text-gray-900">수량</label>
-          <div class="relative rounded-md mt-1">
-            <input type="number" name="price" id="price" class="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="수량을 입력하세요(kg)"/>
+          <label htmlFor="price" className="block text-md leading-6 text-gray-900">수량</label>
+          <div className="relative rounded-md mt-1">
+            <input 
+              
+              type="number" name="price" id="price" className="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="수량을 입력하세요(kg)"/>
           </div>
-          <label for="price" class="block text-md mt-2 leading-6 text-gray-900">가격</label>
-          <div class="relative rounded-md mt-1">
-            <input type="number" name="price" id="price" class="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="가격을 입력하세요(/kg)"/>
+          <label htmlFor="price" className="block text-md mt-2 leading-6 text-gray-900">가격</label>
+          <div className="relative rounded-md mt-1">
+            <input type="number" name="price" id="price" className="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="가격을 입력하세요(/kg)"/>
           </div>
-          <label for="price" class="block text-md mt-2 leading-6 text-gray-900">제목</label>
-          <div class="relative rounded-md mt-1">
-            <input type="text" name="price" id="price" class="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="제목을 입력하세요"/>
+          <label htmlFor="price" className="block text-md mt-2 leading-6 text-gray-900">제목</label>
+          <div className="relative rounded-md mt-1">
+            <input type="text" name="price" id="price" className="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="제목을 입력하세요"/>
           </div>
-          <label for="price" class="block text-md mt-2 leading-6 text-gray-900">내용</label>
-          <div class="relative rounded-md mt-1">
+          <label htmlFor="price" className="block text-md mt-2 leading-6 text-gray-900">내용</label>
+          <div className="relative rounded-md mt-1">
             <textarea className="textarea textarea-bordered w-full h-24" placeholder="내용을 입력하세요"></textarea>
           </div>
           <div className="mt-10">
