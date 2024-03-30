@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface MyfarmImageRepository extends JpaRepository<FarmImg, Integer> {
 
-    @Query("SELECT f FROM FarmImg f WHERE f.farm.id = :id AND f.imgOrder = 1")
+    @Query("SELECT f.imgUrl FROM FarmImg f WHERE f.farm.id = :id AND f.imgOrder = 1")
     String getFirstUrl(int id);
 
     @Query("SELECT i FROM FarmImg i WHERE i.farm.id = :id")
