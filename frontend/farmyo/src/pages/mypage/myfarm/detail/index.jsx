@@ -6,12 +6,15 @@ import { Menu, Transition } from '@headlessui/react'
 import "react-responsive-modal/styles.css"
 import { Modal } from "react-responsive-modal"
 import BackArrow from "../../../../image/component/trade/backarrow.png"
+import WBackArrow from "../../../../image/component/trade/wbackarrow.png"
 import { useEffect,useState } from "react"
 import api from '../../../../api/api'
 import { useNavigate,useParams } from "react-router-dom"
 import React from "react"
 import Slider from "react-slick";
 import "../../../../css/slick.css"
+import { useLocation } from "react-router-dom"
+import Swal from "sweetalert2"
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -29,6 +32,8 @@ const styles = {
 };
 
 export default function MyFarmDetail() {
+  const { state } = useLocation()
+  const { profileId } = state || {}
   const navigate = useNavigate()
   const param = useParams()
   const farmId= param.farmId
@@ -58,9 +63,10 @@ export default function MyFarmDetail() {
     })
   },[])
 
-  const goBack = ()=>{
-    // 나중에 본인인지 검사하고 navigate주소나눠야함 ..
-    navigate('/mypage/seller')
+  // 뒤로가기
+  const goBack = () => {
+    const destination = profileId === undefined ? '/mypage/seller' : `/mypage/seller/${profileId}`;
+    navigate(destination);
   }
 
   const settings = {
@@ -72,31 +78,44 @@ export default function MyFarmDetail() {
     adaptiveHeight: true
   };
 
-
+  // 마이팜게시글 삭제하기
+  const farmDelete = () =>{
+    api.delete('farms',{
+      params:{
+        id:farmId
+      }
+    })
+    .then((res)=>{
+      console.log(res)
+      console.log('삭제성공')
+      Swal.fire({
+        html: '<h1 style="font-weight: bold;">게시글이 삭제되었습니다</h1>',
+        icon: 'success',
+        showConfirmButton: false,
+      });
+      goBack()
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  }
 
   return(
     <div>
       <div style={{height:50,backgroundColor:'#1B5E20'}}>
         <div className="p-2 flex justify-between">
-          <img src={BackArrow} alt="" style={{ width:30,height:30}} onClick={goBack}/>
+          <img src={WBackArrow} alt="" style={{ width:30,height:30}} onClick={goBack}/>
         </div>
       </div>
       {/* 마이팜사진위치 */}
-      {/* <div style={{height:'350px',backgroundColor:'#bbbbbb'}}></div> */}
-    
-        <Slider {...settings}  style={{ minHeight: '350px' }}>
+        <Slider {...settings}  style={{ minHeight: '350px' }} className="sliderOne">
           {imageList.map((image, index) => (
-            <div key={index} style={{ height: '350px',width:'100%'}}>
-              <img src={image.imageUrl} alt={`slide-${index}`} style={{height:'350px', width: '100%', objectFit: 'cover'}}/>
+            <div key={index}>
+              <img src={image.imageUrl} alt={`slide-${index}`}/>
             </div>
           ))}
         </Slider>
   
-
-
-
-
-
 
 
 
@@ -111,7 +130,7 @@ export default function MyFarmDetail() {
             <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
               <img src={Three} alt="" className="w-1"/>
             </Menu.Button>
-          </div>
+        
 
           <Transition
             as={Fragment}
@@ -141,7 +160,7 @@ export default function MyFarmDetail() {
               </Menu.Item>
             </div>
             <div className="py-1">
-              <Menu.Item className='flex'>
+              <Menu.Item className='flex' onClick={farmDelete}>
                 {({ active }) => (
                   <a
                     href="#"
@@ -157,7 +176,7 @@ export default function MyFarmDetail() {
             </div>
           </Menu.Items>
         </Transition>
-        
+        </div>
       </Menu>
     </div>
     {/* 마이팜작성글위치 */}

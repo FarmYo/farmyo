@@ -8,16 +8,19 @@ import Gallery from "../../../image/component/gallery.png"
 import { jwtDecode } from 'jwt-decode';
 import api from "../../../api/api"
 import { useNavigate } from 'react-router-dom'
+import Slider from 'react-slick'
 
 export default function MyFarm(props) {
   const navigate = useNavigate()
   const loginId = jwtDecode( localStorage.getItem("access") ).loginId 
-  const [farmList,setFarmList] = useState([])
+  const [farmList,setFarmList] = useState([]) //마이팜 게시물 조회시 담기는 리스트
+  const [selectImage,setSelectImage] = useState([]) //게시물 생성시 선택한 이미지 리스트
 
   // console.log(loginId)
-  // console.log(props.profileId)
+
    useEffect(()=>{
     console.log(loginId)
+    console.log(props.profileId)
     api.get('farms/list',{
       params:{
         loginId: loginId
@@ -33,6 +36,14 @@ export default function MyFarm(props) {
     })
   },[])
 
+  const settings = {
+    dots: true, // 하단에 점으로 페이지 표시 여부
+    infinite: true, // 무한으로 반복
+    speed: 500, // 넘어가는 속도
+    slidesToShow: 1, // 한 번에 보여줄 슬라이드 수
+    slidesToScroll: 1, // 스크롤할 때 넘어가는 슬라이드 수
+    adaptiveHeight: true
+  };
 
 
 
@@ -52,7 +63,7 @@ export default function MyFarm(props) {
   };
 
   const goMyfarmDeail = (farmId) =>{
-    navigate(`/mypage/myfarm/${farmId}`)
+    navigate(`/mypage/myfarm/${farmId}`,{ state: { profileId: props.profileId } })
   }
 
   
@@ -86,6 +97,57 @@ export default function MyFarm(props) {
   const handleWriteCrop = (e) => {
     setWriteCrop(e)
   }
+
+  const handleFileInputClick = () => {
+    // 숨겨진 file input을 클릭
+    document.getElementById('hiddenFileInput').click();
+  };
+
+  const handleFileChange = (event) => {
+    const files = event.target.files;
+
+    if (files.length > 0) {
+      const fileReaders = [];
+      const urls = [];
+  
+      // 각 파일에 대해 FileReader를 생성하고, 이를 통해 DataURL을 얻음
+      for (let i = 0; i < files.length; i++) {
+        const reader = new FileReader();
+  
+        // 파일 읽기가 완료되면 urls 상태에 DataURL을 추가
+        reader.onload = (e) => {
+          urls.push(e.target.result);
+  
+          // 모든 파일의 읽기가 완료되었는지 확인
+          if (urls.length === files.length) {
+            setSelectImage(urls);
+          }
+        };
+  
+        reader.readAsDataURL(files[i]);
+        fileReaders.push(reader);
+      }
+      console.log(selectImage)
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  };
 
  return(
   <div style={{ position:'relative',height:'400px' }}>
@@ -155,10 +217,30 @@ export default function MyFarm(props) {
     {/* ******모달창들******** */}
     {/* 마이팜게시글등록 모달창 */}
     <Modal open={open} onClose={onCloseModal} styles={styles}>
-    <div className='pt-60'>
-      <div >
-        {/* 사진위치 */}
-      </div>
+    <div className='pt-16'>
+      {/* 사진위치 */}
+
+
+      <Slider {...settings} className="sliderTwo mb-10">
+        {selectImage.map((url, index) => (
+          <div key={index}>
+            <img src={url} alt={`Preview ${index}`} style={{ width: "100%",height:'150px'}} />
+          </div>
+        ))}
+      </Slider>
+
+
+
+
+
+
+
+
+
+
+
+
+
       <div className='flex justify-between'>
       <div div>
       <Menu as="div" className="relative inline-block text-left">
@@ -199,27 +281,21 @@ export default function MyFarm(props) {
       </Transition>
     </Menu>
     </div>
+                  
+    {/* 마이팜게시물생성 사진불러오기 */}
     <div className='flex items-center justify-between'>
-      <div className='flex' onClick={photoOpenModal}>
+      <div className='flex' onClick={handleFileInputClick}>
         <h1 className='font-bold'>+</h1>
         <img src={Gallery} alt="" style={{ width:40 }} className='mr-3'/>
       </div>
     </div>
-    {/* 사진등록모달창 */}
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
+    <input
+        type="file"
+        id="hiddenFileInput"
+        style={{ display: 'none' }}
+        multiple
+        onChange={handleFileChange}
+      />
 
       </div>
       <textarea className="textarea w-full h-28 textarea-bordered mt-10" 
