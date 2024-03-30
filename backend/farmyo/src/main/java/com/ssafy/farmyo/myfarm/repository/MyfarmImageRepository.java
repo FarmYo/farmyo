@@ -10,10 +10,13 @@ import java.util.List;
 @Repository
 public interface MyfarmImageRepository extends JpaRepository<FarmImg, Integer> {
 
-    @Query("SELECT f.imgUrl FROM FarmImg f WHERE f.farm.id = :id AND f.imgOrder = 1")
+    @Query("SELECT i.imgUrl FROM FarmImg i WHERE i.farm.id = :id AND i.imgOrder = 1 ORDER BY i.createdAt")
     String getFirstUrl(int id);
 
     @Query("SELECT i FROM FarmImg i WHERE i.farm.id = :id")
     List<FarmImg> getFarmImgeList(int id);
+
+    @Query("DELETE FROM FarmImg i WHERE i.farm.id = :id")
+    void deleteAllByFarmId(int id);
 
 }
