@@ -23,6 +23,7 @@ public enum ExceptionType {
     PASSWORD_NOT_MATCH(HttpStatus.BAD_REQUEST, "U-011", "현재 비밀번호가 일치하지 않습니다."),
     FARMER_NOT_EXIST(HttpStatus.BAD_REQUEST, "U-012", "존재하지 않는 농부입니다."),
     DUPLICATE_LOGIN_ID(HttpStatus.BAD_REQUEST, "U-013", "아이디가 중복되었습니다."),
+    FAILED_TO_CREATE_WALLET(HttpStatus.INTERNAL_SERVER_ERROR, "U-014", "지갑 생성에 실패했습니다."),
 
     // 작물
     CROP_NOT_EXIST(HttpStatus.BAD_REQUEST, "C-001", "존재하지 않는 작물입니다."),
