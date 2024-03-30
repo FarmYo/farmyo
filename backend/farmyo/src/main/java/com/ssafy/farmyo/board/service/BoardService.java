@@ -20,6 +20,6 @@ public interface BoardService {
     List<BoardListResDto> findBoardListByType(int boardType, int page, int size);
 
     //게시판 수정
-    Integer patchBoard(int boardId, PatchBoardReqDto patchBoardReqDto, int userId);
+    Integer patchBoard(int boardId, PatchBoardReqDto patchBoardReqDto, List<MultipartFile> images, int userId);
 
 }

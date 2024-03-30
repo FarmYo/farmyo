@@ -54,7 +54,7 @@ public enum ExceptionType {
     // 게시판
     BOARD_NOT_EXIST(HttpStatus.NOT_FOUND, "B-001", "존재하지 않는 게시판입니다."),
     CROP_NOT_ASSOCIATED_WITH_BOARD(HttpStatus.BAD_REQUEST, "B-002", "게시판에 연결된 작물이 존재하지 않습니다."),
-    CROPCATEGORY_NOT_ASSOCIATED_WITH_BOARD(HttpStatus.BAD_REQUEST, "B-003", "판매게시판에 연결된 작물카테고리가 존재하지 않습니다."),
+    CROPCATEGORY_NOT_ASSOCIATED_WITH_BOARD(HttpStatus.BAD_REQUEST, "B-003", "게시판에 연결된 작물카테고리가 존재하지 않습니다."),
     FARMER_CANNOT_POST_BUY_BOARD(HttpStatus.FORBIDDEN, "B-004", "농부는 구매 게시판을 작성할 수 없습니다."),
     QUANTITY_INVALID(HttpStatus.BAD_REQUEST, "B-005", "게시판의 수량이 유효하지 않습니다."),
     PRICE_INVALID(HttpStatus.BAD_REQUEST, "B-006", "게시판의 가격이 유효하지 않습니다."),
