@@ -101,14 +101,14 @@ public class BoardController {
 
     //게시물수정
     @Operation(summary = "게시물수정", description = "/boards/{boardId} \n\n 게시물 수정")
-    @PatchMapping("/{boardId}")
+    @PatchMapping(value = "/{boardId}", consumes = "multipart/form-data")
     @ApiResponse(responseCode = "200", description = "성공 \n\n Success 반환")
-    public ResponseEntity<? extends BaseResponseBody> updateBoard(@PathVariable int boardId, @RequestBody @Validated PatchBoardReqDto patchBoardReqDto, Authentication authentication) {
+    public ResponseEntity<? extends BaseResponseBody> updateBoard(@PathVariable int boardId, @ModelAttribute @Validated PatchBoardReqDto patchBoardReqDto, @RequestPart(name = "images", required = false) List<MultipartFile> images, Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        int patchBoardId = boardService.patchBoard(boardId, patchBoardReqDto, userDetails.getId());
+        int patchBoardId = boardService.patchBoard(boardId, patchBoardReqDto, images,userDetails.getId());
         log.info("{}번 게시물 업데이트", boardId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, patchBoardId));
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(boardId, patchBoardId));
 
     }
 
