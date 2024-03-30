@@ -1,30 +1,119 @@
-import { Fragment } from 'react'
+import { useState, useEffect, Fragment } from "react"
+import { useParams, useNavigate } from "react-router-dom"
 import { Menu, Transition } from '@headlessui/react'
+import { Modal } from "react-responsive-modal"
 import Three from "../../../image/component/three.png"
-import Trash from "../../../image/component/trash.png"
+// import Trash from "../../../image/component/trash.png"
 import Edit from "../../../image/component/edit.PNG"
 import Back from '../../../image/component/leftarrow.png'
-import { useState } from "react"
 import api from '../../../api/api'
-import { useParams } from "react-router-dom"
-import { useEffect } from 'react'
-import { useNavigate } from "react-router-dom"
+// import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import Swal from 'sweetalert2'
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ')
+}
 
 export default function BuyDetail(){
-  function classNames(...classes) {
-    return classes.filter(Boolean).join(' ')
-  }
-
   const params = useParams()
   const boardId = params.boardId
   const [boardInfo, setBoardInfo] =useState([])
 
   const navigate = useNavigate()
-  const goList = () => {
+  const goList = (() => {
     navigate("/board",{state:{selected:1}})
+  })
+
+  const styles = {
+    modal: {
+      maxWidth: '100%',
+      width: '100%',
+      height: '100%',
+      top: '0',
+      left: '0',
+      margin: '0',
+    },
+  };
+
+  // const [quantity, setQuantity] = useState(boardInfo.quantity)
+  // const [price, setPrice] = useState(boardInfo.price)
+  // const [title, setTitle] = useState(boardInfo.title)
+  // const [content, setContent] = useState(boardInfo.content)
+
+  const [buyOpen,setBuyOpen] = useState(false)
+  const buyOpenModal = () => {
+    setBuyOpen(true);
+  };
+  const buyCloseModal = () => {
+    setBuyOpen(false);
+  };
+
+  const modifyArticle = (() => {
+    if (boardInfo.title && boardInfo.content && boardInfo.quantity && boardInfo.price) {
+      const formData = new FormData();
+      formData.append('title', boardInfo.title)
+      formData.append('content', boardInfo.content)
+      formData.append('quantity', boardInfo.quantity)
+      formData.append('price', boardInfo.price)
+      if (formData) {
+        api.patch(`boards/${boardInfo.id}`, formData)
+        .then((res) => {
+          console.log('수정 완료')
+          buyCloseModal()
+        })
+        .catch((err) => {
+          console.log('수정 실패', err)
+          
+          if (err.response.data.dataHeader.resultCode === "B-005") {
+            console.log('수량이 0초과가 아닐 때')
+            Swal.fire({
+              title : '수량은 1 이상<br>입력해주세요.',
+              confirmButtonColor: '#1B5E20',
+            })
+          } else if (err.response.data.dataHeader.resultCode === "B-006") {
+            console.log('가격이 0초과가 아닐 때')
+            Swal.fire({
+              title : '가격은 1원 이상<br>입력해주세요.',
+              confirmButtonColor: '#1B5E20',
+            })
+          } else if (err.response.data.dataHeader.resultCode === "B-011") {
+            console.log('접속한 사람과 작성자가 다를때')
+            Swal.fire({
+              title : '본인 글만<br>수정할 수 있습니다.',
+              confirmButtonColor: '#1B5E20',
+            })
+          } else {
+            console.log('내용이나 제목 없을때')
+            Swal.fire({
+              title : '제목과 내용을<br>확인해주세요.',
+              confirmButtonColor: '#1B5E20',
+            })
+          }
+          // Swal.fire({
+          //   title : '게시글 수정 실패',
+          //   confirmButtonColor: '#1B5E20',
+          // })
+          
+        })
+      }
+  } else {
+    if (!boardInfo.quantity) {
+        Swal.fire({
+          title : '수량은 1 이상<br>입력해주세요.',
+          confirmButtonColor: '#1B5E20',
+        })
+    } else if (!boardInfo.price) {
+      Swal.fire({
+        title : '가격은 1원 이상<br>입력해주세요.',
+        confirmButtonColor: '#1B5E20',
+      })
+    } else {
+    Swal.fire({
+      title : '정보를 입력해주세요.',
+      confirmButtonColor: '#1B5E20',
+    })}
   }
-
-
+  })
 
   // 게시판 상세보기
   const getDetail = () => {
@@ -49,7 +138,7 @@ useEffect(() => {
       <div className="p-5 flex justify-between border-b-2 border-gray-300">
         <div className='flex'>
           <div className='flex items-center'>
-            <img src={Back} alt="" style={{ width:30,height:30 }} onClick={goList}/>
+            <img src={Back} alt="" style={{ width:30,height:30 }} onClick={() => goList()}/>
           </div>
           <div className='ml-4'>
             <h1 className='font-bold text-lg'>{boardInfo.title}</h1>
@@ -83,15 +172,15 @@ useEffect(() => {
                         active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                         'block px-4 py-2 text-sm'
                       )}
+                      onClick={() => buyOpenModal()}
                     >
                       <img src={Edit} alt="" style={{width:20}}/>수정하기
                     </a>
-                  
                   )}
             
                 </Menu.Item>
               </div>
-              <div className="py-1">
+              {/* <div className="py-1">
                 <Menu.Item className='flex'>
                   {({ active }) => (
                     <a
@@ -105,14 +194,14 @@ useEffect(() => {
                     </a>
                   )}
                 </Menu.Item>
-              </div>
+              </div> */}
             </Menu.Items>
           </Transition>
         </Menu>
     </div>
     <div className="p-2 pl-5">
       <h1>
-{boardInfo.content}
+        {boardInfo.content}
       </h1>
     </div>
 
@@ -129,6 +218,69 @@ useEffect(() => {
         </div>
       </div>
     </div>
+
+    {/* 게시글 수정 모달 */}
+    <Modal open={buyOpen} onClose={buyCloseModal} styles={styles}>
+        <div className="mt-24">
+          <label htmlFor="price" className="block text-md leading-6 text-gray-900">수량</label>
+          <div className="relative rounded-md mt-1">
+            <input 
+              value={boardInfo.quantity}
+              onChange={(event) => {
+                const newBoardInfo = {
+                  ...boardInfo,
+                  quantity : event.target.value,
+                };
+                setBoardInfo(newBoardInfo);}}
+              type="number" name="price" id="price" className="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="수량을 입력하세요(kg)"/>
+          </div>
+          <label htmlFor="price" className="block text-md mt-2 leading-6 text-gray-900">가격</label>
+          <div className="relative rounded-md mt-1">
+            <input 
+              value={boardInfo.price}
+              onChange={(event) => {
+                const newBoardInfo = {
+                  ...boardInfo,
+                  price : event.target.value,
+                };
+                setBoardInfo(newBoardInfo);}}
+              type="number" name="price" id="price" className="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="가격을 입력하세요(/kg)"/>
+          </div>
+          <label htmlFor="price" className="block text-md mt-2 leading-6 text-gray-900">제목</label>
+          <div className="relative rounded-md mt-1">
+            <input 
+              value={boardInfo.title}
+              onChange={(event) => {
+                const newBoardInfo = {
+                  ...boardInfo,
+                  title : event.target.value,
+                };
+                setBoardInfo(newBoardInfo);}}
+              type="text" name="price" id="price" className="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="제목을 입력하세요"/>
+          </div>
+          <label htmlFor="price" className="block text-md mt-2 leading-6 text-gray-900">내용</label>
+          <div className="relative rounded-md mt-1">
+            <textarea 
+              value={boardInfo.content}
+              onChange={(event) => {
+                const newBoardInfo = {
+                  ...boardInfo,
+                  content : event.target.value,
+                };
+                setBoardInfo(newBoardInfo);}}
+              className="textarea textarea-bordered w-full h-24" placeholder="내용을 입력하세요"></textarea>
+          </div>
+          <div className="mt-10">
+            <button className="btn w-full flex justify-around" style={{ backgroundColor: '#1B5E20'}}> 
+              <div 
+                onClick={() => {
+                  modifyArticle()
+                }}
+                className="font-bold text-lg" style={{ color:'white' }}>수정</div>
+            </button>
+          </div>
+        </div>
+      </Modal>
   </div>  
   )
 }

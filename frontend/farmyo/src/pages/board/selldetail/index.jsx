@@ -1,14 +1,15 @@
-import Three from "../../../image/component/three.png"
-import Trash from "../../../image/component/trash.png"
-import Edit from "../../../image/component/edit.PNG"
-import { Fragment, useEffect } from 'react'
+import { useState, Fragment, useEffect } from 'react'
+import { useParams, useNavigate } from "react-router-dom"
 import { Menu, Transition } from '@headlessui/react'
-import '../../../css/barchart.css'
+import { Modal } from "react-responsive-modal"
+import Three from "../../../image/component/three.png"
+// import Trash from "../../../image/component/trash.png"
+import Edit from "../../../image/component/edit.PNG"
 import Back from '../../../image/component/leftarrow.png'
-import { useParams } from "react-router-dom"
 import api from '../../../api/api'
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import Swal from 'sweetalert2'
+import Gallery from '../../../image/component/gallery.png'
+import '../../../css/barchart.css'
 
 
 function classNames(...classes) {
@@ -21,10 +22,125 @@ export default function SellDetail(){
   const [tradeQuantity,setTradeQuantity] = useState(null)
   const [boardInfo, setBoardInfo] =useState([])
   const navigate = useNavigate()
-  const goList = () => {
+  const goList = (() => {
     navigate("/board",{state:{selected:0}})
-  }
+  })
 
+  const styles = {
+    modal: {
+      maxWidth: '100%',
+      width: '100%',
+      height: '100%',
+      top: '0',
+      left: '0',
+      margin: '0',
+    },
+  };
+
+  const [quantity, setQuantity] = useState(boardInfo.quantity)
+  const [price, setPrice] = useState(boardInfo.price)
+  const [title, setTitle] = useState(boardInfo.title)
+  const [content, setContent] = useState(boardInfo.content)
+  // const [files, setFiles] = useState(boardInfo.files)s
+
+  const [sellOpen, setSellOpen] = useState(false)
+  const sellOpenModal = (() => {
+    setSellOpen(true);
+  });
+
+  const sellCloseModal = (() => {
+    setSellOpen(false);
+  });
+
+  const checkPhoto = ((file) => {
+    console.log(file)
+    if (file.length > 5) {
+      Swal.fire({
+        title : '5개만 선택할 수 있습니다.',
+        confirmButtonColor: '#1B5E20',
+      })
+    } else {
+      const newBoardInfo = {
+        ...boardInfo,
+        files : file,
+      };
+      console.log(newBoardInfo)
+      console.log(newBoardInfo.files)
+      setBoardInfo(newBoardInfo);
+    }
+  })
+
+  const modifyArticle = () => {
+    if (boardInfo.title && boardInfo.content && boardInfo.quantity && boardInfo.price && boardInfo.files) {
+      const formData = new FormData();
+      console.log('formData : ', formData)
+      formData.append('title', boardInfo.title)
+      formData.append('content', boardInfo.content)
+      formData.append('quantity', boardInfo.quantity)
+      formData.append('price', boardInfo.price)
+      // (boardInfo.files).forEach((file, index) => {
+      //   formData.append(`images`, file);
+      // });
+      // 사진 넣는 거 해야한다!
+      console.log('formData : ', formData)
+      if (formData && boardInfo.files.length < 6) {
+        api.patch(`boards/${boardInfo.id}`, formData)
+        .then((res) => {
+          console.log('수정 완료')
+          sellCloseModal()
+        })
+        .catch((err) => {
+          console.log('수정 실패', err)
+          if (err.response.data.dataHeader.resultCode === "B-005") {
+            console.log('수량이 0초과가 아닐 때')
+            Swal.fire({
+              title : '수량은 1 이상<br>입력해주세요.',
+              confirmButtonColor: '#1B5E20',
+            })
+          } else if (err.response.data.dataHeader.resultCode === "B-006") {
+            console.log('가격이 0초과가 아닐 때')
+            Swal.fire({
+              title : '가격은 1원 이상<br>입력해주세요.',
+              confirmButtonColor: '#1B5E20',
+            })
+          } else if (err.response.data.dataHeader.resultCode === "B-011") {
+            console.log('접속한 사람과 작성자가 다를때')
+            Swal.fire({
+              title : '본인 글만<br>수정할 수 있습니다.',
+              confirmButtonColor: '#1B5E20',
+            })
+          } else {
+            console.log('내용이나 제목 없을때')
+            Swal.fire({
+              title : '제목과 내용을<br>확인해주세요.',
+              confirmButtonColor: '#1B5E20',
+            })
+          }
+          // Swal.fire({
+          //   title : '게시글 수정 실패',
+          //   confirmButtonColor: '#1B5E20',
+          // })
+          
+        })
+      }
+  } else {
+    if (!boardInfo.quantity) {
+        Swal.fire({
+          title : '수량은 1 이상<br>입력해주세요.',
+          confirmButtonColor: '#1B5E20',
+        })
+    } else if (!boardInfo.price) {
+      Swal.fire({
+        title : '가격은 1원 이상<br>입력해주세요.',
+        confirmButtonColor: '#1B5E20',
+      })
+    } else {
+    Swal.fire({
+      title : '정보를 입력해주세요.',
+      confirmButtonColor: '#1B5E20',
+    })}
+  }
+  }
 
   // 게시판 상세보기
   const getDetail = () => {
@@ -68,7 +184,7 @@ useEffect(() => {
        {/* 팝니다 상세게시글사진 */}
       <div style={{height:240,backgroundColor:'#bbbbbb'}}>
         {/* 뒤로가기버튼 */}
-        <img src={Back} alt="" style={{ width:40,height:40 }} className="p-2" onClick={goList}/>
+        <img src={Back} alt="" style={{ width:40,height:40 }} className="p-2" onClick={() => goList()}/>
       </div>
       <div className="p-5 flex justify-between">
         <div>
@@ -107,15 +223,16 @@ useEffect(() => {
                         active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                         'block px-4 py-2 text-sm'
                       )}
+                      onClick={() => sellOpenModal()}
                     >
-                      <img src={Edit} alt="" style={{width:20}}/>수정하기
+                      <img src={Edit} alt="수정하기 버튼" style={{width:20}}/>수정하기
                     </a>
                   
                   )}
             
                 </Menu.Item>
               </div>
-              <div className="py-1">
+              {/* <div className="py-1">
                 <Menu.Item className='flex'>
                   {({ active }) => (
                     <a
@@ -129,7 +246,7 @@ useEffect(() => {
                     </a>
                   )}
                 </Menu.Item>
-              </div>
+              </div> */}
             </Menu.Items>
           </Transition>
         </Menu>
@@ -195,6 +312,91 @@ useEffect(() => {
         </div>
       </div>
     </dialog>
+
+    {/* 게시글 수정 모달 */}
+      <Modal open={sellOpen} onClose={sellCloseModal} styles={styles}>
+      <div className="mt-10">
+        <div className='h-32' style={{ backgroundColor:'#bbbbbb'}}>사진있음</div>
+        <div className='flex justify-between mt-4'>
+        <div className='flex items-center justify-between'>
+          <div className='flex'>
+            <h1 className='font-bold'>+</h1>
+            <label htmlFor="img"><img src={Gallery} alt="사진 추가하기" style={{ width:30 }} className='mr-3'/></label>
+              <input
+                type="file"
+                id="img"
+                autoComplete="img"
+                accept="image/*"
+                multiple
+                onChange={(event) => checkPhoto(event.target.files)} 
+                // capture="camera"
+                // react-native-image-picker 라이브러리 사용해도 됨
+                hidden
+              />
+            {/* <img src={Gallery} alt="" style={{ width:30 }} className='mr-3'/> */}
+          </div>
+        </div>
+        </div>
+
+        <label htmlFor="price" className="block text-md leading-6 mt-4 text-gray-900">수량</label>
+        <div className="relative rounded-md mt-1">
+          <input 
+            value={boardInfo.quantity}
+            onChange={(event) => {
+              const newBoardInfo = {
+                ...boardInfo,
+                quantity : event.target.value,
+              };
+              setBoardInfo(newBoardInfo);}}
+            type="number" name="price" id="price" className="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="수량을 입력하세요(kg)"/>
+        </div>
+        <label htmlFor="price" className="block text-md mt-2 leading-6 text-gray-900">가격</label>
+        <div className="relative rounded-md mt-1">
+          <input
+            value={boardInfo.price}
+            onChange={(event) => {
+              const newBoardInfo = {
+                ...boardInfo,
+                price : event.target.value,
+              };
+              setBoardInfo(newBoardInfo);}}
+            type="number" name="price" id="price" className="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="가격을 입력하세요(/kg)"/>
+        </div>
+        <label htmlFor="price" className="block text-md mt-2 leading-6 text-gray-900">제목</label>
+        <div className="relative rounded-md mt-1">
+          <input
+            value={boardInfo.title}
+            onChange={(event) => {
+              const newBoardInfo = {
+                ...boardInfo,
+                title : event.target.value,
+              };
+              setBoardInfo(newBoardInfo);}}
+            type="text" name="price" id="price" className="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="제목을 입력하세요"/>
+        </div>
+        <label htmlFor="price" className="block text-md mt-2 leading-6 text-gray-900">내용</label>
+        <div className="relative rounded-md mt-1">
+          <textarea
+            value={boardInfo.content}
+            onChange={(event) => {
+              const newBoardInfo = {
+                ...boardInfo,
+                content : event.target.value,
+              };
+              setBoardInfo(newBoardInfo);}}
+            className="textarea textarea-bordered w-full h-24" placeholder="내용을 입력하세요"></textarea>
+        </div>
+        <div className="mt-10">
+          <button 
+            onClick={() => {
+              modifyArticle()
+            }}
+            className="btn w-full flex justify-around" style={{ backgroundColor: '#1B5E20'}}> 
+            <div className="font-bold text-lg" style={{ color:'white' }}>수정</div>
+          </button>
+        </div>
+      </div>
+    </Modal>
   </div>
   )
 }

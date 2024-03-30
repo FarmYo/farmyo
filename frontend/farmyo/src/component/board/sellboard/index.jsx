@@ -24,7 +24,7 @@ export default function SellBoardList(){
   const [cropCategory, setCropCategory] =useState([])
 
   // multipart/form-data로 보내기(json형식 아님)
-  const makeArticle = (() => {
+  const makeArticle = () => {
     if (cropId && files && title && content && quantity && price) {
       const formData = new FormData();
       formData.append('cropId', cropId)
@@ -32,74 +32,75 @@ export default function SellBoardList(){
       formData.append('content', content)
       formData.append('quantity', quantity)
       formData.append('price', price)
-      // 선택된 파일들을 FormData 객체에 추가
       files.forEach((file, index) => {
         formData.append(`images`, file);
       });
       console.log('formData : ', formData)
-
-      if (formData && files.length < 6) {
-        api.post('boards/sell', formData)
-        .then((res) => {
-          console.log('팝니다 게시글 생성 완료', res.data.dataBody)
-          Swal.fire({
-            title : '팝니다 게시글이 생성되었습니다.',
-            confirmButtonColor: '#1B5E20',
+      // makeForm()
+      // .then(({ formData, files }) => {
+        if (formData && files.length < 6) {
+          api.post('boards/sell', formData)
+          .then((res) => {
+            console.log('팝니다 게시글 생성 완료', res.data.dataBody)
+            Swal.fire({
+              title : '팝니다 게시글이 생성되었습니다.',
+              confirmButtonColor: '#1B5E20',
+            })
+            sellCloseModal()
+            navigate(`/board/sell/${res.data.dataBody}/detail`)
           })
-          sellCloseModal()
-          navigate(`/board/sell/${res.data.dataBody}/detail`)
+          .catch((err) => {
+            console.log('게시글 생성 실패', err)
+            if (err.response.data.dataHeader.resultCode === "C-002") {
+              console.log('작물카테고리→ cropCategoryId에 해당하는 작물이 없을 때')
+              Swal.fire({
+                title : '존재하지 않는 작물 카테고리<br> 생성되었습니다.',
+                confirmButtonColor: '#1B5E20',
+              })
+            } else if (err.response.data.dataHeader.resultCode === "U-001") {
+              console.log('토큰에 적힌 id값의 유저가 없을 때')
+              navigate('/login')
+              Swal.fire({
+                title : '다시 로그인<br>해주세요.',
+                confirmButtonColor: '#1B5E20',
+              })
+            } else if (err.response.data.dataHeader.resultCode === "B-005") {
+              console.log('수량이 0초과가 아닐 때')
+              Swal.fire({
+                title : '수량은 1 이상<br>입력해주세요.',
+                confirmButtonColor: '#1B5E20',
+              })
+            } else if (err.response.data.dataHeader.resultCode === "B-006") {
+              console.log('가격이 0초과가 아닐 때')
+              Swal.fire({
+                title : '가격은 1원 이상<br>입력해주세요.',
+                confirmButtonColor: '#1B5E20',
+              })
+            } else if (err.response.data.dataHeader.resultCode === "B-012") {
+              console.log('이미 해당 작물로 게시글이 있을 때')
+              Swal.fire({
+                title : '이미 해당 작물의 글이<br> 존재합니다.',
+                html : '작물당 하나의 글 작성만 가능합니다.',
+                confirmButtonColor: '#1B5E20',
+              })
+            } else {
+              console.log('내용이나 제목 없을때')
+              Swal.fire({
+                title : '제목과 내용을<br>확인해주세요.',
+                confirmButtonColor: '#1B5E20',
+              })
+            }
         })
-        .catch((err) => {
-          console.log('게시글 생성 실패', err)
-          if (err.response.data.dataHeader.resultCode === "C-002") {
-            console.log('작물카테고리→ cropCategoryId에 해당하는 작물이 없을 때')
+        } else {
+          if (files.length > 5) {
             Swal.fire({
-              title : '존재하지 않는 작물 카테고리<br> 생성되었습니다.',
-              confirmButtonColor: '#1B5E20',
-            })
-          } else if (err.response.data.dataHeader.resultCode === "U-001") {
-            console.log('토큰에 적힌 id값의 유저가 없을 때')
-            navigate('/login')
-            Swal.fire({
-              title : '다시 로그인<br>해주세요.',
-              confirmButtonColor: '#1B5E20',
-            })
-          } else if (err.response.data.dataHeader.resultCode === "B-005") {
-            console.log('수량이 0초과가 아닐 때')
-            Swal.fire({
-              title : '수량은 1 이상<br>입력해주세요.',
-              confirmButtonColor: '#1B5E20',
-            })
-          } else if (err.response.data.dataHeader.resultCode === "B-006") {
-            console.log('가격이 0초과가 아닐 때')
-            Swal.fire({
-              title : '가격은 1원 이상<br>입력해주세요.',
-              confirmButtonColor: '#1B5E20',
-            })
-          } else if (err.response.data.dataHeader.resultCode === "B-012") {
-            console.log('이미 해당 작물로 게시글이 있을 때')
-            Swal.fire({
-              title : '이미 해당 작물의 글이<br> 존재합니다.',
-              html : '작물당 하나의 글 작성만 가능합니다.',
-              confirmButtonColor: '#1B5E20',
-            })
-          } else {
-            console.log('내용이나 제목 없을때')
-            Swal.fire({
-              title : '제목과 내용을<br>확인해주세요.',
+              title : '5개만 선택할 수 있습니다.',
               confirmButtonColor: '#1B5E20',
             })
           }
-        })
-      } else {
-        if (files.length > 5) {
-          Swal.fire({
-            title : '5개만 선택할 수 있습니다.',
-            confirmButtonColor: '#1B5E20',
-          })
+          console.log('formData 형성 실패','cropId : ', cropId, 'files : ', files, 'title : ', title, 'content : ', content, 'quantity : ', quantity, 'price : ', price)
         }
-        console.log('formData 형성 실패','cropId : ', cropId, 'files : ', files, 'title : ', title, 'content : ', content, 'quantity : ', quantity, 'price : ', price)
-      }
+      // })
     } else {
       if (!quantity) {
           Swal.fire({
@@ -116,17 +117,18 @@ export default function SellBoardList(){
         title : '정보를 입력해주세요.',
         confirmButtonColor: '#1B5E20',
       })}
-    }
-  })
+    } 
+  }
 
-  const checkPhoto = ((files) => {
-    if (files.length > 5) {
+  const checkPhoto = ((file) => {
+    console.log(file)
+    if (file.length > 5) {
       Swal.fire({
         title : '5개만 선택할 수 있습니다.',
         confirmButtonColor: '#1B5E20',
       })
     } else {
-    setFiles(files)
+    setFiles([...file])
     }
   })
 
@@ -155,17 +157,17 @@ export default function SellBoardList(){
   };
 
   //삽니다게시글모달
-  const sellOpenModal = () => {
+  const sellOpenModal = (() => {
     setSellOpen(true);
-  };
+  });
 
-  const sellCloseModal = () => {
+  const sellCloseModal = (() => {
     setSellOpen(false);
-  };
+  });
 
   useEffect(() => {
     BoardInfo();
-    setCropId(25);
+    setCropId(29);
   }, [])
 
 
@@ -173,7 +175,7 @@ export default function SellBoardList(){
     <div style={{height:'420px',position:'relative'}}>
       {/* 팝니다 게시글 목록 */}
       {boardInfo.map((article) => (
-      <div className="p-4 flex" onClick={() => navigate(`sell/${article.boardId}/detail`)}>
+      <div className="p-4 flex" key={article.boardId} onClick={() => navigate(`sell/${article.boardId}/detail`)}>
         <img src={article.imgUrl} alt="작물이미지" className="w-32" />
         {/* <div style={{backgroundColor:'#bbbbbb'}} className="w-32"></div> */}
         <div className="w-full ml-2">
@@ -191,13 +193,13 @@ export default function SellBoardList(){
       <div style={{ position: 'absolute', bottom: 0, right: 10}}>
         <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
           <div style={{ position: 'absolute', top: '44%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}
-          onClick={sellOpenModal}>+
+          onClick={() => sellOpenModal()}>+
           </div>
         </div>
       </div>
       
       {/* 팝니다게시글생성모달 */}
-      <Modal open={sellOpen} onClose={!sellOpen} styles={styles}>
+      <Modal open={sellOpen} onClose={sellCloseModal} styles={styles}>
         <div className="mt-10">
           <div className='h-32' style={{ backgroundColor:'#bbbbbb'}}>사진있음</div>
           <div className='flex justify-between mt-4'>
@@ -241,11 +243,11 @@ export default function SellBoardList(){
           <div className='flex items-center justify-between'>
             <div className='flex'>
               <h1 className='font-bold'>+</h1>
-              <label for="img"><img src={Gallery} alt="사진 추가하기" style={{ width:30 }} className='mr-3'/></label>
+              <label htmlFor="img"><img src={Gallery} alt="사진 추가하기" style={{ width:30 }} className='mr-3'/></label>
                 <input
                   type="file"
                   id="img"
-                  autocomplete="img"
+                  autoComplete="img"
                   accept="image/*"
                   multiple
                   onChange={(event) => checkPhoto(event.target.files)} 
