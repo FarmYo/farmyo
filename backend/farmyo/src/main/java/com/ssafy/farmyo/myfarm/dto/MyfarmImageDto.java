@@ -1,12 +1,13 @@
 package com.ssafy.farmyo.myfarm.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
 
-@Getter
+@Builder
 public class MyfarmImageDto {
 
-    MultipartFile image;
+    String imageUrl;
     int order;
 
 }
