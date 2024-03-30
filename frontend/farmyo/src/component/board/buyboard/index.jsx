@@ -138,7 +138,7 @@ export default function BuyBoardList(){
     <div style={{height:'420px',position:'relative'}}>
       {/* 삽니다 게시글 목록 */}
       {boardInfo.map((article) => (
-        <div className="p-4 flex" onClick={() => navigate(`buy/${article.boardId}/detail`)}>
+        <div className="p-4 flex" key={article.boardId} onClick={() => navigate(`buy/${article.boardId}/detail`)}>
           <div className="w-full ml-2">
             <h1 className="text-lg font-bold">{article.title}</h1> 
             <h1 className="text-sm">{article.userNickname}</h1>
@@ -160,7 +160,7 @@ export default function BuyBoardList(){
       </div>
 
       {/* 삽니다게시글생성모달 */}
-      <Modal open={buyOpen} onClose={!buyOpen} styles={styles}>
+      <Modal open={buyOpen} onClose={buyCloseModal} styles={styles}>
         {/* 드롭다운 */}
       <Menu as="div" className="relative inline-block text-left">
             <div>
