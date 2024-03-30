@@ -66,11 +66,14 @@ public class MyfarmServiceImpl implements MyfarmService {
 
     @Override
     public void updateFarm() {
+//        myfarmImageRepository.deleteAllByFarmId(id);
 
     }
 
     @Override
     public void deleteFarm(int id) {
+        myfarmImageRepository.deleteAllByFarmId(id);
+        myfarmRepository.deleteById(id);
 
     }
 
