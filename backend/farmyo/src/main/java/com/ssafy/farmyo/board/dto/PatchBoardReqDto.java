@@ -20,5 +20,5 @@ public class PatchBoardReqDto {
     private String title;
     @NotBlank
     private String content;
-    private List<MultipartFile> images;
+//    private List<MultipartFile> images;
 }

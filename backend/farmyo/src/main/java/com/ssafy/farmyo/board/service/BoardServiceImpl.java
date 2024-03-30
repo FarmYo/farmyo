@@ -85,7 +85,7 @@ public class BoardServiceImpl implements BoardService {
     //팜요 게시글 작성
     @Override
     @Transactional
-    public Integer addFarmerBoard(AddFarmerBoardReqDto addFarmerBoardReqDto, List<MultipartFile> images ,int farmerId) {
+    public Integer addFarmerBoard(AddFarmerBoardReqDto addFarmerBoardReqDto, List<MultipartFile> images, int farmerId) {
 
         //현재 토큰으로 꺼내온 농부가 있는지 확인
         Farmer farmer = farmerRepository.findById(farmerId)
@@ -164,7 +164,7 @@ public class BoardServiceImpl implements BoardService {
 
                 BoardImg boardImg = BoardImg.builder()
                         .board(board)
-                        .imgOrder(i+1)
+                        .imgOrder(i + 1)
                         .imgUrl(imgUrl)
                         .build();
                 boardImages.add(boardImg);
@@ -254,7 +254,7 @@ public class BoardServiceImpl implements BoardService {
     //게시판 수정
     @Override
     @Transactional
-    public Integer patchBoard(int boardId, PatchBoardReqDto patchBoardReqDto, int userId) {
+    public Integer patchBoard(int boardId, PatchBoardReqDto patchBoardReqDto, List<MultipartFile> images, int userId) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new CustomException(ExceptionType.BOARD_NOT_EXIST));
         //게시글작성자랑 접속 유저가 다르면
@@ -283,17 +283,35 @@ public class BoardServiceImpl implements BoardService {
         }
         board.patchBoard(patchBoardReqDto.getQuantity(), patchBoardReqDto.getPrice(), patchBoardReqDto.getTitle(), patchBoardReqDto.getContent());
 
+
 //        팜요게시글일 경우 사진수정 나중에 s3되고 구현
-//        if (board.getBoardType() == 0) {
-//            //요청에 이미지가 있을때만
-//            if (patchBoardReqDto.getImages() != null) {
-//
-//            }
-//        }
-        board = boardRepository.save(board);
+        if (board.getBoardType() == 0) {
+            //요청에 이미지가 있을때만
+            if ((images != null) && !images.isEmpty()) {
+                // 기존 이미지 삭제
+                List<BoardImg> existingImages = boardImgRepository.findByBoardId(board.getId());
+                if (!existingImages.isEmpty()) {
+                    boardImgRepository.deleteAll(existingImages);
+                    existingImages.forEach(img -> awsS3Service.deleteFileByUrl(img.getImgUrl()));
+                }
+
+                List<BoardImg> newBoardImages = new ArrayList<>();
+
+                for (MultipartFile imgFile : images) {
+                    String imgUrl = awsS3Service.uploadFile(imgFile);
+                    BoardImg boardImg = BoardImg.builder()
+                            .board(board)
+                            .imgUrl(imgUrl)
+                            .build();
+                    newBoardImages.add(boardImg);
+                }
+                boardImgRepository.saveAll(newBoardImages);
+
+
+            }
+        }
         return board.getId();
     }
-
 
 
 }

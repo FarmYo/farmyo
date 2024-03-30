@@ -12,11 +12,14 @@ import com.ssafy.farmyo.myfarm.repository.MyfarmImageRepository;
 import com.ssafy.farmyo.myfarm.repository.MyfarmRepository;
 import com.ssafy.farmyo.user.repository.FarmerRepository;
 import com.ssafy.farmyo.user.repository.UserRepository;
+import jakarta.mail.Multipart;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,16 +33,15 @@ public class MyfarmServiceImpl implements MyfarmService {
     private final MyfarmImageRepository myfarmImageRepository;
 
     @Override
-    public void createFarm(MyfarmReqDto myfarmReqDto) {
-        String loginId = myfarmReqDto.getLoginId();
-
+    public void createFarm(String loginId, String content, List<MultipartFile> files, List<Integer> orders) {
         User user = userRepository.findByLoginId(loginId).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
         Farmer farmer = farmerRepository.getReferenceById(user.getId());
 
         if (user.getJob() != 0) { // 만약 농부가 아니면 예외처리
             throw new CustomException(ExceptionType.USER_NOT_FARMER);
+        } else if (files.size() != orders.size()) { // 만약 사진의 개수와 순서의 개수가 다르다면
+            throw new CustomException(ExceptionType.ORDERS_NOT_MATCH);
         }
-        String content = myfarmReqDto.getFarmContent();
 
         // 마이팜 생성
         Farm farm = Farm.builder()
@@ -48,14 +50,13 @@ public class MyfarmServiceImpl implements MyfarmService {
                 .build();
         myfarmRepository.save(farm);
 
-        List<MyfarmImageDto> imageDto = myfarmReqDto.getMyfarmImageDtoList();
 
         // 보낸 사진의 수 만큼 farmImg 생성
-        for (int i = 0; i < imageDto.size(); i++) {
+        for (int i = 0; i < files.size(); i++) {
             FarmImg farmImg = FarmImg.builder()
                     .farm(farm)
-                    .imgOrder(imageDto.get(i).getOrder())
-                    .imgUrl(awsS3Service.uploadFile(imageDto.get(i).getImage()))
+                    .imgOrder(orders.get(i))
+                    .imgUrl(awsS3Service.uploadFile(files.get(i)))
                     .build();
 
             myfarmImageRepository.save(farmImg);
@@ -89,7 +90,6 @@ public class MyfarmServiceImpl implements MyfarmService {
             throw new CustomException(ExceptionType.USER_NOT_EXIST);
         }
 
-
         return UpUserDto.builder()
                 .job(user.getJob())
                 .userProfile(user.getProfile())
@@ -101,21 +101,52 @@ public class MyfarmServiceImpl implements MyfarmService {
     }
 
     @Override
-    public MyfarmListDto getFarmList(int id) {
-        User user =  userRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+    @Transactional
+    public List<MyfarmListDto> getFarmList(String loginId) {
+        User user =  userRepository.findByLoginId(loginId).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
         if (user.getJob() != 0) {
             throw new CustomException(ExceptionType.USER_NOT_FARMER);
         }
 
-        List<Farm> farmList = myfarmRepository.findAllByUserId(id);
+        List<Farm> farmList = myfarmRepository.findAllByUserId(user.getId());
+        List<MyfarmListDto> resultList = new ArrayList<>();
 
+        for (Farm farm : farmList) {
 
-        return null;
+            MyfarmListDto myfarmListDto = MyfarmListDto.builder()
+                    .id(farm.getId())
+                    .imgUrl(myfarmImageRepository.getFirstUrl(farm.getId()))
+                    .build();
+
+            resultList.add(myfarmListDto);
+        }
+
+        return resultList;
     }
 
     @Override
-    public MyfarmDto getFarm(int id) {
+    @Transactional
+    public MyfarmReqDto getFarm(int id) {
+        Farm farm = myfarmRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.FARM_NOT_EXIST));
+        User user = userRepository.findByLoginId(farm.getFarmer().getLoginId()).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
 
-        return null;
+        List<FarmImg> farmImgList = myfarmImageRepository.getFarmImgeList(id);
+        List<MyfarmImageDto> imageDtoList = new ArrayList<>();
+
+        for (FarmImg farmImg : farmImgList) {
+            MyfarmImageDto myfarmImageDto = MyfarmImageDto.builder()
+                    .imageUrl(farmImg.getImgUrl())
+                    .order(farmImg.getImgOrder())
+                    .build();
+
+            imageDtoList.add(myfarmImageDto);
+        }
+
+        return MyfarmReqDto.builder()
+                .nickname(user.getNickname())
+                .farmContent(farm.getContent())
+                .updatedAt(farm.getUpdatedAt())
+                .myfarmImageDtoList(imageDtoList)
+                .build();
     }
 }
