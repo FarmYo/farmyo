@@ -7,6 +7,7 @@ import DaumPostcode from 'react-daum-postcode';
 import Swal from 'sweetalert2'
 import { jwtDecode } from 'jwt-decode'
 import { useNavigate } from 'react-router-dom';
+import Backarrow from '../../../image/component/trade/backarrow.png'
 
 export default function BuyerTrade() {
   const navigate = useNavigate()
@@ -211,12 +212,19 @@ export default function BuyerTrade() {
       })
     }
 
+    const goTradeList = ()=>{
+      navigate('/trade')
+    }
 
   return(
     <div>
       <div>
         <div className="p-3 flex justify-between border-b-2 border-gray-100 h-20">
-          <div className="font-bold text-xl flex items-center">{info.board}</div>
+          <div className='flex'>
+            <div className='flex items-center mr-5'
+            onClick={goTradeList}><img src={Backarrow} alt="" style={{ width:30,height:30}}/></div>
+            <div className="font-bold text-xl flex items-center">{info.board}</div>
+          </div>
           <div className="font-bold text-lg flex items-center" style={{color:'gray'}}>{tradeStatusToText[info.tradeStatus]}</div>
         </div>
         <div className="p-3 border-b-2 space-y-2 border-gray-100">
