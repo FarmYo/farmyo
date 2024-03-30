@@ -120,6 +120,7 @@ public class BoardController {
     public ResponseEntity<? extends BaseResponseBody> getBoardListbyLoginId(@PathVariable String loginId, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "10") int size,Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         List<BoardListFindByUserResDto> boardListByLoginId= boardService.findBoardListByLoginId(loginId,page, size, userDetails.getId());
+        log.info("{}의 게시물 목록 조회",loginId);
 
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, boardListByLoginId));
     }
