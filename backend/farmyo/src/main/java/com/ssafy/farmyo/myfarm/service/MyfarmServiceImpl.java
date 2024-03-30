@@ -64,13 +64,42 @@ public class MyfarmServiceImpl implements MyfarmService {
 
     }
 
+    @Transactional
     @Override
-    public void updateFarm() {
+    public void updateFarm(int id, String content, int status, List<MultipartFile> files, List<Integer> orders) {
+        Farm farm = myfarmRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.FARM_NOT_EXIST));
+        if (status == 1) { // status가 1이라면, 즉 사진을 변경했다면
+            myfarmImageRepository.deleteAllByFarmId(id);
+
+            if (files.size() != orders.size()) {
+                throw new CustomException(ExceptionType.ORDERS_NOT_MATCH);
+            }
+
+            myfarmRepository.updateFarm(id, content);
+
+            // 보낸 사진의 수 만큼 farmImg 생성
+            for (int i = 0; i < files.size(); i++) {
+                FarmImg farmImg = FarmImg.builder()
+                        .farm(farm)
+                        .imgOrder(orders.get(i))
+                        .imgUrl(awsS3Service.uploadFile(files.get(i)))
+                        .build();
+
+                myfarmImageRepository.save(farmImg);
+            }
+        } else { //사진을 변경하지 않았다면
+            myfarmRepository.updateFarm(id, content);
+        }
 
     }
 
+    @Transactional
     @Override
     public void deleteFarm(int id) {
+        // 마이팜이 가지고 있는 이미지를 먼저 삭제
+        myfarmImageRepository.deleteAllByFarmId(id);
+        // 마이팜 게시글 삭제
+        myfarmRepository.deleteById(id);
 
     }
 
