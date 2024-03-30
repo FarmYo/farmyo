@@ -173,8 +173,10 @@ export default function SellBoardList(){
     <div style={{height:'420px',position:'relative'}}>
       {/* 팝니다 게시글 목록 */}
       {boardInfo.map((article) => (
+
       <div className="p-4 flex" onClick={() => navigate(`sell/${article.boardId}/detail`)}>
         <img src={article.imgUrl} alt="작물이미지" className="w-32" />
+
         {/* <div style={{backgroundColor:'#bbbbbb'}} className="w-32"></div> */}
         <div className="w-full ml-2">
           <h1 className="text-lg font-bold">{article.title}</h1>
