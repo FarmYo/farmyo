@@ -66,10 +66,10 @@ useEffect(() => {
   return(
     <div>
        {/* 팝니다 상세게시글사진 */}
-       <div style={{height:240,backgroundColor:'#bbbbbb'}}>
+      <div style={{height:240,backgroundColor:'#bbbbbb'}}>
         {/* 뒤로가기버튼 */}
         <img src={Back} alt="" style={{ width:40,height:40 }} className="p-2" onClick={goList}/>
-       </div>
+      </div>
       <div className="p-5 flex justify-between">
         <div>
           <h1 className='font-bold text-lg'>{ boardInfo.title }</h1>
