@@ -2,6 +2,7 @@ package com.ssafy.farmyo.myfarm.service;
 
 import com.ssafy.farmyo.myfarm.dto.MyfarmDto;
 import com.ssafy.farmyo.myfarm.dto.MyfarmListDto;
+import com.ssafy.farmyo.myfarm.dto.MyfarmReqDto;
 import com.ssafy.farmyo.myfarm.dto.UpUserDto;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,6 +15,6 @@ public interface MyfarmService {
     void deleteFarm(int id);
     UpUserDto getUpUser(String loginId);
     List<MyfarmListDto> getFarmList(String loginId);
-    MyfarmDto getFarm(int id);
+    MyfarmReqDto getFarm(int id);
 
 }

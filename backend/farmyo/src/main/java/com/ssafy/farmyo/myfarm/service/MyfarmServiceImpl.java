@@ -90,7 +90,6 @@ public class MyfarmServiceImpl implements MyfarmService {
             throw new CustomException(ExceptionType.USER_NOT_EXIST);
         }
 
-
         return UpUserDto.builder()
                 .job(user.getJob())
                 .userProfile(user.getProfile())
@@ -125,8 +124,27 @@ public class MyfarmServiceImpl implements MyfarmService {
     }
 
     @Override
-    public MyfarmDto getFarm(int id) {
+    public MyfarmReqDto getFarm(int id) {
+        Farm farm = myfarmRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.FARM_NOT_EXIST));
+        User user = userRepository.findByLoginId(farm.getFarmer().getLoginId()).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
 
-        return null;
+        List<FarmImg> farmImgList = myfarmImageRepository.getFarmImgeList(id);
+        List<MyfarmImageDto> imageDtoList = new ArrayList<>();
+
+        for (FarmImg farmImg : farmImgList) {
+            MyfarmImageDto myfarmImageDto = MyfarmImageDto.builder()
+                    .imageUrl(farmImg.getImgUrl())
+                    .order(farmImg.getImgOrder())
+                    .build();
+
+            imageDtoList.add(myfarmImageDto);
+        }
+
+        return MyfarmReqDto.builder()
+                .nickname(user.getNickname())
+                .farmContent(farm.getContent())
+                .updatedAt(farm.getUpdatedAt())
+                .myfarmImageDtoList(imageDtoList)
+                .build();
     }
 }
