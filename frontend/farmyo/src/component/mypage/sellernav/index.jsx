@@ -64,11 +64,11 @@ export default function MypageNavbar() {
           <button onClick={() => logOut()} className="text-sm font-bold flex items-center" style={{color:"white"}}>로그아웃</button>
         </div>
       </div>
-      <div className='flex border-b-2 border-gray-300' style={{height:140}}>
+      <div className='flex justify-between border-b-2 border-gray-300' style={{height:140}}>
         <div className='p-5 pt-7'>
           <img src={Me} alt="" style={{ height:80,width:80}}/>
         </div>
-        <div className='p-7 pl-3'>
+        <div className='p-7 pl-0'>
         <h1 className='font-bold'>{userInfo?.nickname}</h1>
         <h4 className='text-sm'>{userInfo?.addressLegal}</h4>
         <h4 className='text-sm'style={{color:'gray'}}>{userInfo?.comment}</h4>
@@ -77,11 +77,8 @@ export default function MypageNavbar() {
         <div className='flex justify-center items-center'>
           <img src={Next} alt="" style={{width:50,height:50}} onClick={GoEdit}/>
         </div>
-        {/* <div className='flex justify-center items-center p-4' onClick={handleLove}>
-          <img src={ love ? SaeClick : Sae} alt="" style={{width:50,height:50}} />
-        </div> */}
-
       </div>
+      
       <div className='flex justify-around p-3' style={{height:50}}>
         <h1 className='font-bold' style={{ color: selected === 0 ? 'black' : 'gray' }} onClick={()=>{handleClick(0)}}>마이팜</h1>
         <h1 className='font-bold' style={{ color: selected === 1 ? 'black' : 'gray' }} onClick={()=>{handleClick(1)}}>마이작물</h1>

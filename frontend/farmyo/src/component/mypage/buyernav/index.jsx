@@ -45,7 +45,7 @@ export default function MypageNavbar() {
   
   //수정페이지로가기
   const GoEdit= () => {
-    navigate('/mypage/edit'); // '/mypage/edit' 경로로 이동합니다.
+    navigate('/mypage/edit')
   };
 
   return(
@@ -59,7 +59,7 @@ export default function MypageNavbar() {
             className="text-sm font-bold flex items-center" style={{color:"white"}}>로그아웃</button>
         </div>
       </div>
-      <div className='flex border-b-2 border-gray-300'style={{height:130}}>
+      <div className='flex justify-between border-b-2 border-gray-300'style={{height:130}}>
         <div className='p-5 pt-7'>
           <img src={Me} alt="" style={{ height:80,width:80}}/>
         </div>
