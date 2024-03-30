@@ -35,8 +35,8 @@ export default function Business() {
     }
   })
 
-  const changePage = async() => {
-    await checkAll()
+  const changePage = () => {
+    checkAll().then(({ isBusinessNumber, isOwnerName, isOpenDay }) => {
     if (isBusinessNumber === true && isOwnerName === true && isOpenDay === true) {
     api.post('users', {
       loginId : id,              
@@ -97,8 +97,8 @@ export default function Business() {
   Swal.fire({
     html: '<br>입력 정보를<br>확인해주세요',
     confirmButtonColor: '#1B5E20',
-  })
-}}
+  })}
+  })}
 
   useEffect(() => {
     const allInputs = document.querySelectorAll('input');
