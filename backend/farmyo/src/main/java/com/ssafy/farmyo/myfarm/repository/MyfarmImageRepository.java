@@ -2,6 +2,7 @@ package com.ssafy.farmyo.myfarm.repository;
 
 import com.ssafy.farmyo.entity.FarmImg;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -16,6 +17,7 @@ public interface MyfarmImageRepository extends JpaRepository<FarmImg, Integer> {
     @Query("SELECT i FROM FarmImg i WHERE i.farm.id = :id")
     List<FarmImg> getFarmImgeList(int id);
 
+    @Modifying
     @Query("DELETE FROM FarmImg i WHERE i.farm.id = :id")
     void deleteAllByFarmId(int id);
 
