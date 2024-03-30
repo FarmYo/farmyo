@@ -101,6 +101,7 @@ public class MyfarmServiceImpl implements MyfarmService {
     }
 
     @Override
+    @Transactional
     public List<MyfarmListDto> getFarmList(String loginId) {
         User user =  userRepository.findByLoginId(loginId).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
         if (user.getJob() != 0) {
@@ -124,6 +125,7 @@ public class MyfarmServiceImpl implements MyfarmService {
     }
 
     @Override
+    @Transactional
     public MyfarmReqDto getFarm(int id) {
         Farm farm = myfarmRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.FARM_NOT_EXIST));
         User user = userRepository.findByLoginId(farm.getFarmer().getLoginId()).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
