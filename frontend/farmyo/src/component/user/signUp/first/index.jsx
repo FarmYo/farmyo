@@ -145,16 +145,15 @@ export default function SignUpFirst() {
       })
       .catch((err) => {
         console.log('인증번호 확인 실패', err)
+        setCheckIsEmail(false)
         if (err.response.data.dataHeader.resultCode === "U-004") {
-          setCheckIsEmail(false)
           alerter1()
           onCloseModal();
           setCheckEmailMessage('이메일 전송 버튼을 다시 눌러주세요')
-        } else if (err.response.data.dataHeader.resultCode === "U-005") {
-          setCheckIsEmail(false)
+        } else if (err.response.data.dataHeader.resultCode === "U-006") {
           setCode("")
           alerter2()
-        }
+        } 
       })
     }
   },[email])
