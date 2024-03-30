@@ -1,6 +1,6 @@
 import { useEffect, useState, Fragment } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { jwtDecode } from 'jwt-decode'
+// import { jwtDecode } from 'jwt-decode'
 import api from '../../../api/api'
 import { Modal } from "react-responsive-modal"
 import { Menu,Transition } from '@headlessui/react'
@@ -9,6 +9,10 @@ import Chatting from '../../../image/component/chatting.png'
 import Swal from 'sweetalert2'
 
 export default function BuyBoardList(){
+  const navigate = useNavigate()
+  function classNames(...classes) {
+    return classes.filter(Boolean).join(' ')
+  }
   // const im = jwtDecode(localStorage.getItem('access')).userJob
   const [boardInfo, setBoardInfo] = useState([])
   const [cropId, setCropId] =useState(0)
@@ -17,12 +21,6 @@ export default function BuyBoardList(){
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
   const [cropCategory, setCropCategory] =useState([])
-  const navigate = useNavigate()
-
-
-  function classNames(...classes) {
-    return classes.filter(Boolean).join(' ')
-  }
 
   const makeArticle = (() => {
     if (cropId && title && content && quantity && price) {
