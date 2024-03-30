@@ -191,6 +191,7 @@ public class BoardServiceImpl implements BoardService {
                 .orElseThrow(() -> new CustomException(ExceptionType.BOARD_NOT_EXIST));
 
         //카테고리있는지 확인
+        Integer cropId = null;
         if (board.getCropCategory() == null) {
             throw new CustomException(ExceptionType.CROPCATEGORY_NOT_ASSOCIATED_WITH_BOARD);
         }
@@ -202,6 +203,7 @@ public class BoardServiceImpl implements BoardService {
             if (board.getCrop() == null) {
                 throw new CustomException(ExceptionType.CROP_NOT_ASSOCIATED_WITH_BOARD);
             }
+            cropId = board.getCrop().getId();
             imgUrls = board.getBoardImgList().stream()
                     .map(BoardImg::getImgUrl)
                     .toList();
@@ -211,12 +213,12 @@ public class BoardServiceImpl implements BoardService {
                 .userId(board.getUser().getId())
                 .userNickname(board.getUser().getNickname())
                 .userLoginId(board.getUser().getLoginId())
-                .cropId(board.getCrop().getId())
+                .cropId(cropId)
                 .cropCategory(board.getCropCategory().getCategoryName())
-                .boardTitle(board.getBoardTitle())
-                .boardContent(board.getBoardContent())
-                .boardQuantity(board.getBoardQuantity())
-                .boardPrice(board.getBoardPrice())
+                .title(board.getBoardTitle())
+                .content(board.getBoardContent())
+                .quantity(board.getBoardQuantity())
+                .price(board.getBoardPrice())
                 .boardImgUrls(imgUrls)
                 .createdAt(board.getCreatedAt())
                 .updatedAt(board.getUpdatedAt())

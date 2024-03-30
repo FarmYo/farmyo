@@ -3,6 +3,8 @@ import { Modal } from "react-responsive-modal"
 import { useEffect, useState } from 'react'
 import api from '../../../api/api'
 import { jwtDecode } from 'jwt-decode'
+import { useNavigate } from 'react-router-dom'
+
 
 export default function BuyBoardList(){
   // const im = jwtDecode(localStorage.getItem('access')).userJob
@@ -12,6 +14,8 @@ export default function BuyBoardList(){
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
   const [cropCategory, setCropCategory] =useState([])
+  const navigate = useNavigate()
+
 
   const BoardInfo = () => {
     api.get("boards?type=1&page=0&size=100")
@@ -56,7 +60,7 @@ export default function BuyBoardList(){
     <div style={{height:'420px',position:'relative'}}>
       {/* 삽니다 게시글 목록 */}
       {boardInfo.map((article) => (
-        <div className="p-4 flex">
+        <div className="p-4 flex" onClick={() => navigate(`buy/${article.boardId}/detail`)}>
           <div className="w-full ml-2">
             <h1 className="text-lg font-bold">{article.title}</h1> 
             <h1 className="text-sm">{article.userNickname}</h1>
