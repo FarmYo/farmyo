@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -191,6 +192,7 @@ public class BoardServiceImpl implements BoardService {
                 .orElseThrow(() -> new CustomException(ExceptionType.BOARD_NOT_EXIST));
 
         //카테고리있는지 확인
+        Integer cropId = null;
         if (board.getCropCategory() == null) {
             throw new CustomException(ExceptionType.CROPCATEGORY_NOT_ASSOCIATED_WITH_BOARD);
         }
@@ -202,6 +204,7 @@ public class BoardServiceImpl implements BoardService {
             if (board.getCrop() == null) {
                 throw new CustomException(ExceptionType.CROP_NOT_ASSOCIATED_WITH_BOARD);
             }
+            cropId = board.getCrop().getId();
             imgUrls = board.getBoardImgList().stream()
                     .map(BoardImg::getImgUrl)
                     .toList();
@@ -211,12 +214,12 @@ public class BoardServiceImpl implements BoardService {
                 .userId(board.getUser().getId())
                 .userNickname(board.getUser().getNickname())
                 .userLoginId(board.getUser().getLoginId())
-                .cropId(board.getCrop().getId())
+                .cropId(cropId)
                 .cropCategory(board.getCropCategory().getCategoryName())
-                .boardTitle(board.getBoardTitle())
-                .boardContent(board.getBoardContent())
-                .boardQuantity(board.getBoardQuantity())
-                .boardPrice(board.getBoardPrice())
+                .title(board.getBoardTitle())
+                .content(board.getBoardContent())
+                .quantity(board.getBoardQuantity())
+                .price(board.getBoardPrice())
                 .boardImgUrls(imgUrls)
                 .createdAt(board.getCreatedAt())
                 .updatedAt(board.getUpdatedAt())
@@ -311,6 +314,32 @@ public class BoardServiceImpl implements BoardService {
             }
         }
         return board.getId();
+    }
+
+    //로그인id로 게시물 목록 조회
+    @Override
+    @Transactional(readOnly = true)
+    public List<BoardListFindByUserResDto> findBoardListByLoginId(String loginId, int page, int size, int userId) {
+        //입력받은 로그인 아이디를 가진 user가 없을 때
+        User user = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+
+        //구매자의 경우 본인만 볼 수 있음
+        if (user.getJob() == 1) {
+            if (!user.getId().equals(userId)) {
+                throw new CustomException(ExceptionType.BUYER_ONLY_ACCESS);
+            }
+        }
+
+        List<Board> boards = boardRepository.findByUserLoginId(loginId,PageRequest.of(page,size));
+        return boards.stream()
+                .map(board -> BoardListFindByUserResDto.builder()
+                        .boardId(board.getId())
+                        .title(board.getBoardTitle())
+                        .boardType(board.getBoardType())
+                        .createdAt(board.getCreatedAt())
+                        .build())
+                .collect(Collectors.toList());
     }
 
 
