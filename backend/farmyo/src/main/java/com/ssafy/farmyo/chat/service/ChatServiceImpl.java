@@ -1,22 +1,18 @@
 package com.ssafy.farmyo.chat.service;
 
 import com.ssafy.farmyo.board.repository.BoardRepository;
-import com.ssafy.farmyo.chat.dto.ChatDto;
-import com.ssafy.farmyo.chat.dto.ChatRoomDto;
-import com.ssafy.farmyo.chat.dto.ChatMessageDto;
-import com.ssafy.farmyo.chat.dto.MessageListDto;
+import com.ssafy.farmyo.chat.dto.*;
 import com.ssafy.farmyo.chat.repository.ChatRepository;
 import com.ssafy.farmyo.chat.repository.MessageRepository;
 import com.ssafy.farmyo.common.exception.CustomException;
 import com.ssafy.farmyo.common.exception.ExceptionType;
 import com.ssafy.farmyo.entity.Board;
 import com.ssafy.farmyo.entity.Chat;
-import com.ssafy.farmyo.entity.Message;
 import com.ssafy.farmyo.entity.User;
 import com.ssafy.farmyo.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,25 +21,13 @@ import java.util.Optional;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class ChatServiceImpl implements ChatService {
 
-    private final RedisTemplate<String, Object> redisTemplate;
     private final UserRepository userRepository;
     private final ChatRepository chatRepository;
     private final MessageRepository messageRepository;
     private final BoardRepository boardRepository;
-
-    public ChatServiceImpl(@Qualifier("redisChatTemplate")RedisTemplate<String, Object> redisTemplate,
-                           UserRepository userRepository,
-                           ChatRepository chatRepository,
-                           MessageRepository messageRepository,
-                           BoardRepository boardRepository) {
-        this.redisTemplate = redisTemplate;
-        this.userRepository = userRepository;
-        this.chatRepository = chatRepository;
-        this.messageRepository = messageRepository;
-        this.boardRepository = boardRepository;
-    }
 
     @Override
     @Transactional
@@ -51,18 +35,16 @@ public class ChatServiceImpl implements ChatService {
 
         ChatDto chatDto;
         // 이미 기존에 채팅방이 있으면 기존의 채팅방 정보 리턴하기
-        if (chatRepository.findById(chatRoomDto.getBoardId()).isPresent()) {
-            Optional<Chat> chat = chatRepository.findById(chatRoomDto.getBoardId());
+        if (chatRepository.findByBoardIdAndSellerIdAndBuyerId(chatRoomDto.getBoardId(), chatRoomDto.getSellerId(), chatRoomDto.getBuyerId()).isPresent()) {
+            Chat chat = chatRepository.findByBoardIdAndSellerIdAndBuyerId(chatRoomDto.getBoardId(), chatRoomDto.getSellerId(), chatRoomDto.getBuyerId()).get();
 
             chatDto = new ChatDto(chatRoomDto.getBoardId(), chatRoomDto.getBuyerId(), chatRoomDto.getSellerId());
-
         }
         // 기존 채팅방이 없다면 만들고 리턴해주기
         else {
-
             Board board = boardRepository.findById(chatRoomDto.getBoardId()).orElseThrow(() -> new CustomException(ExceptionType.BOARD_NOT_EXIST));
             User buyer = userRepository.findById(chatRoomDto.getBuyerId()).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
-            User seller = userRepository.findById(chatRoomDto.getBuyerId()).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+            User seller = userRepository.findById(chatRoomDto.getSellerId()).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
 
             Chat chat = Chat.builder()
                     .board(board)
@@ -72,7 +54,7 @@ public class ChatServiceImpl implements ChatService {
 
             Chat savedChat = chatRepository.save(chat);
 
-            chatDto = new ChatDto(chat.getId(), buyer.getId(), seller.getId());
+            chatDto = new ChatDto(savedChat.getId(), savedChat.getBuyer().getId(), savedChat.getSeller().getId());
         }
 
         return chatDto;
@@ -80,27 +62,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     @Transactional
-    public void sendMsg(ChatMessageDto chatMessageDto) {
-        Chat chat;
-
-        if (chatRepository.findById(chatMessageDto.getChatId()).isPresent()) {
-            chat = chatRepository.findById(chatMessageDto.getChatId()).get();
-        } else {
-            throw new CustomException(ExceptionType.CHAT_NOT_EXIST);
-        }
-
-        Message message = Message.builder()
-                .chat(chat)
-                .content(chatMessageDto.getContent())
-                .userId(chatMessageDto.getUserId())
-                .build();
-
-        // 채팅 기록 DB에 저장하기  redis는 따로 저장함.
-        Message savedMessage = messageRepository.save(message);
-    }
-
-    @Override
-    public List<ChatDto> getChatRooms(String loginId) {
+    public List<ChatRoomListDto> getChatRooms(String loginId) {
         log.info("userId : {}", loginId);
         User user;
 
@@ -110,21 +72,18 @@ public class ChatServiceImpl implements ChatService {
             throw new CustomException(ExceptionType.USER_NOT_EXIST);
         }
 
-        List<ChatDto> result;
-
-        log.info("userJob : {}", user.getJob());
-        log.info("userId : {}", user.getId());
+        List<ChatRoomListDto> resultList;
 
         // 농부이면
         if(user.getJob() == 0) {
-            result = chatRepository.findAllBySellerId(user.getId());
+            resultList = chatRepository.getChatRoomListWhenSeller(user.getId());
         }
         // 상인이면
         else {
-            result = chatRepository.findAllByBuyerId(user.getId());
+            resultList = chatRepository.getChatRoomListWhenBuyer(user.getId());
         }
 
-        return result;
+        return resultList;
     }
 
     @Override
