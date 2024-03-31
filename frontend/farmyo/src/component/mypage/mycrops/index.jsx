@@ -19,6 +19,7 @@ import api from "../../../api/api"
 import '../../../css/pagenation.css'
 import Web3 from "web3"
 import { jwtDecode } from 'jwt-decode';
+import { useNavigate } from "react-router-dom"
 
 
 function classNames(...classes) {
@@ -27,6 +28,7 @@ function classNames(...classes) {
 
 
 export default function MyCrops(props) {
+  const navigate = useNavigate()
   const loginNickname = jwtDecode( localStorage.getItem("access") ).nickname
   const loginId = jwtDecode( localStorage.getItem("access") ).loginId
 
@@ -485,10 +487,10 @@ export default function MyCrops(props) {
   //모든 정보 호출하여 데이터 가져와서 시간 순으로 정렬
   async function fetchData(cropPK) {
     try {
-      const contestInfos = await contract.methods.getContestInfos(cropPK).call();
-      const harvestInfos = await contract.methods.getHarvestInfos(cropPK).call();
       const plantingInfo = await contract.methods.getPlantingInfos(cropPK).call();
       const usageInfos = await contract.methods.getUsageInfos(cropPK).call();
+      const contestInfos = await contract.methods.getContestInfos(cropPK).call();
+      const harvestInfos = await contract.methods.getHarvestInfos(cropPK).call();
 
       let allInfos = [];
 
@@ -614,7 +616,8 @@ export default function MyCrops(props) {
   const [cropHarvestDate,setCropHarvestDate] = useState('')
   const [cropImgUrl,setCropImgUrl] = useState('')
 
-  //농산물등록모달
+
+  //작물등록모달 오픈
   const onOpenModal = () => {
     setOpen(true);
   };
@@ -624,27 +627,9 @@ export default function MyCrops(props) {
   const [cultivation,setCultivation] = useState('') // 재배지
   const [plantingDate,setPlantingDate] = useState('') // 심은날짜
 
+
   const onCloseModal = () => {
     setOpen(false)
-    // 작물등록axios
-    api.post('crops',{
-        cropCategoryId:selectedCrop.id,
-        cultivation:cultivation,
-        plantingDate:plantingDate
-      }
-    )
-    .then((res)=>{
-      console.log('작물등록성공')
-      console.log(res)
-      // 상태 초기화
-      setSelectedCrop({ id: null, categoryName: '작물을 선택하세요' });
-      setCultivation('');
-      setPlantingDate('');
-
-    })
-    .catch((err)=>{
-      console.log(err)
-    })
   };
 
 
@@ -655,9 +640,11 @@ export default function MyCrops(props) {
     api.get(`crops/${crop_id}`) // crop_id 변수를 URL에 삽입
     .then((res)=>{
       console.log(res)
+      console.log('농산물 상세정보(수확전)조회성공')
       setCropName(res.data.dataBody.cropName)
       setCropPlantingDate(res.data.dataBody.cropPlantingDate)
       setCropCultivationSite(res.data.dataBody.cropCultivationSite)
+      setCropId(res.data.dataBody.id)
 
     })
     .catch((err)=>{
@@ -665,6 +652,59 @@ export default function MyCrops(props) {
     })
   };
   
+
+  // 작물등록하기
+  // const handelRegisterCrop = () =>{      
+  //   api.post('crops',{
+  //     cropCategoryId:selectedCrop.id,
+  //     cultivation:cultivation,
+  //     plantingDate:plantingDate
+  //   }
+  //   )
+  //   .then((res)=>{
+  //     console.log('작물등록성공')
+  //     console.log(res)
+  //     // 상태 초기화
+  //     setSelectedCrop({ id: null, categoryName: '작물을 선택하세요' });
+  //     setCultivation('');
+  //     setPlantingDate('');
+  //     onCloseModal()
+
+  //   })
+  //   .catch((err)=>{
+  //     console.log(err)
+  //   })
+  // }
+ 
+ // 작물등록하기
+  const handelRegisterCrop = async () => {
+    try {
+      // 대기 화면으로 이동
+      navigate('/stanby/crop');
+      const res = await api.post('crops', {
+        cropCategoryId: selectedCrop.id,
+        cultivation: cultivation,
+        plantingDate: plantingDate,
+      });
+  
+      console.log('작물등록성공');
+      console.log(res);
+      
+      setSelectedCrop({ id: null, categoryName: '작물을 선택하세요' });
+      setCultivation('');
+      setPlantingDate('');
+      navigate('/mypage/seller',{ state: { selectedTabIndex: 1 } })
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  
+
+
+  
+
+
 
   const infoCloseModal = () => {
     setInfoOpen(false);
@@ -870,7 +910,7 @@ export default function MyCrops(props) {
             </div>
             <div style={{width: '100%', height: '50px', backgroundColor: '#1B5E20' }}
               className="flex justify-center items-center rounded-md mt-16"
-              onClick={onCloseModal}>
+              onClick={handelRegisterCrop}>
               <h1 style={{color:'white'}} className="text-2xl">등록</h1>
             </div>
           </div>
@@ -1109,8 +1149,8 @@ export default function MyCrops(props) {
           </Menu>
           </div>
           {/* 추가모달폼 */}
-          { selected ==='농약사용' && <Pesticide onRegister={addRecordCloseModal}/>}
-          { selected ==='지역대회수상' && <Award onRegister={addRecordCloseModal}/>}
+          { selected ==='농약사용' && <Pesticide cropId={cropId} onRegister={addRecordCloseModal}/>}
+          { selected ==='지역대회수상' && <Award  cropId={cropId} onRegister={addRecordCloseModal}/>}
           </Modal>
           
           {/* 수확하기모달폼 */}

@@ -64,7 +64,17 @@ function App() {
     return false;
   }
 
-  const isDefinedRoute = definedRoutes.some(route => new RegExp(`^${route}$`).test(location.pathname));
+    // 정의된 경로를 확인할 때 사용할 정규 표현식으로 변환하는 함수
+  const convertPathToRegex = (path) => {
+    // ':parameter' 스타일의 경로 파라미터를 정규 표현식으로 변환
+    const regexPath = path.replace(/:[^\s/]+/g, '([^\\s/]+)');
+    return new RegExp(`^${regexPath}$`);
+  };
+
+  const isDefinedRoute = definedRoutes.some(route => convertPathToRegex(route).test(location.pathname));
+
+
+  
 
   // 현재 경로가 숨겨야 하는 경로 중 하나와 일치하는지 확인
   const isHidePatternMatch = hidePatterns.some(pattern => pattern.test(location.pathname));
