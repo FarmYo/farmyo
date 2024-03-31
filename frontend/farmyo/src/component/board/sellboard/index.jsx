@@ -6,6 +6,7 @@ import { Menu,Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import Gallery from '../../../image/component/gallery.png'
 import Chatting from '../../../image/component/chatting.png'
+import Slider from "react-slick";
 import Swal from 'sweetalert2'
 import { jwtDecode } from "jwt-decode"
 
@@ -151,6 +152,17 @@ export default function SellBoardList(){
     } 
   }
 
+  const [fileUrl, setFileUrl] = useState([])
+  const [cropList, setCropList] = useState([]) // 작물등록시 작물 리스트
+  const [selectedCrop, setSelectedCrop] = useState({ id: null, categoryName: '작물을 선택하세요' })
+  const settings = {
+    dots: true, // 하단에 점으로 페이지 표시 여부
+    infinite: true, // 무한으로 반복
+    speed: 500, // 넘어가는 속도
+    slidesToShow: 1, // 한 번에 보여줄 슬라이드 수
+    slidesToScroll: 1, // 스크롤할 때 넘어가는 슬라이드 수
+    adaptiveHeight: true
+  };
   const checkPhoto = ((file) => {
     console.log(file)
     if (file.length > 5) {
@@ -159,6 +171,21 @@ export default function SellBoardList(){
         confirmButtonColor: '#1B5E20',
       })
     } else {
+      const promises = [];
+        for (const readFile of file) {
+          const reader = new FileReader();
+          promises.push(
+            new Promise((resolve) => {
+              reader.onload = () => {
+                resolve(reader.result);
+              };
+              reader.readAsDataURL(readFile);
+            })
+          );
+        }
+        Promise.all(promises).then((urls) => {
+          setFileUrl([...fileUrl, ...urls]);
+        });
     setFiles([...file])
     }
   })
@@ -204,6 +231,18 @@ export default function SellBoardList(){
     }
   }, [])
 
+  useEffect(() => {
+    // 작물 카테고리 조회
+    api.get('crops/category')
+    .then((res)=>{
+      console.log(res.data.dataBody)
+      setCropList(res.data.dataBody)
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  })
+
   return(
     <div style={{height:'420px',position:'relative'}}>
       {/* 팝니다 게시글 목록 */}
@@ -237,7 +276,16 @@ export default function SellBoardList(){
       {/* 팝니다게시글생성모달 */}
       <Modal open={sellOpen} onClose={sellCloseModal} styles={styles}>
         <div className="mt-10">
-          <div className='h-32' style={{ backgroundColor:'#bbbbbb'}}>사진있음</div>
+
+      <Slider {...settings}  
+      className="sliderOne">
+          {fileUrl?.map((img, index) => (
+            <div key={index}  style={{height:240}}>
+              <img src={img} alt={`slide-${index}`}/>
+            </div>
+          ))}
+        </Slider>
+
           <div className='flex justify-between mt-4'>
             <div>
             <Menu as="div" className="relative inline-block text-left">
@@ -256,21 +304,25 @@ export default function SellBoardList(){
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95"
             >
-            <Menu.Items className="absolute right-0 z-10 mt-2 w-30 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-              <div className="py-1">
-                <Menu.Item>
-                  {({ active }) => (
-                    <a
-                      href="#"
-                      className={classNames(
-                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                        'block px-16 py-1 text-sm'
-                      )}
-                    >
-                    감자
-                    </a>
-                  )}
+            <Menu.Items className="absolute right-0 z-10 w-full px-4 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+          style={{width:'16rem'}}>
+            <div className="py-1">
+              {cropList.map((crop,index)=>(
+              <Menu.Item key={crop.id} onClick={() => setSelectedCrop({ id: crop.id, categoryName: crop.categoryName })}> 
+                {({ active }) => (
+                  <button
+                    href="#"
+                    className={classNames(
+                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      'block px-12 py-2 text-xl'
+                      
+                    )}
+                  >
+                    {crop.categoryName}
+                  </button>
+                )}
                 </Menu.Item>
+                ))}
                 </div>
               </Menu.Items>
             </Transition>
