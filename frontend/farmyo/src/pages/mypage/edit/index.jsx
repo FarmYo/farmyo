@@ -1,18 +1,43 @@
 import Me from "../../../image/component/me.png"
 import Back from "../../../image/component/leftarrow.png"
+import Dropdown from '../../../image/component/dropdown.png'
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import api from "../../../api/api"
-import { Dropdown } from 'primereact/dropdown';
-import BankNameList from "../../../store"
+import Modal from "react-responsive-modal"
+import { Menu, Transition } from '@headlessui/react'
+import DaumPostcode from 'react-daum-postcode';
+// import { Dropdown } from 'primereact/dropdown';
+// import BankNameList from "../../../store"
 import Swal from "sweetalert2"
 import { jwtDecode } from "jwt-decode"
+import { Fragment } from 'react'
 
 export default function MypageEdit(){
   const navigate = useNavigate()
+  const im = jwtDecode(localStorage.getItem('access')).userJob
   const [userInfo, setUserInfo] = useState([])
   const [pastPassword, setPastPassword] =useState("")
   const [newPassword, setNewPassword] = useState("")
+  const [isOpen, setIsOpen] = useState(false);
+
+  const [open,setOpen] = useState(false)
+  const onOpenModal = () => {
+    setOpen(true);
+  };
+  const onCloseModal = () => {
+    setOpen(false);
+  };
+
+  const addressSearch = (data) => {
+    console.log(data)
+    const newUserInfo = {
+      ...userInfo,
+      addressCode : data.zonecode,
+      addressLegal : data.roadAddress,
+    };
+    setUserInfo(newUserInfo)}
+
   const [bankList, setBankList] = useState([]);
   const BankList = () => {
       api.get('banks')
@@ -24,20 +49,48 @@ export default function MypageEdit(){
         console.log('은행 리스트 받아오기 실패', err)
       })
   }
-  const banks = (bank) => {
-    return (
-      <select>
-        {bank.options.map((option) => (
-          <option
-            key={option.id}
-            value={option.id}
-          >
-            {option.bankName}
-          </option>
-        ))}
-      </select>
-    )
-  }
+  const [selectedBank, setSelectedBank] = useState('전체');
+  // const banks = (bank) => {
+  //   return (
+  //     <select>
+  //       {bank.options.map((option) => (
+  //         <option
+  //           key={option.id}
+  //           value={option.id}
+  //         >
+  //           {option.bankName}
+  //         </option>
+  //       ))}
+  //     </select>
+  //   )
+  // }
+
+  const isNumber = ((number) => {
+    if (isNaN(number)) {
+      Swal.fire({
+        title: '숫자 외에 입력할 수 없습니다.',
+        confirmButtonColor: '#1B5E20',
+      });
+      const numbers = number.replace(/[^0-9]/g, "");
+      const newUserInfo = {
+        ...userInfo,
+        account :{
+          ...userInfo.account,
+          accountNumber: numbers,
+        }
+      };
+      setUserInfo(newUserInfo);
+    } else {
+      const newUserInfo = {
+        ...userInfo,
+        account :{
+          ...userInfo.account,
+          accountNumber: number,
+        }
+      };
+      setUserInfo(newUserInfo);
+    }
+  })
 
   const getUserInfo = (() => {
     api.get('users')
@@ -162,7 +215,6 @@ export default function MypageEdit(){
 
   // 이전페이지로
   const goBack = () => {
-    const im = jwtDecode(localStorage.getItem('access')).userJob
     if (im === 0) {
       navigate('/mypage/seller')
     } else {
@@ -172,7 +224,7 @@ export default function MypageEdit(){
 
   useEffect(()=>{
     getUserInfo();
-    BankList();
+    // BankList();
   },[])
 
   return(
@@ -200,12 +252,13 @@ export default function MypageEdit(){
         <p>{userInfo?.loginId}</p>
       </div>
       <div>
+        {/* 농부일때만 보이게하기
         <button
           className="btn rounded-md" style={{ backgroundColor:'#81C784'}}
           onClick={()=>document.getElementById('checkPoint').showModal()}
         >
-          <h1 style={{ color:'white' }} className="text-sm" >내 포인트 확인</h1>
-        </button>
+          <h1 style={{ color:'white' }} className="text-sm" >내 지갑</h1>
+        </button> */}
       </div>
       </div>
       <div>
@@ -296,7 +349,7 @@ export default function MypageEdit(){
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
           </form>
           <div>
-            내 포인트 : {userInfo?.account?.accountBalance}
+            내 판매액 : {userInfo?.account?.accountBalance}원
           </div>
         </div>
       </dialog>
@@ -353,7 +406,7 @@ export default function MypageEdit(){
             </div>
             <label htmlFor="message"
               className="block text-sm leading-6 text-gray-900 mt-2">
-              상태메시지
+              상태메세지
             </label>
             <div>
               <input 
@@ -380,6 +433,31 @@ export default function MypageEdit(){
       </dialog>
 
       {/* 주소 수정 모달 */}
+      <Modal
+        open={isOpen}
+        showCloseIcon={true}
+        // center
+        className={{
+          modal: 'customModal',
+        }}
+        onOverlayClick={() => setIsOpen(false)} //  Modal 외부 영역을 클릭했을 때 실행되는 함수
+        onEscapeKey={() => setIsOpen(false)} // Esc 키를 눌렀을 때 실행되는 함수
+        onClose={() => {}}
+      >
+        {/* <button onClick={() => {setIsOpen(false)}} className="closeButton">X</button> */}
+        {/* <firstModal/> */}
+        <DaumPostcode
+          onComplete={(data) => {
+            addressSearch(data);
+            document.getElementById('changeAddress').showModal()
+            setIsOpen(false); // 주소 검색 완료 후 Modal 닫기 // 주소가 선택 안되는 문제 수정해야한다.
+          }}
+          autoClose
+          width="100%"
+          height="100%"
+        />
+      </Modal>
+
       <dialog id="changeAddress" className="modal">
         <div className="modal-box" style={{ height:'250px'}}>
           <form method="dialog">
@@ -403,7 +481,14 @@ export default function MypageEdit(){
                   id="address" name="address" type="text" placeholder={userInfo?.addressLegal} autoComplete="text" 
                   className="block rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
                   />
-                  <button className="btn rounded-md" style={{ backgroundColor:'#bbbbbb'}}>
+                  <button
+                    onClick={() => {
+                      document.getElementById('changeAddress').close()
+                      setIsOpen(true)
+                    }}
+                      className="btn rounded-md"
+                      style={{ backgroundColor:'#bbbbbb'}}
+                    >
                   <span style={{ color:'white' }} className="text-sm">주소검색</span>
                 </button>
               </div>
@@ -431,6 +516,9 @@ export default function MypageEdit(){
       </dialog>
 
       {/* 계좌 수정 모달 */}
+      <Modal>
+        
+      </Modal>
       <dialog id="changeAccount" className="modal">
         <div className="modal-box" style={{ height:'350px'}}>
           <form method="dialog">
@@ -442,7 +530,18 @@ export default function MypageEdit(){
               예금주
             </label>
             <div>
-              <input id="accountOwner" name="accountOwner" type="text" placeholder={userInfo?.account?.depositor} autoComplete="text" 
+              <input 
+                value={userInfo?.account?.depositor}
+                onChange={(event) => {
+                  const newUserInfo = {
+                    ...userInfo,
+                    account :{
+                      ...userInfo.account,
+                      depositor: event.target.value,
+                    }
+                  };
+                  setUserInfo(newUserInfo);}}
+                id="accountOwner" name="accountOwner" type="text" placeholder={userInfo?.account?.depositor} autoComplete="text" 
                 className="block h-10 w-full rounded-md border-0  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
                 />
                 </div>
@@ -450,7 +549,7 @@ export default function MypageEdit(){
               className="block text-sm leading-6 text-gray-900 mt-2">
               은행명
             </label>
-              <Dropdown 
+              {/* <Dropdown 
                 value={userInfo?.account?.bankName} 
                 onChange={(event) => {
                   const newUserInfo = {
@@ -461,20 +560,69 @@ export default function MypageEdit(){
                     }
                   };
                   setUserInfo(newUserInfo);}}
-                options={bankList} optionLabel="bankName" placeholder="은행명" filter className="w-full md:w-14rem" />
+                options={bankList} optionLabel="bankName" placeholder="은행명" filter className="w-full md:w-14rem" /> */}
+
               {/* <span className="p-float-label w-full md:w-14rem"> */}
                 {/* <Dropdown inputId="dd-city" value={selectedCity} onChange={(e) => setSelectedCity(e.value)} options={cities} optionLabel="name" className="w-full" />
 
                 <Dropdown value={selectedCountry} onChange={(e) => setSelectedCountry(e.value)} options={countries} optionLabel="name" placeholder="은행명" filter valueTemplate={selectedCountryTemplate} itemTemplate={countryOptionTemplate} className="w-full md:w-14rem" /> */}
 
               {/* </span> */}
+{/* 드롭다운 */}
+      {/* <Menu as="div" className="relative inline-block text-left">
+        <div>
+          <Menu.Button className="inline-flex w-32 h-12 justify-between items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50"
+          style={{ border: '0.5px solid', backgroundColor: 'transparent'}}>
+            <div className='pl-3'>{selectedBank}</div>
+            <img src={Dropdown} alt="" style={{width:15,height:10}}/>
+          </Menu.Button>
+        </div>
+        <Transition
+          as={Fragment}
+          enter="transition ease-out duration-100"
+          enterFrom="transform opacity-0 scale-95"
+          enterTo="transform opacity-100 scale-100"
+          leave="transition ease-in duration-75"
+          leaveFrom="transform opacity-100 scale-100"
+          leaveTo="transform opacity-0 scale-95"
+        >
+          <Menu.Items className="absolute left-0 z-10 mt-2 w-28 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <div className="py-1">
+              {bankList.map((item) => (
+                <Menu.Item key={item.id}>
+                  {({ active }) => (
+                    <a
+                      href="#"
+                      className={`${
+                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
+                      } block px-4 py-2 text-sm`}
+                      onClick={() => setSelectedBank(item)}
+                    >
+                      {item.bankName}
+                    </a>
+                  )}
+                </Menu.Item>
+              ))}
+            </div>
+          </Menu.Items>
+        </Transition>
+      </Menu> */}
+
             <div>
 
-
-
-
-                <input id="bankName" name="bankName" type="text" placeholder={userInfo?.account?.bankName} autoComplete="text" 
-                className="block h-10 w-full rounded-md border-0 mt-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
+                <input
+                  value={userInfo?.account?.bankName}
+                  onChange={(event) => {
+                    const newUserInfo = {
+                      ...userInfo,
+                      account :{
+                        ...userInfo.account,
+                        bankName: event.target.value,
+                      }
+                    };
+                    setUserInfo(newUserInfo);}}
+                  id="bankName" name="bankName" type="text" placeholder={userInfo?.account?.bankName} autoComplete="text" 
+                  className="block h-10 w-full rounded-md border-0 mt-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
                 />
                 </div>
                 <label htmlFor="account"
@@ -482,8 +630,11 @@ export default function MypageEdit(){
               계좌번호
             </label>
                 <div>
-                <input id="account" name="account" type="text" placeholder={userInfo?.account?.accountNumber} autoComplete="text" 
-                className="block h-10 w-full rounded-md border-0 mt-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
+                <input
+                  value={userInfo?.account?.accountNumber}
+                  onChange={(event) => {isNumber(event.target.value)}}
+                  id="account" name="account" type="text" placeholder={userInfo?.account?.accountNumber} autoComplete="text" 
+                  className="block h-10 w-full rounded-md border-0 mt-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
                 />
             </div>
             <button

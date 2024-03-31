@@ -22,7 +22,7 @@ export default function Mainpage() {
         className="h-10 w-full rounded-md py-1 text-gray-900 focus:ring-lime-950 pl-2"
       />
     </div>
-    <div className="flex mx-2 my-4">
+    <div className="flex my-4 w-full">
       <button
 //        onClick={() => {navigate("/signup/first")}}
         onClick={() => {

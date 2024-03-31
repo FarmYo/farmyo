@@ -17,20 +17,6 @@ import java.util.Optional;
 @Repository
 public interface TradeRepository extends JpaRepository<Trade, Integer> {
 
-//    @Query(value = "SELECT t.id, t.seller.nickname, t.board.boardTitle, t.tradePrice, t.tradeQuantity, t.tradeStatus FROM Trade t WHERE t.seller.id = :id AND t.tradeStatus = 3")
-//    List<TradeListDto> getSellerListFinish(int id);
-//
-//    @Query(value = "SELECT t.id, t.seller.nickname, t.board.boardTitle, t.tradePrice, t.tradeQuantity, t.tradeStatus FROM Trade t WHERE t.seller.id = :id AND t.tradeStatus != 3")
-//    List<TradeListDto> getSellerListNotFinish(int id);
-
-    @Query("SELECT t.id, s.nickname, b.boardTitle, t.tradePrice, t.tradeQuantity, t.tradeStatus " +
-            "FROM Trade t " +
-            "JOIN t.board b " +
-            "JOIN t.seller s " +
-            "JOIN t.buyer buy " +
-            "WHERE buy.id = :id AND t.tradeStatus != 3")
-    List<TradeListDto> getTradeDetailsByBuyerIdAndStatusNot(@Param("id") int id);
-
     @Query(value = "SELECT t FROM Trade t WHERE t.buyer.id = :id AND t.tradeStatus = :tradeStatus ORDER BY t.updatedAt DESC ")
     List<Trade> findAllByBuyerAndTradeStatus(int id, int tradeStatus);
 
