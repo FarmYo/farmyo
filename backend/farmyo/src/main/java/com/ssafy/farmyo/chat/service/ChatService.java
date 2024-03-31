@@ -1,15 +1,14 @@
 package com.ssafy.farmyo.chat.service;
 
-import com.ssafy.farmyo.chat.dto.ChatDto;
-import com.ssafy.farmyo.chat.dto.MessageDto;
-import com.ssafy.farmyo.chat.dto.MessageListDto;
-import com.ssafy.farmyo.entity.Chat;
+import com.ssafy.farmyo.chat.dto.*;
 
 import java.util.List;
 
 public interface ChatService {
-    void publishMsg(MessageDto messageDto);
-    List<ChatDto> getChatRooms(String loginId);
+//    void sendMsg(ChatMessageDto messageDto);
+    List<ChatRoomListDto> getChatRooms(String loginId);
     List<MessageListDto> getMessages(int chatId);
+    ChatDto createChatRoom(ChatRoomDto chatRoomDto);
+
 }
 

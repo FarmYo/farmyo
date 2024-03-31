@@ -1,10 +1,7 @@
 package com.ssafy.farmyo.common.config;
-
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -24,82 +21,18 @@ public class RedisConfig {
     private String password;
 
     @Bean
-    @Primary
     public RedisConnectionFactory redisTokenConnectionFactory() {
-        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(host, port);
-        redisStandaloneConfiguration.setPassword(password);
-        redisStandaloneConfiguration.setDatabase(0);
+            RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(host, port);
+            redisStandaloneConfiguration.setPassword(password);
+            redisStandaloneConfiguration.setDatabase(0);
 
-        return new LettuceConnectionFactory(redisStandaloneConfiguration);
-    }
-
-    @Bean
-    @Qualifier("redisChatRoomFactory")
-    public RedisConnectionFactory redisChatRoomConnectionFactory() {
-        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(host, port);
-        redisStandaloneConfiguration.setPassword(password);
-        redisStandaloneConfiguration.setDatabase(1);
-
-        return new LettuceConnectionFactory(redisStandaloneConfiguration);
-    }
+            return new LettuceConnectionFactory(redisStandaloneConfiguration);
+        }
 
     @Bean
-    @Qualifier("redisMsgFactory")
-    public RedisConnectionFactory redisMsgConnectionFactory() {
-        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(host, port);
-        redisStandaloneConfiguration.setPassword(password);
-        redisStandaloneConfiguration.setDatabase(2);
-
-        return new LettuceConnectionFactory(redisStandaloneConfiguration);
-    }
-
-    @Bean
-    @Primary
     public RedisTemplate<String, Object> redisTokenTemplate() {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisTokenConnectionFactory());
-
-        // 일반적인 key:value의 경우 시리얼라이저
-        // setKeySerializer, setValueSerializer 설정으로 redis-cli를 통해 직접 데이터를 보는게 가능하다.
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
-
-        // Hash를 사용할 경우 시리얼라이저
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashValueSerializer(new StringRedisSerializer());
-
-        // 모든 경우
-        redisTemplate.setDefaultSerializer(new StringRedisSerializer());
-
-        return redisTemplate;
-    }
-
-    @Bean
-    @Qualifier("redisChatRoomTemplate")
-    public RedisTemplate<String, Object> redisChatRoomTemplate(@Qualifier("redisChatRoomFactory") RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory);
-
-        // 일반적인 key:value의 경우 시리얼라이저
-        // setKeySerializer, setValueSerializer 설정으로 redis-cli를 통해 직접 데이터를 보는게 가능하다.
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
-
-        // Hash를 사용할 경우 시리얼라이저
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashValueSerializer(new StringRedisSerializer());
-
-        // 모든 경우
-        redisTemplate.setDefaultSerializer(new StringRedisSerializer());
-
-        return redisTemplate;
-    }
-
-    @Bean
-    @Qualifier("redisMsgTemplate")
-    public RedisTemplate<String, Object> redisMsgTemplate(@Qualifier("redisMsgFactory") RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory);
 
         // 일반적인 key:value의 경우 시리얼라이저
         // setKeySerializer, setValueSerializer 설정으로 redis-cli를 통해 직접 데이터를 보는게 가능하다.
