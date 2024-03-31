@@ -73,7 +73,7 @@ public class Board extends BaseTime {
     //빌더
     @Builder
     public Board(User user, Crop crop, CropCategory cropCategory, int boardType, String boardTitle,
-                 String boardContent, int boardQuantity, int boardPrice) {
+                 String boardContent, int boardQuantity, int boardPrice, int id) {
         this.user = user;
         this.crop = crop;
         this.cropCategory = cropCategory;
@@ -82,6 +82,7 @@ public class Board extends BaseTime {
         this.boardContent = boardContent;
         this.boardQuantity = boardQuantity;
         this.boardPrice = boardPrice;
+        this.id = id;
     }
 
     public void patchBoard(int boardQuantity, int boardPrice, String boardTitle, String boardContent) {

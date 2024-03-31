@@ -9,12 +9,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -41,27 +45,37 @@ public class JWTFilter extends OncePerRequestFilter {
         try{
             jwtUtil.isExpired(accessToken);
         }catch (ExpiredJwtException e){
-//            log.info("Access Token is Expired");
-//            // response body
-//            PrintWriter writer = response.getWriter();
-//            writer.print("만료된 Access 토큰입니다.");
-//
-//            // response status code
-//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//            return;
+            String jsonResponse = "{\"dataHeader\": {\"successCode\": 1, \"resultCode\": \"O-003\", \"resultMessage\": \"만료된 토큰입니다.\"}, \"dataBody\": null}";
+
+            // JSON 형식으로 응답을 반환하기 위해 Content-Type 설정
+            response.setContentType("application/json");
+            // 상태 코드 설정
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+
+            // JSON 응답을 출력
+            PrintWriter out = new PrintWriter(new OutputStreamWriter(response.getOutputStream(), StandardCharsets.UTF_8), true);
+            out.print(jsonResponse);
+            out.flush();
+
+            return;
         }
 
         // 토큰이 access 인지 확인 (발급시 페이로드에 명시)
         String category = jwtUtil.getCategory(accessToken);
         if(!category.equals("access")){
-            log.info("Invalid Access Token");
-//            // response body
-//            PrintWriter writer = response.getWriter();
-//            writer.print("유효하지 않은 토큰입니다.");
-//
-//            // response status code
-//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//            return;
+            String jsonResponse = "{\"dataHeader\": {\"successCode\": 1, \"resultCode\": \"U-002\", \"resultMessage\": \"유효하지 않은 토큰입니다.\"}, \"dataBody\": null}";
+
+            // JSON 형식으로 응답을 반환하기 위해 Content-Type 설정
+            response.setContentType("application/json");
+            // 상태 코드 설정
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+
+            // JSON 응답을 출력
+            PrintWriter out = new PrintWriter(new OutputStreamWriter(response.getOutputStream(), StandardCharsets.UTF_8), true);
+            out.print(jsonResponse);
+            out.flush();
+
+            return;
         }
 
         String loginId = jwtUtil.getLoginId(accessToken);
