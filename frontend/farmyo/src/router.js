@@ -75,7 +75,7 @@ export default function Router (){
       <Route path='/chat/:chatId' element={<ChattingRoom />} />
       {/* 대기화면 */}
       <Route path='/stanby' element={<Stanby />} />
-      {/* 작물대기화면 */}
+      {/* 작물등록대기화면 */}
        <Route path='/stanby/crop' element={<CropStanby />} />
       {/* 작물대기화면 */}
        <Route path='/stanby/trade' element={<TradeStanby />} />

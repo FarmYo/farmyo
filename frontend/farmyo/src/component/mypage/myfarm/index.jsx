@@ -15,15 +15,18 @@ export default function MyFarm(props) {
   const loginId = jwtDecode( localStorage.getItem("access") ).loginId 
   const [farmList,setFarmList] = useState([]) //마이팜 게시물 조회시 담기는 리스트
   const [selectImage,setSelectImage] = useState([]) //게시물 생성시 선택한 이미지 리스트
+  const [fileList,setFileList] = useState([])
+  const [content,setContent] = useState('')
+  const [flag, setFlag] = useState(false);
 
-  // console.log(loginId)
-
+  // 마이팜 게시물 불러오기
    useEffect(()=>{
     console.log(loginId)
     console.log(props.profileId)
+    const paramsLoginId = props.profileId !== undefined ? props.profileId : loginId;
     api.get('farms/list',{
       params:{
-        loginId: loginId
+        loginId: paramsLoginId
       }
     })
     .then((res)=>{
@@ -34,7 +37,7 @@ export default function MyFarm(props) {
     .catch((err)=>{
       console.log(err)
     })
-  },[])
+  },[flag])
 
   const settings = {
     dots: true, // 하단에 점으로 페이지 표시 여부
@@ -103,9 +106,10 @@ export default function MyFarm(props) {
     document.getElementById('hiddenFileInput').click();
   };
 
+  
   const handleFileChange = (event) => {
+    setFileList([...event.target.files]) // 선택된 모든 파일을 저장 
     const files = event.target.files;
-
     if (files.length > 0) {
       const fileReaders = [];
       const urls = [];
@@ -127,27 +131,38 @@ export default function MyFarm(props) {
         reader.readAsDataURL(files[i]);
         fileReaders.push(reader);
       }
-      console.log(selectImage)
+      // console.log(selectImage)
     }
+  }
 
 
+   // 마이팜게시물 생성
+   const handleUpload = () =>{
+    const formData = new FormData()
+    formData.append('loginId',loginId)
+    formData.append('content',content)
+
+    const orders = fileList.map((file, index) => index + 1) //int형식
+
+    fileList.forEach((file,index) => {
+      formData.append('files',file)
+      formData.append('orders',index+1)
+    })
+      // 'orders' 배열을 JSON 문자열로 변환하여 'orders' 필드에 추가
 
 
+    api.post('farms',formData)
+    .then((res)=>{
+      console.log(res)
+      console.log('생성성공')
+      onCloseModal()
+      setFlag(!flag)
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-  };
 
  return(
   <div style={{ position:'relative',height:'400px' }}>
@@ -218,9 +233,7 @@ export default function MyFarm(props) {
     {/* 마이팜게시글등록 모달창 */}
     <Modal open={open} onClose={onCloseModal} styles={styles}>
     <div className='pt-16'>
-      {/* 사진위치 */}
-
-
+      {/* 미리보기사진위치 */}
       <Slider {...settings} className="sliderTwo mb-10">
         {selectImage.map((url, index) => (
           <div key={index}>
@@ -228,17 +241,6 @@ export default function MyFarm(props) {
           </div>
         ))}
       </Slider>
-
-
-
-
-
-
-
-
-
-
-
 
 
       <div className='flex justify-between'>
@@ -299,10 +301,12 @@ export default function MyFarm(props) {
 
       </div>
       <textarea className="textarea w-full h-28 textarea-bordered mt-10" 
-      placeholder="내용을 입력하세요"></textarea>    
+      placeholder="내용을 입력하세요"
+      onChange={(e)=>setContent(e.target.value)}></textarea>    
       <button class="btn h-10 w-full rounded-md mt-5" style={{ backgroundColor:'#1B5E20'}}
-      onClick={onCloseModal}>
-        <h1 style={{ color:'white' }} className="text-lg">등록</h1>
+      onClick={handleUpload}>
+        <h1 style={{ color:'white' }} className="text-lg"
+        >등록</h1>
       </button>
       </div>
     </Modal>
