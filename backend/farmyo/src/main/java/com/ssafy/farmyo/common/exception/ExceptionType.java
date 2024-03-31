@@ -23,6 +23,7 @@ public enum ExceptionType {
     PASSWORD_NOT_MATCH(HttpStatus.BAD_REQUEST, "U-011", "현재 비밀번호가 일치하지 않습니다."),
     FARMER_NOT_EXIST(HttpStatus.BAD_REQUEST, "U-012", "존재하지 않는 농부입니다."),
     DUPLICATE_LOGIN_ID(HttpStatus.BAD_REQUEST, "U-013", "아이디가 중복되었습니다."),
+    FAILED_TO_CREATE_WALLET(HttpStatus.INTERNAL_SERVER_ERROR, "U-014", "지갑 생성에 실패했습니다."),
 
     // 작물
     CROP_NOT_EXIST(HttpStatus.BAD_REQUEST, "C-001", "존재하지 않는 작물입니다."),
@@ -40,8 +41,8 @@ public enum ExceptionType {
 
     // 토큰
     TOKEN_NOT_EXIST(HttpStatus.UNAUTHORIZED, "O-001", "토큰이 존재하지 않습니다."),
-    INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "O-002", "유효하지 않은 리프레시 토큰입니다."),
-    EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "O-003", "만료된 리프레시 토큰입니다."),
+    INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "O-002", "유효하지 않은 토큰입니다."),
+    EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "O-003", "만료된 토큰입니다."),
 
 
     // 거래
