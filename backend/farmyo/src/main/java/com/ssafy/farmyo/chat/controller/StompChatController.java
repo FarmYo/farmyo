@@ -23,15 +23,15 @@ public class RedisChatController {
     private final RedisPublisher redisPublisher;
     private final RedisSubscriber redisSubscriber;
     private final UserRepository userRepository;
-    private final SimpMessageSendingOperations messagingTemplate;
+//    private final SimpMessageSendingOperations messagingTemplate;
 
-    @MessageMapping("/chat/message")
+    @MessageMapping("/chat/room")
     public void getMessage(ChatMessageDto chatMessageDto) {
         User user = userRepository.findById(chatMessageDto.getUserId()).orElseThrow(()-> new CustomException(ExceptionType.USER_NOT_EXIST));
 
         log.info("socket get user : {}", user);
 
-        messagingTemplate.convertAndSend("/sub/chat/" + chatMessageDto.getChatId(), chatMessageDto);
+//        messagingTemplate.convertAndSend("/sub/chat/" + chatMessageDto.getChatId(), chatMessageDto);
     }
 
 }
