@@ -6,16 +6,15 @@ import com.ssafy.farmyo.common.s3.AwsS3Service;
 import com.ssafy.farmyo.entity.*;
 import com.ssafy.farmyo.user.dto.*;
 import com.ssafy.farmyo.user.openApi.OpenApiManager;
-import com.ssafy.farmyo.user.repository.AddressRepository;
-import com.ssafy.farmyo.user.repository.FarmerRepository;
-import com.ssafy.farmyo.user.repository.FavoriteRepository;
-import com.ssafy.farmyo.user.repository.UserRepository;
+import com.ssafy.farmyo.user.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.web3j.crypto.Credentials;
+import org.web3j.crypto.Keys;
 
 import java.util.List;
 
@@ -32,6 +31,7 @@ public class UserServiceImpl implements UserService {
     private final OpenApiManager openApiManager;
     private final AwsS3Service awsS3Service;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final WalletRepository walletRepository;
 
     @Override
     @Transactional
@@ -70,6 +70,20 @@ public class UserServiceImpl implements UserService {
 
         // 주소 저장
         addressRepository.save(address);
+
+        //지갑 생성
+        try {
+            Credentials credentials = Credentials.create(Keys.createEcKeyPair());
+            Wallet wallet = Wallet.builder()
+                    .user(savedUser)
+                    .walletPrivateKey(credentials.getEcKeyPair().getPrivateKey().toString(16))
+                    .walletAddress(credentials.getAddress())
+                    .build();
+            walletRepository.save(wallet);
+
+        } catch (Exception e) {
+            throw new CustomException(ExceptionType.FAILED_TO_CREATE_WALLET);
+        }
 
         // 식별 ID 값 반환
         return savedUser.getId();
@@ -120,6 +134,22 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         addressRepository.save(address);
+
+
+        //농부 지갑 생성
+        try {
+            Credentials credentials = Credentials.create(Keys.createEcKeyPair());
+            Wallet wallet = Wallet.builder()
+                    .user(savedFarmer)
+                    .walletPrivateKey(credentials.getEcKeyPair().getPrivateKey().toString(16))
+                    .walletAddress(credentials.getAddress())
+                    .build();
+            walletRepository.save(wallet);
+
+        } catch (Exception e) {
+            throw new CustomException(ExceptionType.FAILED_TO_CREATE_WALLET);
+        }
+
 
         // 식별 ID 값 반환
         return savedFarmer.getId();
