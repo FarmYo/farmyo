@@ -1,37 +1,27 @@
 package com.ssafy.farmyo.chat.controller;
 
 import com.ssafy.farmyo.chat.dto.ChatMessageDto;
-import com.ssafy.farmyo.chat.service.ChatService;
-import com.ssafy.farmyo.chat.service.RedisPublisher;
-import com.ssafy.farmyo.chat.service.RedisSubscriber;
-import com.ssafy.farmyo.common.exception.CustomException;
-import com.ssafy.farmyo.common.exception.ExceptionType;
-import com.ssafy.farmyo.entity.User;
-import com.ssafy.farmyo.user.repository.UserRepository;
+import com.ssafy.farmyo.chat.service.StompChatService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class RedisChatController {
+@Tag(name="8.STOMP_CHAT", description="STOMP CHAT API")
+public class StompChatController {
 
-    private final ChatService chatService;
-    private final RedisPublisher redisPublisher;
-    private final RedisSubscriber redisSubscriber;
-    private final UserRepository userRepository;
-    private final SimpMessageSendingOperations messagingTemplate;
-
+    private final StompChatService stompChatService;
     @MessageMapping("/chat/message")
-    public void getMessage(ChatMessageDto chatMessageDto) {
-        User user = userRepository.findById(chatMessageDto.getUserId()).orElseThrow(()-> new CustomException(ExceptionType.USER_NOT_EXIST));
-
-        log.info("socket get user : {}", user);
-
-//        messagingTemplate.convertAndSend("/sub/chat/" + chatMessageDto.getChatId(), chatMessageDto);
+    @Operation(summary = "유저 실시간 채팅 전달", description = "메세지 저장 및 pub")
+    public void saveAndPublish(
+            @Parameter(description = "유저가 전송한 메세지 DTO")
+            ChatMessageDto chatMessageDto) {
+        stompChatService.saveAndPublish(chatMessageDto);
     }
-
 }
