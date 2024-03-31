@@ -1,4 +1,4 @@
-import { useEffect, useState, Fragment } from 'react'
+import { useEffect, useState, Fragment, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../../../api/api'
 import { Modal } from "react-responsive-modal"
@@ -7,14 +7,45 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import Gallery from '../../../image/component/gallery.png'
 import Chatting from '../../../image/component/chatting.png'
 import Swal from 'sweetalert2'
+import { jwtDecode } from "jwt-decode"
 
 export default function SellBoardList(){
+  const im = jwtDecode(localStorage.getItem('access')).userJob
   const navigate = useNavigate()
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
-  // const im = jwtDecode(localStorage.getItem('access')).userJob
+
+  // 무한스크롤 부분
   const [boardInfo, setBoardInfo] = useState([])
+  const BoardInfo = (() => {
+    api.get(`boards?type=0&page=${page}&size=6`)
+    .then((res) => {
+      if (res.data.dataBody.length > 0) {
+        setBoardInfo([...boardInfo, ...res.data.dataBody])
+        console.log('게시글 불러오기 성공', res)
+        setPage((prevPage) => prevPage + 1);
+        console.log(res.data.dataBody, boardInfo, page)
+      } else {
+        setHaveMore(false)
+        console.log('더이상의 데이터가 없습니다.', res)
+      }
+    })
+    .catch((err) => {
+      console.log('게시글 불러오기 실패', err)
+    })
+  })
+  const [page, setPage] = useState(0)
+  const observer = useRef(null)
+  const [haveMore, setHaveMore] = useState(true)
+  const handleIntersection = (articles) => {
+    articles.forEach((article) => {
+      if (haveMore && article.isIntersecting && article.target.className === 'trigger') {
+        BoardInfo()
+      }
+    })
+  }
+
   const [files, setFiles] = useState([])
   const [cropId, setCropId] =useState(0)
   const [quantity, setQuantity] = useState(0)
@@ -132,17 +163,6 @@ export default function SellBoardList(){
     }
   })
 
-  const BoardInfo = (() => {
-    api.get("boards?type=0&page=0&size=100")
-    .then((res) => {
-      setBoardInfo(res.data.dataBody)
-      console.log('게시글 불러오기 성공', res)
-    })
-    .catch((err) => {
-      console.log('게시글 불러오기 실패', err)
-    })
-  })
-
   const [sellOpen,setSellOpen] = useState(false)
 
   const styles = {
@@ -166,10 +186,23 @@ export default function SellBoardList(){
   });
 
   useEffect(() => {
-    BoardInfo();
+    if (haveMore) {
+      BoardInfo();
+    }
     setCropId(29);
-  }, [])
+    // 크롭 id 바꾸기
+  }, [page])
 
+  useEffect(() => {
+    observer.current = new IntersectionObserver(handleIntersection, {
+      threshold : 0.7,
+    })
+    const observeTarget = document.querySelector('.trigger');
+    observer.current.observe(observeTarget);
+    return () => {
+      observer.current.disconnect()
+    }
+  }, [])
 
   return(
     <div style={{height:'420px',position:'relative'}}>
@@ -190,13 +223,15 @@ export default function SellBoardList(){
         </div>
       </div>
       ))}
-
+      {haveMore && <div className="trigger"></div>}
       <div style={{ position: 'absolute', bottom: 0, right: 10}}>
+        {im === 0 && (
         <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
           <div style={{ position: 'absolute', top: '44%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}
           onClick={() => sellOpenModal()}>+
           </div>
         </div>
+        )}
       </div>
       
       {/* 팝니다게시글생성모달 */}

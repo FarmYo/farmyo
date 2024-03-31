@@ -8,6 +8,7 @@ import Edit from "../../../image/component/edit.PNG"
 import Back from '../../../image/component/leftarrow.png'
 import api from '../../../api/api'
 import Swal from 'sweetalert2'
+import Slider from "react-slick";
 import Gallery from '../../../image/component/gallery.png'
 import '../../../css/barchart.css'
 
@@ -37,6 +38,17 @@ export default function SellDetail(){
     },
   };
 
+  const settings = {
+    dots: true, // 하단에 점으로 페이지 표시 여부
+    infinite: true, // 무한으로 반복
+    speed: 500, // 넘어가는 속도
+    slidesToShow: 1, // 한 번에 보여줄 슬라이드 수
+    slidesToScroll: 1, // 스크롤할 때 넘어가는 슬라이드 수
+    adaptiveHeight: true
+  };
+
+  const [url, setUrl] = useState([])
+  const [fileUrl, setFileUrl] = useState([])
   const [quantity, setQuantity] = useState(boardInfo.quantity)
   const [price, setPrice] = useState(boardInfo.price)
   const [title, setTitle] = useState(boardInfo.title)
@@ -52,17 +64,32 @@ export default function SellDetail(){
     setSellOpen(false);
   });
 
-  const checkPhoto = ((file) => {
-    console.log(file)
-    if (file.length > 5) {
+  const checkPhoto = ((files) => {
+    console.log(files)
+    if (files.length > 5) {
       Swal.fire({
         title : '5개만 선택할 수 있습니다.',
         confirmButtonColor: '#1B5E20',
       })
     } else {
+        const promises = [];
+        for (const file of files) {
+          const reader = new FileReader();
+          promises.push(
+            new Promise((resolve) => {
+              reader.onload = () => {
+                resolve(reader.result);
+              };
+              reader.readAsDataURL(file);
+            })
+          );
+        }
+        Promise.all(promises).then((urls) => {
+          setFileUrl([...fileUrl, ...urls]);
+        });
       const newBoardInfo = {
         ...boardInfo,
-        files : file,
+        files,
       };
       console.log(newBoardInfo)
       console.log(newBoardInfo.files)
@@ -78,32 +105,32 @@ export default function SellDetail(){
       formData.append('content', boardInfo.content)
       formData.append('quantity', boardInfo.quantity)
       formData.append('price', boardInfo.price)
-      // (boardInfo.files).forEach((file, index) => {
-      //   formData.append(`images`, file);
-      // });
-      // 사진 넣는 거 해야한다!
+      for (const file of boardInfo.files) {
+        formData.append('images', file);
+      }
       console.log('formData : ', formData)
       if (formData && boardInfo.files.length < 6) {
         api.patch(`boards/${boardInfo.id}`, formData)
         .then((res) => {
           console.log('수정 완료')
           sellCloseModal()
+          getDetail()
         })
         .catch((err) => {
           console.log('수정 실패', err)
-          if (err.response.data.dataHeader.resultCode === "B-005") {
+          if (err.response?.data?.dataHeader?.resultCode === "B-005") {
             console.log('수량이 0초과가 아닐 때')
             Swal.fire({
               title : '수량은 1 이상<br>입력해주세요.',
               confirmButtonColor: '#1B5E20',
             })
-          } else if (err.response.data.dataHeader.resultCode === "B-006") {
+          } else if (err.response?.data?.dataHeader?.resultCode === "B-006") {
             console.log('가격이 0초과가 아닐 때')
             Swal.fire({
               title : '가격은 1원 이상<br>입력해주세요.',
               confirmButtonColor: '#1B5E20',
             })
-          } else if (err.response.data.dataHeader.resultCode === "B-011") {
+          } else if (err.response?.data?.dataHeader?.resultCode === "B-011") {
             console.log('접속한 사람과 작성자가 다를때')
             Swal.fire({
               title : '본인 글만<br>수정할 수 있습니다.',
@@ -116,11 +143,6 @@ export default function SellDetail(){
               confirmButtonColor: '#1B5E20',
             })
           }
-          // Swal.fire({
-          //   title : '게시글 수정 실패',
-          //   confirmButtonColor: '#1B5E20',
-          // })
-          
         })
       }
   } else {
@@ -135,6 +157,7 @@ export default function SellDetail(){
         confirmButtonColor: '#1B5E20',
       })
     } else {
+      console.log(boardInfo.title, boardInfo.content, boardInfo.quantity, boardInfo.price, boardInfo.files)
     Swal.fire({
       title : '정보를 입력해주세요.',
       confirmButtonColor: '#1B5E20',
@@ -146,9 +169,13 @@ export default function SellDetail(){
   const getDetail = () => {
     api.get(`boards/${boardId}`)
     .then((res) => {
-      console.log('상세 게시판 조회 성공')
+      console.log('상세 게시판 조회 성공', res.data.dataBody)
       setBoardInfo(res.data.dataBody)
     })
+    // .then((res) => {
+    //   console.log(boardInfo.boardImgUrls)
+    //   setUrl(boardInfo.boardImgUrls)
+    // })
     .catch((err) => {
       console.log(boardId)
       console.error('상세 게시판 조회 실패', err)
@@ -182,9 +209,20 @@ useEffect(() => {
   return(
     <div>
        {/* 팝니다 상세게시글사진 */}
-      <div style={{height:240,backgroundColor:'#bbbbbb'}}>
+      {/* <div style={{height:240,backgroundColor:'#bbbbbb'}}> */}
+      <div>
         {/* 뒤로가기버튼 */}
         <img src={Back} alt="" style={{ width:40,height:40 }} className="p-2" onClick={() => goList()}/>
+        {boardInfo.boardImgUrls && (
+      <Slider {...settings}  
+      className="sliderOne">
+          {boardInfo.boardImgUrls.map((img, index) => (
+            <div key={index}  style={{height:240}}>
+              <img src={img} alt={`slide-${index}`}/>
+            </div>
+          ))}
+        </Slider>
+        )}
       </div>
       <div className="p-5 flex justify-between">
         <div>
@@ -288,20 +326,20 @@ useEffect(() => {
           <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
         </form>
         <div className="">
-          <label for="price" class="block text-md leading-6 text-gray-900">거래가능량</label>
-          <div class="relative rounded-md mt-1">
-            <input type="text" name="price" id="price" class="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="입력됨" disabled/>
+          <label htmlFor="price" className="block text-md leading-6 text-gray-900">거래가능량</label>
+          <div className="relative rounded-md mt-1">
+            <input type="text" name="price" id="price" className="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="입력됨" disabled/>
           </div>
-          <label for="price" class="block text-md mt-5 leading-6 text-gray-900">수량</label>
-          <div class="relative rounded-md mt-1">
+          <label htmlFor="price" className="block text-md mt-5 leading-6 text-gray-900">수량</label>
+          <div className="relative rounded-md mt-1">
             <input type="number" name="price" id="price" min="0" step="1"
-            class="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
+            className="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
             placeholder="수량을 입력하세요(kg)"
             onChange={(e)=>setTradeQuantity(e.target.value)}/>
           </div>
-          <label for="price" class="block text-md mt-5 leading-6 text-gray-900">총 주문금액</label>
-          <div class="relative rounded-md mt-1">
-            <input type="text" name="price" id="price" class="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="'계산된금액나옴'" disabled/>
+          <label htmlFor="price" className="block text-md mt-5 leading-6 text-gray-900">총 주문금액</label>
+          <div className="relative rounded-md mt-1">
+            <input type="text" name="price" id="price" className="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="'계산된금액나옴'" disabled/>
             <h1>10000원/kg</h1>
           </div>
           <div className="mt-10">
@@ -316,7 +354,15 @@ useEffect(() => {
     {/* 게시글 수정 모달 */}
       <Modal open={sellOpen} onClose={sellCloseModal} styles={styles}>
       <div className="mt-10">
-        <div className='h-32' style={{ backgroundColor:'#bbbbbb'}}>사진있음</div>
+      <Slider {...settings}  
+      // style={{ minHeight: '350px' }}
+      className="sliderOne">
+          {fileUrl?.map((fileUrl, index) => (
+            <div key={index}  style={{height:240}}>
+              <img src={fileUrl} alt={`slide-${index}`}/>
+            </div>
+          ))}
+        </Slider>
         <div className='flex justify-between mt-4'>
         <div className='flex items-center justify-between'>
           <div className='flex'>
