@@ -23,9 +23,9 @@ public class RedisChatController {
     private final RedisPublisher redisPublisher;
     private final RedisSubscriber redisSubscriber;
     private final UserRepository userRepository;
-//    private final SimpMessageSendingOperations messagingTemplate;
+    private final SimpMessageSendingOperations messagingTemplate;
 
-    @MessageMapping("/chat/room")
+    @MessageMapping("/chat/message")
     public void getMessage(ChatMessageDto chatMessageDto) {
         User user = userRepository.findById(chatMessageDto.getUserId()).orElseThrow(()-> new CustomException(ExceptionType.USER_NOT_EXIST));
 
