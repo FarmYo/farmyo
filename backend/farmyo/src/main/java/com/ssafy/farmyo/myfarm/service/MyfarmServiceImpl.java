@@ -69,7 +69,15 @@ public class MyfarmServiceImpl implements MyfarmService {
     public void updateFarm(int id, String content, int status, List<MultipartFile> files, List<Integer> orders) {
         Farm farm = myfarmRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.FARM_NOT_EXIST));
         if (status == 1) { // status가 1이라면, 즉 사진을 변경했다면
-            myfarmImageRepository.deleteAllByFarmId(id);
+
+            // 기존 이미지 삭제
+            List<FarmImg> existingImages = myfarmImageRepository.getFarmImgeList(id);
+            if (!existingImages.isEmpty()) {
+                myfarmImageRepository.deleteAll(existingImages);
+                existingImages.forEach(farmImg -> awsS3Service.deleteFileByUrl(farmImg.getImgUrl()));
+            }
+
+//            myfarmImageRepository.deleteAllByFarmId(id);
 
             if (files.size() != orders.size()) {
                 throw new CustomException(ExceptionType.ORDERS_NOT_MATCH);
@@ -97,7 +105,13 @@ public class MyfarmServiceImpl implements MyfarmService {
     @Override
     public void deleteFarm(int id) {
         // 마이팜이 가지고 있는 이미지를 먼저 삭제
-        myfarmImageRepository.deleteAllByFarmId(id);
+        List<FarmImg> existingImages = myfarmImageRepository.getFarmImgeList(id);
+        if (!existingImages.isEmpty()) {
+            myfarmImageRepository.deleteAll(existingImages);
+            existingImages.forEach(farmImg -> awsS3Service.deleteFileByUrl(farmImg.getImgUrl()));
+        }
+
+//        myfarmImageRepository.deleteAllByFarmId(id);
         // 마이팜 게시글 삭제
         myfarmRepository.deleteById(id);
 
