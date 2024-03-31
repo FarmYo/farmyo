@@ -22,6 +22,8 @@ public enum ExceptionType {
     LOGIN_ID_MISMATCH(HttpStatus.BAD_REQUEST, "U-010", "일치하는 회원 정보가 없습니다."),
     PASSWORD_NOT_MATCH(HttpStatus.BAD_REQUEST, "U-011", "현재 비밀번호가 일치하지 않습니다."),
     FARMER_NOT_EXIST(HttpStatus.BAD_REQUEST, "U-012", "존재하지 않는 농부입니다."),
+    DUPLICATE_LOGIN_ID(HttpStatus.BAD_REQUEST, "U-013", "아이디가 중복되었습니다."),
+    FAILED_TO_CREATE_WALLET(HttpStatus.INTERNAL_SERVER_ERROR, "U-014", "지갑 생성에 실패했습니다."),
 
     // 작물
     CROP_NOT_EXIST(HttpStatus.BAD_REQUEST, "C-001", "존재하지 않는 작물입니다."),
@@ -39,8 +41,8 @@ public enum ExceptionType {
 
     // 토큰
     TOKEN_NOT_EXIST(HttpStatus.UNAUTHORIZED, "O-001", "토큰이 존재하지 않습니다."),
-    INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "O-002", "유효하지 않은 리프레시 토큰입니다."),
-    EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "O-003", "만료된 리프레시 토큰입니다."),
+    INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "O-002", "유효하지 않은 토큰입니다."),
+    EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "O-003", "만료된 토큰입니다."),
 
 
     // 거래
@@ -53,7 +55,7 @@ public enum ExceptionType {
     // 게시판
     BOARD_NOT_EXIST(HttpStatus.NOT_FOUND, "B-001", "존재하지 않는 게시판입니다."),
     CROP_NOT_ASSOCIATED_WITH_BOARD(HttpStatus.BAD_REQUEST, "B-002", "게시판에 연결된 작물이 존재하지 않습니다."),
-    CROPCATEGORY_NOT_ASSOCIATED_WITH_BOARD(HttpStatus.BAD_REQUEST, "B-003", "판매게시판에 연결된 작물카테고리가 존재하지 않습니다."),
+    CROPCATEGORY_NOT_ASSOCIATED_WITH_BOARD(HttpStatus.BAD_REQUEST, "B-003", "게시판에 연결된 작물카테고리가 존재하지 않습니다."),
     FARMER_CANNOT_POST_BUY_BOARD(HttpStatus.FORBIDDEN, "B-004", "농부는 구매 게시판을 작성할 수 없습니다."),
     QUANTITY_INVALID(HttpStatus.BAD_REQUEST, "B-005", "게시판의 수량이 유효하지 않습니다."),
     PRICE_INVALID(HttpStatus.BAD_REQUEST, "B-006", "게시판의 가격이 유효하지 않습니다."),
@@ -62,6 +64,12 @@ public enum ExceptionType {
     CONTENT_NOT_EXIST(HttpStatus.BAD_REQUEST, "B-009", "글 내용이 없습니다."),
     BOARDTYPE_INVALID(HttpStatus.BAD_REQUEST, "B-010", "보드타입이 잘못되었습니다."),
     USER_NOT_AUTHOR(HttpStatus.FORBIDDEN, "B-011", "작성자만 수정 또는 삭제할 수 있습니다."),
+    BOARD_ALREADY_EXISTS(HttpStatus.CONFLICT, "B-012", "이미 이 작물과 관련된 게시판이 있습니다."),
+    BUYER_ONLY_ACCESS(HttpStatus.FORBIDDEN, "B-013", "구매자 게시판 목록은 오직 구매자만 볼 수 있습니다."),
+
+
+
+
 
 
     // 채팅
@@ -70,7 +78,14 @@ public enum ExceptionType {
     // 즐겨찾기
     ALREADY_EXIST_FAVORITE(HttpStatus.BAD_REQUEST, "F-001", "이미 존재하는 즐겨찾기 입니다."),
     NOT_EXIST_FAVORITE(HttpStatus.BAD_REQUEST, "F-002", "존재하지 않는 즐겨찾기 입니다."),
-    INVALID_ACCESS_FAVORITE(HttpStatus.BAD_REQUEST, "F-003", "해당 즐겨찾기 삭제할 권한이 없습니다.");
+    INVALID_ACCESS_FAVORITE(HttpStatus.BAD_REQUEST, "F-003", "해당 즐겨찾기 삭제할 권한이 없습니다."),
+
+    // 마이페이지(마이팜)
+    USER_NOT_FARMER(HttpStatus.BAD_REQUEST, "P-001", "해당 유저는 농부가 아닙니다."),
+    ADDRESS_NOT_EXIST(HttpStatus.BAD_REQUEST, "P-002", "해당 유저의 주소가 존재하지 않습니다."),
+    ORDERS_NOT_MATCH(HttpStatus.BAD_REQUEST, "P-003", "사진의 개수와 순서의 개수가 맞지 않습니다."),
+    FARM_NOT_EXIST(HttpStatus.BAD_REQUEST, "P-004", "존재하지 않는 마이팜입니다.");
+
 
     // 상태, 에러 코드, 메시지
     private final HttpStatus httpStatus;

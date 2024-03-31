@@ -2,10 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 import api from "../../../../api/api"
+import Back from "../../../../image/component/leftarrow.png"
 import '../../../../css/signup.css';
 
 export default function SignUpSecond() {
   const navigate = useNavigate()
+  const goBack = () => {
+    navigate(-1)
+  };
   const location = useLocation()
   const { isSeller, id, email, password, nickName, phoneNumber, zoomNumber, address, detailAddress } = location.state;
   const [account, setAccount] = useState("")
@@ -93,7 +97,7 @@ export default function SignUpSecond() {
       }} else {
         console.log('소비자 회원가입 실패 이유 확인해보기', '우편번호 : ', zoomNumber, '주소 :', address, '상세주소 :', detailAddress, '예금주 :', account, '계좌번호 :', accountNumber, '은행명 :', bankName)
         Swal.fire({
-          html: '<br>입력 정보를<br>확인해주세요',
+          title: '<br>입력 정보를<br>확인해주세요',
           confirmButtonColor: '#1B5E20',
         })
       }
@@ -115,6 +119,7 @@ export default function SignUpSecond() {
   }, []);
   return(
     <div>
+      <img src={Back} alt="" style={{ width:20}} onClick={goBack}/>
     <div className="main2 mx-auto w-auto max-w-sm p-10">
       <label 
         htmlFor="account"
