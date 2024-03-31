@@ -119,25 +119,19 @@ public class CustomLogoutFilter extends GenericFilterBean {
             return;
         }
 
-        //DB에 저장되어 있는지 확인
+        // 로그아웃 진행
+        // DB에 저장되어 있는지 확인
         Optional<RefreshToken> refreshToken = refreshRepository.findByRefreshToken(refresh);
 
-        if (refreshToken.isEmpty()) {
-            log.info("리프레시 토큰이 있지 않음");
-            //response status code
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
+        if (refreshToken.isPresent()) {
+            RefreshToken reToken = refreshToken.get();
+            log.info("{}", reToken.getLoginId());
+            log.info("{}", reToken.getAccessToken());
+            log.info("{}", reToken.getRefreshToken());
+
+            //Refresh 토큰 DB에서 제거
+            refreshRepository.deleteById(reToken.getLoginId());
         }
-
-        RefreshToken reToken = refreshToken.get();
-        log.info("{}", reToken.getLoginId());
-        log.info("{}", reToken.getAccessToken());
-        log.info("{}", reToken.getRefreshToken());
-
-
-        //로그아웃 진행
-        //Refresh 토큰 DB에서 제거
-        refreshRepository.deleteById(reToken.getLoginId());
 
         //Refresh 토큰 Cookie 값 0
         Cookie cookie = new Cookie("refresh", null);

@@ -56,13 +56,14 @@ public class RefreshServiceImpl implements RefreshService{
         String category = jwtUtil.getCategory(refresh);
         if (!category.equals("refresh")) throw new CustomException(ExceptionType.INVALID_REFRESH_TOKEN);
 
+        // Redis DB에 해당 리프레시토큰 조회
+        if(refreshTokenRepository.findByRefreshToken(refresh).isEmpty()) throw new CustomException(ExceptionType.INVALID_REFRESH_TOKEN);
+
         // 토큰에서 정보 가져오기
         String loginId = jwtUtil.getLoginId(refresh);
         String nickname = jwtUtil.getNickname(refresh);
         Integer id = jwtUtil.getUserId(refresh);
         Integer job = jwtUtil.getUserJob(refresh);
-
-        log.info("Create Token - loginId : {}, id : {}, job : {}", loginId, id, job);
 
         // 토큰 생성
         String newAccess = jwtUtil.createJwt("access", loginId, nickname, id, job, 86400000L);

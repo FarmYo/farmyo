@@ -1,20 +1,33 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 // import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from "react-router-dom";
 // import { useNavigate } from "react-router-dom";
 import DaumPostcode from 'react-daum-postcode';
 import Modal from 'react-responsive-modal';
 import Swal from "sweetalert2";
+import Back from "../../../../image/component/leftarrow.png"
 import '../../../../css/signup.css';
 
 export default function SignUpSecond() {
   const navigate = useNavigate()
+  const goBack = () => {
+    navigate(-1)
+  };
+  // const customModal = {  
+  //   maxWidth: "100%",
+  //   maxHeight: "100vh", /* 화면 높이에 맞춰 설정 */ 
+  //   width: "90%",
+  //   position: "fixed",
+  //   top: "30%",
+  //   left: 0,
+  //   borderRadius: "5%",
+  // }
 
   const location = useLocation()
   const { isSeller, id, email, password } = location.state;
   const alerter = () => {
     Swal.fire({
-      title: '숫자 외에 입력할 수 없습니다.',
+      title: '숫자 외에는 <br>입력할 수 없습니다.',
       confirmButtonColor: '#1B5E20',
     });
   };
@@ -44,7 +57,7 @@ export default function SignUpSecond() {
     }
   })
   
-  const [zoomNumber, setZoomNumber] = useState("")
+  const [zoomNumber, setZoomNumber] = useState("00000")
 
   const [address, setAddress] = useState("")
   const [isAddress, setIsAddress] = useState(false)
@@ -60,7 +73,7 @@ export default function SignUpSecond() {
     setZoomNumber(data.zonecode)
     setIsAddress(true)
     // setDetailAddress('');
-    // setIsOpen(false)
+    setIsOpen(false)
   }
   const [detailAddress, setDetailAddress] = useState("")
   const [isDetailAddress, setIsDetailAddress] = useState(false)
@@ -76,11 +89,10 @@ export default function SignUpSecond() {
       if (isNickName === true && isPhoneNumber === true && isAddress === true && isDetailAddress === true) {
         console.log(isSeller, id, email, password, nickName, phoneNumber, address, detailAddress)
         navigate("/signup/third", { state: { isSeller, id, email, password, nickName, phoneNumber, zoomNumber, address, detailAddress } }, { replace: true })
-        // navigate("/signup/third", { state: { nickName, phoneNumber, address, detailAddress } }, { replace: true })
       } else {
         console.log('로그인 실패 화면 확인해보기', isNickName, isPhoneNumber, isAddress, isDetailAddress)
         Swal.fire({
-          html: '<br>입력 정보를<br>확인해주세요',
+          title: '<br>입력 정보를<br>확인해주세요',
           confirmButtonColor: '#1B5E20',
         })
       }
@@ -105,6 +117,7 @@ export default function SignUpSecond() {
 
   return(
     <div>
+      <img src={Back} alt="" style={{ width:20}} onClick={goBack}/>
     <div className="main mx-auto w-auto max-w-sm p-10">
       <label 
         htmlFor="nickname"
@@ -205,6 +218,7 @@ export default function SignUpSecond() {
       <Modal
         open={isOpen}
         showCloseIcon={false}
+        // style={customModal}
         className={{
           modal: 'customModal',
         }}

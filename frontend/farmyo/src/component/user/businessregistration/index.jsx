@@ -35,8 +35,8 @@ export default function Business() {
     }
   })
 
-  const changePage = (() => {
-    checkAll()
+  const changePage = () => {
+    checkAll().then(({ isBusinessNumber, isOwnerName, isOpenDay }) => {
     if (isBusinessNumber === true && isOwnerName === true && isOpenDay === true) {
     api.post('users', {
       loginId : id,              
@@ -92,13 +92,13 @@ export default function Business() {
     })}
   })
 } else {
+  console.log(isOpenDay,isOwnerName,isBusinessNumber)
   console.log('판매자 회원가입 실패 화면 확인해보기', '우편번호 : ', zoomNumber, '주소 :', address, '상세주소 :', detailAddress, '예금주 :', account, '계좌번호 :', accountNumber, '은행명 :', bankName, '사업자등록번호 :', businessNumber, '대표자 :', ownerName, '개업일 :', strOpenDay)
   Swal.fire({
     html: '<br>입력 정보를<br>확인해주세요',
     confirmButtonColor: '#1B5E20',
-  })
-}
-  })
+  })}
+  })}
 
   useEffect(() => {
     const allInputs = document.querySelectorAll('input');

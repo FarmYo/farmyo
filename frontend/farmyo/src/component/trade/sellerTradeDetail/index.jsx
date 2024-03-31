@@ -5,11 +5,14 @@ import { Modal } from "react-responsive-modal"
 import Swal from "sweetalert2";
 import "../../../css/trade.css";
 import api from '../../../api/api'
+import BackArrow from '../../../image/component/trade/backarrow.png'
+import { useNavigate } from "react-router-dom";
 
 
 
 
 export default function SellerTrade() {
+  const navigate = useNavigate()
   const params = useParams()
   const tradeId = params.tradeId
   const [open,setOpen] = useState(false)
@@ -50,24 +53,25 @@ export default function SellerTrade() {
   const tradeStatusToText = {
     0: '입금 대기중',
     1: '입금 완료',
-    2: '거래중',
+    2: '배송중',
+    3: '거래완료'
   };
 
-  //송장번호전송 입금대기중이->거래중으로 변함
+  //송장번호전송 입금완료가->배송중으로 변함
   const goInvoice = () =>{
-    api.put(`trades/deal/${tradeId}`,{},{
-      params:{
-        tradeShipment:company,
-        tradeShipcom:number
-      }
+    api.patch(`trades/deal/${tradeId}`,{
+      tradeShipment:company,
+      tradeShipcom:number
     })
     .then((res)=>{
+    
       console.log('송장번호전송완료')
       onCloseModal()
       alerter()
+
       setInfo(prevInfo => ({
         ...prevInfo,
-        tradeStatus: 2, // 거래 상태를 '거래중'으로 변경
+        tradeStatus: 2, // 입금완료(1)를 '배송중(2)'으로 변경
         tradeShipment: company,
         tradeShipcom:number
       }));
@@ -77,11 +81,19 @@ export default function SellerTrade() {
     })
   }
 
+  const goTradeList = ()=>{
+    navigate('/trade')
+  }
+
   return(
     <div>
       <div>
         <div className="p-3 flex justify-between border-b-2 border-gray-100 h-20">
-          <div className="font-bold text-xl flex items-center">{info.board}</div>
+        <div className='flex'>
+            <div className='flex items-center mr-5'
+              onClick={goTradeList}><img src={BackArrow} alt="" style={{ width:30,height:30}}/></div>
+            <div className="font-bold text-xl flex items-center">{info.board}</div>
+          </div>
           <div className="font-bold text-lg flex items-center" style={{color:'gray'}}>{tradeStatusToText[info.tradeStatus]}</div>
         </div>
         <div className="p-3 border-b-2 space-y-2 border-gray-100">
@@ -112,10 +124,18 @@ export default function SellerTrade() {
         </div>
         <div className="p-3 border-b-2 space-y-2 border-gray-100">
           <div className="font-bold text-lg flex items-center">송장번호</div>
-          {/* 입금대기중,입금완료이면 보임 */}
-          {info.tradeStatus === 0 || info.tradeStatus === 1 ? (
-            <button onClick={onOpenModal} className="addressbutton btn">송장번호 입력</button>) : 
-            <h1 className="mt-2">{`${info.tradeShipment} ${info.tradeShipcom}`}</h1>}
+          {/*입금대기중이면 입금완료후 입력가능하다고 알리기*/}
+          {info.tradeStatus === 0 && (
+            <h1 className="mt-2">입금완료후 입력가능</h1>)}
+          {/*입금완료이면 송장번호 입력버튼보임 */}
+          {info.tradeStatus === 1 && (
+            <button onClick={onOpenModal} className="addressbutton btn">송장번호 입력</button>)}
+          {/* 배송중이면 입력한송장번호 보임 */}
+          {info.tradeStatus === 2 && (
+            <h1 className="mt-2">{`${info.tradeShipment} ${info.tradeShipcom}`}</h1> )}
+          {/* 거래완료이면 입력한송장번호 보임 */}
+          {info.tradeStatus === 3 && (
+            <h1 className="mt-2">{`${info.tradeShipment} ${info.tradeShipcom}`}</h1> )}
         </div>
       </div>
       

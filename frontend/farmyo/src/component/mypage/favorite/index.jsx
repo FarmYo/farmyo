@@ -1,12 +1,9 @@
 import SaeClick from '../../../image/component/saeclick.png'
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
+import api from '../../../api/api'
 
 export default function Favorite() {
-  const [farmers, setFarmers] = useState([
-    { id: 'farmer1', name: '승현농부', image: SaeClick },
-    { id: 'farmer2', name: '현제농부', image: SaeClick },
-    // ... 기타 농부들
-  ]);
+  const [favoriteFarmers,setFavoriteFarmers] = useState([])
 
   //선택된 farmid를 저장해놓기
   const [selectedFarmerId, setSelectedFarmerId] = useState(null);
@@ -14,20 +11,50 @@ export default function Favorite() {
   // 즐겨찾기에서 삭제하기
   const deleteFavorite = (farmerId) => {
     // 클릭된 농부의 id를 가지고 목록에서 제거합니다.
-    setFarmers(farmers.filter(farmer => farmer.id !== farmerId));
+    api.delete('users/bookmarks',{
+      params :{
+        bookmarkId : farmerId
+      }
+    })
+    .then((res)=>{
+      console.log(res)
+      console.log('즐겨찾기삭제성공')
+      setFavoriteFarmers(favoriteFarmers.filter(farmer => farmer.id !== farmerId));
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+    
   };
+
+  // 즐겨찾기 조회
+  // 이게 로그인한 유저를 기반으로 그냥 조회해버리는데 
+  // 나말고 다른 구매자유저의 목록에도 내가 즐찾한 사람목록이 나와버림
+  // 나의아이디를 가지고 조회하던지 그런방향으로 바꾸기
+  useEffect(()=>{
+    api.get('users/bookmarks')
+    .then((res)=>{
+      console.log(res)
+      console.log('즐겨찾기조회성공')
+      setFavoriteFarmers(res.data.dataBody)
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  },[])
 
 
   return(
     <div>
       <table className="table">
         <tbody>
-          {farmers.map((farmer) => (
+          {favoriteFarmers.map((farmer) => (
             <tr key={farmer.id} style={{ height: 80 }}>
-              <td className="font-bold pl-8 text-lg">{farmer.name}</td>
+              <td className="font-bold pl-8 text-lg">{farmer.farmerName}</td>
+              
               <td>
                 <img 
-                  src={farmer.image} 
+                  src={SaeClick} 
                   alt={farmer.name} 
                   style={{ width: 40 }} 
                   onClick={()=>{document.getElementById('deletefavorite').showModal()
@@ -38,6 +65,8 @@ export default function Favorite() {
           ))}
         </tbody>
       </table>
+
+
       {/* 즐겨찾기 삭제 물어보는 모달 */}
       <dialog id="deletefavorite" className="modal">
         <div className="modal-box p-8" style={{ height:200}}>
