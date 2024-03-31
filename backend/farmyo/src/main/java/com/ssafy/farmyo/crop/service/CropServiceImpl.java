@@ -227,7 +227,7 @@ public class CropServiceImpl implements CropService {
 
         if (cropBlockchainResDto.getType() == 1) {
 
-            if (cropBlockchainResDto.getContestName() == null || cropBlockchainResDto.getPesticideName().isEmpty()) {
+            if (cropBlockchainResDto.getPesticideName() == null || cropBlockchainResDto.getPesticideName().isEmpty()) {
                 throw new CustomException(ExceptionType.PesticideName_INVALID);
             }
             if (cropBlockchainResDto.getPesticideType() == null || cropBlockchainResDto.getPesticideType().isEmpty()) {
