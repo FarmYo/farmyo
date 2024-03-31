@@ -1,5 +1,6 @@
 package com.ssafy.farmyo.trade.service;
 
+import com.ssafy.farmyo.blockchain.service.TradeContractService;
 import com.ssafy.farmyo.board.repository.BoardRepository;
 import com.ssafy.farmyo.chat.repository.ChatRepository;
 import com.ssafy.farmyo.common.exception.CustomException;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,7 @@ public class TradeServiceImpl implements TradeService {
     private final CropRepository cropRepository;
     private final TradeDepositRepository tradeDepositRepository;
     private final TradeWithdrawalRepository tradeWithdrawalRepository;
+    private final TradeContractService tradeContractService;
 
     @Override
     public void createTrade(TradeReqDto tradeReqDto) {
@@ -235,6 +238,14 @@ public class TradeServiceImpl implements TradeService {
         tradeDepositRepository.save(tradeDeposit);
         // 거래 테이블 상태 업데이트
         tradeRepository.updateStatus(id, 1);
+        // 블록체인 민팅(입금한 만큼)
+        try {
+            tradeContractService.adminMint(trade.getBuyer().getWallet().getWalletAddress(), BigInteger.valueOf(trade.getTradePrice()), BigInteger.valueOf(trade.getBuyer().getId()));
+
+        } catch (Exception e) {
+            throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
+        }
+
     }
 
     @Override
@@ -275,6 +286,14 @@ public class TradeServiceImpl implements TradeService {
         tradeWithdrawalRepository.save(tradeWithdrawal);
         // 거래 테이블 상태 업데이트
         tradeRepository.updateStatus(id, 3);
+        // 블록체인 토큰 구매자한테서 판매자한테로 이동
+        try {
+            tradeContractService.adminTransfer(trade.getSeller().getWallet().getWalletAddress(), trade.getBuyer().getWallet().getWalletAddress(), BigInteger.valueOf(trade.getTradePrice()), BigInteger.valueOf(trade.getBuyer().getId()), BigInteger.valueOf(trade.getSeller().getId()));
+        } catch (Exception e) {
+            throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
+        }
+
+        //나중에 환금하는거 생기면 민팅한거 소각하고 현금 주는 로직 추가 필수
     }
 
     @Override
