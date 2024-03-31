@@ -10,7 +10,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry){
-        List<String> origins = List.of("http://localhost:3000", "https://j10d209.p.ssafy.io");
+        List<String> origins = List.of("https://j10d209.p.ssafy.io", "http://localhost:3000", "http://localhost:3001");
 
         registry.addMapping("/**") // 모든 경로에 대해
                 .allowedOrigins(String.join(",", origins)) // 허용할 오리진 지정
