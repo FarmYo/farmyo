@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Logo from '../../../image/component/user/logo.png';
+import Back from "../../../image/component/leftarrow.png"
 import "react-responsive-modal/styles.css"
 import { Modal } from "react-responsive-modal"
 import Swal from "sweetalert2";
@@ -9,7 +10,9 @@ import "../../../css/checkpassword.css";
 
 export default function CheckPassword() {
   const navigate = useNavigate()
-
+  const goBack = () => {
+    navigate(-1)
+  };
   const [id, setId] = useState("")
 
   const [email, setEmail] = useState("")
@@ -26,7 +29,10 @@ export default function CheckPassword() {
     const isValid = await checkValidEmail(email);
     setCheckEmail(isValid);
     if (isValid === false) {
-      Swal.fire('형식에 맞지 않는 이메일입니다.')
+      Swal.fire({
+        title:'형식에 맞지 않는<br> 이메일입니다.',
+        confirmButtonColor: '#1B5E20',
+      })
     } else {
       if (id && email) {
         api.post('users/email/password', {
@@ -39,11 +45,21 @@ export default function CheckPassword() {
         })
         .catch((err) => {
           console.log('아이디 확인&이메일 인증 번호 발송 실패', err)
-          console.log('없는 아이디', err)
-        })
+          if (err.response.data.dataHeader.resultCode === "U-007") {
+            Swal.fire({
+              title:'존재하지 않는<br> 이메일입니다.',
+              confirmButtonColor: '#1B5E20',
+            })
+          } else {
+          console.log('존재하지 않는 이메일', err)
+          Swal.fire({
+            title:'일치하는 회원이<br>없습니다.',
+            confirmButtonColor: '#1B5E20',
+          })
+        }})
       } else {
         Swal.fire({
-          html: '<br>입력 정보를<br>확인해주세요',
+          title: '<br>회원 정보를<br>입력해주세요',
           confirmButtonColor: '#1B5E20',
         })
       }
@@ -58,36 +74,6 @@ export default function CheckPassword() {
     const onCloseModal = () => {
       setOpen(false);
     };
-    
-    const FirstModal = () => {
-      return(
-        <div>
-        <div className="mt-5">
-          <input
-            value={code}
-            onChange={(event) => setCode(event.target.value)}
-            id="authenticationCode"
-            name="authenticationCode"
-            type="text"
-            autoComplete="text"
-            required
-            className="inputstyle block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-            placeholder="인증코드"
-          />
-        </div>
-
-          <button
-            onClick={(event) => {
-              event.preventDefault();
-              checkCode(code);
-            }} // 모달로 비밀번호 입력창 띄우기
-            className="flex justify-center w-full h-10 rounded-md px-3 py-2 mt-5 text-sm font-bold leading-6 text-white shadow-sm hover:bg-lime-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-950"
-            style={{backgroundColor:'#1B5E20'}}
-            >
-            확인
-          </button>
-      </div>
-    )}
     
     const alerter1 = () => {
       Swal.fire({
@@ -105,6 +91,8 @@ export default function CheckPassword() {
 };
 
 const checkCode = useCallback((code) => {
+  setNewPassword("")
+  setPassword("")
   if (code.length < 1) {
     Swal.fire({
       title: '인증번호를 입력하세요.',
@@ -132,6 +120,10 @@ const checkCode = useCallback((code) => {
     .catch((err) => {
       console.log('인증번호 확인 실패', err)
       setCode("")
+      Swal.fire({
+        title:'인증번호를<br>확인해주세요',
+        confirmButtonColor: '#1B5E20',
+      })
       if (err.response.data.dataHeader.resultCode === "U-004") {
         alerter1()
         onCloseModal();
@@ -147,75 +139,34 @@ const checkCode = useCallback((code) => {
   const [password, setPassword] = useState("")
   const [newPassword, setNewPassword] = useState("")
 
-const [twoopen, setTwoOpen] = useState(false)
-const onTwoOpenModal = () => {
-  setTwoOpen(true);
-};
-const onTwoCloseModal = () => {
-  setTwoOpen(false);
-};
-const SecondModal = () => {
-  return (
-      <div className="modal-content">
-        <div className="mt-2">
-          <input
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            id="password"
-            name="password"
-            type="password"
-            autoComplete="password"
-            required
-            className="inputstyle block h-10 rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-            placeholder="새 비밀번호"
-          />
-        </div>
-        <div className="mt-4 flex justify-center ">
-          <input
-            value={newPassword}
-            onChange={(event) => setNewPassword(event.target.value)}
-            id="newPassword"
-            name="newPassword"
-            type="password"
-            autoComplete="password"
-            required
-            className="inputstyle block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-            placeholder="새 비밀번호 확인"
-          />
-        </div>
-        <button
-          onClick={(event)=>{
-            event.preventDefault();
-            checkPassword();
-          }}
-          className="flex justify-center w-full h-10 rounded-md px-3 py-2 mt-5 text-sm font-bold leading-6 text-white shadow-sm hover:bg-lime-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-950"
-          style={{backgroundColor:'#1B5E20'}}
-        >
-          비밀번호 변경
-        </button>
-      </div>
-    )}
+  const [twoopen, setTwoOpen] = useState(false)
+  const onTwoOpenModal = () => {
+    setTwoOpen(true);
+  };
+  const onTwoCloseModal = () => {
+    setTwoOpen(false);
+  };
 
-    const alerter = () => {
-      Swal.fire({
-        html: '<h2>비밀번호가<br>변경되었습니다!</h2>',
-        confirmButtonColor: '#1B5E20',
-      });
-    };
-  
-    const alerterWrong1 = () => {
-      Swal.fire({
-        html: '<h2>비밀번호를<br>입력해주세요.</h2>',
-        confirmButtonColor: '#1B5E20',
-      });
-    };
+  const alerter = () => {
+    Swal.fire({
+      title: '비밀번호가<br>변경되었습니다!',
+      confirmButtonColor: '#1B5E20',
+    });
+  };
 
-    const alerterWrong2 = () => {
-      Swal.fire({
-        html: '<h2>두 비밀번호가<br>일치하지 않습니다.</h2>',
-        confirmButtonColor: '#1B5E20',
-      });
-    };
+  const alerterWrong1 = () => {
+    Swal.fire({
+      title: '비밀번호를<br>입력해주세요.',
+      confirmButtonColor: '#1B5E20',
+    });
+  };
+
+  const alerterWrong2 = () => {
+    Swal.fire({
+      title: '두 비밀번호가<br>일치하지 않습니다.',
+      confirmButtonColor: '#1B5E20',
+    });
+  };
 
 const checkPassword = () => {
   if (!password || !newPassword) {
@@ -241,6 +192,8 @@ const checkPassword = () => {
 }
 
   return(
+    <div>
+    <img src={Back} alt="" style={{ width:20}} onClick={goBack}/>
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 main">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm mb-0">
         <img
@@ -307,8 +260,33 @@ const checkPassword = () => {
         modal: 'customModal', // 모달 커스텀 할 것
       }}
     >
-      <FirstModal />
+      {/* <FirstModal /> */}
+      <div className="mt-5">
+          <input
+            value={code}
+            onChange={(event) => setCode(event.target.value)}
+            id="authenticationCode"
+            name="authenticationCode"
+            type="text"
+            autoComplete="text"
+            required
+            className="inputstyle block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
+            placeholder="인증코드"
+          />
+        </div>
+
+          <button
+            onClick={(event) => {
+              event.preventDefault();
+              checkCode(code);
+            }} // 모달로 비밀번호 입력창 띄우기
+            className="flex justify-center w-full h-10 rounded-md px-3 py-2 mt-5 text-sm font-bold leading-6 text-white shadow-sm hover:bg-lime-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-950"
+            style={{backgroundColor:'#1B5E20'}}
+            >
+            확인
+          </button>
     </Modal>
+
     <Modal
       open={twoopen}
       onClose={onTwoCloseModal}
@@ -319,8 +297,47 @@ const checkPassword = () => {
         modal: 'customModal', // 모달 커스텀 할 것
       }}
     >
-      <SecondModal />
+      {/* <SecondModal /> */}
+      <div className="modal-content">
+        <div className="mt-2">
+          <input
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            id="password"
+            name="password"
+            type="password"
+            autoComplete="password"
+            required
+            className="inputstyle block h-10 rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
+            placeholder="새 비밀번호"
+          />
+        </div>
+        <div className="mt-4 flex justify-center ">
+          <input
+            value={newPassword}
+            onChange={(event) => setNewPassword(event.target.value)}
+            id="newPassword"
+            name="newPassword"
+            type="password"
+            autoComplete="password"
+            required
+            className="inputstyle block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
+            placeholder="새 비밀번호 확인"
+          />
+        </div>
+        <button
+          onClick={(event)=>{
+            event.preventDefault();
+            checkPassword();
+          }}
+          className="flex justify-center w-full h-10 rounded-md px-3 py-2 mt-5 text-sm font-bold leading-6 text-white shadow-sm hover:bg-lime-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-950"
+          style={{backgroundColor:'#1B5E20'}}
+        >
+          비밀번호 변경
+        </button>
+      </div>
     </Modal>
+  </div>
   </div>
   )
 }

@@ -2,17 +2,21 @@ package com.ssafy.farmyo.user.service;
 
 import com.ssafy.farmyo.common.exception.CustomException;
 import com.ssafy.farmyo.common.exception.ExceptionType;
+import com.ssafy.farmyo.common.s3.AwsS3Service;
 import com.ssafy.farmyo.entity.*;
 import com.ssafy.farmyo.user.dto.*;
 import com.ssafy.farmyo.user.openApi.OpenApiManager;
-import com.ssafy.farmyo.user.repository.AddressRepository;
-import com.ssafy.farmyo.user.repository.FarmerRepository;
-import com.ssafy.farmyo.user.repository.UserRepository;
+import com.ssafy.farmyo.user.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.web3j.crypto.Credentials;
+import org.web3j.crypto.Keys;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -23,8 +27,11 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final FarmerRepository farmerRepository;
     private final AddressRepository addressRepository;
+    private final FavoriteRepository favoriteRepository;
     private final OpenApiManager openApiManager;
+    private final AwsS3Service awsS3Service;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final WalletRepository walletRepository;
 
     @Override
     @Transactional
@@ -47,7 +54,6 @@ public class UserServiceImpl implements UserService {
                 .job(joinReqDto.getJob())
                 .status(UserStatus.ACTIVE)
                 .account(account)
-                .profile("기본 이미지 URL이 들어갈 자리입니다.")
                 .comment("기본 메세지입니다.")
                 .build();
 
@@ -64,6 +70,20 @@ public class UserServiceImpl implements UserService {
 
         // 주소 저장
         addressRepository.save(address);
+
+        //지갑 생성
+        try {
+            Credentials credentials = Credentials.create(Keys.createEcKeyPair());
+            Wallet wallet = Wallet.builder()
+                    .user(savedUser)
+                    .walletPrivateKey(credentials.getEcKeyPair().getPrivateKey().toString(16))
+                    .walletAddress(credentials.getAddress())
+                    .build();
+            walletRepository.save(wallet);
+
+        } catch (Exception e) {
+            throw new CustomException(ExceptionType.FAILED_TO_CREATE_WALLET);
+        }
 
         // 식별 ID 값 반환
         return savedUser.getId();
@@ -99,7 +119,6 @@ public class UserServiceImpl implements UserService {
                 .job(joinReqDto.getJob())
                 .status(UserStatus.ACTIVE)
                 .account(account)
-                .profile("기본 이미지 URL이 들어갈 자리입니다.")
                 .comment("기본 메세지입니다.")
                 .farmerLicense(joinReqDto.getLicenseNum())
                 .build();
@@ -116,6 +135,22 @@ public class UserServiceImpl implements UserService {
 
         addressRepository.save(address);
 
+
+        //농부 지갑 생성
+        try {
+            Credentials credentials = Credentials.create(Keys.createEcKeyPair());
+            Wallet wallet = Wallet.builder()
+                    .user(savedFarmer)
+                    .walletPrivateKey(credentials.getEcKeyPair().getPrivateKey().toString(16))
+                    .walletAddress(credentials.getAddress())
+                    .build();
+            walletRepository.save(wallet);
+
+        } catch (Exception e) {
+            throw new CustomException(ExceptionType.FAILED_TO_CREATE_WALLET);
+        }
+
+
         // 식별 ID 값 반환
         return savedFarmer.getId();
     }
@@ -124,7 +159,7 @@ public class UserServiceImpl implements UserService {
     public int checkIdDuplicate(String id) {
 
         // 해당 아이디의 유저가 있다면 0(False) 반환
-        if(userRepository.findByLoginId(id).isPresent()) return 0;
+        if(userRepository.findByLoginId(id).isPresent()) throw new CustomException(ExceptionType.DUPLICATE_LOGIN_ID);
 
         return 1;
     }
@@ -171,23 +206,99 @@ public class UserServiceImpl implements UserService {
 
         // 유저 기본 정보 수정 (닉네임, 전화번호, 상태 메세지)
         user.updateAll(userModifyDto.getNickname(), userModifyDto.getTelephone(), userModifyDto.getComment());
-
-        // 주소 수정
-        Address address = user.getAddress();
-        address.updateAll(userModifyDto.getAddressCode(), userModifyDto.getAddressLegal(), userModifyDto.getAddressDetail());
-
-        // 계좌 수정
-        if(!user.getAccount().getAccountNumber().equals(userModifyDto.getAccount()))
-            user.getAccount().updateAll(userModifyDto.getDepositor(), userModifyDto.getBank(), userModifyDto.getAccount());
     }
 
-    @Override
-    @Transactional
     public void deactivateUser(int id) {
 
         User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
 
         user.updateStatus(UserStatus.WITHDRAWN);
 
+    }
+
+
+    @Override
+    @Transactional
+    public void modifyAccountInfo(int id, AccountModifyDto accountModifyDto) {
+
+        // 계좌 바꾸고자 하는 유저의 엔티티를 가져옴
+        User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+
+        // 계좌 수정
+        user.getAccount().updateAll(accountModifyDto.getDepositor(), accountModifyDto.getBank(), accountModifyDto.getAccount());
+    }
+
+
+
+    @Override
+    @Transactional
+    public void modifyAddressInfo(int id, AddressModifyDto addressModifyDto) {
+
+        // 주소를 바꾸고자 하는 유저의 엔티티를 가져옴
+        User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+
+        // 주소 수정
+        Address address = user.getAddress();
+        address.updateAll(addressModifyDto.getAddressCode(), addressModifyDto.getAddressLegal(), addressModifyDto.getAddressDetail());
+    }
+    
+
+    @Override
+    @Transactional
+    public void addBookmark(int userId, String farmerId) {
+
+        log.info("{}", userId);
+        log.info("{}", farmerId);
+
+        // 현재 로그인한 유저 엔티티 조회
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+
+        // 즐겨찾기한 농부 엔티티 조회
+        Farmer farmer = farmerRepository.findByLoginId(farmerId).orElseThrow(() -> new CustomException(ExceptionType.FARMER_NOT_EXIST));
+
+        log.info("{}", farmer.getId());
+
+        // 이미 즐겨찾기가 있다면 예외 처리
+        if(favoriteRepository.checkFavoriteExistence(userId, farmer.getId()).isPresent()){
+            throw new CustomException(ExceptionType.ALREADY_EXIST_FAVORITE);
+        };
+
+        // 즐겨찾기 엔티티 생성
+        Favorite favorite = Favorite.builder()
+                .user(user)
+                .farmer(farmer)
+                .build();
+
+        // 즐겨찾기 엔티티 저장
+        favoriteRepository.save(favorite);
+    }
+
+    @Override
+    @Transactional
+    public void removeBookmark(int userId, int bookmarkId) {
+
+        Favorite favorite = favoriteRepository.findById(bookmarkId).orElseThrow(() -> new CustomException(ExceptionType.NOT_EXIST_FAVORITE));
+
+        if (!(favorite.getUser().getId() == userId)) throw new CustomException(ExceptionType.INVALID_ACCESS_FAVORITE);
+
+        favoriteRepository.delete(favorite);
+    }
+
+    @Override
+    public List<BookmarkResDto> getBookmarkList(int userId) {
+        return favoriteRepository.getCustomerBookmarkList(userId);
+    }
+
+
+    @Override
+    @Transactional
+    public void modifyProfileImg(int userId, MultipartFile profileImg) {
+        // 현재 로그인한 유저 엔티티 조회
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
+
+        String profileImgUrl = awsS3Service.uploadFile(profileImg);
+        log.info("{}", profileImgUrl);
+
+        user.updateProfile(profileImgUrl);
     }
 }

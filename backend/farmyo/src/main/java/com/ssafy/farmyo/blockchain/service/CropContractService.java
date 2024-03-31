@@ -35,7 +35,7 @@ public class CropContractService {
 
         String rpcUrl = "https://rpc2.sepolia.org";
         String privateKey = "59f616cf0e5003164c921f8172c9da1e7b5c1e1556eca22c0f0c9ef94a2a5b42";
-        String contractAddress = "0x89e67b1cd96337bd5eaa87e83cb8a9917320411a";
+        String contractAddress = "0xE8448EEB2629E3e96f96f8EBedc9Fd2faa6fe20c";
         long chainId = 11155111;
 
 
@@ -88,16 +88,20 @@ public class CropContractService {
     }
 
 
-    public TransactionReceipt addBasicInfo(BigInteger cropPK, String cropName, String land, BigInteger createdAt) throws Exception {
-        return cropContract.addBasicInfo(cropPK, cropName, land, createdAt).send();
+    public TransactionReceipt addPlantingInfo(BigInteger cropPK, String cropName, String land, BigInteger eventDate) throws Exception {
+        return cropContract.addPlantingInfo(cropPK, cropName, land, eventDate).send();
     }
 
-    public TransactionReceipt addUsageInfo(BigInteger cropPK, String drugName, String drugKind, BigInteger createdAt) throws Exception {
-        return cropContract.addUsageInfo(cropPK, drugName, drugKind, createdAt).send();
+    public TransactionReceipt addUsageInfo(BigInteger cropPK, String pesticideName, String pesticideType, BigInteger eventDate) throws Exception {
+        return cropContract.addUsageInfo(cropPK, pesticideName, pesticideType, eventDate).send();
     }
 
-    public TransactionReceipt addContestInfo(BigInteger cropPK, String contestName, String win, BigInteger createdAt) throws Exception {
-        return cropContract.addContestInfo(cropPK, contestName, win, createdAt).send();
+    public TransactionReceipt addContestInfo(BigInteger cropPK, String contestName, String awardDetails, BigInteger eventDate) throws Exception {
+        return cropContract.addContestInfo(cropPK, contestName, awardDetails, eventDate).send();
+    }
+
+    public TransactionReceipt addHarvestInfo(BigInteger cropPK, BigInteger eventDate) throws Exception {
+        return cropContract.addHarvestInfo(cropPK, eventDate).send();
     }
 }
 

@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Menu, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
-import Dropdown from '../../../image/component/dropdown.png'
+// import Dropdown from '../../../image/component/dropdown.png'
+import Dropdown from '../../../image/component/trade/downarrow.png'
 import Up from '../../../image/component/up.png'
 import api from '../../../api/api'
 import { useEffect } from "react"
@@ -31,7 +32,7 @@ export default function OngoingTrade({ ongoingData }) {
     '전체': null, // '전체'를 선택한 경우 모든 항목을 표시
     '입금 대기중': 0,
     '입금 완료': 1,
-    '거래중': 2
+    '배송중': 2
   };
 
   // 전체,입금대기중,입금완료,거래중 필터링
@@ -43,7 +44,7 @@ export default function OngoingTrade({ ongoingData }) {
   const tradeStatusToText = {
     0: '입금 대기중',
     1: '입금 완료',
-    2: '거래중',
+    2: '배송중',
   };
 
   // 상세 거래내역으로 가는것
@@ -71,8 +72,8 @@ export default function OngoingTrade({ ongoingData }) {
           onClick={()=>setIsOpen(!isOpen)}>
             <div className='pl-2'>{selectedItem}</div>
             <div className="flex items-center justify-center"><img src={isOpen ? Up : Dropdown} alt="" style={{
-              width: isOpen ? 27 : 20, 
-              height: isOpen ? 27 : 10 
+              width: isOpen ? 32 : 24, 
+              height: isOpen ? 32 : 24 
             }} className="mt-0.5"/></div>
           </Menu.Button>
         </div>
@@ -87,7 +88,7 @@ export default function OngoingTrade({ ongoingData }) {
         >
           <Menu.Items className="absolute left-0 z-10 mt-2 w-36 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
             <div className="py-1">
-              {['전체','입금 대기중', '입금 완료', '거래중'].map((item) => (
+              {['전체','입금 대기중', '입금 완료', '배송중'].map((item) => (
                 <Menu.Item key={item}>
                   {({ active }) => (
                     <a

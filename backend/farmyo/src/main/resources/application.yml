@@ -33,6 +33,19 @@ spring:
       port: ENC(mHAvIKkcjL19aJn3d6+jgw==)
       password: ENC(7ReurrhfXLRM+oOUeAE1UA==)
 
+  # S3
+  cloud:
+    aws:
+      credentials:
+        access-key: ENC(5fJM3mO9pjNQmAOxvMhOjcFsH79SSDXhLh+Vqf0B46w=)
+        secret-key: ENC(9fQX5kWvhRYP9rNPmK41e2Csxl/vun1wgkQsR5IoSHWcJalUMDiuLAQ56IdbSuEL0LzetCpXRXw=)
+      s3:
+        bucket: yeopbucket
+      region:
+        static: ap-northeast-2
+      stack:
+        auto: false
+
   # mail smtp
   mail:
     # 서버 주소
