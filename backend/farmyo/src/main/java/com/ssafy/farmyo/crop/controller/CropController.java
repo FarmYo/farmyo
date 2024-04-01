@@ -135,5 +135,20 @@ public class CropController {
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseBody.of(0, "성공적으로 블록체인에 저장되었습니다."));
 
     }
+
+    //조회한 농부의 수확한 작물리스트
+    @Operation(summary = "수확작물리스트", description = "/crops/list/{farmerLoginId}/harvest\n\n 수확 작물 리스트 조회")
+    @GetMapping("/list/{farmerLoginId}/harvest")
+    @ApiResponse(responseCode = "201", description = "성공 \n\n Success 반환")
+    public ResponseEntity<? extends BaseResponseBody> getHarvestCropList(@PathVariable String farmerLoginId, Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        if (userDetails.getJob() == 1) {
+            throw new CustomException(ExceptionType.USER_FARMER_REQUIRED);
+        }
+
+        List<HarvestCropListResDto> harvestCropList=cropService.getHarvestCropList(farmerLoginId, userDetails.getId());
+        log.info("{} 농부의 수확 작물 조회", farmerLoginId);
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, harvestCropList));
+    }
 }
 
