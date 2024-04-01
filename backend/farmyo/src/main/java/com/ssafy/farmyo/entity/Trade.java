@@ -106,5 +106,8 @@ public class Trade extends BaseTime {
         this.tradeBlockchain = tradeBlockchain;
     }
 
+    public void updateStatus(int tradeStatus) {
+        this.tradeStatus = tradeStatus;
+    }
 
 }
