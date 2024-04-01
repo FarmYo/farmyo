@@ -60,6 +60,7 @@ export default function BuyDetail(){
         .then((res) => {
           console.log('수정 완료')
           buyCloseModal()
+          getDetail()
         })
         .catch((err) => {
           console.log('수정 실패', err)

@@ -7,8 +7,10 @@ import { Menu,Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import Chatting from '../../../image/component/chatting.png'
 import Swal from 'sweetalert2'
+import { jwtDecode } from "jwt-decode"
 
 export default function BuyBoardList(){
+  const im = jwtDecode(localStorage.getItem('access')).userJob
   const navigate = useNavigate()
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -152,11 +154,13 @@ export default function BuyBoardList(){
       ))}
 
       <div style={{ position: 'absolute', bottom: 0, right: 10}}>
+        {im === 1 && (
         <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
           <div style={{ position: 'absolute', top: '44%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}
           onClick={buyOpenModal}>+
           </div>
         </div>
+        )}
       </div>
 
       {/* 삽니다게시글생성모달 */}
