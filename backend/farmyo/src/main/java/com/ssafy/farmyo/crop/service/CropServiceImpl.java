@@ -203,6 +203,7 @@ public class CropServiceImpl implements CropService {
     //블록체인 기록 등록
 
     @Override
+    @Transactional
     public void createBlockChain(int cropId, int userId, CropBlockchainResDto cropBlockchainResDto) {
 
 
@@ -227,7 +228,7 @@ public class CropServiceImpl implements CropService {
 
         if (cropBlockchainResDto.getType() == 1) {
 
-            if (cropBlockchainResDto.getContestName() == null || cropBlockchainResDto.getPesticideName().isEmpty()) {
+            if (cropBlockchainResDto.getPesticideName() == null || cropBlockchainResDto.getPesticideName().isEmpty()) {
                 throw new CustomException(ExceptionType.PesticideName_INVALID);
             }
             if (cropBlockchainResDto.getPesticideType() == null || cropBlockchainResDto.getPesticideType().isEmpty()) {
@@ -251,6 +252,7 @@ public class CropServiceImpl implements CropService {
                 throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
             }
         } else if (cropBlockchainResDto.getType() == 3) {
+            crop.updateCropHarvestDate(cropBlockchainResDto.getEventDate());
             try {
                 cropContractService.addHarvestInfo(BigInteger.valueOf(crop.getId()), eventDate);
             } catch (Exception e) {

@@ -1,46 +1,66 @@
-import Back from '../../../image/component/leftarrow.png'
-import Photo from '../../../image/component/me.png'
-import Form from '../form/index'
-import Vector from '../../../image/component/Vector.png'
-import { useState,useEffect,useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useEffect, useRef } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import SockJS from 'sockjs-client';
+import { Stomp } from '@stomp/stompjs';
 
-export default function Room(){
-  const navigate  = useNavigate()
-  const [showForm,setShowForm] = useState(false)
-  const [buttonText,setButtonText] = useState('거래하기')
-  const [buttonBgcolor,setButtonBgcolor] = useState('#1B5E20')
-  const textRef = useRef(null)
+import Back from '../../../image/component/leftarrow.png';
+import Photo from '../../../image/component/me.png';
+import Form from '../form/index';
+import Vector from '../../../image/component/Vector.png';
+
+export default function Room() {
+  const navigate = useNavigate();
+  const { chatId } = useParams();
+  const [talk, setTalk] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [buttonText, setButtonText] = useState('거래하기');
+  const [buttonBgcolor, setButtonBgcolor] = useState('#1B5E20');
+  const textRef = useRef(null);
   const [width, setWidth] = useState(120); 
-  const textRef2 = useRef(null)
+  const textRef2 = useRef(null);
   const [width2, setWidth2] = useState(120); 
   const [keyboardVisible, setKeyboardVisible] = useState(false);
+  const stompClient = useRef(null);
 
   useEffect(() => {
-    const handleResize = () => {
-      const screenHeight = window.innerHeight;
-      // 키보드가 올라왔는지 여부를 판단하기 위한 로직
-      //화면 높이가 특정 값 이하로 줄어들면 키보드가 올라온 것으로 판단
-      if (screenHeight < 500) { 
-        setKeyboardVisible(true);
-      } else {
-        setKeyboardVisible(false);
+    const socket = new SockJS('https://j10d209.p.ssafy.io/api/ws/chat');
+    stompClient.current = Stomp.over(socket);
+
+    stompClient.current.connect({}, function(frame) {
+      console.log('Connected: ' + frame);
+
+      stompClient.current.subscribe(`/sub/chat/room/${chatId}`, function(message) {
+        const newMessage = JSON.parse(message.body);
+        setMessages(prevMessages => [...prevMessages, newMessage]);
+      });
+    });
+
+    return () => {
+      if (stompClient.current && stompClient.current.connected) {
+        stompClient.current.disconnect();
       }
     };
+  }, [chatId]);
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const sendMessage = () => {
+    if (stompClient.current && stompClient.current.connected && talk.trim() !== '') {
+      stompClient.current.send(
+        '/pub/chat/message',
+        {},
+        JSON.stringify({
+          chatId: chatId,
+          userId: 1, // 여기서 userId는 현재 로그인한 사용자의 ID로 변경해야 합니다.
+          content: talk,
+        })
+      );
+      setTalk(''); // 메시지 전송 후 입력 필드 초기화
+    }
+  };
 
-  useEffect(() => {
-    // 텍스트 요소의 너비를 계산하고 상태를 업데이트
-    const textWidth = textRef.current ? textRef.current.offsetWidth : 0;
-    const padding = 40 // 좌우 패딩을 추가하기 위한 값
-    setWidth(textWidth + padding)
-    const textWidth2 = textRef2.current ? textRef2.current.offsetWidth : 0;
-    const padding2 = 40 // 좌우 패딩을 추가하기 위한 값
-    setWidth2(textWidth2 + padding2);
-  }, [])
+
+
+
 
   const openForm = () =>{
     setShowForm(true)
@@ -77,7 +97,7 @@ export default function Room(){
           <button className="btn" style={{ backgroundColor: buttonBgcolor}}> 
             <div className="font-bold text-md" style={{ color:'white' }}
             onClick={buttonText === '전송완료' ? null : openForm}
-           >{buttonText}</div>
+          >{buttonText}</div>
           </button>
         </div>
       </div>
@@ -98,11 +118,11 @@ export default function Room(){
       </div>
       {/* 채팅입력창 */}
       <div className='p-3 flex'  style={{ position: 'fixed', bottom: keyboardVisible ? '0vh' : 10, left: '0', width: '100%', padding: '10px', boxSizing: 'border-box' }}>
-        <input id="" name="" type="text" placeholder="" autoComplete="text" 
+        <input value={talk} onChange={(event) => setTalk(event.target.value)} id="" name="" type="text" placeholder="" autoComplete="text" 
         className="block h-10 pl-5 w-full rounded-3xl border-0 py-1 text-gray-800 ring-2 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
         />
         <div style={{backgroundColor:'#D3D3D3'}} className='rounded-3xl w-12 flex justify-center items-center ml-1'>
-          <div><img src={Vector} alt="" style={{ width:20,height:20}}/></div>
+          <div><img onClick={() => sendMessage(talk)} src={Vector} alt="" style={{ width:20,height:20}}/></div>
         </div>
       </div> 
     </div>
