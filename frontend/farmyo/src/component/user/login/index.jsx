@@ -68,7 +68,6 @@ export default function LoginInput() {
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 main">
     <div className="sm:mx-auto sm:w-full sm:max-w-sm mb-0">
-      <img class="mt-8 ml-4" src={Back} alt="" style={{ width:30 }} onClick={goBack}/>
       <img
         className="mx-auto h-auto w-auto"
         src={Logo}
