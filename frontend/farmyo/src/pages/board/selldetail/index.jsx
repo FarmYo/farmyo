@@ -11,6 +11,7 @@ import Swal from 'sweetalert2'
 import Slider from "react-slick";
 import Gallery from '../../../image/component/gallery.png'
 import '../../../css/barchart.css'
+import { jwtDecode } from 'jwt-decode'
 
 
 function classNames(...classes) {
@@ -19,8 +20,8 @@ function classNames(...classes) {
 
 export default function SellDetail(){
   const params = useParams()
-  const boardId = params.boardId
-  const [tradeQuantity,setTradeQuantity] = useState(null)
+  const boardId = Number(params.boardId)
+  const [tradeQuantity,setTradeQuantity] = useState(0)
   const [boardInfo, setBoardInfo] =useState([])
   const navigate = useNavigate()
   const goList = (() => {
@@ -191,25 +192,68 @@ export default function SellDetail(){
     })
     }
 
+  const im = jwtDecode(localStorage.getItem('access')).userJob
+  const loginId = jwtDecode(localStorage.getItem('access')).loginId
   // 게시판에서 바로 거래생성 로직
   const goTrade = () =>{
-    api.post('trades',{
-      sellerId:"ssafy1",//수정
-      buyerId:"ssafy2", //수정
-      cropId:1,   //수정
-      boardId:boardId,
-      tradePrice:20000, //수정
-      tradeQuantity:tradeQuantity,
-      tradeStatus:0 //수정
+    if (im === 1) {
+      if (tradeQuantity <= boardInfo.quantity) {
+        console.log(boardInfo.userLoginId,'/',loginId,'/',boardInfo.cropId,'/',)
+        api.post('trades', {
+          sellerId : boardInfo.userLoginId,
+          buyerId : loginId, 
+          cropId : boardInfo.cropId, 
+          boardId : boardId,
+          tradePrice : boardInfo.price, 
+          tradeQuantity : Number(tradeQuantity),
+          tradeStatus : 0,
+        })
+        .then((res)=>{
+          console.log(res)
+          document.getElementById('gotrade').close()
+          navigate('/trade')
+        })
+        .catch((err)=>{
+          console.log(err)
+        })
+      } else {
+        document.getElementById('gotrade').close()
+        Swal.fire({
+          title : '거래가능량 이내로<br>주문할 수 있습니다.',
+          confirmButtonColor: '#1B5E20',
+        })
+        setTradeQuantity(0)
+      }
+    } else {
+      Swal.fire({
+        title : '농부는 구매할 수 없습니다.',
+        confirmButtonColor: '#1B5E20',
+      })
     }
-  )
+  }
+// 게시판에서 바로 채팅생성 로직
+const myId = jwtDecode(localStorage.getItem('access')).userId
+const goChat = (() =>{
+  if (im === 1) {
+    api.post('chats/room', {
+      sellerId : boardInfo.userId,
+      buyerId : myId,
+      boardId : boardId,
+    })
     .then((res)=>{
-      console.log(res)
+      console.log(res.data.dataBody)
+      navigate(`/chat/${res.data.dataBody.id}`)
     })
     .catch((err)=>{
       console.log(err)
     })
+  } else {
+    Swal.fire({
+      title : '농부는 농부와 채팅할 수 없습니다.',
+      confirmButtonColor: '#1B5E20',
+    })
   }
+})
 
 useEffect(() => {
   getDetail()
@@ -314,20 +358,20 @@ useEffect(() => {
           <h1 className="font-bold">{boardInfo.price}원/kg</h1>
           {/* <h1 className="font-bold">50kg</h1> */}
         </div>
-        <div>
+        { im === 1 && (<div>
           <button className="btn mr-2" style={{ backgroundColor: '#1B5E20'}} 
           onClick={()=>{
           document.getElementById('gotrade').showModal()
-          
           }}> 
             <div className="font-bold text-md" style={{ color:'white' }}>거래하기</div>
           </button>
-          <button className="btn" style={{ backgroundColor: '#1B5E20'}}> 
+          <button onClick={() => goChat()} className="btn" style={{ backgroundColor: '#1B5E20'}}> 
             <div className="font-bold text-md" style={{ color:'white' }}>채팅하기</div>
           </button>
-        </div>
+        </div>)}
       </div>
     </div>
+
     {/* 거래하기모달창 */}
     <dialog id="gotrade" className="modal">
       <div className="modal-box">
@@ -337,19 +381,25 @@ useEffect(() => {
         <div className="">
           <label htmlFor="price" className="block text-md leading-6 text-gray-900">거래가능량</label>
           <div className="relative rounded-md mt-1">
-            <input type="text" name="price" id="price" className="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="입력됨" disabled/>
+            <input 
+              value={boardInfo.quantity}
+              type="text" name="price" id="price" className="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="입력됨" disabled/>
           </div>
           <label htmlFor="price" className="block text-md mt-5 leading-6 text-gray-900">수량</label>
           <div className="relative rounded-md mt-1">
-            <input type="number" name="price" id="price" min="0" step="1"
+            <input 
+              value={tradeQuantity}
+              type="number" name="price" id="price" min="0" step="1" max={boardInfo.quantity}
             className="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
             placeholder="수량을 입력하세요(kg)"
             onChange={(e)=>setTradeQuantity(e.target.value)}/>
           </div>
           <label htmlFor="price" className="block text-md mt-5 leading-6 text-gray-900">총 주문금액</label>
           <div className="relative rounded-md mt-1">
-            <input type="text" name="price" id="price" className="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="'계산된금액나옴'" disabled/>
-            <h1>10000원/kg</h1>
+            <input 
+              value={boardInfo.price * tradeQuantity}
+              type="text" name="price" id="price" className="block h-12 w-full rounded-md border-0 pl-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="계산된금액" disabled/>
+            <h1>{boardInfo.price}원/kg</h1>
           </div>
           <div className="mt-10">
             <button className="btn w-full flex justify-around" style={{ backgroundColor: '#1B5E20'}} onClick={()=>goTrade()}> 
