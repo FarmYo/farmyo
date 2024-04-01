@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -52,9 +53,9 @@ public class ChatController {
     public ResponseEntity<? extends BaseResponseBody> getMessages (
             @PathVariable
             @Parameter(description = "채팅 내역을 조회할 채팅방 아이디")
-            int chatId
+            int chatId, Authentication authentication
     ) {
-        List<MessageListDto> messageList = chatService.getMessages(chatId);
+        List<MessageListDto> messageList = chatService.getMessages(chatId, authentication);
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, messageList));
     }
 }

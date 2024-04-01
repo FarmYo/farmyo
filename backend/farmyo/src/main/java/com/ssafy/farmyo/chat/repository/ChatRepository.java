@@ -49,7 +49,8 @@ public interface ChatRepository extends JpaRepository<Chat, Integer> {
     )
     List<ChatRoomListDto> getChatRoomListWhenBuyer(int userId);
 
-
+    Optional<Integer> findSellerIdById(int chatId);
+    Optional<Integer> findBuyerIdById(int chatId);
 
 
 }
