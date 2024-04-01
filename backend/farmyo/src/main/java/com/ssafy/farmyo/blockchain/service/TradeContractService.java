@@ -39,7 +39,7 @@ public class TradeContractService {
     @PostConstruct
     public void init() throws IOException {
         String rpcUrl = "https://rpc2.sepolia.org";
-        String contractAddress = "0xE8448EEB2629E3e96f96f8EBedc9Fd2faa6fe20c";
+        String contractAddress = "0xf22D952Dbd1E212739F4a4730FfddA657182DD14";
         long chainId = 11155111;
 
         this.web3j = Web3j.build(new HttpService(rpcUrl)); // url과 web3j을 통해 해당 코인네트워크 접속
