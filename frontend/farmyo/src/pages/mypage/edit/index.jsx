@@ -99,6 +99,7 @@ export default function MypageEdit(){
     .then((res) => {
       console.log('정보 받아오기 성공', res.data, res.data.dataBody)
       setUserInfo(res.data.dataBody)
+      setProfileImg(res.data.dataBody.profile)
     })
     .catch((err) => {
       console.log('정보 받아오기 실패', err)
@@ -230,7 +231,7 @@ export default function MypageEdit(){
   },[])
 
   const imgRef = useRef(null); 
-  const [profileImg, setProfileImg] = useState(userInfo.profile); 
+  const [profileImg, setProfileImg] = useState(""); 
   
   const saveImgFile = () => {
     const file = imgRef.current.files[0];
