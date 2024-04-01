@@ -4,15 +4,16 @@ import com.ssafy.farmyo.board.repository.BoardRepository;
 import com.ssafy.farmyo.chat.dto.*;
 import com.ssafy.farmyo.chat.repository.ChatRepository;
 import com.ssafy.farmyo.chat.repository.MessageRepository;
+import com.ssafy.farmyo.common.auth.CustomUserDetails;
 import com.ssafy.farmyo.common.exception.CustomException;
 import com.ssafy.farmyo.common.exception.ExceptionType;
 import com.ssafy.farmyo.entity.Board;
 import com.ssafy.farmyo.entity.Chat;
 import com.ssafy.farmyo.entity.User;
 import com.ssafy.farmyo.user.repository.UserRepository;
+import org.springframework.security.core.Authentication;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,12 +88,31 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public List<MessageListDto> getMessages(int chatId) {
-        log.info("chatId : {} ", chatId);
+    public MessageListDto getMessages(int chatId, Authentication authentication) {
 
-        List<MessageListDto> result = messageRepository.findAllById(chatId);
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        return result;
+        log.info("getMessages -> chatId : {} ", chatId);
+
+        MessageListDto messageListDto = new MessageListDto();
+
+        // MessageListDto 의 위에부분 채우기
+
+        // 사용자의 직업 가져오기   0 : 농부  1 : 일반인
+        int job = customUserDetails.getJob();
+
+        // 만약 해당 사람이 판매자면
+        if (job == 0) {
+            // 상대방의 닉네임과
+            messageListDto.setChatDetailDto(chatRepository.getChatDetailWhenSeller(chatId).get());
+        } else {
+            messageListDto.setChatDetailDto(chatRepository.getChatDetailWhenBuyer(chatId).get());
+        }
+
+        // MessageListDto 의 아랫부분 채우기
+        messageListDto.setMessageDetailDtoList(messageRepository.findAllById(chatId));
+
+        return messageListDto;
     }
 
 }
