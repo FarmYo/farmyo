@@ -260,4 +260,25 @@ public class CropServiceImpl implements CropService {
         }
 
     }
+
+
+    //수확한 농부의 작물만 조회
+    @Override
+    public  List<HarvestCropListResDto> getHarvestCropList(String farmerLoginId, int userId) {
+        Farmer farmer = farmerRepository.findByLoginId(farmerLoginId)
+                .orElseThrow(() -> new CustomException(ExceptionType.FARMER_NOT_EXIST));
+        if (!farmer.getId().equals(userId)) {
+            throw new CustomException(ExceptionType.FARMER_MISMATCH);
+        }
+
+        List<Crop> crops = cropRepository.findHarvestByFarmerIdOrderByCropHarvestDate(farmer.getId());
+        return crops.stream()
+                .map(crop -> HarvestCropListResDto.builder()
+                        .id(crop.getId())
+                        .harvestDate(crop.getCropHarvestDate())
+                        .name(crop.getCropName())
+                        .build())
+                .collect(Collectors.toList());
+        }
+
 }
