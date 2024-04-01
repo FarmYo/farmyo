@@ -203,6 +203,7 @@ public class CropServiceImpl implements CropService {
     //블록체인 기록 등록
 
     @Override
+    @Transactional
     public void createBlockChain(int cropId, int userId, CropBlockchainResDto cropBlockchainResDto) {
 
 
