@@ -1,4 +1,3 @@
-import Me from "../../../image/component/me.png"
 import Back from "../../../image/component/leftarrow.png"
 import Dropdown from '../../../image/component/dropdown.png'
 import { useNavigate } from "react-router-dom"
@@ -250,6 +249,12 @@ export default function MypageEdit(){
     })
     .catch((err) => {
       console.log('수정 실패 백엔드 누구야!', err)
+      Swal.fire({
+        icon: "error",
+        title: '이미지 파일이</br> 너무 큽니다.',
+        text: "10MB 이하 파일을 업로드해주세요.",
+        confirmButtonColor: '#1B5E20',
+      });
     })
 
   };
