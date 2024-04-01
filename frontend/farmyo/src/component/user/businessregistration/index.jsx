@@ -28,77 +28,79 @@ export default function Business() {
   const checkAll = (() => {
     if (businessNumber) {
       setIsBusinessNumber(true)
-    } if (ownerName) {
+    if (ownerName) {
       setIsOwnerName(true)
-    } if (strOpenDay) {
+    if (strOpenDay) {
       setIsOpenDay(true)
+      return true
     }
+  }} return false
   })
 
   const changePage = () => {
-    checkAll().then(({ isBusinessNumber, isOwnerName, isOpenDay }) => {
-    if (isBusinessNumber === true && isOwnerName === true && isOpenDay === true) {
-    api.post('users', {
-      loginId : id,              
-      password : password,               
-      telephone : phoneNumber, 
-      depositor : account,         
-      bank : bankName,          
-      account : accountNumber,
-      email : email,  
-      nickname : nickName,        
-      addressCode : zoomNumber,          
-      addressLegal : address,
-      addressDetail : detailAddress,
-      job : isSeller,
-      licenseNum : businessNumber,
-      representative : ownerName,
-      startDate : strOpenDay,
-    }
-  )
-  .then((res) => {
-    console.log('판매자 회원가입 성공 확인 성공')
-    if (res.data.dataHeader.successCode === 0) {
-      navigate('/login', { replace: true })
+    if (checkAll()) {
+      if (isBusinessNumber === true && isOwnerName === true && isOpenDay === true) {
+      api.post('users', {
+        loginId : id,              
+        password : password,               
+        telephone : phoneNumber, 
+        depositor : account,         
+        bank : bankName,          
+        account : accountNumber,
+        email : email,  
+        nickname : nickName,        
+        addressCode : zoomNumber,          
+        addressLegal : address,
+        addressDetail : detailAddress,
+        job : isSeller,
+        licenseNum : businessNumber,
+        representative : ownerName,
+        startDate : strOpenDay,
+      }
+    )
+    .then((res) => {
+      console.log('판매자 회원가입 성공 확인 성공')
+      if (res.data.dataHeader.successCode === 0) {
+        navigate('/login', { replace: true })
+        Swal.fire({
+          title:'회원이 되신 걸<br>환영합니다',
+          confirmButtonColor: '#1B5E20',
+        })
+      } else {
+        console.log('그렇지만 여기로 왔다는 건 로직 다시 확인 필요')
+      }
+    })
+    .catch((err) => {
+      if (err.response.data.dataHeader.resultCode === "U-008") {
+        console.log('사업자등록 오류', err)
+        Swal.fire({
+          title:'사업자등록 오류',
+          html: '사업자 등록 정보를 확인해주세요',
+          confirmButtonColor: '#1B5E20',
+        })
+      } else if (err.response.data.dataHeader.resultCode === "U-009") {
+        console.log('중복된 사업자등록', err)
+        Swal.fire({
+          title:'중복된 사업자등록',
+          html: '사업자 등록 정보를 확인해주세요',
+          confirmButtonColor: '#1B5E20',
+        })
+      } else {
+      console.log('판매자 회원가입 확인 실패', err)
       Swal.fire({
-        title:'회원이 되신 걸<br>환영합니다',
+        title:'알 수 없는 에러',
+        html: '회원가입 실패',
         confirmButtonColor: '#1B5E20',
-      })
-    } else {
-      console.log('그렇지만 여기로 왔다는 건 로직 다시 확인 필요')
-    }
-  })
-  .catch((err) => {
-    if (err.response.data.dataHeader.resultCode === "U-008") {
-      console.log('사업자등록 오류', err)
-      Swal.fire({
-        title:'사업자등록 오류',
-        html: '사업자 등록 정보를 확인해주세요',
-        confirmButtonColor: '#1B5E20',
-      })
-    } else if (err.response.data.dataHeader.resultCode === "U-009") {
-      console.log('중복된 사업자등록', err)
-      Swal.fire({
-        title:'중복된 사업자등록',
-        html: '사업자 등록 정보를 확인해주세요',
-        confirmButtonColor: '#1B5E20',
-      })
-    } else {
-    console.log('판매자 회원가입 확인 실패', err)
-    Swal.fire({
-      title:'알 수 없는 에러',
-      html: '회원가입 실패',
-      confirmButtonColor: '#1B5E20',
-    })}
-  })
+      })}
+    })
+  } 
 } else {
-  console.log(isOpenDay,isOwnerName,isBusinessNumber)
+  console.log(isOpenDay, isOwnerName, isBusinessNumber)
   console.log('판매자 회원가입 실패 화면 확인해보기', '우편번호 : ', zoomNumber, '주소 :', address, '상세주소 :', detailAddress, '예금주 :', account, '계좌번호 :', accountNumber, '은행명 :', bankName, '사업자등록번호 :', businessNumber, '대표자 :', ownerName, '개업일 :', strOpenDay)
   Swal.fire({
     html: '<br>입력 정보를<br>확인해주세요',
     confirmButtonColor: '#1B5E20',
-  })}
-  })}
+  })}}
 
   useEffect(() => {
     const allInputs = document.querySelectorAll('input');
