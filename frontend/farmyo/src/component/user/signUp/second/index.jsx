@@ -117,7 +117,7 @@ export default function SignUpSecond() {
 
   return(
     <div>
-      <img src={Back} alt="" style={{ width:20}} onClick={goBack}/>
+      <img class="mt-8 ml-4" src={Back} alt="" style={{ width:30 }} onClick={goBack}/>
     <div className="main mx-auto w-auto max-w-sm p-10">
       <label 
         htmlFor="nickname"
