@@ -99,6 +99,7 @@ export default function MypageEdit(){
     .then((res) => {
       console.log('정보 받아오기 성공', res.data, res.data.dataBody)
       setUserInfo(res.data.dataBody)
+      setProfileImg(res.data.dataBody.profile)
     })
     .catch((err) => {
       console.log('정보 받아오기 실패', err)
@@ -230,7 +231,7 @@ export default function MypageEdit(){
   useEffect(()=>{
     getUserInfo();
     // BankList();
-  },[])
+  },[userInfo.profile])
 
   const imgRef = useRef(null); 
   const [profileImg, setProfileImg] = useState(userInfo.profile); 
@@ -245,7 +246,6 @@ export default function MypageEdit(){
 
     const formData = new FormData();
     formData.append(`profileImg`, file);
-
     api.patch(`users/profile`, formData)
     .then((res) => {
       console.log("수정 완료")
@@ -266,7 +266,7 @@ export default function MypageEdit(){
         <div className="flex justify-center">
           <input type="file" accept="image" capture="camera" hidden id="img"/>
           {/* 아래 img랑 연결해놓기 */}
-          {userInfo.profile &&( <img src={profileImg} alt="" style={{ width:80 }}  htmlFor="img"/>)}
+          {userInfo.profile && (<img src={profileImg} alt="" style={{ width:80 }}  htmlFor="img"/>)}
         </div>
         {/* 사진 눌러서 선택하는 거 아니면 이걸로 하기 */}
         <label style={{ backgroundColor:'#bbbbbb'}} className="mx-auto btn rounded-md w-1/2 mt-2" htmlFor="profileImg">
