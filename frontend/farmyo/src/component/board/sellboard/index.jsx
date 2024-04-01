@@ -243,7 +243,7 @@ export default function SellBoardList(){
   useEffect(() => {
     const myId = jwtDecode(localStorage.getItem('access')).loginId
     // 작물 카테고리 조회
-    api.get(`crops/list/${myId}`)
+    api.get(`crops/list/${myId}/harvest`)
     .then((res)=>{
       console.log(res.data.dataBody)
       setCropList(res.data.dataBody)
@@ -318,7 +318,7 @@ export default function SellBoardList(){
           style={{width:'16rem'}}>
             <div className="py-1">
               {cropList.map((crop,index)=>(
-              <Menu.Item key={crop.id} onClick={() => setSelectedCrop({ id: crop.id, cropName: crop.cropName })}> 
+              <Menu.Item key={crop.id} onClick={() => setSelectedCrop({ id: crop.id, cropName: crop.name })}> 
                 {({ active }) => (
                   <button
                     href="#"
@@ -327,7 +327,7 @@ export default function SellBoardList(){
                       'block px-12 py-2 text-xl'
                     )}
                   >
-                    {crop.cropName}({crop.cropHarvestDate})
+                    {crop.name}({crop.harvestDate})
                   </button>
                 )}
                 </Menu.Item>
@@ -396,10 +396,6 @@ export default function SellBoardList(){
           </div>
         </div>
       </Modal>
-
-
-
-
     </div>
   )
 }
