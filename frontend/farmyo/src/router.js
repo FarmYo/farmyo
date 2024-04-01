@@ -60,7 +60,7 @@ export default function Router (){
       {/* 상대방판매자마이페이지 */}
       <Route path='/mypage/seller/:id' element={<OpponentSellerMypage />} /> 
       {/* 마이팜디테일페이지 */}
-      <Route path='/mypage/:myfarmId/detail' element={<MyFarmDetail />} />
+      <Route path='/mypage/myfarm/:farmId' element={<MyFarmDetail />} />
       {/* 팜&삼 게시판페이지 */}
       <Route path='/board' element={<BoardNav />} />
       {/* 팝니다상세페이지 */}
@@ -75,7 +75,7 @@ export default function Router (){
       <Route path='/chat/:chatId' element={<ChattingRoom />} />
       {/* 대기화면 */}
       <Route path='/stanby' element={<Stanby />} />
-      {/* 작물대기화면 */}
+      {/* 작물등록대기화면 */}
        <Route path='/stanby/crop' element={<CropStanby />} />
       {/* 작물대기화면 */}
        <Route path='/stanby/trade' element={<TradeStanby />} />
