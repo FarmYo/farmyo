@@ -1,4 +1,4 @@
-import { useEffect, useState, Fragment } from 'react'
+import { useEffect, useState, Fragment, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../../../api/api'
 import { Modal } from "react-responsive-modal"
@@ -6,15 +6,47 @@ import { Menu,Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import Gallery from '../../../image/component/gallery.png'
 import Chatting from '../../../image/component/chatting.png'
+import Slider from "react-slick";
 import Swal from 'sweetalert2'
+import { jwtDecode } from "jwt-decode"
 
 export default function SellBoardList(){
+  const im = jwtDecode(localStorage.getItem('access')).userJob
   const navigate = useNavigate()
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
-  // const im = jwtDecode(localStorage.getItem('access')).userJob
+
+  // 무한스크롤 부분
   const [boardInfo, setBoardInfo] = useState([])
+  const BoardInfo = (() => {
+    api.get(`boards?type=0&page=${page}&size=6`)
+    .then((res) => {
+      if (res.data.dataBody.length > 0) {
+        setBoardInfo([...boardInfo, ...res.data.dataBody])
+        console.log('게시글 불러오기 성공', res)
+        setPage((prevPage) => prevPage + 1);
+        console.log(res.data.dataBody, boardInfo, page)
+      } else {
+        setHaveMore(false)
+        console.log('더이상의 데이터가 없습니다.', res)
+      }
+    })
+    .catch((err) => {
+      console.log('게시글 불러오기 실패', err)
+    })
+  })
+  const [page, setPage] = useState(0)
+  const observer = useRef(null)
+  const [haveMore, setHaveMore] = useState(true)
+  const handleIntersection = (articles) => {
+    articles.forEach((article) => {
+      if (haveMore && article.isIntersecting && article.target.className === 'trigger') {
+        BoardInfo()
+      }
+    })
+  }
+
   const [files, setFiles] = useState([])
   const [cropId, setCropId] =useState(0)
   const [quantity, setQuantity] = useState(0)
@@ -25,20 +57,30 @@ export default function SellBoardList(){
 
   // multipart/form-data로 보내기(json형식 아님)
   const makeArticle = () => {
-    if (cropId && files && title && content && quantity && price) {
+    if (cropId && title && content && quantity && price) {
       const formData = new FormData();
       formData.append('cropId', cropId)
       formData.append('title', title)
       formData.append('content', content)
       formData.append('quantity', quantity)
       formData.append('price', price)
-      files.forEach((file, index) => {
-        formData.append(`images`, file);
-      });
-      console.log('formData : ', formData)
-      // makeForm()
-      // .then(({ formData, files }) => {
-        if (formData && files.length < 6) {
+      if (files) {
+        if (files.length < 6) {
+          // for (const file of files) {
+          //   formData.append('images', file);
+          // }
+          files.forEach((file, index) => {
+            formData.append(`images`, file);
+          });
+          console.log('formData : ', formData)
+        } else {
+          Swal.fire({
+            title : '사진은 5장 이내로<br>업로드 할 수 있습니다.',
+            confirmButtonColor: '#1B5E20',
+          })
+        }
+      } 
+        if (formData) {
           api.post('boards/sell', formData)
           .then((res) => {
             console.log('팝니다 게시글 생성 완료', res.data.dataBody)
@@ -120,6 +162,17 @@ export default function SellBoardList(){
     } 
   }
 
+  const [fileUrl, setFileUrl] = useState([])
+  const [cropList, setCropList] = useState([]) // 작물등록시 작물 리스트
+  const [selectedCrop, setSelectedCrop] = useState({ id: null, categoryName: '작물을 선택하세요' })
+  const settings = {
+    dots: true, // 하단에 점으로 페이지 표시 여부
+    infinite: true, // 무한으로 반복
+    speed: 500, // 넘어가는 속도
+    slidesToShow: 1, // 한 번에 보여줄 슬라이드 수
+    slidesToScroll: 1, // 스크롤할 때 넘어가는 슬라이드 수
+    adaptiveHeight: true
+  };
   const checkPhoto = ((file) => {
     console.log(file)
     if (file.length > 5) {
@@ -128,19 +181,23 @@ export default function SellBoardList(){
         confirmButtonColor: '#1B5E20',
       })
     } else {
+      const promises = [];
+        for (const readFile of file) {
+          const reader = new FileReader();
+          promises.push(
+            new Promise((resolve) => {
+              reader.onload = () => {
+                resolve(reader.result);
+              };
+              reader.readAsDataURL(readFile);
+            })
+          );
+        }
+        Promise.all(promises).then((urls) => {
+          setFileUrl([...fileUrl, ...urls]);
+        });
     setFiles([...file])
     }
-  })
-
-  const BoardInfo = (() => {
-    api.get("boards?type=0&page=0&size=100")
-    .then((res) => {
-      setBoardInfo(res.data.dataBody)
-      console.log('게시글 불러오기 성공', res)
-    })
-    .catch((err) => {
-      console.log('게시글 불러오기 실패', err)
-    })
   })
 
   const [sellOpen,setSellOpen] = useState(false)
@@ -166,10 +223,35 @@ export default function SellBoardList(){
   });
 
   useEffect(() => {
-    BoardInfo();
-    setCropId(29);
+    if (haveMore) {
+      BoardInfo();
+    }
+    setCropId(30);
+    // 크롭 id 바꾸기
+  }, [page])
+
+  useEffect(() => {
+    observer.current = new IntersectionObserver(handleIntersection, {
+      threshold : 0.7,
+    })
+    const observeTarget = document.querySelector('.trigger');
+    observer.current.observe(observeTarget);
+    return () => {
+      observer.current.disconnect()
+    }
   }, [])
 
+  useEffect(() => {
+    // 작물 카테고리 조회
+    api.get('crops/category')
+    .then((res)=>{
+      console.log(res.data.dataBody)
+      setCropList(res.data.dataBody)
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  })
 
   return(
     <div style={{height:'420px',position:'relative'}}>
@@ -190,19 +272,30 @@ export default function SellBoardList(){
         </div>
       </div>
       ))}
-
+      {haveMore && <div className="trigger"></div>}
       <div style={{ position: 'absolute', bottom: 0, right: 10}}>
+        {im === 0 && (
         <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
           <div style={{ position: 'absolute', top: '44%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}
           onClick={() => sellOpenModal()}>+
           </div>
         </div>
+        )}
       </div>
       
       {/* 팝니다게시글생성모달 */}
       <Modal open={sellOpen} onClose={sellCloseModal} styles={styles}>
         <div className="mt-10">
-          <div className='h-32' style={{ backgroundColor:'#bbbbbb'}}>사진있음</div>
+
+      <Slider {...settings}  
+      className="sliderOne">
+          {fileUrl?.map((img, index) => (
+            <div key={index}  style={{height:240}}>
+              <img src={img} alt={`slide-${index}`}/>
+            </div>
+          ))}
+        </Slider>
+
           <div className='flex justify-between mt-4'>
             <div>
             <Menu as="div" className="relative inline-block text-left">
@@ -221,21 +314,25 @@ export default function SellBoardList(){
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95"
             >
-            <Menu.Items className="absolute right-0 z-10 mt-2 w-30 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-              <div className="py-1">
-                <Menu.Item>
-                  {({ active }) => (
-                    <a
-                      href="#"
-                      className={classNames(
-                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                        'block px-16 py-1 text-sm'
-                      )}
-                    >
-                    감자
-                    </a>
-                  )}
+            <Menu.Items className="absolute right-0 z-10 w-full px-4 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+          style={{width:'16rem'}}>
+            <div className="py-1">
+              {cropList.map((crop,index)=>(
+              <Menu.Item key={crop.id} onClick={() => setSelectedCrop({ id: crop.id, categoryName: crop.categoryName })}> 
+                {({ active }) => (
+                  <button
+                    href="#"
+                    className={classNames(
+                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      'block px-12 py-2 text-xl'
+                      
+                    )}
+                  >
+                    {crop.categoryName}
+                  </button>
+                )}
                 </Menu.Item>
+                ))}
                 </div>
               </Menu.Items>
             </Transition>
