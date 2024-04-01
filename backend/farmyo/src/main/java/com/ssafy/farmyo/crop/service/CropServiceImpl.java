@@ -19,9 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +40,7 @@ public class CropServiceImpl implements CropService {
     @Transactional
     public int addCrop(AddCropReqDto addCropReqDto, int farmerId) {
 
-        String basicUrl = "https://yeopbucket.s3.ap-northeast-2.amazonaws.com/%EA%B8%B0%EB%B3%B8%20%EC%9D%B4%EB%AF%B8%EC%A7%80_1711798541181.png";
+        String basicUrl = "https://yeopbucket.s3.ap-northeast-2.amazonaws.com/%EC%A0%9C%EB%AA%A9%EC%9D%84-%EC%9E%85%EB%A0%A5%ED%95%B4%EC%A3%BC%EC%84%B8%EC%9A%94_-002_1711958597385.png";
 
 
         //해당 id의 파머가 있는지 확인
@@ -140,7 +137,7 @@ public class CropServiceImpl implements CropService {
             throw new CustomException(ExceptionType.USER_NOT_EXIST);
         } else {
             Farmer farmer = farmerOptional.get();
-            List<Crop> crops = cropRepository.findByFarmerId(farmer.getId());
+            List<Crop> crops = cropRepository.findByFarmerIdOrderByIdDesc(farmer.getId());
             return crops.stream()
                     .map(crop -> CropListResDto.builder()
                             .id(crop.getId())
