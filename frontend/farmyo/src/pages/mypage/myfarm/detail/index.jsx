@@ -135,8 +135,7 @@ export default function MyFarmDetail() {
     const formData = new FormData();
     formData.append('id', farmId);
     formData.append('content', farmContent);
-    formData.append('status', isImageUpdated ? 1 : 0); // 이미지 수정 여부
-
+ 
     // 이미지가 수정되었다면, 수정된 이미지 정보만 서버에 전송
     if (isImageUpdated) {
       const orders = updateList.map((file, index) => index + 1); // int 형식
@@ -144,25 +143,31 @@ export default function MyFarmDetail() {
         formData.append('files', file);
         formData.append('orders', index + 1);
       });
-    }
-    else{
-      //모르겠다....
-    }
+      api.put('farms/image',formData)
+      .then((res)=>{
+        console.log('수정성공')
+        setFlag(!flag)
+        Swal.fire({
+          html: '<h1 style="font-weight: bold;">게시글이 수정되었습닌다</h1>',
+          icon: 'success',
+          showConfirmButton: false,
+        });
+        onCloseModal()
+      })
+      .catch((err)=>{
+        console.log(err)
+      })
 
-    api.put('farms',formData)
-    .then((res)=>{
-      console.log('수정성공')
-      setFlag(!flag)
-      Swal.fire({
-        html: '<h1 style="font-weight: bold;">게시글이 수정되었습닌다</h1>',
-        icon: 'success',
-        showConfirmButton: false,
-      });
-      onCloseModal()
-    })
-    .catch((err)=>{
-      console.log(err)
-    })
+    }
+    // else{
+    //   api.patch('farms',formData)
+
+
+
+
+    // }
+    
+   
 
   }
   
