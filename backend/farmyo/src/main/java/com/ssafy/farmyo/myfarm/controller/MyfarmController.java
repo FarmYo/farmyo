@@ -68,19 +68,30 @@ public class MyfarmController {
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, myfarmReqDto));
     }
 
-    @PutMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PatchMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "마이팜 게시글 수정", description = "마이팜 id와 수정할 정보를 통해 마이팜 게시글을 수정한다.")
     public ResponseEntity<? extends BaseResponseBody> updateFarm(
             @RequestParam("id") int id,
-            @RequestParam("content") String content,
-            @RequestParam("status") int status,
-            @RequestParam("files") List<MultipartFile> files,
-            @RequestParam("orders") List<Integer> orders) {
-        log.info("{}, {}, {}, {} : updateFarm 실행", id, content, orders, status);
+            @RequestParam("content") String content) {
+        log.info("{}, {} : updateFarm 실행", id, content);
 
-        myfarmService.updateFarm(id, content, status, files, orders);
+        myfarmService.updateFarm(id, content);
 
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "success updateFarm"));
+    }
+
+    @PutMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "마이팜 게시글 수정", description = "마이팜 id와 수정할 정보를 통해 마이팜 게시글을 수정한다.")
+    public ResponseEntity<? extends BaseResponseBody> updateFarmImage(
+            @RequestParam("id") int id,
+            @RequestParam("content") String content,
+            @RequestParam("files") List<MultipartFile> files,
+            @RequestParam("orders") List<Integer> orders) {
+        log.info("{}, {}, {} : updateFarmImage 실행", id, content, orders);
+
+        myfarmService.updateFarmImage(id, content, files, orders);
+
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "success updateFarmImage"));
     }
 
     @DeleteMapping("")
