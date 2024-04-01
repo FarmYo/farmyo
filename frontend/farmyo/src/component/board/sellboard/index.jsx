@@ -228,7 +228,7 @@ export default function SellBoardList(){
     }
     setCropId(30);
     // 크롭 id 바꾸기
-  }, [page])
+  }, [])
 
   useEffect(() => {
     observer.current = new IntersectionObserver(handleIntersection, {
@@ -251,7 +251,7 @@ export default function SellBoardList(){
     .catch((err)=>{
       console.log(err)
     })
-  })
+  }, [])
 
   return(
     <div style={{height:'420px',position:'relative'}}>
