@@ -5,9 +5,6 @@ import java.util.List;
 
 @Data
 public class MessageListDto {
-
-    private int userId;
-    private String userNickname;
-
-    private List<MessageDetailDto> list;
+    private ChatDetailDto chatDetailDto;
+    private List<MessageDetailDto> messageDetailDtoList;
 }

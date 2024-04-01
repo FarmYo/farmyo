@@ -88,11 +88,11 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public List<MessageListDto> getMessages(int chatId, Authentication authentication) {
+    public MessageListDto getMessages(int chatId, Authentication authentication) {
 
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        log.info("chatId : {} ", chatId);
+        log.info("getMessages -> chatId : {} ", chatId);
 
         MessageListDto messageListDto = new MessageListDto();
 
@@ -101,13 +101,16 @@ public class ChatServiceImpl implements ChatService {
         // 사용자의 직업 가져오기   0 : 농부  1 : 일반인
         int job = customUserDetails.getJob();
 
-        chatRepository.
+        // 만약 해당 사람이 판매자면
+        if (job == 0) {
+            // 상대방의 닉네임과
+            messageListDto.setChatDetailDto(chatRepository.getChatDetailWhenSeller(chatId).get());
+        } else {
+            messageListDto.setChatDetailDto(chatRepository.getChatDetailWhenBuyer(chatId).get());
+        }
 
-        messageListDto.setUserId();
-        messageListDto.setUserNickname();
         // MessageListDto 의 아랫부분 채우기
-        messageListDto.setList(messageRepository.findAllById(chatId));
-
+        messageListDto.setMessageDetailDtoList(messageRepository.findAllById(chatId));
 
         return messageListDto;
     }
