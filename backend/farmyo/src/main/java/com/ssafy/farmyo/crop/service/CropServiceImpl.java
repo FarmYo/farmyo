@@ -37,7 +37,7 @@ public class CropServiceImpl implements CropService {
 
     //작물 등록
     @Override
-    @Transactional
+    @Transactional(rollbackFor = CustomException.class)
     public int addCrop(AddCropReqDto addCropReqDto, int farmerId) {
 
         String basicUrl = "https://yeopbucket.s3.ap-northeast-2.amazonaws.com/%EC%A0%9C%EB%AA%A9%EC%9D%84-%EC%9E%85%EB%A0%A5%ED%95%B4%EC%A3%BC%EC%84%B8%EC%9A%94_-002_1711958597385.png";
@@ -200,7 +200,7 @@ public class CropServiceImpl implements CropService {
     //블록체인 기록 등록
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = CustomException.class)
     public void createBlockChain(int cropId, int userId, CropBlockchainResDto cropBlockchainResDto) {
 
 
