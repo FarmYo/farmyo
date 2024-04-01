@@ -45,6 +45,7 @@ export default function Room() {
     };
   }, [chatId]);
 
+  const myLoginId = jwtDecode(localStorage.getItem('access')).loginId
   const myId = jwtDecode(localStorage.getItem('access')).userId
   const sendMessage = () => {
     if (stompClient.current && stompClient.current.connected && talk.trim() !== '') {
@@ -58,21 +59,34 @@ export default function Room() {
         })
       );
       setTalk(''); // 메시지 전송 후 입력 필드 초기화
+      getMessage()
     }
   };
 
-  // const [partnerInfo, setPartnerInfo] = useEffect([])
-  // const [chatData, setChatData] = useState([])
-  useEffect(() => {
+  const [partnerInfo, setPartnerInfo] = useState([])
+  const [chatData, setChatData] = useState([])
+  const getMessage = (() => {
     api.get(`chats/message/${chatId}`)
     .then((res) => {
-      console.log('채팅 데이터 받아오기', res.data.dataBody.chatDetailDto, res.data.dataBody.messageDetailDtoList)
-      // setPartnerInfo(res.data.dataBody.chatDetailDto)
-      // setChatData(res.data.dataBody.messageDetailDtoList)
+      console.log('채팅 데이터 받아오기')
+      setPartnerInfo(res.data.dataBody.chatDetailDto)
+      setChatData(res.data.dataBody.messageDetailDtoList)
     })
     .catch((err) => {
       console.log('채팅 데이터 받아오기 실패', err)
     })
+  })
+  useEffect(() => {
+    getMessage()
+    // api.get(`chats/message/${chatId}`)
+    // .then((res) => {
+    //   console.log('채팅 데이터 받아오기', res.data.dataBody.chatDetailDto, res.data.dataBody.messageDetailDtoList)
+    //   setPartnerInfo(res.data.dataBody.chatDetailDto)
+    //   setChatData(res.data.dataBody.messageDetailDtoList)
+    // })
+    // .catch((err) => {
+    //   console.log('채팅 데이터 받아오기 실패', err)
+    // })
   }, [])
 
   const openForm = () =>{
@@ -103,7 +117,7 @@ export default function Room() {
       <div style={{height:80}} className="p-2 border-b-2 border-gray-100 flex justify-between">
         <div className='flex'>
           <div className='flex items-center' onClick={goBack}><img src={Back} alt="" style={{ width:25,height:25 }}/></div>
-          <div className='text-lg flex items-center font-bold ml-5'>차은우보다현준</div>
+          <div className='text-lg flex items-center font-bold ml-5'>{partnerInfo.userNickname}</div>
         </div>
         {/* 아래거래하기버튼은 판매자만보이게 */}
         <div className='flex items-center'>
@@ -119,19 +133,39 @@ export default function Room() {
       
       
       {/* 대화말풍선 - 상대방 */}
-      <div className='flex p-3'>
-        <img src={Photo} alt="" style={{ width:40,height:40 }}/>
-        <div style={{width:`${width2}px`,backgroundColor:'#D3D3D3'}} className='rounded-3xl ml-3 flex justify-center items-center'>
-          <div ref={textRef2}>판매자님</div>
-        </div>
-      </div>
-      {/* 대화말풍선 - 나 */}
-      <div className='flex p-3 justify-end'>
-        <div style={{width:`${width}px`,height:40,backgroundColor:'#8FBC8F'}} className='rounded-3xl ml-3 flex justify-center items-center'>
-          <div ref={textRef}>안녕하세요</div>
-        </div>
-      </div>
 
+    {chatData?.map((chat, index) => (
+      <div>
+      {Number(chat?.userId) === Number(myId) ?  
+        (
+          <div className='flex p-3 justify-end'>
+          <div style={{width:`${width}px`,height:40,backgroundColor:'#8FBC8F'}} className='rounded-3xl ml-3 flex justify-center items-center'>
+            <div ref={textRef}>{chat.content}</div>
+          </div>
+        </div>
+          // <div key={index} className='flex p-3'>
+          //   <img src={partnerInfo.userProfile} alt="" style={{ width:40,height:40 }}/>
+          //   <div style={{width:`${width2}px`,backgroundColor:'#D3D3D3'}} className='rounded-3xl ml-3 flex justify-center items-center'>
+          //     <div ref={textRef2}>{chat.content}</div>
+          //   </div>
+          // </div>
+      ) :
+      (
+        <div key={index} className='flex p-3'>
+        <img src={partnerInfo.userProfile} alt="" style={{ width:40,height:40 }}/>
+        <div style={{width:`${width2}px`,backgroundColor:'#D3D3D3'}} className='rounded-3xl ml-3 flex justify-center items-center'>
+          <div ref={textRef2}>{chat.content}</div>
+        </div>
+      </div>
+        // <div className='flex p-3 justify-end'>
+        //   <div style={{width:`${width}px`,height:40,backgroundColor:'#8FBC8F'}} className='rounded-3xl ml-3 flex justify-center items-center'>
+        //     <div ref={textRef}>{chat.content}</div>
+        //   </div>
+        // </div>
+      )
+    }
+    </div>))}
+      {/* 대화말풍선 - 나 */}
 
       {/* 채팅입력창 */}
       <div className='p-3 flex'  style={{ position: 'fixed', bottom: keyboardVisible ? '0vh' : 10, left: '0', width: '100%', padding: '10px', boxSizing: 'border-box' }}>
