@@ -57,20 +57,30 @@ export default function SellBoardList(){
 
   // multipart/form-data로 보내기(json형식 아님)
   const makeArticle = () => {
-    if (cropId && files && title && content && quantity && price) {
+    if (cropId && title && content && quantity && price) {
       const formData = new FormData();
       formData.append('cropId', cropId)
       formData.append('title', title)
       formData.append('content', content)
       formData.append('quantity', quantity)
       formData.append('price', price)
-      files.forEach((file, index) => {
-        formData.append(`images`, file);
-      });
-      console.log('formData : ', formData)
-      // makeForm()
-      // .then(({ formData, files }) => {
-        if (formData && files.length < 6) {
+      if (files) {
+        if (files.length < 6) {
+          // for (const file of files) {
+          //   formData.append('images', file);
+          // }
+          files.forEach((file, index) => {
+            formData.append(`images`, file);
+          });
+          console.log('formData : ', formData)
+        } else {
+          Swal.fire({
+            title : '사진은 5장 이내로<br>업로드 할 수 있습니다.',
+            confirmButtonColor: '#1B5E20',
+          })
+        }
+      } 
+        if (formData) {
           api.post('boards/sell', formData)
           .then((res) => {
             console.log('팝니다 게시글 생성 완료', res.data.dataBody)
@@ -216,7 +226,7 @@ export default function SellBoardList(){
     if (haveMore) {
       BoardInfo();
     }
-    setCropId(29);
+    setCropId(30);
     // 크롭 id 바꾸기
   }, [page])
 
