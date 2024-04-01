@@ -1,0 +1,32 @@
+/* 첫 번째 슬라이더 스타일 */
+.sliderOne .slick-slider,
+.sliderOne .slick-list,
+.sliderOne .slick-track {
+  height: 350px;
+}
+
+.sliderOne .slick-slide > div {
+  height: 350px;
+}
+
+.sliderOne .slick-slide img {
+  height: 350px;
+  width: 100%;
+  object-fit: cover;
+}
+
+/* 두 번째 슬라이더 스타일 */
+.sliderTwo .slick-slider,
+.sliderTwo .slick-list,
+.sliderTwo .slick-track {
+  height: auto; /* 높이 변경 */
+}
+
+.sliderTwo .slick-slide > div {
+  height: auto; /* 높이 변경 */
+}
+
+.sliderTwo .slick-slide img {
+  width: 100%;
+  object-fit: contain;
+}
