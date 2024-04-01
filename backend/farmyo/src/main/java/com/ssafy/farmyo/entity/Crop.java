@@ -99,7 +99,9 @@ public class Crop extends BaseTime {
 
     //나중에 수확날짜 넣는 메소드
     public void updateCropHarvestDate(LocalDate cropHarvestDate) {
+
         this.cropHarvestDate = cropHarvestDate;
+        this.cropStatus = 1;
     }
 
 
