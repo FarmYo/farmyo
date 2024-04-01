@@ -66,9 +66,9 @@ public class MyfarmServiceImpl implements MyfarmService {
 
     @Transactional
     @Override
-    public void updateFarm(int id, String content, int status, List<MultipartFile> files, List<Integer> orders) {
+    public void updateFarmImage(int id, String content, List<MultipartFile> files, List<Integer> orders) {
         Farm farm = myfarmRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.FARM_NOT_EXIST));
-        if (status == 1) { // status가 1이라면, 즉 사진을 변경했다면
+
 
             // 기존 이미지 삭제
             List<FarmImg> existingImages = myfarmImageRepository.getFarmImgeList(id);
@@ -77,7 +77,6 @@ public class MyfarmServiceImpl implements MyfarmService {
                 existingImages.forEach(farmImg -> awsS3Service.deleteFileByUrl(farmImg.getImgUrl()));
             }
 
-//            myfarmImageRepository.deleteAllByFarmId(id);
 
             if (files.size() != orders.size()) {
                 throw new CustomException(ExceptionType.ORDERS_NOT_MATCH);
@@ -95,10 +94,13 @@ public class MyfarmServiceImpl implements MyfarmService {
 
                 myfarmImageRepository.save(farmImg);
             }
-        } else { //사진을 변경하지 않았다면
-            myfarmRepository.updateFarm(id, content);
-        }
 
+    }
+
+    @Transactional
+    @Override
+    public void updateFarm(int id, String content) {
+        myfarmRepository.updateFarm(id, content);
     }
 
     @Transactional
