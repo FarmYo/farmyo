@@ -11,7 +11,8 @@ import DaumPostcode from 'react-daum-postcode';
 // import BankNameList from "../../../store"
 import Swal from "sweetalert2"
 import { jwtDecode } from "jwt-decode"
-import { Fragment } from 'react'
+import { Fragment, useRef } from 'react'
+
 
 export default function MypageEdit(){
   const navigate = useNavigate()
@@ -64,6 +65,7 @@ export default function MypageEdit(){
   //     </select>
   //   )
   // }
+
 
   const isNumber = ((number) => {
     if (isNaN(number)) {
@@ -227,8 +229,33 @@ export default function MypageEdit(){
     // BankList();
   },[])
 
+  const imgRef = useRef(null); 
+  const [profileImg, setProfileImg] = useState(userInfo.profile); 
+  
+  const saveImgFile = () => {
+    const file = imgRef.current.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setProfileImg(reader.result);
+    };
+
+    const formData = new FormData();
+    formData.append(`profileImg`, file);
+
+    api.patch(`users/profile`, formData)
+    .then((res) => {
+      console.log("수정 완료")
+    })
+    .catch((err) => {
+      console.log('수정 실패 백엔드 누구야!', err)
+    })
+
+  };
+
   return(
     <div className="p-5">
+      {/* 이미지 */}
       <div>
         <img src={Back} alt="" style={{ width:20}} onClick={goBack}/>
       </div>
@@ -236,13 +263,25 @@ export default function MypageEdit(){
         <div className="flex justify-center">
           <input type="file" accept="image" capture="camera" hidden id="img"/>
           {/* 아래 img랑 연결해놓기 */}
-          <img src={Me} alt="" style={{ width:80 }}  htmlFor="img"/>
+          {userInfo.profile &&( <img src={profileImg} alt="" style={{ width:80 }}  htmlFor="img"/>)}
         </div>
         {/* 사진 눌러서 선택하는 거 아니면 이걸로 하기 */}
-        <button className="mx-auto btn rounded-md w-1/2 mt-2" style={{ backgroundColor:'#bbbbbb'}}>
-          <h1 style={{ color:'white' }} className="text-sm">프로필 사진 변경</h1>
-        </button>
+        <label style={{ backgroundColor:'#bbbbbb'}} className="mx-auto btn rounded-md w-1/2 mt-2" htmlFor="profileImg">
+            <div style={{ color: 'white' }} className="text-sm cursor-pointer">
+                프로필 사진 변경
+            </div>
+        </label>
+        <input
+                  type="file"
+                  id="profileImg"
+                  autocomplete="img"
+                  accept="image/*"
+                  hidden
+                  onChange={saveImgFile}
+                  ref={imgRef}
+          />
       </div>
+      {/* 이미지 */}
       <div className="flex justify-between mt-8">
         <div className="flex flex-col">
       <label htmlFor="id"
