@@ -1,4 +1,3 @@
-import Me from "../../../image/component/me.png"
 import Back from "../../../image/component/leftarrow.png"
 import Dropdown from '../../../image/component/dropdown.png'
 import { useNavigate } from "react-router-dom"
@@ -234,7 +233,7 @@ export default function MypageEdit(){
   },[userInfo.profile])
 
   const imgRef = useRef(null); 
-  const [profileImg, setProfileImg] = useState(userInfo.profile); 
+  const [profileImg, setProfileImg] = useState(""); 
   
   const saveImgFile = () => {
     const file = imgRef.current.files[0];
@@ -252,6 +251,12 @@ export default function MypageEdit(){
     })
     .catch((err) => {
       console.log('수정 실패 백엔드 누구야!', err)
+      Swal.fire({
+        icon: "error",
+        title: '이미지 파일이</br> 너무 큽니다.',
+        text: "10MB 이하 파일을 업로드해주세요.",
+        confirmButtonColor: '#1B5E20',
+      });
     })
 
   };
@@ -595,6 +600,7 @@ export default function MypageEdit(){
               className="block text-sm leading-6 text-gray-900 mt-2">
               은행명
             </label>
+            
               {/* <Dropdown 
                 value={userInfo?.account?.bankName} 
                 onChange={(event) => {
@@ -615,6 +621,8 @@ export default function MypageEdit(){
 
               {/* </span> */}
 {/* 드롭다운 */}
+
+      
       {/* <Menu as="div" className="relative inline-block text-left">
         <div>
           <Menu.Button className="inline-flex w-32 h-12 justify-between items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50"
@@ -654,7 +662,7 @@ export default function MypageEdit(){
         </Transition>
       </Menu> */}
 
-            <div>
+            {/* <div>
 
                 <input
                   value={userInfo?.account?.bankName}
@@ -670,7 +678,35 @@ export default function MypageEdit(){
                   id="bankName" name="bankName" type="text" placeholder={userInfo?.account?.bankName} autoComplete="text" 
                   className="block h-10 w-full rounded-md border-0 mt-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
                 />
-                </div>
+                </div> */}
+                <div>
+  <select
+    value={userInfo?.account?.bankName}
+    onChange={(event) => {
+      const newUserInfo = {
+        ...userInfo,
+        account: {
+          ...userInfo.account,
+          bankName: event.target.value,
+        }
+      };
+      setUserInfo(newUserInfo);
+    }}
+    id="bankName"
+    name="bankName"
+    autoComplete="text"
+    className="block h-10 w-full rounded-md border-0 mt-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
+  >
+    <option value="농협">농협</option>
+    <option value="신한은행">신한은행</option>
+    <option value="국민은행">국민은행</option>
+    <option value="우리은행">우리은행</option>
+    <option value="하나은행">하나은행</option>
+    <option value="대구은행">대구은행</option>
+    <option value="카카오뱅크">카카오뱅크</option>
+    <option value="토스뱅크">토스뱅크</option>
+  </select>
+</div>
                 <label htmlFor="account"
               className="block text-sm leading-6 text-gray-900 mt-2">
               계좌번호
