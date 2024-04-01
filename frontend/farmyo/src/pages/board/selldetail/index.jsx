@@ -98,18 +98,27 @@ export default function SellDetail(){
   })
 
   const modifyArticle = () => {
-    if (boardInfo.title && boardInfo.content && boardInfo.quantity && boardInfo.price && boardInfo.files) {
+    if (boardInfo.title && boardInfo.content && boardInfo.quantity && boardInfo.price) {
       const formData = new FormData();
       console.log('formData : ', formData)
       formData.append('title', boardInfo.title)
       formData.append('content', boardInfo.content)
       formData.append('quantity', boardInfo.quantity)
       formData.append('price', boardInfo.price)
-      for (const file of boardInfo.files) {
-        formData.append('images', file);
+      if (boardInfo.files) {
+        if (boardInfo.files?.length < 6) {
+          for (const file of boardInfo.files) {
+            formData.append('images', file);
+          }
+          console.log('formData : ', formData)
+        } else {
+          Swal.fire({
+            title : '사진은 5장 이내로<br>업로드 할 수 있습니다.',
+            confirmButtonColor: '#1B5E20',
+          })
+        }
       }
-      console.log('formData : ', formData)
-      if (formData && boardInfo.files.length < 6) {
+      if (formData) {
         api.patch(`boards/${boardInfo.id}`, formData)
         .then((res) => {
           console.log('수정 완료')
