@@ -113,6 +113,7 @@ export default function MypageEdit(){
       .then((res) => {
         console.log('유저정보 수정 성공')
         console.log('현재 유저 정보 :', userInfo)
+        getUserInfo()
         document.getElementById('changeInfo').close()
         Swal.fire({
           title : '변경되었습니다.',
@@ -136,6 +137,7 @@ export default function MypageEdit(){
       .then((res) => {
         console.log('주소정보 수정 성공')
         console.log('현재 유저 정보 :', userInfo)
+        getUserInfo()
         document.getElementById('changeAddress').close()
         Swal.fire({
           title : '변경되었습니다.',
@@ -159,6 +161,7 @@ export default function MypageEdit(){
       .then((res) => {
         console.log('계좌 정보 수정 성공')
         console.log('현재 유저 정보 :', userInfo)
+        getUserInfo()
         document.getElementById('changeAccount').close()
         Swal.fire({
           title : '변경되었습니다.',
@@ -252,13 +255,13 @@ export default function MypageEdit(){
         <p>{userInfo?.loginId}</p>
       </div>
       <div>
-        {/* 농부일때만 보이게하기
+      {im === 0 && (
         <button
           className="btn rounded-md" style={{ backgroundColor:'#81C784'}}
           onClick={()=>document.getElementById('checkPoint').showModal()}
         >
           <h1 style={{ color:'white' }} className="text-sm" >내 지갑</h1>
-        </button> */}
+        </button> )}
       </div>
       </div>
       <div>
@@ -359,7 +362,7 @@ export default function MypageEdit(){
         <div className="modal-box" style={{ height:'350px'}}>
           <form method="dialog">
             <button 
-              onClick={() => navigate('/mypage/edit')}
+              onClick={() => getUserInfo()}
               className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
             >
               ✕
@@ -461,7 +464,9 @@ export default function MypageEdit(){
       <dialog id="changeAddress" className="modal">
         <div className="modal-box" style={{ height:'250px'}}>
           <form method="dialog">
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            <button 
+              onClick={() => getUserInfo()}
+              className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
           </form>
           <div>
           <label htmlFor="address"
@@ -522,7 +527,9 @@ export default function MypageEdit(){
       <dialog id="changeAccount" className="modal">
         <div className="modal-box" style={{ height:'350px'}}>
           <form method="dialog">
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            <button 
+              onClick={() => getUserInfo()}
+              className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
           </form>
           <div>
           <label htmlFor="accountOwner"

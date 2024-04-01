@@ -10,7 +10,7 @@ export default function NotFoundPage(){
 
   return(
     <div className="flex flex-col items-center justify-center min-h-screen">
-      <div className='mb-3'><img src={Ban} alt="잘못된경로" style={{}}/></div>
+      <div className='mb-3'><img src={Ban} alt="잘못된경로" style={{width:200}}/></div>
       <div>
         <h1 className="font-bold text-2xl mb-3">잘못된경로입니다</h1>
         <h1 className="text-center text-md" onClick={goHome}>홈으로가기</h1>
