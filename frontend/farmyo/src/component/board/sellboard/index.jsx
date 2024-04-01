@@ -164,7 +164,7 @@ export default function SellBoardList(){
 
   const [fileUrl, setFileUrl] = useState([])
   const [cropList, setCropList] = useState([]) // 작물등록시 작물 리스트
-  const [selectedCrop, setSelectedCrop] = useState({ id: null, categoryName: '작물을 선택하세요' })
+  const [selectedCrop, setSelectedCrop] = useState({ id: null, cropName: '작물을 선택하세요' })
   const settings = {
     dots: true, // 하단에 점으로 페이지 표시 여부
     infinite: true, // 무한으로 반복
@@ -240,10 +240,10 @@ export default function SellBoardList(){
       observer.current.disconnect()
     }
   }, [])
-
   useEffect(() => {
+    const myId = jwtDecode(localStorage.getItem('access')).loginId
     // 작물 카테고리 조회
-    api.get('crops/category')
+    api.get(`crops/list/${myId}`)
     .then((res)=>{
       console.log(res.data.dataBody)
       setCropList(res.data.dataBody)
@@ -318,17 +318,16 @@ export default function SellBoardList(){
           style={{width:'16rem'}}>
             <div className="py-1">
               {cropList.map((crop,index)=>(
-              <Menu.Item key={crop.id} onClick={() => setSelectedCrop({ id: crop.id, categoryName: crop.categoryName })}> 
+              <Menu.Item key={crop.id} onClick={() => setSelectedCrop({ id: crop.id, cropName: crop.cropName })}> 
                 {({ active }) => (
                   <button
                     href="#"
                     className={classNames(
                       active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                       'block px-12 py-2 text-xl'
-                      
                     )}
                   >
-                    {crop.categoryName}
+                    {crop.cropName}({crop.cropHarvestDate})
                   </button>
                 )}
                 </Menu.Item>

@@ -7,6 +7,8 @@ import Back from '../../../image/component/leftarrow.png';
 import Photo from '../../../image/component/me.png';
 import Form from '../form/index';
 import Vector from '../../../image/component/Vector.png';
+import { jwtDecode } from 'jwt-decode';
+import api from '../../../api/api';
 
 export default function Room() {
   const navigate = useNavigate();
@@ -43,6 +45,7 @@ export default function Room() {
     };
   }, [chatId]);
 
+  const myId = jwtDecode(localStorage.getItem('access')).userId
   const sendMessage = () => {
     if (stompClient.current && stompClient.current.connected && talk.trim() !== '') {
       stompClient.current.send(
@@ -50,7 +53,7 @@ export default function Room() {
         {},
         JSON.stringify({
           chatId: chatId,
-          userId: 1, // 여기서 userId는 현재 로그인한 사용자의 ID로 변경해야 합니다.
+          userId: myId, // 여기서 userId는 현재 로그인한 사용자의 ID로 변경해야 합니다.
           content: talk,
         })
       );
@@ -58,9 +61,19 @@ export default function Room() {
     }
   };
 
-
-
-
+  // const [partnerInfo, setPartnerInfo] = useEffect([])
+  // const [chatData, setChatData] = useState([])
+  useEffect(() => {
+    api.get(`chats/message/${chatId}`)
+    .then((res) => {
+      console.log('채팅 데이터 받아오기', res.data.dataBody.chatDetailDto, res.data.dataBody.messageDetailDtoList)
+      // setPartnerInfo(res.data.dataBody.chatDetailDto)
+      // setChatData(res.data.dataBody.messageDetailDtoList)
+    })
+    .catch((err) => {
+      console.log('채팅 데이터 받아오기 실패', err)
+    })
+  }, [])
 
   const openForm = () =>{
     setShowForm(true)
@@ -103,6 +116,8 @@ export default function Room() {
       </div>
       {/* 거래하기눌렀을때 입력폼- 판매게시판에서 만든 채팅은 작물명X,구매게시판에서 만든채팅은 작물명O*/}
       {showForm && <Form onFormSubmit={handleFormSubmit} onCloseForm={closeForm} />}
+      
+      
       {/* 대화말풍선 - 상대방 */}
       <div className='flex p-3'>
         <img src={Photo} alt="" style={{ width:40,height:40 }}/>
@@ -116,6 +131,8 @@ export default function Room() {
           <div ref={textRef}>안녕하세요</div>
         </div>
       </div>
+
+
       {/* 채팅입력창 */}
       <div className='p-3 flex'  style={{ position: 'fixed', bottom: keyboardVisible ? '0vh' : 10, left: '0', width: '100%', padding: '10px', boxSizing: 'border-box' }}>
         <input value={talk} onChange={(event) => setTalk(event.target.value)} id="" name="" type="text" placeholder="" autoComplete="text" 
