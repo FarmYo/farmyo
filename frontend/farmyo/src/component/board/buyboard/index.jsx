@@ -194,8 +194,8 @@ export default function BuyBoardList(){
 
     <div style={{height:'420px',position:'relative'}}>
       {/* 삽니다 게시글 목록 */}
-      {boardInfo.map((article) => (
-        <div className="p-4 flex" key={article.boardId} onClick={() => navigate(`buy/${article.boardId}/detail`)}>
+      {boardInfo.map((article,index) => (
+        <div className="p-4 flex" key={index} onClick={() => navigate(`buy/${article.boardId}/detail`)}>
           <div className="w-full ml-2">
             <h1 className="text-lg font-bold">{article.title}</h1> 
             <h1 className="text-sm">{article.userNickname}</h1>
@@ -207,7 +207,7 @@ export default function BuyBoardList(){
           </div>
         </div>
       ))}
-      <div> <br/> </div>
+      <div ref={obsRef}><br/></div>
 
       <div style={{ position: 'absolute', bottom: 0, right: 10}}>
         {im === 1 && (
