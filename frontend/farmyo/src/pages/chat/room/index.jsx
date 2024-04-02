@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
-
+import '../../../css/chat.css'
 import Back from '../../../image/component/leftarrow.png';
 import Photo from '../../../image/component/me.png';
 import Form from '../form/index';
@@ -45,7 +45,6 @@ export default function Room() {
     };
   }, [chatId]);
 
-  const myLoginId = jwtDecode(localStorage.getItem('access')).loginId
   const myId = jwtDecode(localStorage.getItem('access')).userId
   const sendMessage = () => {
     if (stompClient.current && stompClient.current.connected && talk.trim() !== '') {
@@ -78,16 +77,15 @@ export default function Room() {
   })
   useEffect(() => {
     getMessage()
-    // api.get(`chats/message/${chatId}`)
-    // .then((res) => {
-    //   console.log('채팅 데이터 받아오기', res.data.dataBody.chatDetailDto, res.data.dataBody.messageDetailDtoList)
-    //   setPartnerInfo(res.data.dataBody.chatDetailDto)
-    //   setChatData(res.data.dataBody.messageDetailDtoList)
-    // })
-    // .catch((err) => {
-    //   console.log('채팅 데이터 받아오기 실패', err)
-    // })
   }, [])
+
+  const [bubbleWidth, setBubbleWidth] = useState(null);
+  useEffect(() => {
+    if (textRef.current) {
+      const contentWidth = textRef.current.offsetWidth;
+      setBubbleWidth(contentWidth + 20); // Add some padding for aesthetics
+    }
+  }, []);
 
   const openForm = () =>{
     setShowForm(true)
@@ -132,40 +130,28 @@ export default function Room() {
       {showForm && <Form onFormSubmit={handleFormSubmit} onCloseForm={closeForm} />}
       
       
+      {/* 대화말풍선 - 나 */}
       {/* 대화말풍선 - 상대방 */}
-
     {chatData?.map((chat, index) => (
       <div>
       {Number(chat?.userId) === Number(myId) ?  
         (
           <div className='flex p-3 justify-end'>
-          <div style={{width:`${width}px`,height:40,backgroundColor:'#8FBC8F'}} className='rounded-3xl ml-3 flex justify-center items-center'>
+          <div style={{width:`${bubbleWidth}px`,height:40,backgroundColor:'#8FBC8F'}} className='rounded-3xl ml-3 flex justify-center items-center'>
             <div ref={textRef}>{chat.content}</div>
           </div>
         </div>
-          // <div key={index} className='flex p-3'>
-          //   <img src={partnerInfo.userProfile} alt="" style={{ width:40,height:40 }}/>
-          //   <div style={{width:`${width2}px`,backgroundColor:'#D3D3D3'}} className='rounded-3xl ml-3 flex justify-center items-center'>
-          //     <div ref={textRef2}>{chat.content}</div>
-          //   </div>
-          // </div>
       ) :
       (
         <div key={index} className='flex p-3'>
         <img src={partnerInfo.userProfile} alt="" style={{ width:40,height:40 }}/>
-        <div style={{width:`${width2}px`,backgroundColor:'#D3D3D3'}} className='rounded-3xl ml-3 flex justify-center items-center'>
+        <div style={{width:`${bubbleWidth}px`,backgroundColor:'#D3D3D3'}} className='rounded-3xl ml-3 flex justify-center items-center'>
           <div ref={textRef2}>{chat.content}</div>
         </div>
       </div>
-        // <div className='flex p-3 justify-end'>
-        //   <div style={{width:`${width}px`,height:40,backgroundColor:'#8FBC8F'}} className='rounded-3xl ml-3 flex justify-center items-center'>
-        //     <div ref={textRef}>{chat.content}</div>
-        //   </div>
-        // </div>
       )
     }
     </div>))}
-      {/* 대화말풍선 - 나 */}
 
       {/* 채팅입력창 */}
       <div className='p-3 flex'  style={{ position: 'fixed', bottom: keyboardVisible ? '0vh' : 10, left: '0', width: '100%', padding: '10px', boxSizing: 'border-box' }}>
