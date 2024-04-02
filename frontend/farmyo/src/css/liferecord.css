@@ -29,7 +29,7 @@
   background: #134F2C; /* 동그라미 내부 색상 */
   border-radius: 50%; /* 동그라미 모양 */
   z-index: 1;
-} */
+} 
 
 .timeline-middle {
   border-left: 2px solid gray; /* 왼쪽에 2px 두께의 회색 선을 추가 */

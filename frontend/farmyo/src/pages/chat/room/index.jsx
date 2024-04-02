@@ -172,7 +172,7 @@ export default function Room() {
         <div key={index}>
           {message.userId === myId ? (
             <div className='flex p-3 justify-end'>
-              <div style={{ width: `calc(${bubbleWidth}px + 20px)`, height:40, backgroundColor:'#8FBC8F' }}> {/* Adjust width for padding */}
+              <div style={{ width: `${bubbleWidth}px`, height:40, backgroundColor:'#8FBC8F' }}> {/* Adjust width for padding */}
                 <div className='rounded-3xl ml-3 flex justify-center items-center'>
                   <div ref={textRef}>{message.content}</div>
                 </div>
@@ -181,7 +181,7 @@ export default function Room() {
           ) : (
             <div key={index} className='flex p-3'>
               <img src={partnerInfo.userProfile} alt="" style={{ width: 40, height: 40 }} />
-              <div style={{ width: `calc(${bubbleWidth}px + 20px)`, backgroundColor:'#D3D3D3' }}> {/* Adjust width for padding */}
+              <div style={{ width: `${bubbleWidth}px`, backgroundColor:'#D3D3D3' }}> {/* Adjust width for padding */}
                 <div className='rounded-3xl ml-3 flex justify-center items-center'>
                   <div ref={textRef}>{message.content}</div>
                 </div>
@@ -194,7 +194,7 @@ export default function Room() {
 
       {/* 채팅입력창 */}
       <div className='p-3 flex'  style={{ position: 'fixed', bottom: keyboardVisible ? '0vh' : 10, left: '0', width: '100%', padding: '10px', boxSizing: 'border-box,', backgroundColor:'#FFFFFF' }}>
-        <input value={talk} onChange={(event) => setTalk(event.target.value)} id="" name="" type="text" placeholder="" autoComplete="text" 
+        <input value={talk} onChange={(event) => setTalk(event.target.value)} onKeyDown={(e)=> {if (e.key === 'Enter') {sendMessage(talk)}}} id="" name="" type="text" placeholder="" autoComplete="text" 
         className="block h-10 pl-5 w-full rounded-3xl border-0 py-1 text-gray-800 ring-2 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
         />
         <div style={{backgroundColor:'#D3D3D3'}} className='rounded-3xl w-12 flex justify-center items-center ml-1'>
