@@ -6,10 +6,10 @@ import org.springframework.security.core.Authentication;
 import java.util.List;
 
 public interface ChatService {
-//    void sendMsg(ChatMessageDto messageDto);
-    List<ChatRoomListDto> getChatRooms(String loginId);
+    ChatRoomResultDto getChatRooms(String loginId);
     MessageListDto getMessages(int chatId, Authentication authentication, int page, int size);
     ChatDto createChatRoom(ChatRoomDto chatRoomDto);
+    void readMessages(int chatId, Authentication authentication);
 
 }
 

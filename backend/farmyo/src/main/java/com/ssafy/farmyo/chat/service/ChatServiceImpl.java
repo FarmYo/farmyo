@@ -9,6 +9,7 @@ import com.ssafy.farmyo.common.exception.CustomException;
 import com.ssafy.farmyo.common.exception.ExceptionType;
 import com.ssafy.farmyo.entity.Board;
 import com.ssafy.farmyo.entity.Chat;
+import com.ssafy.farmyo.entity.Message;
 import com.ssafy.farmyo.entity.User;
 import com.ssafy.farmyo.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,9 +67,11 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     @Transactional
-    public List<ChatRoomListDto> getChatRooms(String loginId) {
+    public ChatRoomResultDto getChatRooms(String loginId) {
         log.info("userId : {}", loginId);
         User user;
+
+        ChatRoomResultDto chatRoomResultDto = new ChatRoomResultDto();
 
         if (userRepository.findByLoginId(loginId).isPresent()) {
             user = userRepository.findByLoginId(loginId).get();
@@ -76,17 +80,29 @@ public class ChatServiceImpl implements ChatService {
         }
 
         List<ChatRoomListDto> resultList;
+        List<Integer> unreadCount = new ArrayList<>();
 
         // 농부이면
         if(user.getJob() == 0) {
             resultList = chatRepository.getChatRoomListWhenSeller(user.getId());
+
+            // getChatRoomListWhenSeller 쿼리가 너무 복잡해서 추가하기보다 새로 쿼리 날리는 방식으로 추가함
+            for(ChatRoomListDto c : resultList) {
+                unreadCount.add(messageRepository.getSellerUnreadMessageCount(c.getChatId()));
+            }
         }
         // 상인이면
         else {
             resultList = chatRepository.getChatRoomListWhenBuyer(user.getId());
+            for(ChatRoomListDto c : resultList) {
+                unreadCount.add(messageRepository.getBuyerUnreadMessageCount(c.getChatId()));
+            }
         }
 
-        return resultList;
+        chatRoomResultDto.setResultList(resultList);
+        chatRoomResultDto.setUnreadCountList(unreadCount);
+
+        return chatRoomResultDto;
     }
 
     @Override
@@ -119,4 +135,18 @@ public class ChatServiceImpl implements ChatService {
         return messageListDto;
     }
 
-   }
+    @Override
+    @Transactional
+    public void readMessages(int chatId, Authentication authentication) {
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        int job = customUserDetails.getJob();
+
+        // 농부이면
+        if (job == 0) {
+            messageRepository.readSellerMessages(chatId);
+        } else {
+            // 구매자면
+            messageRepository.readBuyerMessages(chatId);
+        }
+    }
+}
