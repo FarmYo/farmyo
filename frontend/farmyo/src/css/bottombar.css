@@ -7,5 +7,10 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  /* 필요한 추가 스타일링 */
+  height: 50px; /* 바텀바 높이 */
+  z-index: 100;
+}
+
+.appContent {
+  padding-bottom: 20vh; /* 바텀바 높이만큼 여백 추가 */
 }

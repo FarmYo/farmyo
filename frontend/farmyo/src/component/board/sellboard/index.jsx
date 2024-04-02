@@ -91,11 +91,13 @@ export default function SellBoardList(){
   const getBoard = (() => {
     api.get(`boards?type=0&page=${page}&size=${size}`)
     .then((res) => {
-      setBoardInfo(prevBoardInfo => [...prevBoardInfo, ...res.data.dataBody]);
       if (res.data.dataBody.length < size) {
         setHaveMore(false)
+        setBoardInfo(prevBoardInfo => [...prevBoardInfo, ...res.data.dataBody]);
         console.log('더이상의 데이터가 없습니다.', res)
+        console.log(res.data.dataBody, boardInfo, page)
       } else {
+        setBoardInfo(prevBoardInfo => [...prevBoardInfo, ...res.data.dataBody]);
         //불러올 때마다 다시 중복방지값 true로 변환
         preventRef.current=true
         console.log("무한스크롤 되는중")
@@ -109,6 +111,10 @@ export default function SellBoardList(){
   useEffect(() => {
     getBoard();
   }, [page])
+
+  useEffect(() => {
+    setCropId(selectedCrop.id);
+  }, [])
 
   const [files, setFiles] = useState([])
   const [cropId, setCropId] =useState(0)
@@ -299,8 +305,8 @@ export default function SellBoardList(){
   return(
     <div style={{height:'420px',position:'relative'}}>
       {/* 팝니다 게시글 목록 */}
-      {boardInfo.map((article,index) => (
-      <div className="p-4 flex" key={index} onClick={() => navigate(`sell/${article.boardId}/detail`)}>
+      {boardInfo.map((article) => (
+      <div className="p-4 flex" key={article.boardId} onClick={() => navigate(`sell/${article.boardId}/detail`)}>
         <img src={article.imgUrl} alt="작물이미지" className="w-32" />
 
         {/* <div style={{backgroundColor:'#bbbbbb'}} className="w-32"></div> */}
@@ -317,10 +323,10 @@ export default function SellBoardList(){
       ))}
       {/* {haveMore && <div className="trigger"></div>} */}
       <div ref={obsRef}><br/></div>
-      <div style={{ position: 'absolute', bottom: 0, right: 10}}>
+      <div style={{ position: 'fixed', bottom: '200px', right: '15px'}}>
         {im === 0 && (
         <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
-          <div style={{ position: 'absolute', top: '44%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}
+          <div style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}
           onClick={() => sellOpenModal()}>+
           </div>
         </div>
@@ -366,7 +372,10 @@ export default function SellBoardList(){
           style={{width:'16rem'}}>
             <div className="py-1">
               {cropList.map((crop,index)=>(
-              <Menu.Item key={crop.id} onClick={() => setSelectedCrop({ id: crop.id, cropName: crop.name, harvestDate: crop.harvestDate })}> 
+              <Menu.Item key={crop.id} onClick={() => {
+                setSelectedCrop({ id: crop.id, cropName: crop.name, harvestDate: crop.harvestDate })
+                setCropId(crop.id)
+              }}> 
                 {({ active }) => (
                   <button
                     href="#"

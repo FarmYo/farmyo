@@ -3,8 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Router from './router'
 import BottomBar from './component/common/bottombar'
 import "slick-carousel/slick/slick.css"; 
-import "slick-carousel/slick/slick-theme.css";
-
+import "slick-carousel/slick/slick-theme.css"
+import "./css/bottombar.css"
 
 function App() {
   const location = useLocation()
@@ -85,9 +85,15 @@ function App() {
   };
 
   return (
-    <div >
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+      <div style={{ flex: 1, overflowY: 'auto', paddingBottom: '20vh' }}>
         <Router />
-        {!shouldHideBottomBar() && <BottomBar className="bottomBar" />}
+      </div>
+      {!shouldHideBottomBar() && (
+        <div style={{ position: 'fixed', bottom: 0, width: '100%', height: '10vh' }}>
+          <BottomBar />
+        </div>
+      )}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState,useEffect,useRef} from 'react'
 import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
@@ -19,26 +19,27 @@ export default function MyFarm(props) {
   const [fileList,setFileList] = useState([])
   const [content,setContent] = useState('')
   const [flag, setFlag] = useState(false);
+  const profileId = props.profileId
 
   // 마이팜 게시물 불러오기
-   useEffect(()=>{
-    console.log(loginId)
-    console.log(props.profileId)
-    const paramsLoginId = props.profileId !== undefined ? props.profileId : loginId;
-    api.get('farms/list',{
-      params:{
-        loginId: paramsLoginId
-      }
-    })
-    .then((res)=>{
-      console.log(res)
-      console.log('마이팜게시글조회 성공')
-      setFarmList(res.data.dataBody)
-    })
-    .catch((err)=>{
-      console.log(err)
-    })
-  },[flag])
+  //  useEffect(()=>{
+  //   console.log(loginId)
+  //   console.log(props.profileId)
+  //   const paramsLoginId = props.profileId !== undefined ? props.profileId : loginId;
+    // api.get('farms/list',{
+    //   params:{
+    //     loginId: paramsLoginId
+    //   }
+    // })
+    // .then((res)=>{
+    //   console.log(res)
+    //   console.log('마이팜게시글조회 성공')
+    //   setFarmList(res.data.dataBody)
+    // })
+    // .catch((err)=>{
+    //   console.log(err)
+    // })
+  // },[flag])
 
   const settings = {
     dots: true, // 하단에 점으로 페이지 표시 여부
@@ -142,11 +143,82 @@ export default function MyFarm(props) {
       });
       onCloseModal()
       setFlag(!flag)
+      setFlag2(true)
     })
     .catch((err)=>{
       console.log(err)
     })
   }
+
+  // 마이팜 조회 무한스크롤
+  const [page, setPage] = useState(0)
+  const obsRef = useRef(null)
+  const preventRef = useRef(true);
+  const [haveMore, setHaveMore] = useState(true)
+  const size = 8
+  const [flag2, setFlag2] = useState(false)
+  const obsHandler = ((entries) => { //옵저버 콜백함수
+    const target = entries[0]
+    if(haveMore && target.isIntersecting && preventRef.current) {//옵저버 중복 실행 방지
+      preventRef.current=false
+      setPage(prev => prev+1) //페이지 값 증가
+    }
+  })
+
+
+  useEffect(() => {//옵저버 생성
+    if (!haveMore) return;
+    const observer = new IntersectionObserver(obsHandler, {threshold : 0.1})
+    if(obsRef.current) observer.observe(obsRef.current)
+    return () => {observer.disconnect()}
+  }, [])
+
+
+  const getMyfarmList = ()=>{
+    api.get('farms/list',{
+      params:{
+        loginId: (profileId === undefined || profileId === loginId) ? loginId : profileId,
+        page:page,
+        size:size
+      }
+    })
+    .then((res)=>{
+      console.log(res)
+      console.log('마이팜게시글조회 성공')
+      if (res.data.dataBody < size ){
+        setHaveMore(false)
+        setFarmList(preFarmList=>[...preFarmList,...res.data.dataBody])
+        console.log('더이상의 데이터가 없습니다.', res)
+      }else{
+        setFarmList(preFarmList=>[...preFarmList,...res.data.dataBody])
+        preventRef.current=true
+        console.log("무한스크롤 되는중")
+      }
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+    .finally(() => {
+      preventRef.current = true; // 데이터 로딩 시도 후에 중복 방지를 리셋
+    });
+  }
+
+  useEffect(()=>{
+    getMyfarmList()
+  },[page])
+
+
+  useEffect(() => {
+    if (flag2) {
+      setPage(0);
+      setFarmList([]);   // 기존 리스트를 초기화
+      setHaveMore(true); // 더 불러올 데이터가 있다고 가정하고 초기화
+      getMyfarmList()
+      
+    }
+  }, [flag])
+
+
 
 
  return(
@@ -160,12 +232,13 @@ export default function MyFarm(props) {
         onClick={()=>goMyfarmDeail(farm.id)}/>
       ))}
     </div>
+    <div ref={obsRef}><br /></div>
 
 
-    { !props.profileId  && (
-    <div style={{ position: 'absolute', bottom: 0, right: 10}}>
+    { (!props.profileId || props.profileId === loginId) && (
+    <div style={{ position: 'fixed', bottom: '200px', right: '15px'}}>
       <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
-        <div style={{ position: 'absolute', top: '44%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}
+        <div style={{ position: 'absolute', top: '41%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}
         onClick={onOpenModal}>
           +</div>
       </div>
