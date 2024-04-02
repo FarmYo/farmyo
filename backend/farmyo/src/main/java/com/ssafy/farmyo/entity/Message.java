@@ -32,11 +32,19 @@ public class Message extends BaseTime {
     @Column(name = "user_id", nullable = false)
     private int userId;
 
+    @Column(name = "buyer_read")
+    private int buyerRead = 0;
+
+    @Column(name = "seller_read")
+    private int sellerRead = 0;
+
     //빌더
     @Builder
-    public Message(Chat chat, String content, int userId) {
+    public Message(Chat chat, String content, int userId, int buyerRead, int sellerRead) {
         this.chat = chat;
         this.content = content;
         this.userId = userId;
+        this.buyerRead = buyerRead;
+        this.sellerRead = sellerRead;
     }
 }
