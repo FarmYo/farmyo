@@ -10,7 +10,7 @@ import Slider from "react-slick";
 import Swal from 'sweetalert2'
 import { jwtDecode } from "jwt-decode"
 
-export default function SellBoardList(){
+export default function SellBoardList({ value, search }){
   const im = jwtDecode(localStorage.getItem('access')).userJob
   const navigate = useNavigate()
 
@@ -59,12 +59,9 @@ export default function SellBoardList(){
   //   })
   // })
   
-  // useEffect(() => {
-  //   if (haveMore) {
-  //     BoardInfo();
-  //   }
-  //   setCropId(selectedCrop.id);
-  // }, [])
+  useEffect(() => {
+    setCropId(selectedCrop.id);
+  }, [])
 
   // 무한스크롤 부분
   const [boardInfo, setBoardInfo] = useState([])
@@ -111,6 +108,18 @@ export default function SellBoardList(){
   useEffect(() => {
     getBoard();
   }, [page])
+
+  const [newBoardInfo, setNewBoardInfo] = useState([])
+
+  useEffect(() => {
+    const filteredList = boardInfo.filter((article) => {
+      if (value === "전체") return true;
+      else if (value === "농산물") return article.cropCategory === search;
+      else if (value === "제목") return article.title.includes(search); 
+      else if (value === "작성자") return article.userNickname.includes(search);
+    });
+    setNewBoardInfo(filteredList); 
+  }, [value, search, boardInfo]); 
 
   const [files, setFiles] = useState([])
   const [cropId, setCropId] =useState(0)
@@ -301,9 +310,12 @@ export default function SellBoardList(){
   return(
     <div style={{height:'420px',position:'relative'}}>
       {/* 팝니다 게시글 목록 */}
-      {boardInfo.map((article) => (
-      <div className="p-3 flex" key={article.boardId} onClick={() => navigate(`sell/${article.boardId}/detail`)}>
-        <div className='w-32 h-24'><img src={article.imgUrl} alt="작물이미지" /></div>
+
+
+      {newBoardInfo.map((article,index) => (
+      <div className="p-3 flex" key={index} onClick={() => navigate(`sell/${article.boardId}/detail`)}>
+        <img src={article.imgUrl} alt="작물이미지" className="w-32" />
+        {/* <div style={{backgroundColor:'#bbbbbb'}} className="w-32"></div> */}
 
         <div className="w-full ml-2">
           <h1 className="text-lg font-bold">{article.title}</h1>
@@ -367,7 +379,10 @@ export default function SellBoardList(){
           style={{width:'16rem'}}>
             <div className="py-1">
               {cropList.map((crop,index)=>(
-              <Menu.Item key={crop.id} onClick={() => setSelectedCrop({ id: crop.id, cropName: crop.name, harvestDate: crop.harvestDate })}> 
+              <Menu.Item key={crop.id} onClick={() => {
+                setSelectedCrop({ id: crop.id, cropName: crop.name, harvestDate: crop.harvestDate })
+                setCropId(crop.id)
+              }}> 
                 {({ active }) => (
                   <button
                     href="#"
