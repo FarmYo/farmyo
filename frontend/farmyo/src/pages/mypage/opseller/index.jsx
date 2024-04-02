@@ -41,6 +41,7 @@ export default function OpponentSeller (){
       setProfileAddress(res.data.dataBody.location)
       setProfileComment(res.data.dataBody.comment)
       setProfileJob(res.data.dataBody.job)
+      setProfileUrl(res.data.dataBody.userProfile)
     })
     .catch((err)=>{
       console.log(err)
@@ -127,7 +128,8 @@ export default function OpponentSeller (){
       </div>
       <div className='flex border-b-2 border-gray-300' style={{height:140}}>
         <div className='p-5 pt-7'>
-          <img src={Me} alt="" style={{ height:80,width:80}}/>
+          {/* <img src={Me} alt="" style={{ height:80,width:80}}/> */}
+          <img src={profileUrl} alt="" style={{ height:80,width:80}}/>
         </div>
         <div className='p-7 pl-3'>
           <h1 className='font-bold'>{profileNickname}</h1>
@@ -149,7 +151,7 @@ export default function OpponentSeller (){
       {/* 선택된 컴포넌트 조건부 렌더링 */}
       {selected === 0 && <Myfarm profileId={profileId}/>}
       {selected === 1 && <Mycrops profileId={profileId}/>}
-      {selected === 2 && <ArticleList />}
+      {selected === 2 && <ArticleList profileId={profileId}/>}
     </div>
   )
 }
