@@ -44,10 +44,10 @@ export default function BoardNav(){
       <div style={{height:50,backgroundColor:'#1B5E20'}} className="p-2 flex items-center">
         <h1 className="text-xl font-bold" style={{color:"white"}}>팜&삼</h1> 
       </div>
-      <div className='p-5 flex justify-between'>
+      <div className='p-4 flex justify-between'>
         <Menu as="div" className="relative inline-block text-left">
         <div>
-          <Menu.Button className="inline-flex w-32 h-12 justify-between items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50"
+          <Menu.Button className="inline-flex w-28 h-12 justify-between items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50"
           style={{ border: '3px solid #2E8B57', backgroundColor: 'transparent'}}>
             <div className='pl-3'>{selectedItem}</div>
             <img src={Dropdown} alt="" style={{width:15,height:10}}/>
@@ -87,9 +87,9 @@ export default function BoardNav(){
         <input 
           value={searchName}
           onChange={(event) => setSearchName(event.target.value)}
-          type="text" className="input w-44" style={{ border:'3px solid #2E8B57',backgroundColor: 'transparent'}}
+          type="text" className="input w-52" style={{ border:'3px solid #2E8B57',backgroundColor: 'transparent'}}
           disabled={selectedItem === "전체"}
-          placeholder={selectedItem === "전체" ? "조건 선택 후 검색 가능" : ""}
+          placeholder={selectedItem === "전체" ? "조건선택 후 검색" : ""}
         />
         <img src={Search} alt="" style={{ position: 'absolute', right: '13px', top: '25%',width:25,height:25}} />
       </div>
