@@ -143,6 +143,7 @@ export default function MyFarm(props) {
       });
       onCloseModal()
       setFlag(!flag)
+      setFlag2(true)
     })
     .catch((err)=>{
       console.log(err)
@@ -155,7 +156,7 @@ export default function MyFarm(props) {
   const preventRef = useRef(true);
   const [haveMore, setHaveMore] = useState(true)
   const size = 8
-
+  const [flag2, setFlag2] = useState(false)
   const obsHandler = ((entries) => { //옵저버 콜백함수
     const target = entries[0]
     if(haveMore && target.isIntersecting && preventRef.current) {//옵저버 중복 실행 방지
@@ -203,13 +204,19 @@ export default function MyFarm(props) {
   }
 
   useEffect(()=>{
-    setPage(0);
-    setFarmList([]); // 기존 리스트를 초기화
-    setHaveMore(true); // 더 불러올 데이터가 있다고 가정하고 초기화
     getMyfarmList()
   },[page])
 
 
+  useEffect(() => {
+    if (flag2) {
+      setPage(0);
+      setFarmList([]);   // 기존 리스트를 초기화
+      setHaveMore(true); // 더 불러올 데이터가 있다고 가정하고 초기화
+      getMyfarmList()
+      
+    }
+  }, [flag])
 
 
 
