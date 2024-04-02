@@ -48,13 +48,6 @@ export default function SignUpSecond() {
   })
 
   const [bankName, setBankName] = useState({ id: null, bankName: "은행명을 선택해주세요." })
-  // const [isBankName, setIsBankName] = useState(false)
-  // const checkBankName = ((bankName) => {
-  //   if (bankName) {
-  //     setIsBankName(true)
-  //   }
-  // })
-
   const [bankList, setBankList] = useState([]);
 
   const BankList = () => {
@@ -70,7 +63,6 @@ export default function SignUpSecond() {
 
 
   const changePage = (() => {
-    // if (isAccount === true && isAccountNumber === true && isBankName === true) {
     if (isAccount === true && isAccountNumber === true) {
       if (isSeller === 0) {
         // 판매자
