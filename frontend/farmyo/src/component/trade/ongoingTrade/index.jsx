@@ -9,14 +9,6 @@ import api from '../../../api/api'
 import { useEffect } from "react"
 import { jwtDecode } from 'jwt-decode'
 
-// 진행중인 거래목록들
-// const ongoingData = [
-//   {id: 8, nickname: '감자파는오승현', boardTitle: '가가가가', tradePrice: 20000, tradeQuantity: 10,tradeStatus:0},
-//   {id: 8, nickname: '감자파는오승현', boardTitle: '가가가가', tradePrice: 20000, tradeQuantity: 10,tradeStatus:0},
-//   {id: 8, nickname: '감자파는오승현', boardTitle: '가가가가', tradePrice: 20000, tradeQuantity: 10,tradeStatus:0},
-//   tradeStatus가 0 이면 입금 대기중, 1이면 입금 완료, 2이면 거래중
-// ]
-
 export default function OngoingTrade({ ongoingData }) {
 
   function classNames(...classes) {
@@ -68,7 +60,7 @@ export default function OngoingTrade({ ongoingData }) {
         <Menu as="div" className="relative inline-block text-left" >
         <div>
           <Menu.Button className="flex w-40 h-12 justify-between items-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50"
-          style={{ border: '3px solid #81C784', backgroundColor: 'transparent'}}
+          style={{ border: '2px solid #1B5E20', backgroundColor: 'transparent'}}
           onClick={()=>setIsOpen(!isOpen)}>
             <div className='pl-2'>{selectedItem}</div>
             <div className="flex items-center justify-center"><img src={isOpen ? Up : Dropdown} alt="" style={{
@@ -114,8 +106,8 @@ export default function OngoingTrade({ ongoingData }) {
       
       {/* 거래목록  */}
       {filteredItems.map((item) => (
-          <div key={item.id} className="p-3 border-b-2 border-gray-150 flex" onClick={()=>goDetail(item.id)}>
-            <div style={{backgroundColor:'#bbbbbb'}} className="w-32"></div>
+          <div key={item.id} className="p-2 border-b-2 border-gray-150 flex" onClick={()=>goDetail(item.id)}>
+            <div><img src={item.cropImg} alt="" className="w-32 h-24"/></div>
             <div className="w-full ml-2">
               <h1 className="text-lg font-bold">{item.boardTitle}</h1>
               <h1 className="text-sm">{item.nickname}</h1>
