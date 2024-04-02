@@ -11,6 +11,7 @@ import DaumPostcode from 'react-daum-postcode';
 import Swal from "sweetalert2"
 import { jwtDecode } from "jwt-decode"
 import { Fragment, useRef } from 'react'
+import { ChevronDownIcon } from '@heroicons/react/20/solid'
 
 
 export default function MypageEdit(){
@@ -29,6 +30,10 @@ export default function MypageEdit(){
     setOpen(false);
   };
 
+  const resetSelectedBank = () => {
+    setSelectedBank({ id: null, bankName: userInfo?.account?.bankName });
+  };
+
   const addressSearch = (data) => {
     console.log(data)
     const newUserInfo = {
@@ -38,7 +43,10 @@ export default function MypageEdit(){
     };
     setUserInfo(newUserInfo)}
 
+    
   const [bankList, setBankList] = useState([]);
+  const [selectedBank, setSelectedBank] = useState({ id: null, bankName: userInfo?.account?.bankName });
+
   const BankList = () => {
       api.get('banks')
       .then((res) => {
@@ -49,22 +57,10 @@ export default function MypageEdit(){
         console.log('은행 리스트 받아오기 실패', err)
       })
   }
-  const [selectedBank, setSelectedBank] = useState('전체');
-  // const banks = (bank) => {
-  //   return (
-  //     <select>
-  //       {bank.options.map((option) => (
-  //         <option
-  //           key={option.id}
-  //           value={option.id}
-  //         >
-  //           {option.bankName}
-  //         </option>
-  //       ))}
-  //     </select>
-  //   )
-  // }
 
+  function classNames(...classes) {
+    return classes.filter(Boolean).join(' ')
+  }
 
   const isNumber = ((number) => {
     if (isNaN(number)) {
@@ -99,6 +95,7 @@ export default function MypageEdit(){
       console.log('정보 받아오기 성공', res.data, res.data.dataBody)
       setUserInfo(res.data.dataBody)
       setProfileImg(res.data.dataBody.profile)
+      // setSelectedBank({ id: null, bankName: res.data.dataBody.account.bankName});
     })
     .catch((err) => {
       console.log('정보 받아오기 실패', err)
@@ -157,7 +154,7 @@ export default function MypageEdit(){
     if (userInfo?.account?.depositor && userInfo?.account?.bankName && userInfo?.account?.accountNumber) {
       api.patch('users/account', {
         depositor : userInfo?.account?.depositor,
-        bank : userInfo?.account?.bankName,
+        bank : selectedBank.bankName,
         account : userInfo?.account?.accountNumber,
       })
       .then((res) => {
@@ -229,7 +226,8 @@ export default function MypageEdit(){
 
   useEffect(()=>{
     getUserInfo();
-    // BankList();
+    setSelectedBank()
+    BankList();
   },[userInfo.profile])
 
   const imgRef = useRef(null); 
@@ -565,14 +563,11 @@ export default function MypageEdit(){
       </dialog>
 
       {/* 계좌 수정 모달 */}
-      <Modal>
-        
-      </Modal>
       <dialog id="changeAccount" className="modal">
         <div className="modal-box" style={{ height:'350px'}}>
           <form method="dialog">
             <button 
-              onClick={() => getUserInfo()}
+              onClick={() => {getUserInfo(); resetSelectedBank()}}
               className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
           </form>
           <div>
@@ -600,114 +595,47 @@ export default function MypageEdit(){
               className="block text-sm leading-6 text-gray-900 mt-2">
               은행명
             </label>
-            
-              {/* <Dropdown 
-                value={userInfo?.account?.bankName} 
-                onChange={(event) => {
-                  const newUserInfo = {
-                    ...userInfo,
-                    account : {
-                      ...userInfo.account,
-                      bankName : event.target.value,
-                    }
-                  };
-                  setUserInfo(newUserInfo);}}
-                options={bankList} optionLabel="bankName" placeholder="은행명" filter className="w-full md:w-14rem" /> */}
-
-              {/* <span className="p-float-label w-full md:w-14rem"> */}
-                {/* <Dropdown inputId="dd-city" value={selectedCity} onChange={(e) => setSelectedCity(e.value)} options={cities} optionLabel="name" className="w-full" />
-
-                <Dropdown value={selectedCountry} onChange={(e) => setSelectedCountry(e.value)} options={countries} optionLabel="name" placeholder="은행명" filter valueTemplate={selectedCountryTemplate} itemTemplate={countryOptionTemplate} className="w-full md:w-14rem" /> */}
-
-              {/* </span> */}
-{/* 드롭다운 */}
-
-      
-      {/* <Menu as="div" className="relative inline-block text-left">
-        <div>
-          <Menu.Button className="inline-flex w-32 h-12 justify-between items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50"
-          style={{ border: '0.5px solid', backgroundColor: 'transparent'}}>
-            <div className='pl-3'>{selectedBank}</div>
-            <img src={Dropdown} alt="" style={{width:15,height:10}}/>
-          </Menu.Button>
-        </div>
-        <Transition
-          as={Fragment}
-          enter="transition ease-out duration-100"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-75"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
-        >
-          <Menu.Items className="absolute left-0 z-10 mt-2 w-28 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-            <div className="py-1">
-              {bankList.map((item) => (
-                <Menu.Item key={item.id}>
-                  {({ active }) => (
-                    <a
-                      href="#"
-                      className={`${
-                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-                      } block px-4 py-2 text-sm`}
-                      onClick={() => setSelectedBank(item)}
-                    >
-                      {item.bankName}
-                    </a>
-                  )}
-                </Menu.Item>
-              ))}
+            {/* 드롭다운 */}
+            <Menu as="div" >
+            <div>
+            <Menu.Button className="flex items-center justify-between h-10 w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3 pr-4">
+              {selectedBank ? (<span>{selectedBank?.bankName}</span>) : (<span>{userInfo?.account?.bankName}</span>)}
+              <ChevronDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+            </Menu.Button>
             </div>
-          </Menu.Items>
-        </Transition>
-      </Menu> */}
-
-            {/* <div>
-
-                <input
-                  value={userInfo?.account?.bankName}
-                  onChange={(event) => {
-                    const newUserInfo = {
-                      ...userInfo,
-                      account :{
-                        ...userInfo.account,
-                        bankName: event.target.value,
-                      }
-                    };
-                    setUserInfo(newUserInfo);}}
-                  id="bankName" name="bankName" type="text" placeholder={userInfo?.account?.bankName} autoComplete="text" 
-                  className="block h-10 w-full rounded-md border-0 mt-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-                />
-                </div> */}
-                <div>
-  <select
-    value={userInfo?.account?.bankName}
-    onChange={(event) => {
-      const newUserInfo = {
-        ...userInfo,
-        account: {
-          ...userInfo.account,
-          bankName: event.target.value,
-        }
-      };
-      setUserInfo(newUserInfo);
-    }}
-    id="bankName"
-    name="bankName"
-    autoComplete="text"
-    className="block h-10 w-full rounded-md border-0 mt-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-  >
-    <option value="농협">농협</option>
-    <option value="신한은행">신한은행</option>
-    <option value="국민은행">국민은행</option>
-    <option value="우리은행">우리은행</option>
-    <option value="하나은행">하나은행</option>
-    <option value="대구은행">대구은행</option>
-    <option value="카카오뱅크">카카오뱅크</option>
-    <option value="토스뱅크">토스뱅크</option>
-  </select>
-</div>
-                <label htmlFor="account"
+            <Transition
+              as={Fragment}
+              enter="transition ease-out duration-100"
+              enterFrom="transform opacity-0 scale-95"
+              enterTo="transform opacity-100 scale-100"
+              leave="transition ease-in duration-75"
+              leaveFrom="transform opacity-100 scale-100"
+              leaveTo="transform opacity-0 scale-95"
+            >
+            <Menu.Items className="absolute z-10 mt-2 w-80 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-auto max-h-20">
+              <div className="py-1">
+                {bankList.map((bank,index)=>(
+                  <Menu.Item key={bank.id} onClick={() => {
+                    setSelectedBank({ id: bank.id, bankName: bank.bankName })
+                    }}> 
+                    {({ active }) => (
+                      <button
+                        href="#"
+                        className={classNames(
+                          active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                          'block  px-12 py-2 text-xl'
+                        )}
+                      >
+                        {bank.bankName}
+                      </button>
+                    )}
+                  </Menu.Item>
+                ))}
+                </div>
+              </Menu.Items>
+            </Transition>
+          </Menu>
+            <label htmlFor="account"
               className="block text-sm leading-6 text-gray-900 mt-2">
               계좌번호
             </label>
