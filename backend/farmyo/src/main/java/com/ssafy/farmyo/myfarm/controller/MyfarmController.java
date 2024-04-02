@@ -47,10 +47,16 @@ public class MyfarmController {
     public ResponseEntity<? extends BaseResponseBody> getFarms(
             @RequestParam(name = "loginId")
             @Parameter(description = "유저 아이디")
-            String loginId) {
+            String loginId,
+            @RequestParam(value = "page", defaultValue = "0")
+            @Parameter(description = "페이지")
+            int page, 
+            @RequestParam(value = "size", defaultValue = "10")
+            @Parameter(description = "사이즈")
+            int size) {
         log.info("{} : getFarms 실행", loginId);
 
-        List<MyfarmListDto> resultList = myfarmService.getFarmList(loginId);
+        List<MyfarmListDto> resultList = myfarmService.getFarmList(loginId, page, size);
 
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, resultList));
     }
