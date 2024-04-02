@@ -49,12 +49,7 @@ export default function MyCrops(props) {
   const [cropList,setCropList] = useState([]) // 작물등록시 작물 리스트
   const [cropsList,setCropsList] = useState([]) // 농부가 등록한 작물조회시 담길 리스트
   const [cropId,setCropId] = useState(null)
-  //작물 리스트 5개단위로 페이지네이션
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 5
-  //전체 페이지수 계산
-  const totalItems = cropsList.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+ 
   
   const [lifeCycleList,setLifeCycleList] = useState([])
 
@@ -555,29 +550,43 @@ export default function MyCrops(props) {
   //   console.error('Error fetching data:', error);
   // });
 
+   //작물 리스트 5개단위로 페이지네이션
+   const [currentPage, setCurrentPage] = useState(1)
+   const itemsPerPage = 3
+   //전체 페이지수 계산
+   const totalItems = cropsList.length;
+   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-
-
-
+   const groupSize = 3; // 페이지 그룹당 최대 페이지 수
+   const [currentGroup, setCurrentGroup] = useState(1); // 현재 페이지 그룹
   // currentPage에 따라 보여줄 항목 계산
   const indexOfLastItem = currentPage * itemsPerPage
   const indexOfFirstItem = indexOfLastItem - itemsPerPage
   const currentItems = cropsList.slice(indexOfFirstItem, indexOfLastItem)
 
+
+  // 현재 페이지 그룹에 따라 보여줄 페이지 번호 계산
+  const firstPageInGroup = (currentGroup - 1) * groupSize + 1;
+  const lastPageInGroup = Math.min(firstPageInGroup + groupSize - 1, totalPages);
+
+
    // 페이지 변경 함수
-   const goToNextPage = () => {
-    setCurrentPage(currentPage => {
-      if (currentPage < totalPages) return currentPage + 1;
-      return currentPage;
-    });
-  };
-   const goToPrevPage = () => setCurrentPage(page => page > 1 ? page - 1 : page);
+  //  const goToNextPage = () => {
+  //   setCurrentPage(currentPage => {
+  //     if (currentPage < totalPages) return currentPage + 1;
+  //     return currentPage;
+  //   });
+  // };
+  //  const goToPrevPage = () => setCurrentPage(page => page > 1 ? page - 1 : page);
 
    const pageNumbers = [];
-    for (let i = 1; i <= totalPages; i++) {
-      pageNumbers.push(i);
-    }
+  for (let i = firstPageInGroup; i <= lastPageInGroup; i++) {
+    pageNumbers.push(i);
+  }
 
+  const paginate = pageNumber => setCurrentPage(pageNumber);
+  const goToNextGroup = () => setCurrentGroup(group => Math.min(group + 1, Math.ceil(totalPages / groupSize)));
+  const goToPrevGroup = () => setCurrentGroup(group => Math.max(group - 1, 1));
 
   const [flag,setFlag] = useState(false)
 
@@ -886,19 +895,26 @@ export default function MyCrops(props) {
       </div>
       ))}
       
-      <div style={{ position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)' }}>
+      <div style={{ position: 'fixed', bottom: '200px', left: '50%', transform: 'translateX(-50%)' }}>
         <div className="join flex justify-center">
-          <button className="join-item btn"  onClick={goToPrevPage}>«</button>
+          {/* 이전 페이지 그룹으로 이동: 현재 페이지 그룹이 첫 번째 그룹보다 큰 경우에만 버튼 표시 */}
+          {currentGroup > 1 && (
+            <button className="join-item btn" onClick={goToPrevGroup}>«</button>
+          )}
           {pageNumbers.map(number => (
-          <button key={number}
-          className={`join-item btn ${currentPage === number ? 'active' : ''}`}
-          onClick={() => setCurrentPage(number)}>
-            {number}
-          </button>
+            <button key={number}
+              className={`join-item btn ${currentPage === number ? 'active' : ''}`}
+              onClick={() => paginate(number)}>
+              {number}
+            </button>
           ))}
-          <button className="join-item btn"  onClick={goToNextPage}>»</button>
+          {/* 다음 페이지 그룹으로 이동: 현재 페이지 그룹이 마지막 그룹보다 작은 경우에만 버튼 표시 */}
+          {currentGroup < Math.ceil(totalPages / groupSize) && (
+            <button className="join-item btn" onClick={goToNextGroup}>»</button>
+          )}
         </div>
       </div>
+
       </>
       ) :
       (
@@ -908,7 +924,7 @@ export default function MyCrops(props) {
       )}
   
       { !props.profileId && (
-      <div style={{ position: 'absolute', bottom: 0, right: 10}}>
+      <div style={{ position: 'fixed', bottom: '200px', right: '15px'}}>
         <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
           <div style={{ position: 'absolute', top: '44%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}
           onClick={onOpenModal}>
