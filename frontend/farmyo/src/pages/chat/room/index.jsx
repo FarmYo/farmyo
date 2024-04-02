@@ -71,18 +71,24 @@ export default function Room() {
   const obsRef = useRef(null)
   const preventRef = useRef(true);
   const [haveMore, setHaveMore] = useState(true)
-  const size = 30
-
+  const size = 10
   const obsHandler = ((entries) => { //옵저버 콜백함수
     const target = entries[0]
     if(haveMore && target.isIntersecting && preventRef.current) {//옵저버 중복 실행 방지
       preventRef.current=false
-      setMessageId(chatData[0].messageId) //페이지 값 증가
+      console.log(chatData)
+      if(chatData.length !== 0){
+        console.log("여기봐봐", chatData)
+        // setMessageId(chatData.messageId) //페이지 값 증가
+      }
+      else {
+        setMessageId(0)
+      }
     }
   })
 
   useEffect(() => {//옵저버 생성
-    const observer = new IntersectionObserver(obsHandler, {threshold : 0.1})
+    const observer = new IntersectionObserver(obsHandler, {threshold : 1})
     if(obsRef.current) observer.observe(obsRef.current)
     return () => {observer.disconnect()}
   }, [])
@@ -187,8 +193,10 @@ export default function Room() {
       {/* 대화말풍선 - 나 */}
       {/* 대화말풍선 - 상대방 */}
       <div className="chat-container mb-20">
-      <div ref={obsRef}><br/></div>
+      <div ref={obsRef}>옵저버</div>
+
         {chatData?.map((chat, index) => (
+          
           <div>
             {Number(chat?.userId) === Number(myId) ? (
               <div className="flex p-3 justify-end">
