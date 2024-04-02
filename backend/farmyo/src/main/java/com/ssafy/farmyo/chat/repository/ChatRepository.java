@@ -1,5 +1,6 @@
 package com.ssafy.farmyo.chat.repository;
 
+import com.ssafy.farmyo.chat.dto.ChatDetailDto;
 import com.ssafy.farmyo.chat.dto.ChatDto;
 import com.ssafy.farmyo.chat.dto.ChatRoomListDto;
 import com.ssafy.farmyo.chat.dto.MessageListDto;
@@ -49,7 +50,11 @@ public interface ChatRepository extends JpaRepository<Chat, Integer> {
     )
     List<ChatRoomListDto> getChatRoomListWhenBuyer(int userId);
 
+    @Query("select new com.ssafy.farmyo.chat.dto.ChatDetailDto(u.nickname, u.profile) from User u join Chat c on u.id=c.buyer.id where c.id=:chatId")
+    Optional<ChatDetailDto> getChatDetailWhenSeller(int chatId);
 
+    @Query("select new com.ssafy.farmyo.chat.dto.ChatDetailDto(u.nickname, u.profile) from User u join Chat c on u.id=c.seller.id where c.id=:chatId")
+    Optional<ChatDetailDto> getChatDetailWhenBuyer(int chatId);
 
 
 }

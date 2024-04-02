@@ -48,7 +48,6 @@ export default function SignUpSecond() {
   })
 
   const [bankName, setBankName] = useState({ id: null, bankName: "은행명을 선택해주세요." })
-
   const [bankList, setBankList] = useState([]);
 
   const BankList = () => {
