@@ -25,7 +25,7 @@ import CropStanby from "./pages/stanby/cropstanby/index"
 import TradeStanby from "./pages/stanby/tradestanby/index"
 import Payment from "./pages/trade/kakaopay/index"
 import NotFoundPage from "./pages/notfound/index"
-import TestPage from "../src/pages/test"
+import TestPage from "../src/pages/board/navbar/index"
 
 
 
@@ -77,9 +77,9 @@ export default function Router (){
       {/* 대기화면 */}
       <Route path='/stanby' element={<Stanby />} />
       {/* 작물등록대기화면 */}
-       <Route path='/stanby/crop' element={<CropStanby />} />
+      <Route path='/stanby/crop' element={<CropStanby />} />
       {/* 작물대기화면 */}
-       <Route path='/stanby/trade' element={<TradeStanby />} />
+      <Route path='/stanby/trade' element={<TradeStanby />} />
       {/* 카카오페이대기화면 */}
       <Route path='/trade/redirect' element={<Payment />} />
       {/* 잘못된 경로화면*/}
