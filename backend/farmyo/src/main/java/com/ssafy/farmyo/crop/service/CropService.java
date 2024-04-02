@@ -31,4 +31,7 @@ public interface CropService {
 
     //블록체인 기록 등록
     void createBlockChain(int cropId, int userId, CropBlockchainResDto cropBlockchainResDto);
+
+    //농부의 수확한 작물만 조회
+    List<HarvestCropListResDto> getHarvestCropList(String farmerLoginId, int userId);
 }

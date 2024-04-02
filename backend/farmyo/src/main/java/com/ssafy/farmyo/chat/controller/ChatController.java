@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -18,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/chats")
 @RequiredArgsConstructor
+@Validated
 @Tag(name="5.CHAT", description="CHAT API")
 public class ChatController {
 
@@ -48,13 +51,13 @@ public class ChatController {
 
     @GetMapping("/message/{chatId}")
     @Operation(summary = "채팅 내역 조회", description = "해당 채팅방의 채팅 내역들을 조회한다.")
-    @ApiResponse(responseCode = "200", description = "성공 \n\n 채팅 내역 리스트 반환")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n 채팅 내역 DTO 반환")
     public ResponseEntity<? extends BaseResponseBody> getMessages (
             @PathVariable
             @Parameter(description = "채팅 내역을 조회할 채팅방 아이디")
-            int chatId
+            int chatId, Authentication authentication
     ) {
-        List<MessageListDto> messageList = chatService.getMessages(chatId);
+        MessageListDto messageList = chatService.getMessages(chatId, authentication);
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, messageList));
     }
 }

@@ -1,5 +1,6 @@
 package com.ssafy.farmyo.trade.service;
 
+import com.ssafy.farmyo.blockchain.service.TradeContractService;
 import com.ssafy.farmyo.board.repository.BoardRepository;
 import com.ssafy.farmyo.chat.repository.ChatRepository;
 import com.ssafy.farmyo.common.exception.CustomException;
@@ -14,8 +15,10 @@ import com.ssafy.farmyo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +34,7 @@ public class TradeServiceImpl implements TradeService {
     private final CropRepository cropRepository;
     private final TradeDepositRepository tradeDepositRepository;
     private final TradeWithdrawalRepository tradeWithdrawalRepository;
+    private final TradeContractService tradeContractService;
 
     @Override
     public void createTrade(TradeReqDto tradeReqDto) {
@@ -219,22 +223,39 @@ public class TradeServiceImpl implements TradeService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED, rollbackFor = CustomException.class)
     public void updateTradeDeposit(int id, String depositName) {
+        // 거래 조회
         Trade trade = tradeRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.TRADE_NOT_EXIST));
+
+        // 거래에 필요한 인자들 미리 가져오기
+        User buyer = trade.getBuyer();
+        Wallet wallet = buyer.getWallet();
+        String walletAddress = wallet.getWalletAddress();
+        int tradePrice = trade.getTradePrice();
+        BigInteger buyerId = BigInteger.valueOf(buyer.getId());
 
         // 입금 테이블 생성
         TradeDeposit tradeDeposit = TradeDeposit.builder()
-                .depositPrice(trade.getTradePrice())
+                .depositPrice(tradePrice)
                 .depositName(depositName)
-                .buyer(trade.getBuyer())
+                .buyer(buyer)
                 .trade(trade)
                 .build();
 
         // 입금 테이블 저장
         tradeDepositRepository.save(tradeDeposit);
+
         // 거래 테이블 상태 업데이트
-        tradeRepository.updateStatus(id, 1);
+        trade.updateStatus(1);
+
+        // 블록체인 민팅(입금한 만큼)
+        try {
+            tradeContractService.adminMint(walletAddress, BigInteger.valueOf(tradePrice), buyerId);
+        } catch (Exception e) {
+            System.out.println("e = " + e);
+            throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
+        }
     }
 
     @Override
@@ -250,7 +271,7 @@ public class TradeServiceImpl implements TradeService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED, rollbackFor = CustomException.class)
     public void updateTradeFinish(int id) {
         Trade trade = tradeRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.TRADE_NOT_EXIST));
         User seller = userRepository.findById(trade.getSeller().getId()).orElseThrow(() -> new CustomException((ExceptionType.USER_LOGIN_REQUIRED)));
@@ -274,7 +295,16 @@ public class TradeServiceImpl implements TradeService {
         // 출금 테이블 저장
         tradeWithdrawalRepository.save(tradeWithdrawal);
         // 거래 테이블 상태 업데이트
-        tradeRepository.updateStatus(id, 3);
+        trade.updateStatus(3);
+        // 블록체인 토큰 구매자한테서 판매자한테로 이동
+        try {
+            tradeContractService.adminTransfer(trade.getSeller().getWallet().getWalletAddress(), trade.getBuyer().getWallet().getWalletAddress(), BigInteger.valueOf(trade.getTradePrice()), BigInteger.valueOf(trade.getBuyer().getId()), BigInteger.valueOf(trade.getSeller().getId()));
+        } catch (Exception e) {
+            System.out.println("e = " + e);
+            throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
+        }
+
+        //나중에 환금하는거 생기면 민팅한거 소각하고 현금 주는 로직 추가 필수
     }
 
     @Override
