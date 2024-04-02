@@ -119,7 +119,7 @@ export default function SignUpSecond() {
   }, []);
   return(
     <div>
-      <img src={Back} alt="" style={{ width:20}} onClick={goBack}/>
+      <img class="mt-8 ml-4" src={Back} alt="" style={{ width:30 }} onClick={goBack}/>
     <div className="main2 mx-auto w-auto max-w-sm p-10">
       <label 
         htmlFor="account"
@@ -164,24 +164,32 @@ export default function SignUpSecond() {
           className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3 mt-4"
         />
       </div>
+
       <div>
-        <input 
-          value={bankName}
-          onChange={(event) => {
-            setBankName(event.target.value)
-          }}
-          onBlur={(event) => {
-            checkBankName(event.target.value)
-          }}
-          id="bankName" 
-          name="bankName" 
-          type="text" 
-          placeholder="은행명"
-          autoComplete="text"
-          required
-          className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3 mt-4"
-        />
-      </div>
+          <select
+            value={bankName}
+            onChange={(event) => {
+              setBankName(event.target.value);
+            }}
+            onBlur={(event) => {
+              checkBankName(event.target.value);
+            }}
+            id="bankName"
+            name="bankName"
+            required
+            className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3 mt-4"
+          >
+            <option value="" style={{ color: '#CCCCCC' }}>은행을 선택하세요</option>
+            <option value="농협">농협</option>
+            <option value="신한은행">신한은행</option>
+            <option value="국민은행">국민은행</option>
+            <option value="우리은행">우리은행</option>
+            <option value="하나은행">하나은행</option>
+            <option value="대구은행">대구은행</option>
+            <option value="카카오뱅크">카카오뱅크</option>
+            <option value="토스뱅크">토스뱅크</option>
+          </select>
+        </div>
 
     </div>
     <div className="fixed-bottom">

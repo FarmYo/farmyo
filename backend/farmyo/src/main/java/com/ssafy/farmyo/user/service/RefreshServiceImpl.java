@@ -26,6 +26,8 @@ public class RefreshServiceImpl implements RefreshService{
     @Override
     public void reissue(HttpServletRequest request, HttpServletResponse response) {
 
+        log.info("reissue Service");
+
         // 리프레시 토큰 찾기
         String refresh = null;
 
@@ -66,8 +68,11 @@ public class RefreshServiceImpl implements RefreshService{
         Integer job = jwtUtil.getUserJob(refresh);
 
         // 토큰 생성
-        String newAccess = jwtUtil.createJwt("access", loginId, nickname, id, job, 86400000L);
+        String newAccess = jwtUtil.createJwt("access", loginId, nickname, id, job, 600000L);
         String newRefresh = jwtUtil.createJwt("refresh", loginId, nickname, id, job,  86400000L);
+
+        log.info("access : {}", newAccess);
+        log.info("refresh : {}", newRefresh);
 
         //response
         response.setHeader("access", newAccess);

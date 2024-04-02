@@ -13,39 +13,104 @@ import { jwtDecode } from "jwt-decode"
 export default function SellBoardList(){
   const im = jwtDecode(localStorage.getItem('access')).userJob
   const navigate = useNavigate()
+
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
 
   // 무한스크롤 부분
+  // const [page, setPage] = useState(0)
+  // const observer = useRef(null)
+  // const [haveMore, setHaveMore] = useState(true)
+  // const handleIntersection = (articles) => {
+  //   articles.forEach((article) => {
+  //     if (haveMore && article.isIntersecting && article.target.className === 'trigger') {
+  //       BoardInfo()
+  //     }
+  //   })
+  // }
+
+  // useEffect(() => {
+  //   observer.current = new IntersectionObserver(handleIntersection, {
+  //     threshold : 0.7,
+  //   })
+  //   const observeTarget = document.querySelector('.trigger');
+  //   observer.current.observe(observeTarget);
+  //   return () => {
+  //     observer.current.disconnect()
+  //   }
+  // }, [])
+
+  // const BoardInfo = (() => {
+  //   api.get(`boards?type=0&page=${page}&size=6`)
+  //   .then((res) => {
+  //     if (res.data.dataBody.length > 0) {
+  //       setBoardInfo([...boardInfo, ...res.data.dataBody])
+  //       console.log('게시글 불러오기 성공', res)
+  //       setPage((prevPage) => prevPage + 1);
+  //       console.log(res.data.dataBody, boardInfo, page)
+  //     } else {
+  //       setHaveMore(false)
+  //       console.log('더이상의 데이터가 없습니다.', res)
+  //     }
+  //   })
+  //   .catch((err) => {
+  //     console.log('게시글 불러오기 실패', err)
+  //   })
+  // })
+  
+  // useEffect(() => {
+  //   if (haveMore) {
+  //     BoardInfo();
+  //   }
+  //   setCropId(selectedCrop.id);
+  // }, [])
+
+  // 무한스크롤 부분
   const [boardInfo, setBoardInfo] = useState([])
-  const BoardInfo = (() => {
-    api.get(`boards?type=0&page=${page}&size=6`)
+  const [page, setPage] = useState(0)
+  const obsRef = useRef(null)
+  const preventRef = useRef(true);
+  const [haveMore, setHaveMore] = useState(true)
+  const size = 6
+
+  const obsHandler = ((entries) => { //옵저버 콜백함수
+    const target = entries[0]
+    if(haveMore && target.isIntersecting && preventRef.current) {//옵저버 중복 실행 방지
+      preventRef.current=false
+      setPage(prev => prev+1) //페이지 값 증가
+    }
+  })
+
+  useEffect(() => {//옵저버 생성
+    const observer = new IntersectionObserver(obsHandler, {threshold : 0.1})
+    if(obsRef.current) observer.observe(obsRef.current)
+    return () => {observer.disconnect()}
+  }, [])
+
+  const getBoard = (() => {
+    api.get(`boards?type=0&page=${page}&size=${size}`)
     .then((res) => {
-      if (res.data.dataBody.length > 0) {
-        setBoardInfo([...boardInfo, ...res.data.dataBody])
-        console.log('게시글 불러오기 성공', res)
-        setPage((prevPage) => prevPage + 1);
+      if (res.data.dataBody.length < size) {
+        setHaveMore(false)
+        setBoardInfo(prevBoardInfo => [...prevBoardInfo, ...res.data.dataBody]);
+        console.log('더이상의 데이터가 없습니다.', res)
         console.log(res.data.dataBody, boardInfo, page)
       } else {
-        setHaveMore(false)
-        console.log('더이상의 데이터가 없습니다.', res)
+        setBoardInfo(prevBoardInfo => [...prevBoardInfo, ...res.data.dataBody]);
+        //불러올 때마다 다시 중복방지값 true로 변환
+        preventRef.current=true
+        console.log("무한스크롤 되는중")
       }
     })
     .catch((err) => {
       console.log('게시글 불러오기 실패', err)
     })
   })
-  const [page, setPage] = useState(0)
-  const observer = useRef(null)
-  const [haveMore, setHaveMore] = useState(true)
-  const handleIntersection = (articles) => {
-    articles.forEach((article) => {
-      if (haveMore && article.isIntersecting && article.target.className === 'trigger') {
-        BoardInfo()
-      }
-    })
-  }
+  
+  useEffect(() => {
+    getBoard();
+  }, [page])
 
   const [files, setFiles] = useState([])
   const [cropId, setCropId] =useState(0)
@@ -53,7 +118,6 @@ export default function SellBoardList(){
   const [price, setPrice] = useState(0)
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
-  const [cropCategory, setCropCategory] =useState([])
 
   // multipart/form-data로 보내기(json형식 아님)
   const makeArticle = () => {
@@ -164,7 +228,7 @@ export default function SellBoardList(){
 
   const [fileUrl, setFileUrl] = useState([])
   const [cropList, setCropList] = useState([]) // 작물등록시 작물 리스트
-  const [selectedCrop, setSelectedCrop] = useState({ id: null, categoryName: '작물을 선택하세요' })
+  const [selectedCrop, setSelectedCrop] = useState({ id: null, cropName: '작물을 선택하세요', harvestDate: null })
   const settings = {
     dots: true, // 하단에 점으로 페이지 표시 여부
     infinite: true, // 무한으로 반복
@@ -223,27 +287,9 @@ export default function SellBoardList(){
   });
 
   useEffect(() => {
-    if (haveMore) {
-      BoardInfo();
-    }
-    setCropId(30);
-    // 크롭 id 바꾸기
-  }, [page])
-
-  useEffect(() => {
-    observer.current = new IntersectionObserver(handleIntersection, {
-      threshold : 0.7,
-    })
-    const observeTarget = document.querySelector('.trigger');
-    observer.current.observe(observeTarget);
-    return () => {
-      observer.current.disconnect()
-    }
-  }, [])
-
-  useEffect(() => {
+    const myId = jwtDecode(localStorage.getItem('access')).loginId
     // 작물 카테고리 조회
-    api.get('crops/category')
+    api.get(`crops/list/${myId}/harvest`)
     .then((res)=>{
       console.log(res.data.dataBody)
       setCropList(res.data.dataBody)
@@ -251,7 +297,7 @@ export default function SellBoardList(){
     .catch((err)=>{
       console.log(err)
     })
-  })
+  }, [])
 
   return(
     <div style={{height:'420px',position:'relative'}}>
@@ -300,10 +346,14 @@ export default function SellBoardList(){
             <div>
             <Menu as="div" className="relative inline-block text-left">
             <div>
-              <Menu.Button className="inline-flex w-44 justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                작물명을 선택하세요
+              {selectedCrop.harvestDate ? (<Menu.Button className="inline-flex w-44 justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                {selectedCrop.cropName}({selectedCrop.harvestDate})
                 <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
-              </Menu.Button>
+              </Menu.Button>) :
+              (<Menu.Button className="inline-flex w-44 justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+              {selectedCrop.cropName}
+              <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
+            </Menu.Button>)}
             </div>
             <Transition
               as={Fragment}
@@ -314,21 +364,20 @@ export default function SellBoardList(){
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95"
             >
-            <Menu.Items className="absolute right-0 z-10 w-full px-4 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+            <Menu.Items className="absolute right-0 z-10 w-full px-4 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-auto max-h-60"
           style={{width:'16rem'}}>
             <div className="py-1">
               {cropList.map((crop,index)=>(
-              <Menu.Item key={crop.id} onClick={() => setSelectedCrop({ id: crop.id, categoryName: crop.categoryName })}> 
+              <Menu.Item key={crop.id} onClick={() => setSelectedCrop({ id: crop.id, cropName: crop.name, harvestDate: crop.harvestDate })}> 
                 {({ active }) => (
                   <button
                     href="#"
                     className={classNames(
                       active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                       'block px-12 py-2 text-xl'
-                      
                     )}
                   >
-                    {crop.categoryName}
+                    {crop.name}({crop.harvestDate})
                   </button>
                 )}
                 </Menu.Item>
@@ -397,10 +446,6 @@ export default function SellBoardList(){
           </div>
         </div>
       </Modal>
-
-
-
-
     </div>
   )
 }

@@ -1,31 +1,28 @@
 // import { useTokenCheck } from '../../feature/login/receiveToken';
-import Photo from '../../image/component/me.png'
+import { jwtDecode } from 'jwt-decode'
+import api from '../../api/api'
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export default function Chatting(){
+  const navigate = useNavigate()
   // const isAuthed = useTokenCheck();
-  const [chattingList, setChattingList] = useState([
-    {
-      id: 1,
-      name: '차은우보다현준',
-      message: '감사합니다!! 많이 파세요!',
-      photoSrc: Photo,
-      board_type : 0   // 판매게시판에서 온 채팅인지 구매게시판에서 온 채팅인지
-    },
-    {
-      id: 2,
-      name: '차은우보다현준',
-      message: '감사합니다!! 많이 파세요!',
-      photoSrc: Photo,
-      board_type : 1
-    },
-  ]);
+  const [chattingData, setChattingData] = useState([])
+  const loginId = jwtDecode(localStorage.getItem('access')).loginId
+  const showChattings = (() => {
+    api.get(`chats/rooms/${loginId}`)
+    .then((res) => {
+      console.log('채팅방 목록 불러오기 성공', res)
+      setChattingData(res.data.dataBody)
+    })
+    .catch((err) => {
+      console.log('채팅방 목록 불러오기 실패', err)
+    })
+  })
 
 useEffect(() => {
-  // if (isAuthed) {
-
-  // }
-})
+  showChattings()
+}, [])
 
   return(
     <div>
@@ -33,15 +30,15 @@ useEffect(() => {
         <h1 className="text-xl font-bold" style={{color:"white"}}>채팅</h1>
       </div>
       {/* 채팅목록나옴 */}
-      {chattingList.map((chat) => (
-        <div key={chat.id} className='p-3 flex border-b-2 border-gray-100'>
+      {chattingData.map((chat) => (
+        <div onClick={() => {navigate(`/chat/${chat.chatId}`)}} key={chat.chatId} className='p-3 flex border-b-2 border-gray-100'>
           <div>
             {/* 채팅 상대방 프로필 사진 나옴 */}
-            <img src={chat.photoSrc} alt="" style={{width: 50}}/>
+            <img src={chat.userProfile} alt="" style={{width: 50}}/>
           </div>
           <div className='ml-3'>
-            <h1 className='font-bold'>{chat.name}</h1>
-            <h1 className='text-sm'>{chat.message}</h1>
+            <h1 className='font-bold'>{chat.userNickname}</h1>
+            <h1 className='text-sm'>{chat.recentMessage}</h1>
           </div> 
         </div>
       ))}
