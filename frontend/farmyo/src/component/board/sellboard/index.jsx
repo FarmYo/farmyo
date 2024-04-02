@@ -110,6 +110,10 @@ export default function SellBoardList(){
     getBoard();
   }, [page])
 
+  useEffect(() => {
+    setCropId(selectedCrop.id);
+  }, [])
+
   const [files, setFiles] = useState([])
   const [cropId, setCropId] =useState(0)
   const [quantity, setQuantity] = useState(0)
@@ -366,7 +370,10 @@ export default function SellBoardList(){
           style={{width:'16rem'}}>
             <div className="py-1">
               {cropList.map((crop,index)=>(
-              <Menu.Item key={crop.id} onClick={() => setSelectedCrop({ id: crop.id, cropName: crop.name, harvestDate: crop.harvestDate })}> 
+              <Menu.Item key={crop.id} onClick={() => {
+                setSelectedCrop({ id: crop.id, cropName: crop.name, harvestDate: crop.harvestDate })
+                setCropId(crop.id)
+              }}> 
                 {({ active }) => (
                   <button
                     href="#"
