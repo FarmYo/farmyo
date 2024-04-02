@@ -91,13 +91,11 @@ export default function SellBoardList(){
   const getBoard = (() => {
     api.get(`boards?type=0&page=${page}&size=${size}`)
     .then((res) => {
+      setBoardInfo(prevBoardInfo => [...prevBoardInfo, ...res.data.dataBody]);
       if (res.data.dataBody.length < size) {
         setHaveMore(false)
-        setBoardInfo(prevBoardInfo => [...prevBoardInfo, ...res.data.dataBody]);
         console.log('더이상의 데이터가 없습니다.', res)
-        console.log(res.data.dataBody, boardInfo, page)
       } else {
-        setBoardInfo(prevBoardInfo => [...prevBoardInfo, ...res.data.dataBody]);
         //불러올 때마다 다시 중복방지값 true로 변환
         preventRef.current=true
         console.log("무한스크롤 되는중")
