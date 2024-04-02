@@ -180,6 +180,7 @@ export default function BuyerTrade() {
             icon: 'success',
             showConfirmButton: false,
           })
+          
           navigate('/trade/redirect', { state: { tradeId: tradeId, seller: info.seller } })
           // 결제 성공 시 로직,
         } else {
