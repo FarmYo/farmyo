@@ -172,7 +172,7 @@ export default function Room() {
         <div key={index}>
           {message.userId === myId ? (
             <div className='flex p-3 justify-end'>
-              <div style={{ width: `calc(${bubbleWidth}px + 20px)`, height:40, backgroundColor:'#8FBC8F' }}> {/* Adjust width for padding */}
+              <div style={{ width: `${bubbleWidth}px`, height:40, backgroundColor:'#8FBC8F' }}> {/* Adjust width for padding */}
                 <div className='rounded-3xl ml-3 flex justify-center items-center'>
                   <div ref={textRef}>{message.content}</div>
                 </div>
@@ -181,7 +181,7 @@ export default function Room() {
           ) : (
             <div key={index} className='flex p-3'>
               <img src={partnerInfo.userProfile} alt="" style={{ width: 40, height: 40 }} />
-              <div style={{ width: `calc(${bubbleWidth}px + 20px)`, backgroundColor:'#D3D3D3' }}> {/* Adjust width for padding */}
+              <div style={{ width: `${bubbleWidth}px`, backgroundColor:'#D3D3D3' }}> {/* Adjust width for padding */}
                 <div className='rounded-3xl ml-3 flex justify-center items-center'>
                   <div ref={textRef}>{message.content}</div>
                 </div>
