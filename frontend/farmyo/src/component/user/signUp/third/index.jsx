@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Fragment } from 'react'
 import { useNavigate, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 import api from "../../../../api/api"
 import Back from "../../../../image/component/leftarrow.png"
 import '../../../../css/signup.css';
+import { Menu, Transition } from '@headlessui/react'
+import { ChevronDownIcon } from '@heroicons/react/20/solid'
 
 export default function SignUpSecond() {
   const navigate = useNavigate()
@@ -19,6 +21,11 @@ export default function SignUpSecond() {
       setIsAccount(true)
     }
   })
+
+  function classNames(...classes) {
+    return classes.filter(Boolean).join(' ')
+  }
+
 
   const [accountNumber, setAccountNumber] = useState("")
   const [isAccountNumber, setIsAccountNumber] = useState(false)
@@ -40,19 +47,34 @@ export default function SignUpSecond() {
     }
   })
 
-  const [bankName, setBankName] = useState("")
-  const [isBankName, setIsBankName] = useState(false)
-  const checkBankName = ((bankName) => {
-    if (bankName) {
-      setIsBankName(true)
-    }
-  })
+  const [bankName, setBankName] = useState({ id: null, bankName: "은행명을 선택해주세요." })
+  // const [isBankName, setIsBankName] = useState(false)
+  // const checkBankName = ((bankName) => {
+  //   if (bankName) {
+  //     setIsBankName(true)
+  //   }
+  // })
+
+  const [bankList, setBankList] = useState([]);
+
+  const BankList = () => {
+    api.get('banks')
+    .then((res) => {
+      console.log('은행 리스트 받아오기 성공', res.data.dataBody)
+      setBankList(res.data.dataBody)
+    })
+    .catch((err) => {
+      console.log('은행 리스트 받아오기 실패', err)
+    })
+  }
+
 
   const changePage = (() => {
-    if (isAccount === true && isAccountNumber === true && isBankName === true) {
+    // if (isAccount === true && isAccountNumber === true && isBankName === true) {
+    if (isAccount === true && isAccountNumber === true) {
       if (isSeller === 0) {
         // 판매자
-        navigate("/signup/business", { state: { isSeller, id, email, password, nickName, phoneNumber, zoomNumber, address, detailAddress, account, accountNumber, bankName } }, { replace: true })
+        navigate("/signup/business", { state: { isSeller, id, email, password, nickName, phoneNumber, zoomNumber, address, detailAddress, account, accountNumber, bankName: bankName.bankName } }, { replace: true })
       } else if (isSeller === 1) {
         // 구매자
         api.post('users', {
@@ -60,7 +82,7 @@ export default function SignUpSecond() {
             password : password,               
             telephone : phoneNumber, 
             depositor : account,         
-            bank : bankName,          
+            bank : bankName.bankName,          
             account : accountNumber,
             email : email,  
             nickname : nickName,        
@@ -95,7 +117,7 @@ export default function SignUpSecond() {
           })
         })
       }} else {
-        console.log('소비자 회원가입 실패 이유 확인해보기', '우편번호 : ', zoomNumber, '주소 :', address, '상세주소 :', detailAddress, '예금주 :', account, '계좌번호 :', accountNumber, '은행명 :', bankName)
+        console.log('소비자 회원가입 실패 이유 확인해보기', '우편번호 : ', zoomNumber, '주소 :', address, '상세주소 :', detailAddress, '예금주 :', account, '계좌번호 :', accountNumber, '은행명 :', bankName.bankName)
         Swal.fire({
           title: '<br>입력 정보를<br>확인해주세요',
           confirmButtonColor: '#1B5E20',
@@ -116,7 +138,11 @@ export default function SignUpSecond() {
         button.style.display = 'block';
       });
     });
+
+    BankList();
   }, []);
+
+  
   return(
     <div>
       <img class="mt-8 ml-4" src={Back} alt="" style={{ width:30 }} onClick={goBack}/>
@@ -165,31 +191,46 @@ export default function SignUpSecond() {
         />
       </div>
 
-      <div>
-          <select
-            value={bankName}
-            onChange={(event) => {
-              setBankName(event.target.value);
-            }}
-            onBlur={(event) => {
-              checkBankName(event.target.value);
-            }}
-            id="bankName"
-            name="bankName"
-            required
-            className="block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3 mt-4"
-          >
-            <option value="" style={{ color: '#CCCCCC' }}>은행을 선택하세요</option>
-            <option value="농협">농협</option>
-            <option value="신한은행">신한은행</option>
-            <option value="국민은행">국민은행</option>
-            <option value="우리은행">우리은행</option>
-            <option value="하나은행">하나은행</option>
-            <option value="대구은행">대구은행</option>
-            <option value="카카오뱅크">카카오뱅크</option>
-            <option value="토스뱅크">토스뱅크</option>
-          </select>
-        </div>
+
+      <Menu as="div" className="mt-4">
+            <div>
+            <Menu.Button className="flex items-center justify-between h-10 w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3 pr-4">
+              <span>{bankName.bankName}</span>
+              <ChevronDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+            </Menu.Button>
+            </div>
+            <Transition
+              as={Fragment}
+              enter="transition ease-out duration-100"
+              enterFrom="transform opacity-0 scale-95"
+              enterTo="transform opacity-100 scale-100"
+              leave="transition ease-in duration-75"
+              leaveFrom="transform opacity-100 scale-100"
+              leaveTo="transform opacity-0 scale-95"
+            >
+            <Menu.Items className="absolute z-10 mt-2 w-80 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-auto max-h-20">
+              <div className="py-1">
+                {bankList.map((bank,index)=>(
+                  <Menu.Item key={bank.id} onClick={() => {
+                    setBankName({ id: bank.id, bankName: bank.bankName }); 
+                    }}> 
+                    {({ active }) => (
+                      <button
+                        href="#"
+                        className={classNames(
+                          active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                          'block  px-12 py-2 text-xl'
+                        )}
+                      >
+                        {bank.bankName}
+                      </button>
+                    )}
+                  </Menu.Item>
+                ))}
+                </div>
+              </Menu.Items>
+            </Transition>
+          </Menu>
 
     </div>
     <div className="fixed-bottom">

@@ -1,4 +1,4 @@
-import { useEffect, useState, Fragment } from 'react'
+import { useEffect, useState, Fragment, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 // import { jwtDecode } from 'jwt-decode'
 import api from '../../../api/api'
@@ -25,6 +25,56 @@ export default function BuyBoardList(){
   const [cropCategory, setCropCategory] = useState([])
   const [selectedCrop, setSelectedCrop] = useState({ id: null, categoryName: '작물을 선택하세요' })
   
+  //무한스크롤
+    // 무한스크롤 부분
+
+    const [page, setPage] = useState(0)
+    const obsRef = useRef(null)
+    const preventRef = useRef(true);
+    const [haveMore, setHaveMore] = useState(true)
+    const size = 6
+
+    const obsHandler = ((entries) => { //옵저버 콜백함수
+      const target = entries[0]
+      if(haveMore && target.isIntersecting && preventRef.current && boardInfo) {//옵저버 중복 실행 방지
+        preventRef.current=false
+        setPage(prev => prev+1) //페이지 값 증가
+      }
+    })
+
+    useEffect(() => {//옵저버 생성
+      const observer = new IntersectionObserver(obsHandler, {threshold : 0.1})
+      if(obsRef.current) observer.observe(obsRef.current)
+      return () => {observer.disconnect()}
+    }, [])
+    
+    const getBoard = () => {
+      api.get(`boards?type=1&page=${page}&size=${size}`)
+      .then((res) => {
+        setBoardInfo(prevBoardInfo => [...prevBoardInfo, ...res.data.dataBody]);
+        if (res.data.dataBody.length < size) {
+          setHaveMore(false)
+          console.log('더이상의 데이터가 없습니다.', res)        
+        } else {
+          //불러올 때마다 다시 중복방지값 true로 변환
+          preventRef.current=true
+          console.log("무한스크롤 되는중")
+        }
+      })
+      .catch((err) => {
+        console.log('게시글 불러오기 실패', err)
+      })
+    }
+  
+    useEffect(() => {
+      getBoard()
+    }, [page])
+  
+
+
+
+
+
 
   const makeArticle = (() => {
     if (cropId && title && content && quantity && price) {
@@ -99,16 +149,9 @@ export default function BuyBoardList(){
     }
   })
 
-  const BoardInfo = () => {
-    api.get("boards?type=1&page=0&size=100")
-    .then((res) => {
-      setBoardInfo(res.data.dataBody)
-      console.log('게시글 불러오기 성공', res)
-    })
-    .catch((err) => {
-      console.log('게시글 불러오기 실패', err)
-    })
-  }
+
+
+
 
   const [buyOpen,setBuyOpen] = useState(false)
 
@@ -132,10 +175,7 @@ export default function BuyBoardList(){
     setBuyOpen(false);
   };
 
-  useEffect(() => {
-    BoardInfo()
-    setCropId(selectedCrop.id);
-  }, [])
+
 
   useEffect(() => {
     // 작물 카테고리 조회
@@ -154,8 +194,8 @@ export default function BuyBoardList(){
 
     <div style={{height:'420px',position:'relative'}}>
       {/* 삽니다 게시글 목록 */}
-      {boardInfo.map((article) => (
-        <div className="p-4 flex" key={article.boardId} onClick={() => navigate(`buy/${article.boardId}/detail`)}>
+      {boardInfo.map((article,index) => (
+        <div className="p-4 flex" key={index} onClick={() => navigate(`buy/${article.boardId}/detail`)}>
           <div className="w-full ml-2">
             <h1 className="text-lg font-bold">{article.title}</h1> 
             <h1 className="text-sm">{article.userNickname}</h1>
@@ -167,6 +207,7 @@ export default function BuyBoardList(){
           </div>
         </div>
       ))}
+      <div ref={obsRef}><br/></div>
 
       <div style={{ position: 'absolute', bottom: 0, right: 10}}>
         {im === 1 && (
