@@ -85,8 +85,8 @@ function App() {
   };
 
   return (
-    <div className='appContent'>
-        <Router />
+    <div>
+        <Router/>
         {!shouldHideBottomBar() && <BottomBar/>}
     </div>
   );
