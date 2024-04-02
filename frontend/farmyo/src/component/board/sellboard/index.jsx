@@ -59,12 +59,10 @@ export default function SellBoardList(){
   //   })
   // })
   
-  // useEffect(() => {
-  //   if (haveMore) {
-  //     BoardInfo();
-  //   }
-  //   setCropId(selectedCrop.id);
-  // }, [])
+  useEffect(() => {
+    console.log(1324)
+    setCropId(selectedCrop.id);
+  }, [])
 
   // 무한스크롤 부분
   const [boardInfo, setBoardInfo] = useState([])
@@ -362,11 +360,14 @@ export default function SellBoardList(){
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95"
             >
-            <Menu.Items className="absolute right-0 z-10 w-full px-4 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-auto max-h-60"
-          style={{width:'16rem'}}>
+            <Menu.Items className="absolute right-0 z-10 w-full px-4 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-auto max-h-60" style={{width:'16rem'}}>
             <div className="py-1">
-              {cropList.map((crop,index)=>(
-              <Menu.Item key={crop.id} onClick={() => setSelectedCrop({ id: crop.id, cropName: crop.name, harvestDate: crop.harvestDate })}> 
+              {cropList.map((crop, index) => (
+                <Menu.Item key={crop.id} onClick={() => {
+                  setSelectedCrop({ id: crop.id, cropName: crop.name, harvestDate: crop.harvestDate })
+                  setCropId(crop.id)
+                  console.log(cropId)
+                }}> 
                 {({ active }) => (
                   <button
                     href="#"
