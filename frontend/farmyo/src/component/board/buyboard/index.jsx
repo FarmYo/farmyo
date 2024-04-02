@@ -36,7 +36,7 @@ export default function BuyBoardList(){
 
     const obsHandler = ((entries) => { //옵저버 콜백함수
       const target = entries[0]
-      if(haveMore && target.isIntersecting && preventRef.current) {//옵저버 중복 실행 방지
+      if(haveMore && target.isIntersecting && preventRef.current && boardInfo) {//옵저버 중복 실행 방지
         preventRef.current=false
         setPage(prev => prev+1) //페이지 값 증가
       }
