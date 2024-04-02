@@ -236,9 +236,9 @@ export default function MyFarm(props) {
 
 
     { (!props.profileId || props.profileId === loginId) && (
-    <div style={{ position: 'fixed', bottom: '200px', right: '15px'}}>
+    <div style={{ position: 'fixed', bottom: '130px', right: '15px'}}>
       <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
-        <div style={{ position: 'absolute', top: '41%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}
+        <div style={{ position: 'absolute', top: '44%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}
         onClick={onOpenModal}>
           +</div>
       </div>

@@ -48,7 +48,7 @@ export default function BoardNav(){
         <Menu as="div" className="relative inline-block text-left">
         <div>
           <Menu.Button className="inline-flex w-32 h-12 justify-between items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50"
-          style={{ border: '3px solid #81C784', backgroundColor: 'transparent'}}>
+          style={{ border: '3px solid #2E8B57', backgroundColor: 'transparent'}}>
             <div className='pl-3'>{selectedItem}</div>
             <img src={Dropdown} alt="" style={{width:15,height:10}}/>
           </Menu.Button>
@@ -87,7 +87,7 @@ export default function BoardNav(){
         <input 
           value={searchName}
           onChange={(event) => setSearchName(event.target.value)}
-          type="text" className="input w-44" style={{ border:'3px solid #81C784',backgroundColor: 'transparent'}}
+          type="text" className="input w-44" style={{ border:'3px solid #2E8B57',backgroundColor: 'transparent'}}
           disabled={selectedItem === "전체"}
           placeholder={selectedItem === "전체" ? "조건 선택 후 검색 가능" : ""}
         />
