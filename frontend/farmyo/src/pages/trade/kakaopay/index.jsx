@@ -10,8 +10,8 @@ export default function PaymentRedirectPage() {
   const location = useLocation()
   const navigate = useNavigate()
   const { rsp } = location.state
-  const params = queryString.parse(location.search);
-  const impSuccess = params.imp_success === 'true';
+  const queryParams = new URLSearchParams(location.search);
+  const impSuccess = queryParams.get('imp_success');
   const tradeId = localStorage.getItem('tradeId')
   const seller =  localStorage.getItem('seller') 
 
@@ -39,11 +39,7 @@ export default function PaymentRedirectPage() {
   //   })
   // }else{
 
-    if (!impSuccess) {
-      Swal.fire("결제가 실패했습니다.")
-      
-    }
-    if(rsp === null) {
+    if (impSuccess) {
       api.patch(`trades/deposit/${tradeId}`,{},{
         params:{
           depositName:seller
@@ -58,17 +54,21 @@ export default function PaymentRedirectPage() {
           showConfirmButton: false,
         })
         
-        navigate('/trade/redirect', { state: {  rsp } })
+        navigate(`/trade/buyer/${tradeId}`)
+
         // navigate(`/trade/buyer/${tradeId}`)
       })
       .catch((err)=>{
         console.log(err)
         navigate('/trade')
       })
-
+      Swal.fire("되나")
+      
+    }
+    else{
+      navigate(`/trade/buyer/${tradeId}`)
     }
 
-    navigate(`/trade/buyer/${tradeId}`)
   // }
 
   },[location,navigate])
