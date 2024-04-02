@@ -55,9 +55,10 @@ public class ChatController {
     public ResponseEntity<? extends BaseResponseBody> getMessages (
             @PathVariable
             @Parameter(description = "채팅 내역을 조회할 채팅방 아이디")
-            int chatId, Authentication authentication
+            int chatId, Authentication authentication,
+            @RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "size", defaultValue = "10") int size
     ) {
-        MessageListDto messageList = chatService.getMessages(chatId, authentication);
+        MessageListDto messageList = chatService.getMessages(chatId, authentication, page, size);
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, messageList));
     }
 }
