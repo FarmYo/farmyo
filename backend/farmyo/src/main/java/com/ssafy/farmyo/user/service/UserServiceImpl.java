@@ -33,6 +33,7 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final WalletRepository walletRepository;
 
+
     @Override
     @Transactional
     public int customerJoin(JoinReqDto joinReqDto) {
@@ -45,6 +46,7 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         // 유저 생성
+        String basicUrl = "https://yeopbucket.s3.ap-northeast-2.amazonaws.com/me_1712031463385.png";
         User user = User.builder()
                 .loginId(joinReqDto.getLoginId())
                 .password(bCryptPasswordEncoder.encode(joinReqDto.getPassword()))
@@ -52,6 +54,7 @@ public class UserServiceImpl implements UserService {
                 .nickname(joinReqDto.getNickname())
                 .email(joinReqDto.getEmail())
                 .job(joinReqDto.getJob())
+                .profile(basicUrl)
                 .status(UserStatus.ACTIVE)
                 .account(account)
                 .comment("기본 메세지입니다.")
@@ -98,6 +101,7 @@ public class UserServiceImpl implements UserService {
 
         // 사업자 공공 API 불러오기
         openApiManager.validateLicense(joinReqDto.getLicenseNum() ,joinReqDto.getRepresentative(), joinReqDto.getStartDate());
+        String basicUrl = "https://yeopbucket.s3.ap-northeast-2.amazonaws.com/me_1712031463385.png";
 
         // 계좌 생성
         Account account = Account.builder()
@@ -117,6 +121,7 @@ public class UserServiceImpl implements UserService {
                 .nickname(joinReqDto.getNickname())
                 .email(joinReqDto.getEmail())
                 .job(joinReqDto.getJob())
+                .profile(basicUrl)
                 .status(UserStatus.ACTIVE)
                 .account(account)
                 .comment("기본 메세지입니다.")
