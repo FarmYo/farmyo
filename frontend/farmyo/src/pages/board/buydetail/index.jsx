@@ -22,7 +22,8 @@ export default function BuyDetail(){
 
   const navigate = useNavigate()
   const goList = (() => {
-    navigate("/board",{state:{selected:1}})
+    // navigate("/board",{state:{selected:1}})
+    navigate(-1,{state:{selected:1}})
   })
 
   const styles = {
