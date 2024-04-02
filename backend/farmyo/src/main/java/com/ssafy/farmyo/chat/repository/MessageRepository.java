@@ -18,10 +18,10 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
 //    @Query("select new com.ssafy.farmyo.chat.dto.MessageListDto() from Message m join m.userId where ")
 //    List<MessageDto> findAllById(int chatId);
 
-//    @Query("Select new com.ssafy.farmyo.chat.dto.MessageDetailDto(u.id, m.content, m.createdAt) from Message m join User u on m.userId = u.id where m.chat.id=:chatId")
+//    @Query("Select new com.ssafy.farmyo.chat.dto.MessageDetailDto(u.id, m.content, m.createdAt) from Message m join User u on m.userId = u.id where m.chat.id=:chatId ORDER BY m.createdAt DESC")
 //    List<MessageDetailDto> findAllById(int chatId);
 
-    @Query("Select new com.ssafy.farmyo.chat.dto.MessageDetailDto(u.id, m.content, m.createdAt) from Message m join User u on m.userId = u.id where m.chat.id=:chatId order by m.createdAt")
+    @Query("SELECT new com.ssafy.farmyo.chat.dto.MessageDetailDto(m.userId, m.content, m.createdAt) from Message m WHERE m.chat.id=:chatId ORDER BY m.createdAt DESC")
     List<MessageDetailDto> findAllById(int chatId, Pageable pageable);
 
 }
