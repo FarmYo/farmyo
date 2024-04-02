@@ -25,7 +25,8 @@ export default function SellDetail(){
   const [boardInfo, setBoardInfo] =useState([])
   const navigate = useNavigate()
   const goList = (() => {
-    navigate("/board",{state:{selected:0}})
+    // navigate("/board",{state:{selected:0}})
+    navigate(-1,{state:{selected:0}})
   })
 
   const styles = {
