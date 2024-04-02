@@ -156,8 +156,8 @@ export default function BuyerTrade() {
     }else{
       console.log("handleKakaoPay 시작")
 
-      localStorage.setItem('tradeId', tradeId.toString());
-      localStorage.setItem('seller', info.seller);
+      // localStorage.setItem('tradeId', tradeId.toString());
+      // localStorage.setItem('seller', info.seller);
 
       const IMP = window.IMP; 
       // console.log(IMP)
@@ -175,12 +175,28 @@ export default function BuyerTrade() {
       }, function(rsp) {
         console.log("결제응답:",rsp)
         if (rsp.success) {
-          Swal.fire({
-            html: '<h1 style="font-weight: bold;">결제가 정상적으로 완료되었습니다</h1>',
-            icon: 'success',
-            showConfirmButton: false,
+          api.patch(`trades/deposit/${tradeId}`,{},{
+            params:{
+              depositName:info.seller
+            }
           })
-          navigate('/trade/redirect', { state: { tradeId: tradeId, seller: info.seller } })
+          .then((res)=>{
+            console.log(res)
+            console.log("입금완료")
+            Swal.fire({
+              html: '<h1 style="font-weight: bold;">결제가 정상적으로 완료되었습니다</h1>',
+              icon: 'success',
+              showConfirmButton: false,
+            })
+            
+            navigate('/trade/redirect', { state: { tradeId: tradeId, seller: info.seller, rsp } })
+            // navigate(`/trade/buyer/${tradeId}`)
+          })
+          .catch((err)=>{
+            console.log(err)
+            navigate('/trade')
+          })
+
           // 결제 성공 시 로직,
         } else {
           alert('결제실패');
@@ -201,7 +217,7 @@ export default function BuyerTrade() {
           icon: 'success',
           showConfirmButton: false,
         });
-         // info 상태 업데이트로 거래 상태 직접 변경
+        // info 상태 업데이트로 거래 상태 직접 변경
         setInfo(prevInfo => ({
           ...prevInfo,
           tradeStatus: 3 // 거래완료 상태로 변경
@@ -390,7 +406,7 @@ export default function BuyerTrade() {
           <DaumPostcode onComplete={handleAddressSelect} 
           autoClose width="100%" height="auto" />
         </Modal>
- 
+
     </div>
   )
 }

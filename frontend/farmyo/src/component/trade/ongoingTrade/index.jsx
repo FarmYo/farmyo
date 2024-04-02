@@ -1,4 +1,4 @@
-import React, { useState,useRef,useCallback,useEffect } from "react";
+import React, { useState,useRef,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Menu, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
@@ -18,67 +18,87 @@ export default function OngoingTrade() {
   const userId = jwtDecode( localStorage.getItem("access") ).userId 
   const [isOpen, setIsOpen] = useState(false) // 드롭다운 메뉴 열림닫힘 구분
   const userJob = jwtDecode( localStorage.getItem("access") ).userJob // 0이면 판매자,1이면 구매자
-  const [notFinishedList,setNotFinishedList] = useState([]) //진행중인 거래담길 리스트
-  const [page, setPage] = useState(0);
-  const [isLastPage, setIsLastPage] = useState(false); // 마지막 페이지인지 여부를 추적하는 상태
+  const [ongoingList,setOngoingList] = useState([]) //진행중인 거래담길 리스트
 
   // 진행중인 거래목록 조회
   // useEffect(()=>{
-  //   api.get(`trades/list`, {
+  //   api.get('trades/list', {
   //     params: { 
   //       id: userId 
   //     }
   //   })
   //   .then((res) => {
   //     console.log(res)
-  //     setNotFinishedList(res.data.dataBody.notFinishedList)
+  //     setOngoingList(res.data.dataBody.notFinishedList)
   //   })
   //   .catch((err) => {
   //     console.log(err);
   //   });
   // },[])
 
+  // 무한스크롤 부분
+  const [page, setPage] = useState(0)
+  const obsRef = useRef(null)
+  const preventRef = useRef(true);
+  const [haveMore, setHaveMore] = useState(true)
+  const size = 4
 
-  const observer = useRef();
-  const lastItemRef = useCallback(node => {
-    if (isLastPage) return; 
-    if (observer.current) observer.current.disconnect();
-    observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) {
-        // 페이지 번호 증가 및 추가 데이터 로드
-        setPage(prevPage => prevPage + 1);
+  const obsHandler = ((entries) => { //옵저버 콜백함수
+    const target = entries[0]
+    if(haveMore && target.isIntersecting && preventRef.current) {//옵저버 중복 실행 방지
+      preventRef.current=false
+      setPage(prev => prev+1) //페이지 값 증가
+    }
+  })
+
+  useEffect(() => {//옵저버 생성
+    if (!haveMore) return;
+    const observer = new IntersectionObserver(obsHandler, {threshold : 0.1})
+    if(obsRef.current) observer.observe(obsRef.current)
+    return () => {observer.disconnect()}
+  }, [])
+
+
+  const getTrade = ()=>{
+    api.get('trades/list', {
+      params: { 
+        id: userId,
+        page:page,
+        size:size
       }
+    })
+    .then((res) => {
+      console.log(res)
+      if (res.data.dataBody.notFinishedList.length < size) {
+        setHaveMore(false)
+        setOngoingList(preongoingList => [...preongoingList, ...res.data.dataBody.notFinishedList]);
+        console.log('더이상의 데이터가 없습니다.', res)
+        console.log(res.data.dataBody.notFinishedList, ongoingList, page)
+      } else {
+        setOngoingList(preongoingList => [...preongoingList, ...res.data.dataBody.notFinishedList]);
+        //불러올 때마다 다시 중복방지값 true로 변환
+        preventRef.current=true
+        console.log("무한스크롤 되는중")
+      }
+    })
+    .catch((err) => {
+      console.log('실패', err)
+    })
+    .finally(() => {
+      preventRef.current = true; // 데이터 로딩 시도 후에 중복 방지를 리셋
     });
-    if (node) observer.current.observe(node);
-  }, [isLastPage]);
+  } 
+
+  useEffect(()=>{
+    getTrade()
+  },[page])
 
 
 
-  useEffect(() => {
-    const fetchTrades = async () => {
-      try {
-        const res = await api.get('trades/list', {
-          params: {
-            id: userId,
-            page, // 페이지 번호를 요청에 포함
-            size :4
-          },
-        });
-        console.log(res)
-        const fetchedList = res.data.dataBody.notFinishedList;
-        setNotFinishedList(prevList => [...prevList, ...res.data.dataBody.notFinishedList]);
-        if (fetchedList.length < 4) { // 불러온 데이터의 길이가 요청한 size보다 작으면 마지막 페이지로 간주
-          setIsLastPage(true);
-        } 
-      }catch (err) {
-        console.log(err);
-      }
-    };
-
-    fetchTrades();
-  }, [page]); // 페이지 번호가 변경될 때마다 데이터를 추가로 불러옵니다.
 
 
+
+ 
 
 
 
@@ -91,8 +111,9 @@ export default function OngoingTrade() {
   };
 
   // 전체,입금대기중,입금완료,거래중 필터링
-  const filteredItems = notFinishedList.filter(item => {
-    if (selectedItem === '전체') return true; 
+  const filteredItems = ongoingList.filter(item => {
+    if (selectedItem === '전체') return true;
+
     return item.tradeStatus === statusMapping[selectedItem];
   });
 
@@ -171,7 +192,7 @@ export default function OngoingTrade() {
       {filteredItems.map((item,index) => (
           <div key={item.id} className="p-2 border-b-2 border-gray-150 flex"
            onClick={()=>goDetail(item.id)}
-           ref={index === filteredItems.length - 1 ? lastItemRef : undefined}>
+          >
             <div><img src={item.cropImg} alt="" className="w-32 h-24"/></div>
             <div className="w-full ml-2">
               <h1 className="text-lg font-bold">{item.boardTitle}</h1>
@@ -185,7 +206,7 @@ export default function OngoingTrade() {
           </div>
         ))
       }
-  
+      <div ref={obsRef}><br/></div>
 
     </div>
   )
