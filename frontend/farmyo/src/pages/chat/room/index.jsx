@@ -83,7 +83,7 @@ export default function Room() {
   useEffect(() => {
     if (textRef.current) {
       const contentWidth = textRef.current.offsetWidth;
-      setBubbleWidth(contentWidth + 20); // Add some padding for aesthetics
+      setBubbleWidth(contentWidth + 20);
     }
   }, []);
 
@@ -127,11 +127,12 @@ export default function Room() {
         </div>
       </div>
       {/* 거래하기눌렀을때 입력폼- 판매게시판에서 만든 채팅은 작물명X,구매게시판에서 만든채팅은 작물명O*/}
-      {showForm && <Form onFormSubmit={handleFormSubmit} onCloseForm={closeForm} />}
+      {showForm && <Form onFormSubmit={handleFormSubmit} onCloseForm={closeForm}/>}
       
       
       {/* 대화말풍선 - 나 */}
       {/* 대화말풍선 - 상대방 */}
+      <div className="chat-container">
     {chatData?.map((chat, index) => (
       <div>
       {Number(chat?.userId) === Number(myId) ?  
@@ -152,16 +153,18 @@ export default function Room() {
       )
     }
     </div>))}
+    
 
       {/* 채팅입력창 */}
-      <div className='p-3 flex'  style={{ position: 'fixed', bottom: keyboardVisible ? '0vh' : 10, left: '0', width: '100%', padding: '10px', boxSizing: 'border-box' }}>
+      <div className='p-3 flex'  style={{ position: 'fixed', bottom: keyboardVisible ? '0vh' : 10, left: '0', width: '100%', padding: '10px', boxSizing: 'border-box,', backgroundColor:'#FFFFFF' }}>
         <input value={talk} onChange={(event) => setTalk(event.target.value)} id="" name="" type="text" placeholder="" autoComplete="text" 
         className="block h-10 pl-5 w-full rounded-3xl border-0 py-1 text-gray-800 ring-2 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
         />
         <div style={{backgroundColor:'#D3D3D3'}} className='rounded-3xl w-12 flex justify-center items-center ml-1'>
           <div><img onClick={() => sendMessage(talk)} src={Vector} alt="" style={{ width:20,height:20}}/></div>
         </div>
-      </div> 
+      </div>
+      </div>
     </div>
   )
 }
