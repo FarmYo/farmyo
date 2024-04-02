@@ -1,8 +1,7 @@
 package com.ssafy.farmyo.blockchain.service;
 
-import com.ssafy.farmyo.blockchain.contract.CropContract;
+import com.ssafy.farmyo.blockchain.contract.TradeContract;
 import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.web3j.crypto.Credentials;
@@ -20,10 +19,9 @@ import java.io.IOException;
 import java.math.BigInteger;
 
 @Service
-@RequiredArgsConstructor
-public class CropContractService {
+public class TradeContractService {
 
-    private CropContract cropContract;
+    private TradeContract tradeContract;
     private Web3j web3j;
 
     private Credentials credentials;
@@ -33,10 +31,15 @@ public class CropContractService {
     @Value("${spring.blockChain.privateKey}")
     private String privateKey;
 
+    // 기본 생성자를 비워 두고, 실제 로직은 @PostConstruct 어노테이션을 사용한 메소드에서 수행
+    public TradeContractService() {
+        // 기본 생성자는 비워둠
+    }
+
     @PostConstruct
     public void init() throws IOException {
         String rpcUrl = "https://rpc2.sepolia.org";
-        String contractAddress = "0xE8448EEB2629E3e96f96f8EBedc9Fd2faa6fe20c";
+        String contractAddress = "0xf22D952Dbd1E212739F4a4730FfddA657182DD14";
         long chainId = 11155111;
 
         this.web3j = Web3j.build(new HttpService(rpcUrl)); // url과 web3j을 통해 해당 코인네트워크 접속
@@ -59,8 +62,8 @@ public class CropContractService {
                 receiptProcessor
         );
 
-        // CropData 스마트 계약 로드, ContractGasProvider를 사용하여 가스 가격 및 한도 설정
-        this.cropContract = CropContract.load(
+        // TradeContract 스마트 계약 로드, ContractGasProvider를 사용하여 가스 가격 및 한도 설정
+        this.tradeContract = TradeContract.load(
                 contractAddress,
                 web3j,
                 transactionManager,
@@ -77,30 +80,27 @@ public class CropContractService {
 
                     @Override
                     public BigInteger getGasLimit(String contractFunc) {
-                        return BigInteger.valueOf(10000000); // 예제 가스 한도
+                        return BigInteger.valueOf(3000000); // 예제 가스 한도
                     }
 
                     @Override
                     public BigInteger getGasLimit() {
-                        return BigInteger.valueOf(10000000); // 예제 가스 한도
+                        return BigInteger.valueOf(3000000); // 예제 가스 한도
                     }
                 }
         );
     }
 
-    public TransactionReceipt addPlantingInfo(BigInteger cropPK, String cropName, String land, BigInteger eventDate) throws Exception {
-        return cropContract.addPlantingInfo(cropPK, cropName, land, eventDate).send();
+    public TransactionReceipt adminBurn(String address, BigInteger amount, BigInteger userId) throws Exception {
+        return tradeContract.adminBurn(address, amount, userId).send();
     }
 
-    public TransactionReceipt addUsageInfo(BigInteger cropPK, String pesticideName, String pesticideType, BigInteger eventDate) throws Exception {
-        return cropContract.addUsageInfo(cropPK, pesticideName, pesticideType, eventDate).send();
+    public TransactionReceipt adminMint(String address, BigInteger amount, BigInteger userId) throws Exception {
+        return tradeContract.adminMint(address, amount, userId).send();
     }
 
-    public TransactionReceipt addContestInfo(BigInteger cropPK, String contestName, String awardDetails, BigInteger eventDate) throws Exception {
-        return cropContract.addContestInfo(cropPK, contestName, awardDetails, eventDate).send();
+    public TransactionReceipt adminTransfer(String farmerAddress, String customerAddress, BigInteger amount, BigInteger customerId, BigInteger farmerId) throws Exception {
+        return tradeContract.adminTransfer(farmerAddress, customerAddress, amount, customerId, farmerId).send();
     }
 
-    public TransactionReceipt addHarvestInfo(BigInteger cropPK, BigInteger eventDate) throws Exception {
-        return cropContract.addHarvestInfo(cropPK, eventDate).send();
-    }
 }
