@@ -5,7 +5,7 @@ import Gumsa from "../../../image/component/gumsa.png"
 import Inz from "../../../image/component/inz.png"
 import "react-responsive-modal/styles.css"
 import { Modal } from "react-responsive-modal"
-import React,{ useState,useEffect } from "react"
+import React,{ useState,useEffect,useRef} from "react"
 import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
@@ -855,9 +855,9 @@ export default function MyCrops(props) {
     .catch((err)=>{
       console.log(err)
     })
-  
-
   }  
+
+
 
 
   return(
@@ -1015,9 +1015,11 @@ export default function MyCrops(props) {
           </div>
         </div>
         <div className="px-8 mt-10">
-          <button className="btn w-full flex justify-around" style={{ border:'3px solid #81C784',backgroundColor: 'transparent'}}>
+          <button className="btn w-full flex justify-around" 
+          style={{ border:'3px solid #81C784',backgroundColor: 'transparent'}}
+          onClick={LifeRecordOpenModal}>
             <img src={Vet} alt="" style={{width:40,height:30}}/>
-            <div className="font-bold" onClick={LifeRecordOpenModal}>농산물 생애기록 보기</div>
+            <div className="font-bold">농산물 생애기록 보기</div>
           </button>
         </div>
         {/* 아래부분은 판매자만보이게 */}
@@ -1054,16 +1056,15 @@ export default function MyCrops(props) {
             case 0:
               return (
                 <li>
-                  <div className="flex">
+                  <div className="flex" style={{borderLeft: "2px solid #1B5E20"}} >
                     <div class="timeline-middle">
-                    <div class="vertical-line"></div>
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg>
                     </div>
-                    <div className="timeline-end timeline-box">
-                      <time className="font-mono italic">{item.eventDate}</time>
+                    <div className="timeline-end timeline-box space-y-2">
+                      <time className="font-mono italic font-bold">{item.eventDate}</time>
                       <div className="text-lg font-black">재배</div>
-                      작물이름 : {item.cropName} <br/>
-                      재배지 : {item.land}
+                      <div>작물이름 : {item.cropName}</div>
+                      <div>재배지 : {item.land}</div>
                     </div>
                   </div>
                 </li>
@@ -1073,15 +1074,17 @@ export default function MyCrops(props) {
             case 1:
               return (
                 <li>
-                <div class="timeline-middle">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg>
-                </div>
-                <div className="timeline-end timeline-box">
-                  <time className="font-mono italic">{item.eventDate}</time>
-                  <div className="text-lg font-black">농약사용</div>
-                  농약 이름 : {item.pesticideName} <br/>
-                  농약 종류 : {item.pesticideType}
-                </div>
+                  <div className="flex" style={{borderLeft: "2px solid #1B5E20"}} >
+                    <div class="timeline-middle">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg>
+                    </div>
+                    <div className="timeline-end timeline-box space-y-2">
+                      <time className="font-mono italic font-bold">{item.eventDate}</time>
+                      <div className="text-lg font-black">농약사용</div>
+                      <div>농약 이름 : {item.pesticideName}</div>
+                      <div>농약 종류 : {item.pesticideType}</div>
+                    </div>
+                  </div>
                 </li>
               )
 
@@ -1089,15 +1092,17 @@ export default function MyCrops(props) {
             case 2:
               return (
                 <li>
-                <div class="timeline-middle">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg>
-                </div>
-                <div className="timeline-end timeline-box">
-                  <time className="font-mono italic">{item.eventDate}</time>
-                  <div className="text-lg font-black">수상 정보</div>
-                  대회 이름 : {item.pesticicontestNamedeName} <br/>
-                  수상내역 : {item.awardDetails}
-                </div>
+                  <div className="flex" style={{borderLeft: "2px solid #1B5E20"}} >
+                    <div class="timeline-middle">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg>
+                    </div>
+                    <div className="timeline-end timeline-box space-y-2">
+                      <time className="font-mono italic font-bold">{item.eventDate}</time>
+                      <div className="text-lg font-black">수상 정보</div>
+                      <div>대회 이름 : {item.pesticicontestNamedeName} </div>
+                      <div>수상내역 : {item.awardDetails}</div>
+                    </div>
+                  </div>
                 </li>
 
               )
@@ -1106,17 +1111,16 @@ export default function MyCrops(props) {
               case 3:
                 return (
                   <li>
-                    <div className="flex">
+                    <div className="flex" style={{borderLeft: "2px solid #1B5E20"}} >
                       <div class="timeline-middle">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg>
                       </div>
-                      <div className="timeline-end timeline-box">
-                        <time className="font-mono italic">{item.eventDate}</time>
+                      <div className="timeline-end timeline-box space-y-2">
+                        <time className="font-mono italic font-bold">{item.eventDate}</time>
                         <div className="text-lg font-black">수확</div>
                       </div>
                     </div>
                   </li>
-
                 )
          
             default:
@@ -1132,7 +1136,7 @@ export default function MyCrops(props) {
         <Modal open={info2Open} onClose={info2CloseModal} styles={styles}>
         <div className="pt-12">
           <div className="px-8">  
-            <div className="flex justify-center">
+            <div className="flex justify-center w-64 h-32">
               { selectImage? (<img src={selectImage} alt="Selected crop" style={{ height: '100%', width: 'auto' }} />
               ) : (  <img src={cropImgUrl} alt="Crop" style={{ height: '100%', width: 'auto' }} />)}    
             </div>
