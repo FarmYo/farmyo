@@ -211,6 +211,7 @@ public class CropServiceImpl implements CropService {
         Crop crop = cropRepository.findById(cropId)
                 .orElseThrow(() -> new CustomException(ExceptionType.CROP_NOT_EXIST));
 
+
         //작물주인과 접속자가 다를 경우
         if (!crop.getFarmer().getId().equals(userId)) {
             throw new CustomException(ExceptionType.CROP_NOT_OWNED_BY_FARMER);
@@ -219,6 +220,11 @@ public class CropServiceImpl implements CropService {
         //작성일이 없을 경유
         if (cropBlockchainResDto.getEventDate() == null) {
             throw new CustomException(ExceptionType.EVENTDATE_INVALID);
+        }
+
+        if (cropBlockchainResDto.getEventDate().isBefore(crop.getCropPlantingDate())) {
+            throw new CustomException(ExceptionType.HARVEST_DATE_INVALID);
+
         }
 //        블록체인기능 다듬어서 넣을곳
         // LocalDate 타입의 날짜를 yyyyMMdd 형식의 String으로 변환
@@ -253,10 +259,7 @@ public class CropServiceImpl implements CropService {
                 throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
             }
         } else if (cropBlockchainResDto.getType() == 3) {
-            if (cropBlockchainResDto.getEventDate().isBefore(crop.getCropPlantingDate())) {
-                throw new CustomException(ExceptionType.HARVEST_DATE_INVALID);
 
-            }
             crop.updateCropHarvestDate(cropBlockchainResDto.getEventDate());
             try {
                 cropContractService.addHarvestInfo(BigInteger.valueOf(crop.getId()), eventDate);
