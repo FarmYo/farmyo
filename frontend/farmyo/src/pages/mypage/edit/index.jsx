@@ -154,7 +154,7 @@ export default function MypageEdit(){
     if (userInfo?.account?.depositor && userInfo?.account?.bankName && userInfo?.account?.accountNumber) {
       api.patch('users/account', {
         depositor : userInfo?.account?.depositor,
-        bank : userInfo?.account?.bankName,
+        bank : selectedBank.bankName,
         account : userInfo?.account?.accountNumber,
       })
       .then((res) => {
@@ -599,7 +599,7 @@ export default function MypageEdit(){
             <Menu as="div" >
             <div>
             <Menu.Button className="flex items-center justify-between h-10 w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3 pr-4">
-              <span>{selectedBank.bankName}</span>
+              {selectedBank ? (<span>{selectedBank?.bankName}</span>) : (<span>{userInfo?.account?.bankName}</span>)}
               <ChevronDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
             </Menu.Button>
             </div>
