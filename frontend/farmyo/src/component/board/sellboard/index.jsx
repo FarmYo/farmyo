@@ -164,7 +164,7 @@ export default function SellBoardList(){
 
   const [fileUrl, setFileUrl] = useState([])
   const [cropList, setCropList] = useState([]) // 작물등록시 작물 리스트
-  const [selectedCrop, setSelectedCrop] = useState({ id: null, cropName: '작물을 선택하세요' })
+  const [selectedCrop, setSelectedCrop] = useState({ id: null, cropName: '작물을 선택하세요', harvestDate: null })
   const settings = {
     dots: true, // 하단에 점으로 페이지 표시 여부
     infinite: true, // 무한으로 반복
@@ -300,10 +300,14 @@ export default function SellBoardList(){
             <div>
             <Menu as="div" className="relative inline-block text-left">
             <div>
-              <Menu.Button className="inline-flex w-44 justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                {selectedCrop.categoryName}
+              {selectedCrop.harvestDate ? (<Menu.Button className="inline-flex w-44 justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                {selectedCrop.cropName}({selectedCrop.harvestDate})
                 <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
-              </Menu.Button>
+              </Menu.Button>) :
+              (<Menu.Button className="inline-flex w-44 justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+              {selectedCrop.cropName}
+              <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
+            </Menu.Button>)}
             </div>
             <Transition
               as={Fragment}
@@ -318,7 +322,7 @@ export default function SellBoardList(){
           style={{width:'16rem'}}>
             <div className="py-1">
               {cropList.map((crop,index)=>(
-              <Menu.Item key={crop.id} onClick={() => setSelectedCrop({ id: crop.id, cropName: crop.name })}> 
+              <Menu.Item key={crop.id} onClick={() => setSelectedCrop({ id: crop.id, cropName: crop.name, harvestDate: crop.harvestDate })}> 
                 {({ active }) => (
                   <button
                     href="#"

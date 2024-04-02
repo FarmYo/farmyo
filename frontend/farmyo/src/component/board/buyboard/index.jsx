@@ -91,6 +91,7 @@ export default function BuyBoardList(){
           confirmButtonColor: '#1B5E20',
         })
       } else {
+        console.log(cropId, title, content, quantity, price)
       Swal.fire({
         title : '정보를 입력해주세요.',
         confirmButtonColor: '#1B5E20',
@@ -199,7 +200,10 @@ export default function BuyBoardList(){
             <Menu.Items className="absolute right-0 z-10 mt-2 w-30 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-auto max-h-60">
               <div className="py-1">
                 {cropCategory.map((crop,index)=>(
-                <Menu.Item key={crop.id} onClick={() => setSelectedCrop({ id: crop.id, categoryName: crop.categoryName })}> 
+                <Menu.Item key={crop.id} onClick={() => {
+                  setSelectedCrop({ id: crop.id, categoryName: crop.categoryName })
+                  setCropId(crop.id)
+                  }}> 
                   {({ active }) => (
                     <button
                       href="#"
