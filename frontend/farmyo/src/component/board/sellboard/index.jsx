@@ -13,39 +13,104 @@ import { jwtDecode } from "jwt-decode"
 export default function SellBoardList(){
   const im = jwtDecode(localStorage.getItem('access')).userJob
   const navigate = useNavigate()
+
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
 
   // 무한스크롤 부분
+  // const [page, setPage] = useState(0)
+  // const observer = useRef(null)
+  // const [haveMore, setHaveMore] = useState(true)
+  // const handleIntersection = (articles) => {
+  //   articles.forEach((article) => {
+  //     if (haveMore && article.isIntersecting && article.target.className === 'trigger') {
+  //       BoardInfo()
+  //     }
+  //   })
+  // }
+
+  // useEffect(() => {
+  //   observer.current = new IntersectionObserver(handleIntersection, {
+  //     threshold : 0.7,
+  //   })
+  //   const observeTarget = document.querySelector('.trigger');
+  //   observer.current.observe(observeTarget);
+  //   return () => {
+  //     observer.current.disconnect()
+  //   }
+  // }, [])
+
+  // const BoardInfo = (() => {
+  //   api.get(`boards?type=0&page=${page}&size=6`)
+  //   .then((res) => {
+  //     if (res.data.dataBody.length > 0) {
+  //       setBoardInfo([...boardInfo, ...res.data.dataBody])
+  //       console.log('게시글 불러오기 성공', res)
+  //       setPage((prevPage) => prevPage + 1);
+  //       console.log(res.data.dataBody, boardInfo, page)
+  //     } else {
+  //       setHaveMore(false)
+  //       console.log('더이상의 데이터가 없습니다.', res)
+  //     }
+  //   })
+  //   .catch((err) => {
+  //     console.log('게시글 불러오기 실패', err)
+  //   })
+  // })
+  
+  // useEffect(() => {
+  //   if (haveMore) {
+  //     BoardInfo();
+  //   }
+  //   setCropId(selectedCrop.id);
+  // }, [])
+
+  // 무한스크롤 부분
   const [boardInfo, setBoardInfo] = useState([])
-  const BoardInfo = (() => {
-    api.get(`boards?type=0&page=${page}&size=6`)
+  const [page, setPage] = useState(0)
+  const obsRef = useRef(null)
+  const preventRef = useRef(true);
+  const [haveMore, setHaveMore] = useState(true)
+  const size = 6
+
+  const obsHandler = ((entries) => { //옵저버 콜백함수
+    const target = entries[0]
+    if(haveMore && target.isIntersecting && preventRef.current) {//옵저버 중복 실행 방지
+      preventRef.current=false
+      setPage(prev => prev+1) //페이지 값 증가
+    }
+  })
+
+  useEffect(() => {//옵저버 생성
+    const observer = new IntersectionObserver(obsHandler, {threshold : 0.1})
+    if(obsRef.current) observer.observe(obsRef.current)
+    return () => {observer.disconnect()}
+  }, [])
+
+  const getBoard = (() => {
+    api.get(`boards?type=0&page=${page}&size=${size}`)
     .then((res) => {
-      if (res.data.dataBody.length > 0) {
-        setBoardInfo([...boardInfo, ...res.data.dataBody])
-        console.log('게시글 불러오기 성공', res)
-        setPage((prevPage) => prevPage + 1);
+      if (res.data.dataBody.length < size) {
+        setHaveMore(false)
+        setBoardInfo(prevBoardInfo => [...prevBoardInfo, ...res.data.dataBody]);
+        console.log('더이상의 데이터가 없습니다.', res)
         console.log(res.data.dataBody, boardInfo, page)
       } else {
-        setHaveMore(false)
-        console.log('더이상의 데이터가 없습니다.', res)
+        setBoardInfo(prevBoardInfo => [...prevBoardInfo, ...res.data.dataBody]);
+        //불러올 때마다 다시 중복방지값 true로 변환
+        preventRef.current=true
+        console.log("무한스크롤 되는중")
       }
     })
     .catch((err) => {
       console.log('게시글 불러오기 실패', err)
     })
   })
-  const [page, setPage] = useState(0)
-  const observer = useRef(null)
-  const [haveMore, setHaveMore] = useState(true)
-  const handleIntersection = (articles) => {
-    articles.forEach((article) => {
-      if (haveMore && article.isIntersecting && article.target.className === 'trigger') {
-        BoardInfo()
-      }
-    })
-  }
+  
+  useEffect(() => {
+    getBoard();
+  }, [page])
 
   const [files, setFiles] = useState([])
   const [cropId, setCropId] =useState(0)
@@ -53,7 +118,6 @@ export default function SellBoardList(){
   const [price, setPrice] = useState(0)
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
-  const [cropCategory, setCropCategory] =useState([])
 
   // multipart/form-data로 보내기(json형식 아님)
   const makeArticle = () => {
@@ -222,24 +286,6 @@ export default function SellBoardList(){
     setSellOpen(false);
   });
 
-  useEffect(() => {
-    if (haveMore) {
-      BoardInfo();
-    }
-    setCropId(selectedCrop.id);
-    // 크롭 id 바꾸기
-  }, [])
-
-  useEffect(() => {
-    observer.current = new IntersectionObserver(handleIntersection, {
-      threshold : 0.7,
-    })
-    const observeTarget = document.querySelector('.trigger');
-    observer.current.observe(observeTarget);
-    return () => {
-      observer.current.disconnect()
-    }
-  }, [])
   useEffect(() => {
     const myId = jwtDecode(localStorage.getItem('access')).loginId
     // 작물 카테고리 조회
