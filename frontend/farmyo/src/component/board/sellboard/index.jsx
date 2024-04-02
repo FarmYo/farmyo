@@ -302,10 +302,9 @@ export default function SellBoardList(){
     <div style={{height:'420px',position:'relative'}}>
       {/* 팝니다 게시글 목록 */}
       {boardInfo.map((article) => (
-      <div className="p-4 flex" key={article.boardId} onClick={() => navigate(`sell/${article.boardId}/detail`)}>
-        <img src={article.imgUrl} alt="작물이미지" className="w-32" />
+      <div className="p-3 flex" key={article.boardId} onClick={() => navigate(`sell/${article.boardId}/detail`)}>
+        <div className='w-32 h-24'><img src={article.imgUrl} alt="작물이미지" /></div>
 
-        {/* <div style={{backgroundColor:'#bbbbbb'}} className="w-32"></div> */}
         <div className="w-full ml-2">
           <h1 className="text-lg font-bold">{article.title}</h1>
           <h1 className="text-sm">{article.userNickname}</h1>
@@ -319,7 +318,7 @@ export default function SellBoardList(){
       ))}
       {/* {haveMore && <div className="trigger"></div>} */}
       <div ref={obsRef}><br/></div>
-      <div style={{ position: 'fixed', bottom: '200px', right: '15px'}}>
+      <div style={{ position: 'fixed', bottom: '130px', right: '15px'}}>
         {im === 0 && (
         <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
           <div style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}
