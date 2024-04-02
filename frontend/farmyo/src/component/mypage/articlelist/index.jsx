@@ -1,11 +1,51 @@
-import { useState } from "react"
+import { useState,useEffect } from "react"
+import { jwtDecode } from 'jwt-decode'
+import api from '../../../api/api'
+import { useNavigate } from "react-router-dom"
 
-export default function Articlelist() {
-  const [articles, setArticles] = useState([
-    { id: 1, title: '감자팝니다', date: '2024/02/02' },
-    { id: 2, title: '감자감자팔아요', date: '2024/02/10' },
-    // 여기에 더 많은 게시글을 추가할 수 있습니다.
-  ]);
+
+export default function Articlelist(props) {
+  const loginId = jwtDecode( localStorage.getItem("access") ).loginId
+  // console.log(loginId)
+  // console.log(props.profileId)
+  const navigate = useNavigate()
+  const [boardList,setBoardList] = useState([])
+ 
+  // 본인이 작성한 게시글조회 
+  useEffect(()=>{
+    if (!props.profileId){
+      api.get(`boards/list/${loginId}`,{
+        params:{
+          page : 0,
+          size: 4
+        }
+      })
+      .then((res)=>{
+        console.log(res)
+        console.log('게시글 조회성공')
+        setBoardList(res.data.dataBody)
+        // {boardId: 41, title: '상추맛집', createdAt: '2024-03-28T16:44:42.220845', boardType: 0}
+      })
+      .catch((err)=>{
+        console.log(err)
+      })
+    }else{
+      api.get(`boards/list/${props.profileId}`,{
+        params:{
+          page : 0,
+          size: 4
+        }
+      })
+      .then((res)=>{
+        console.log(res)
+        console.log('게시글 조회성공')
+        setBoardList(res.data.dataBody)
+      })
+      .catch((err)=>{
+        console.log(err)
+      })
+    }
+    },[])
 
 
   return(
@@ -13,10 +53,15 @@ export default function Articlelist() {
       <div className="overflow-x-auto">
         <table className="table">
           <tbody>
-            {articles.map((article) => ( // 게시글 목록을 반복하여 테이블 행을 생성합니다.
-              <tr key={article.id} style={{ height: 80 }}>
+            {boardList.map((article) => ( 
+              <tr key={article.id} style={{ height: 80 }}
+              onClick={() => navigate(
+                article.boardType === 0
+                  ? `/board/sell/${article.boardId}/detail` 
+                  : `/board/buy/${article.boardId}/detail`
+              )}>
                 <td className="font-bold pl-8 text-lg">{article.title}</td>
-                <td>{article.date}</td>
+                <td>{article.createdAt.split('T')[0]}</td>
               </tr>
             ))}
           </tbody>
@@ -25,3 +70,6 @@ export default function Articlelist() {
     </div>
   )
 }
+
+
+// boardType = 0 이면 팝니다가 맞는지 
