@@ -9,7 +9,6 @@ import Swal from 'sweetalert2';
 export default function PaymentRedirectPage() {
   const location = useLocation()
   const navigate = useNavigate()
-  const { rsp } = location.state
   const queryParams = new URLSearchParams(location.search);
   const impSuccess = queryParams.get('imp_success');
   const tradeId = localStorage.getItem('tradeId')
@@ -71,7 +70,7 @@ export default function PaymentRedirectPage() {
 
   // }
 
-  },[location,navigate])
+  },[])
 
   return (
     <div className="w-full h-screen flex flex-col justify-center items-center relative">
