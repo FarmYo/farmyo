@@ -206,7 +206,6 @@ export default function SellBoardList(){
           }
           console.log('formData 형성 실패','cropId : ', cropId, 'files : ', files, 'title : ', title, 'content : ', content, 'quantity : ', quantity, 'price : ', price)
         }
-      // })
     } else {
       if (!quantity) {
           Swal.fire({
@@ -318,7 +317,8 @@ export default function SellBoardList(){
         </div>
       </div>
       ))}
-      {haveMore && <div className="trigger"></div>}
+      {/* {haveMore && <div className="trigger"></div>} */}
+      <div ref={obsRef}><br/></div>
       <div style={{ position: 'absolute', bottom: 0, right: 10}}>
         {im === 0 && (
         <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
