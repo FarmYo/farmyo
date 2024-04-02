@@ -24,6 +24,7 @@ import CropStanby from "../../../image/component/cropstanby.gif"
 import Gallery from "../../../image/component/gallery.png"
 import Swal from "sweetalert2"
 import BeforeHarvest from '../../../image/component/beforeharvest.png'
+import Daegi from '../../../image/component/daegi.gif'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -49,12 +50,7 @@ export default function MyCrops(props) {
   const [cropList,setCropList] = useState([]) // 작물등록시 작물 리스트
   const [cropsList,setCropsList] = useState([]) // 농부가 등록한 작물조회시 담길 리스트
   const [cropId,setCropId] = useState(null)
-  //작물 리스트 5개단위로 페이지네이션
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 5
-  //전체 페이지수 계산
-  const totalItems = cropsList.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+ 
   
   const [lifeCycleList,setLifeCycleList] = useState([])
 
@@ -479,6 +475,7 @@ export default function MyCrops(props) {
       "type": "function"
     }
   ]
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
   //접근할 계약 주소
   const contractAddress = '0xE8448EEB2629E3e96f96f8EBedc9Fd2faa6fe20c';
   //계약 객체 생성
@@ -486,6 +483,7 @@ export default function MyCrops(props) {
 
   //모든 정보 호출하여 데이터 가져와서 시간 순으로 정렬
   async function fetchData(cropPK) {
+    setIsLoading(true);
     try {
       const plantingInfo = await contract.methods.getPlantingInfos(cropPK).call();
       const usageInfos = await contract.methods.getUsageInfos(cropPK).call();
@@ -545,6 +543,8 @@ export default function MyCrops(props) {
     } catch (error) {
       console.error('Error fetching data:', error);
       throw error;
+    }finally {
+      setIsLoading(false); // 로딩 완료
     }
   }
 
@@ -555,29 +555,43 @@ export default function MyCrops(props) {
   //   console.error('Error fetching data:', error);
   // });
 
+   //작물 리스트 5개단위로 페이지네이션
+   const [currentPage, setCurrentPage] = useState(1)
+   const itemsPerPage = 3
+   //전체 페이지수 계산
+   const totalItems = cropsList.length;
+   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-
-
-
+   const groupSize = 3; // 페이지 그룹당 최대 페이지 수
+   const [currentGroup, setCurrentGroup] = useState(1); // 현재 페이지 그룹
   // currentPage에 따라 보여줄 항목 계산
   const indexOfLastItem = currentPage * itemsPerPage
   const indexOfFirstItem = indexOfLastItem - itemsPerPage
   const currentItems = cropsList.slice(indexOfFirstItem, indexOfLastItem)
 
+
+  // 현재 페이지 그룹에 따라 보여줄 페이지 번호 계산
+  const firstPageInGroup = (currentGroup - 1) * groupSize + 1;
+  const lastPageInGroup = Math.min(firstPageInGroup + groupSize - 1, totalPages);
+
+
    // 페이지 변경 함수
-   const goToNextPage = () => {
-    setCurrentPage(currentPage => {
-      if (currentPage < totalPages) return currentPage + 1;
-      return currentPage;
-    });
-  };
-   const goToPrevPage = () => setCurrentPage(page => page > 1 ? page - 1 : page);
+  //  const goToNextPage = () => {
+  //   setCurrentPage(currentPage => {
+  //     if (currentPage < totalPages) return currentPage + 1;
+  //     return currentPage;
+  //   });
+  // };
+  //  const goToPrevPage = () => setCurrentPage(page => page > 1 ? page - 1 : page);
 
    const pageNumbers = [];
-    for (let i = 1; i <= totalPages; i++) {
-      pageNumbers.push(i);
-    }
+  for (let i = firstPageInGroup; i <= lastPageInGroup; i++) {
+    pageNumbers.push(i);
+  }
 
+  const paginate = pageNumber => setCurrentPage(pageNumber);
+  const goToNextGroup = () => setCurrentGroup(group => Math.min(group + 1, Math.ceil(totalPages / groupSize)));
+  const goToPrevGroup = () => setCurrentGroup(group => Math.max(group - 1, 1));
 
   const [flag,setFlag] = useState(false)
 
@@ -684,11 +698,16 @@ export default function MyCrops(props) {
   
       console.log('작물등록성공');
       console.log(res);
-      
+      Swal.fire({
+        html: '<h1 style="font-weight: bold;">작물이 등록되었습니다</h1>',
+        icon: 'success',
+        showConfirmButton: false,
+      });
       setSelectedCrop({ id: null, categoryName: '작물을 선택하세요' });
       setCultivation('');
       setPlantingDate('');
       navigate('/mypage/seller',{ state: { selectedTabIndex: 1 } })
+
 
     } catch (err) {
       console.log(err);
@@ -770,7 +789,9 @@ export default function MyCrops(props) {
   // 생애기록 모달(블록체인)
   const LifeRecordOpenModal = () => {
     fetchData(cropId)
-    setLifeRecordOpen(true);
+    if (!isLoading) {
+    setLifeRecordOpen(true)
+    }
   };
 
   const LifeRecordCloseModal = () => {
@@ -886,19 +907,26 @@ export default function MyCrops(props) {
       </div>
       ))}
       
-      <div style={{ position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)' }}>
+      <div style={{ position: 'fixed', bottom: '130px', left: '50%', transform: 'translateX(-50%)' }}>
         <div className="join flex justify-center">
-          <button className="join-item btn"  onClick={goToPrevPage}>«</button>
+          {/* 이전 페이지 그룹으로 이동: 현재 페이지 그룹이 첫 번째 그룹보다 큰 경우에만 버튼 표시 */}
+          {currentGroup > 1 && (
+            <button className="join-item btn" onClick={goToPrevGroup}>«</button>
+          )}
           {pageNumbers.map(number => (
-          <button key={number}
-          className={`join-item btn ${currentPage === number ? 'active' : ''}`}
-          onClick={() => setCurrentPage(number)}>
-            {number}
-          </button>
+            <button key={number}
+              className={`join-item btn ${currentPage === number ? 'active' : ''}`}
+              onClick={() => paginate(number)}>
+              {number}
+            </button>
           ))}
-          <button className="join-item btn"  onClick={goToNextPage}>»</button>
+          {/* 다음 페이지 그룹으로 이동: 현재 페이지 그룹이 마지막 그룹보다 작은 경우에만 버튼 표시 */}
+          {currentGroup < Math.ceil(totalPages / groupSize) && (
+            <button className="join-item btn" onClick={goToNextGroup}>»</button>
+          )}
         </div>
       </div>
+
       </>
       ) :
       (
@@ -908,7 +936,7 @@ export default function MyCrops(props) {
       )}
   
       { !props.profileId && (
-      <div style={{ position: 'absolute', bottom: 0, right: 10}}>
+      <div style={{ position: 'fixed', bottom: '130px', right: '15px'}}>
         <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
           <div style={{ position: 'absolute', top: '44%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}
           onClick={onOpenModal}>
@@ -921,7 +949,7 @@ export default function MyCrops(props) {
       {/* ********모달모음************ */}
       {/* ******농산물 등록모달창***** */}
       <Modal open={open} onClose={onCloseModal} styles={styles}>
-        <div className="flex justify-center items-center pt-32">
+        <div className="flex justify-center items-center pt-12">
         <Menu as="div" className="relative inline-block text-left">
           <Menu.Button className="inline-flex w-full justify-center items-center gap-x-1.5 rounded-md
           bg-white px-12 py-3 text-xl text-gray-900 font-semibold
@@ -979,7 +1007,7 @@ export default function MyCrops(props) {
             <DatePicker
               locale={ko}
               selected={plantingDate ? new Date(plantingDate) : null}
-              dateFormat="yyyy년 MM월 dd일"
+              dateFormat="yyyy-MM-dd"
               onChange={date => setPlantingDate(date.toISOString().slice(0, 10))}
               className="block h-12 w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               placeholderText="날짜를 선택하세요"
@@ -995,7 +1023,7 @@ export default function MyCrops(props) {
       </Modal>
       {/* *******농산물정보보기모달(수확전)****** */}
       <Modal open={infoOpen} onClose={infoCloseModal} styles={styles}>
-        <div className="mt-28">
+        <div className="mt-16">
         <div className="px-8">
           <label for="price" class="block text-xl font-medium leading-6 text-gray-900">작물명</label>
           <div class="relative mt-2 rounded-md">
@@ -1025,7 +1053,7 @@ export default function MyCrops(props) {
         {/* 아래부분은 판매자만보이게 */}
         { (!props.profileId || props.profileId === loginId)  && (
         <div>
-          <div className="px-8 flex justify-end mt-3">
+          <div className="px-8 flex justify-end mt-3 mr-3">
             <p className="text-md font-bold" onClick={addRecordModal}>+생애기록 추가하기</p>
           </div>
           <div className="px-8 mt-10" onClick={harvestOpenModal}>
@@ -1039,16 +1067,15 @@ export default function MyCrops(props) {
       </Modal>
       {/* 농산물 생애기록보기(블록체인) 모달 */}
       <Modal open={lifeRecordOpen} onClose={LifeRecordCloseModal} styles={styles}>
-        {/* <div class="timeline">
-          <div class="event">
-            <div class="text-xl font-bold">2023-05-10</div>
-            <div class="event-circle"></div>
-            <div className="font-bold mt-5">심은날짜</div>    
-            <div>2022-10-2</div>
-            <div className="font-bold mt-5">재배지</div>    
-            <div>경상북도 고령군 대가야읍</div>
+       { isLoading ? (
+        <div className="flex flex-col items-center justify-center min-h-screen">
+          <div><img src={Daegi} alt="대기 이미지" style={{width:200}}/></div>
+          <div className="font-bold text-lg">
+            <h1>생애기록 불러오는중 ...</h1>
           </div>
-        </div> */}
+        </div>
+    
+       ) : (
         <ul class="timeline-vertical">
         {lifeCycleList.map((item, index) => {
           switch (item.infoType) {
@@ -1129,7 +1156,7 @@ export default function MyCrops(props) {
           
         })}
         </ul>
-
+      )}
       </Modal>
 
        {/* *******농산물정보보기모달(수확후)****** */} 
@@ -1279,7 +1306,7 @@ export default function MyCrops(props) {
 
       {/* ******생애기록추가모달******** */}
       <Modal open={addRecord} onClose={addRecordCloseModal} styles={styles}>
-      <div className="flex justify-center items-center pt-28">
+      <div className="flex justify-center items-center pt-16">
         <Menu as="div" className="relative inline-block text-left">
           <Menu.Button className="inline-flex w-full justify-center items-center gap-x-1.5 rounded-md
           bg-white px-12 py-3 text-xl text-gray-900 font-semibold
@@ -1338,7 +1365,7 @@ export default function MyCrops(props) {
           
           {/* 수확하기모달폼 */}      
           <Modal open={harvestOpen} onClose={harvestCloseModal} styles={styles}>
-            <div className="mt-28">
+            <div className="mt-12">
             <div className="px-8 mt-4">
               <label for="price" class="block text-xl font-medium leading-6 text-gray-900">작물명</label>
               <div class="relative mt-2 rounded-md">
@@ -1363,7 +1390,7 @@ export default function MyCrops(props) {
                 <DatePicker
                 locale={ko}
                 selected={cropHarvestDate ? new Date(cropHarvestDate) : null}
-                dateFormat="yyyy년 MM월 dd일"
+                dateFormat="yyyy-MM-dd"
                 onChange={date => setCropHarvestDate(date.toISOString().slice(0, 10))}
                 className="block h-10 w-full rounded-md 
                  py-1.5 pl-7 pr-20

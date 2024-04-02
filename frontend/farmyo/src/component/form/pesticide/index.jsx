@@ -77,7 +77,7 @@ export default function Pesticide( { cropId, onRegister }){
           <div className="label">
             <span className="text-md">사용날짜</span>
           </div>
-          <input type="number" placeholder="yyyy-mm-dd 형식으로입력" className="input input-bordered w-full max-w-xs" 
+          <input type="text" placeholder="yyyy-mm-dd 형식으로입력" className="input input-bordered w-full max-w-xs" 
           onChange={(e)=>setEventDate(e.target.value)}/>
           </label>
           <label className="form-control w-full max-w-xs">
