@@ -61,7 +61,7 @@ export default function PaymentRedirectPage() {
         console.log(err)
         navigate('/trade')
       })
-      Swal.fire("되나")
+      Swal.fire("결제 완료 페이지에서 대기하시면 페이지가 이동됩니다.")
       
     }
     else{
