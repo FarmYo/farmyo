@@ -39,14 +39,14 @@ public class ChatController {
 
     @GetMapping("/rooms/{loginId}")
     @Operation(summary = "채팅방 목록 조회", description = "해당 유저의 채팅방 목록을 조회한다. (채팅 탭 눌렀을 때)")
-    @ApiResponse(responseCode = "200", description = "성공 \n\n 채팅방 목록 반환 List<ChatRoomListDto>")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n 안 읽은 메세지 리스트 + 채팅방 목록 반환 resultDto")
     public ResponseEntity<? extends BaseResponseBody> getChatRooms (
             @PathVariable
             @Parameter(description = "채팅방 목록을 조회할 유저의 아이디")
             String loginId
     ) {
-        List<ChatRoomListDto> chatList = chatService.getChatRooms(loginId);
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, chatList));
+        ChatRoomResultDto resultDto = chatService.getChatRooms(loginId);
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, resultDto));
     }
 
     @GetMapping("/message/{chatId}")
@@ -60,5 +60,16 @@ public class ChatController {
     ) {
         MessageListDto messageList = chatService.getMessages(chatId, authentication, page, size);
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, messageList));
+    }
+
+    @PutMapping("/message/{chatId}")
+    @Operation(summary = "채팅 읽음 처리", description = "해당 채팅방에 내용들을 읽음 처리 한다.")
+    @ApiResponse(responseCode = "200", description = "성공 \n\n Success")
+    public ResponseEntity<? extends BaseResponseBody> getMessages (
+            Authentication authentication,
+            @PathVariable int chatId
+    ) {
+        chatService.readMessages(chatId, authentication);
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, "Success"));
     }
 }
