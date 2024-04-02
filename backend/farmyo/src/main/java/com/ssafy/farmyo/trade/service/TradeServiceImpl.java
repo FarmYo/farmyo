@@ -14,6 +14,8 @@ import com.ssafy.farmyo.trade.repository.TradeWithdrawalRepository;
 import com.ssafy.farmyo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,7 +87,7 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     @Transactional
-    public TradeListReqDto getTrades(int id) {
+    public TradeListReqDto getTrades(int id, int page, int size) {
         User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
 
         log.info("user : {}", user);
@@ -96,8 +98,10 @@ public class TradeServiceImpl implements TradeService {
         log.info("{} : user job", job);
 
         if (job == 0) { // user가 판매자라면
-            List<Trade> finish = tradeRepository.findAllBySellerAndTradeStatus(id, 3);
-            List<Trade> notFinish = tradeRepository.findAllBySellerAndTradeStatusNot(id, 3);
+//            List<Trade> finish = tradeRepository.findAllBySellerAndTradeStatus(id, 3);
+//            List<Trade> notFinish = tradeRepository.findAllBySellerAndTradeStatusNot(id, 3);
+            Page<Trade> finish = tradeRepository.findAllBySellerAndTradeStatus(id, 3, PageRequest.of(page, size));
+            Page<Trade> notFinish = tradeRepository.findAllBySellerAndTradeStatusNot(id, 3, PageRequest.of(page, size));
             List<TradeListDto> selNot = new ArrayList<>();
             List<TradeListDto> sel = new ArrayList<>();
 
@@ -135,8 +139,10 @@ public class TradeServiceImpl implements TradeService {
                     .build();
 
         } else { // user가 구매자라면
-            List<Trade> finish = tradeRepository.findAllByBuyerAndTradeStatus(id, 3);
-            List<Trade> notFinish = tradeRepository.findAllByBuyerAndTradeStatusNot(id, 3);
+//            List<Trade> finish = tradeRepository.findAllByBuyerAndTradeStatus(id, 3);
+//            List<Trade> notFinish = tradeRepository.findAllByBuyerAndTradeStatusNot(id, 3);
+            Page<Trade> finish = tradeRepository.findAllByBuyerAndTradeStatus(id, 3, PageRequest.of(page, size));
+            Page<Trade> notFinish = tradeRepository.findAllByBuyerAndTradeStatusNot(id, 3, PageRequest.of(page, size));
             List<TradeListDto> buyNot = new ArrayList<>();
             List<TradeListDto> buy = new ArrayList<>();
 

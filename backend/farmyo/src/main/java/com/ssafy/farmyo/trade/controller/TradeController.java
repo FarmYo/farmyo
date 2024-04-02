@@ -41,10 +41,16 @@ public class TradeController {
     public ResponseEntity<? extends BaseResponseBody> getTradeList(
             @RequestParam(name = "id")
             @Parameter(description = "거래 목록을 조회할 유저의 아이디")
-            int id) {
+            int id,
+            @RequestParam(value = "page", defaultValue = "0")
+            @Parameter(description = "페이지")
+            int page,
+            @RequestParam(value = "size", defaultValue = "10")
+            @Parameter(description = "사이즈")
+            int size) {
         log.info("{} : getTradeList 실행", id);
 
-        TradeListReqDto tradeListReqDto = tradeService.getTrades(id);
+        TradeListReqDto tradeListReqDto = tradeService.getTrades(id, page, size);
 
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponseBody.of(0, tradeListReqDto));
     }
