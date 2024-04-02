@@ -70,7 +70,9 @@ export default function BuyBoardList(){
       getBoard()
     }, [page])
   
-
+    useEffect(() => {
+      setCropId(selectedCrop.id);
+    }, [])
 
 
 
@@ -243,7 +245,7 @@ export default function BuyBoardList(){
                 {cropCategory.map((crop,index)=>(
                 <Menu.Item key={crop.id} onClick={() => {
                   setSelectedCrop({ id: crop.id, categoryName: crop.categoryName })
-                  setCropId(crop.id)
+                    setCropId(crop.id)
                   }}> 
                   {({ active }) => (
                     <button
