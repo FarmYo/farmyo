@@ -88,5 +88,5 @@ export default function BoardNav(){
       {selected === 0 && <SellBoardList />}
       {selected === 1 && <BuyBoardList />} 
     </div>
-  )
+  )                                                       
 }
