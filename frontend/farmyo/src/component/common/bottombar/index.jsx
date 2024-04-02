@@ -13,6 +13,7 @@ import MypageClick from '../../../image/component/mypageclick.png';
 import '../../../css/bottombar.css';
 import { jwtDecode } from 'jwt-decode';
 // import { useNavigate } from 'react-router-dom';
+import "../../../css/bottombar.css"
 
 export default function BottomBar() {
   const location = useLocation()
@@ -41,7 +42,7 @@ export default function BottomBar() {
   
   return (
     <div>
-      <nav className="bg-white border-t-2 border-gray-300 fixed bottom-0 w-full h-20">
+      <nav className="bg-white border-t-2 border-gray-300 fixed bottom-0 w-full h-20 ">
         <div className='p-3'>
           <div className="flex justify-between">
             {menuItems.map(({ key, to, text, image }) => (

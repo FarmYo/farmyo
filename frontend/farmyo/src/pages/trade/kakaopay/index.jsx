@@ -11,16 +11,15 @@ export default function PaymentRedirectPage() {
   // const { tradeId,seller } = location.state
   const params = queryString.parse(location.search);
   const impSuccess = params.imp_success === 'true';
-  const tradeId = localStorage.getItem('tradeId'); // 예시에서는 trade_id라고 가정합니다. 실제 파라미터 이름에 맞게 조정해야 합니다.
-  const seller =  localStorage.getItem('seller'); // 이 값도 URL에서 얻거나 다른 방식으로 제공받아야 할 수 있습니다.
-
+  const tradeId = localStorage.getItem('tradeId')
+  const seller =  localStorage.getItem('seller') 
 
 
 
 
   useEffect(()=>{
     // if (!location.state) {
-    //   return;
+    //   return;s
     // }
     if (impSuccess) {
     api.patch(`trades/deposit/${tradeId}`,{},{

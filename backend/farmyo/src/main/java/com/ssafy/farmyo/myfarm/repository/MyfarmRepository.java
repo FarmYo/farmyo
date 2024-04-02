@@ -18,7 +18,7 @@ public interface MyfarmRepository extends JpaRepository<Farm, Integer> {
     @Query(value = "SELECT f FROM Farm f WHERE f.farmer.id = :id ")
     List<Farm> findAllByUserId(int id);
 
-    @Query(value = "SELECT f FROM Farm f WHERE f.farmer.id = :id ")
+    @Query(value = "SELECT f FROM Farm f WHERE f.farmer.id = :id ORDER BY f.createdAt DESC")
     Page<Farm> findAllByUserId(int id, Pageable pageable);
 
     @Transactional
