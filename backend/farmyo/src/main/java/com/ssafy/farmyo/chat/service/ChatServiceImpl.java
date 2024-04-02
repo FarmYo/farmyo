@@ -11,6 +11,8 @@ import com.ssafy.farmyo.entity.Board;
 import com.ssafy.farmyo.entity.Chat;
 import com.ssafy.farmyo.entity.User;
 import com.ssafy.farmyo.user.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -88,7 +90,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public MessageListDto getMessages(int chatId, Authentication authentication) {
+    public MessageListDto getMessages(int chatId, Authentication authentication, int page, int size) {
 
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
@@ -110,7 +112,9 @@ public class ChatServiceImpl implements ChatService {
         }
 
         // MessageListDto 의 아랫부분 채우기
-        messageListDto.setMessageDetailDtoList(messageRepository.findAllById(chatId));
+        List<MessageDetailDto> allById = (List<MessageDetailDto>) messageRepository.findAllById(chatId, PageRequest.of(page, size));
+
+        messageListDto.setMessageDetailDtoList(allById);
 
         return messageListDto;
     }
