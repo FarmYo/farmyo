@@ -9,7 +9,7 @@ import Chatting from '../../../image/component/chatting.png'
 import Swal from 'sweetalert2'
 import { jwtDecode } from "jwt-decode"
 
-export default function BuyBoardList(){
+export default function BuyBoardList({ value, search }){
   const im = jwtDecode(localStorage.getItem('access')).userJob
   const navigate = useNavigate()
   function classNames(...classes) {
@@ -27,7 +27,6 @@ export default function BuyBoardList(){
   
   //무한스크롤
     // 무한스크롤 부분
-
     const [page, setPage] = useState(0)
     const obsRef = useRef(null)
     const preventRef = useRef(true);
@@ -71,9 +70,24 @@ export default function BuyBoardList(){
     }, [page])
   
 
+    useEffect(() => {
+      setCropId(selectedCrop.id);
+    }, [])
 
 
+  const [newBoardInfo, setNewBoardInfo] = useState([])
 
+  useEffect(() => {
+    const filteredList = boardInfo.filter((article) => {
+      if (value === "전체") return true;
+      else if (value === "농산물") return article.cropCategory === search;
+      else if (value === "제목") return article.title.includes(search); 
+      else if (value === "작성자") return article.userNickname.includes(search);
+    });
+    setNewBoardInfo(filteredList); 
+  }, [value, search, boardInfo]); 
+  
+  
 
 
   const makeArticle = (() => {
@@ -194,9 +208,10 @@ export default function BuyBoardList(){
 
     <div style={{height:'420px',position:'relative'}}>
       {/* 삽니다 게시글 목록 */}
-      {boardInfo.map((article,index) => (
+      {newBoardInfo.map((article,index) => (
         <div className="p-4 flex" key={index} onClick={() => navigate(`buy/${article.boardId}/detail`)}>
           <div className="w-full ml-2">
+            {article.cropCategory}
             <h1 className="text-lg font-bold">{article.title}</h1> 
             <h1 className="text-sm">{article.userNickname}</h1>
             <h1 style={{ color:'#1B5E20' }} className="font-bold">{article.quantity}kg</h1>

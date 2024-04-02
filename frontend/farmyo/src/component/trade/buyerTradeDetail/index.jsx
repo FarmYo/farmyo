@@ -171,7 +171,7 @@ export default function BuyerTrade() {
         name: "팜요", // 서비스명
         amount: info.tradePrice*info.tradeQuantity , // 결제 금액
         buyer_name: info.seller, // 판매자 이름
-        // m_redirect_url: 'https://j10d209.p.ssafy.io/trade/redirect',
+        m_redirect_url: 'https://j10d209.p.ssafy.io/trade/redirect',
       }, function(rsp) {
         console.log("결제응답:",rsp)
         if (rsp.success) {
@@ -217,7 +217,7 @@ export default function BuyerTrade() {
           icon: 'success',
           showConfirmButton: false,
         });
-         // info 상태 업데이트로 거래 상태 직접 변경
+        // info 상태 업데이트로 거래 상태 직접 변경
         setInfo(prevInfo => ({
           ...prevInfo,
           tradeStatus: 3 // 거래완료 상태로 변경
@@ -406,7 +406,7 @@ export default function BuyerTrade() {
           <DaumPostcode onComplete={handleAddressSelect} 
           autoClose width="100%" height="auto" />
         </Modal>
- 
+
     </div>
   )
 }
