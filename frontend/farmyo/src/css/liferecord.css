@@ -1,8 +1,6 @@
-.timeline {
+/* /* .timeline {
   position: relative;
   padding-left: 50px; /* 선과 동그라미가 이벤트 내용에 겹치지 않도록 충분한 공간 확보 */
-
-}
 
 .timeline::before {
   content: '';
@@ -31,20 +29,14 @@
   background: #134F2C; /* 동그라미 내부 색상 */
   border-radius: 50%; /* 동그라미 모양 */
   z-index: 1;
-}
+} */
 
 .timeline-middle {
-  position: relative; /* 상대적 위치 설정 */
-  height: 100%; /* 또는 실제 높이에 맞게 설정 */
-  /* 기타 스타일링 */
+  border-left: 2px solid gray; /* 왼쪽에 2px 두께의 회색 선을 추가 */
+  height: 100%; /* 디브의 높이를 부모 요소의 높이만큼 설정 */
+  /* 필요에 따라 추가적인 스타일링을 여기에 추가할 수 있습니다. */
 }
 
-.vertical-line {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  border-left: 1px solid gray; /* 세로선의 두께 및 색상 */
-  height: 100%; /* 높이를 부모의 100%로 설정 */
+.timeline-end {
+  border: 2px solid #bbbbbb;
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useRef,useCallback,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Menu, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
@@ -6,18 +6,81 @@ import { Fragment } from 'react'
 import Dropdown from '../../../image/component/trade/downarrow.png'
 import Up from '../../../image/component/up.png'
 import api from '../../../api/api'
-import { useEffect } from "react"
 import { jwtDecode } from 'jwt-decode'
 
-export default function OngoingTrade({ ongoingData }) {
+export default function OngoingTrade() {
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
   const navigate = useNavigate()
   const [selectedItem, setSelectedItem] = useState('전체')
+  const userId = jwtDecode( localStorage.getItem("access") ).userId 
   const [isOpen, setIsOpen] = useState(false) // 드롭다운 메뉴 열림닫힘 구분
   const userJob = jwtDecode( localStorage.getItem("access") ).userJob // 0이면 판매자,1이면 구매자
+  const [notFinishedList,setNotFinishedList] = useState([]) //진행중인 거래담길 리스트
+  const [page, setPage] = useState(0);
+  const [isLastPage, setIsLastPage] = useState(false); // 마지막 페이지인지 여부를 추적하는 상태
+
+  // 진행중인 거래목록 조회
+  // useEffect(()=>{
+  //   api.get(`trades/list`, {
+  //     params: { 
+  //       id: userId 
+  //     }
+  //   })
+  //   .then((res) => {
+  //     console.log(res)
+  //     setNotFinishedList(res.data.dataBody.notFinishedList)
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
+  // },[])
+
+
+  const observer = useRef();
+  const lastItemRef = useCallback(node => {
+    if (isLastPage) return; 
+    if (observer.current) observer.current.disconnect();
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        // 페이지 번호 증가 및 추가 데이터 로드
+        setPage(prevPage => prevPage + 1);
+      }
+    });
+    if (node) observer.current.observe(node);
+  }, [isLastPage]);
+
+
+
+  useEffect(() => {
+    const fetchTrades = async () => {
+      try {
+        const res = await api.get('trades/list', {
+          params: {
+            id: userId,
+            page, // 페이지 번호를 요청에 포함
+            size :4
+          },
+        });
+        console.log(res)
+        const fetchedList = res.data.dataBody.notFinishedList;
+        setNotFinishedList(prevList => [...prevList, ...res.data.dataBody.notFinishedList]);
+        if (fetchedList.length < 4) { // 불러온 데이터의 길이가 요청한 size보다 작으면 마지막 페이지로 간주
+          setIsLastPage(true);
+        } 
+      }catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchTrades();
+  }, [page]); // 페이지 번호가 변경될 때마다 데이터를 추가로 불러옵니다.
+
+
+
+
 
    // 상태에 따른 표시 문자열과 tradeStatus 매핑
    const statusMapping = {
@@ -28,7 +91,7 @@ export default function OngoingTrade({ ongoingData }) {
   };
 
   // 전체,입금대기중,입금완료,거래중 필터링
-  const filteredItems = ongoingData.filter(item => {
+  const filteredItems = notFinishedList.filter(item => {
     if (selectedItem === '전체') return true; 
     return item.tradeStatus === statusMapping[selectedItem];
   });
@@ -45,7 +108,7 @@ export default function OngoingTrade({ ongoingData }) {
     console.log(id)
 
     if (userJob == 0){
-      navigate(`/trade/seller/${id}`) //  '/trade/seller/:tradeId'
+      navigate(`/trade/seller/${id}`) 
     }
     else{
       navigate(`/trade/buyer/${id}`)
@@ -105,8 +168,10 @@ export default function OngoingTrade({ ongoingData }) {
       </div>
       
       {/* 거래목록  */}
-      {filteredItems.map((item) => (
-          <div key={item.id} className="p-2 border-b-2 border-gray-150 flex" onClick={()=>goDetail(item.id)}>
+      {filteredItems.map((item,index) => (
+          <div key={item.id} className="p-2 border-b-2 border-gray-150 flex"
+           onClick={()=>goDetail(item.id)}
+           ref={index === filteredItems.length - 1 ? lastItemRef : undefined}>
             <div><img src={item.cropImg} alt="" className="w-32 h-24"/></div>
             <div className="w-full ml-2">
               <h1 className="text-lg font-bold">{item.boardTitle}</h1>
@@ -120,6 +185,7 @@ export default function OngoingTrade({ ongoingData }) {
           </div>
         ))
       }
+  
 
     </div>
   )
