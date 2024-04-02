@@ -117,7 +117,7 @@ export default function MyFarmDetail() {
       console.log(res)
       console.log('삭제성공')
       Swal.fire({
-        html: '<h1 style="font-weight: bold;">게시글이 삭제되었습니다</h1>',
+        html: '<h1 style="font-weight: bold;">삭제완료!</h1>',
         icon: 'success',
         showConfirmButton: false,
       });
@@ -136,7 +136,7 @@ export default function MyFarmDetail() {
     formData.append('id', farmId);
     formData.append('content', farmContent);
  
-    // 이미지가 수정되었다면, 수정된 이미지 정보만 서버에 전송
+    // 이미지가 수정되었을때 안되었을때 나눠서 api보냄
     if (isImageUpdated) {
       const orders = updateList.map((file, index) => index + 1); // int 형식
       updateList.forEach((file, index) => {
@@ -148,7 +148,7 @@ export default function MyFarmDetail() {
         console.log('수정성공')
         setFlag(!flag)
         Swal.fire({
-          html: '<h1 style="font-weight: bold;">게시글이 수정되었습닌다</h1>',
+          html: '<h1 style="font-weight: bold;">수정완료!</h1>',
           icon: 'success',
           showConfirmButton: false,
         });
@@ -157,18 +157,22 @@ export default function MyFarmDetail() {
       .catch((err)=>{
         console.log(err)
       })
-
+    }else{
+      api.patch('farms',formData)
+      .then((res)=>{
+        console.log('수정성공')
+        setFlag(!flag)
+        Swal.fire({
+          html: '<h1 style="font-weight: bold;">수정완료!</h1>',
+          icon: 'success',
+          showConfirmButton: false,
+        });
+        onCloseModal()
+      })
+      .catch((err)=>{
+        console.log(err)
+      })
     }
-    // else{
-    //   api.patch('farms',formData)
-
-
-
-
-    // }
-    
-   
-
   }
   
 

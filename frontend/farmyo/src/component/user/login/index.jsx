@@ -116,8 +116,11 @@ export default function LoginInput() {
           >
             로그인
           </button>
-          <div className="ml-14 my-4">
-            <Link to="/password" className="mr-3">비밀번호 찾기</Link> | <Link to="/signup" className="m-3">회원가입</Link>
+          <div className="ml-4 my-4">
+            <div className='text-center'>
+              <Link to="/signup" className="m-3">회원가입</Link> | <Link to="/password" className="m-3">비밀번호 찾기</Link>
+            </div>
+            
           </div>
         </div>
     </div>

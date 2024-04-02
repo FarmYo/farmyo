@@ -26,8 +26,8 @@ export default function SuccessTrade({finishedData}) {
     <div>
       {/* 완료된거래목록 */}
       {finishedData.map((item) => (
-          <div key={item.id} className="p-3 border-b-2 border-gray-150 flex" onClick={()=>goDetail(item.id)}>
-            <div style={{backgroundColor:'#bbbbbb'}} className="w-32 h-24"></div>
+          <div key={item.id} className="p-2 border-b-2 border-gray-150 flex" onClick={()=>goDetail(item.id)}>
+            <div><img src={item.cropImg} alt="" className="w-32 h-24"/></div>
             <div className="w-full ml-2">
               <h1 className="text-lg font-bold">{item.boardTitle}</h1>
               <h1 className="text-sm">{item.nickname}</h1>
