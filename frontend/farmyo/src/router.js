@@ -25,6 +25,7 @@ import CropStanby from "./pages/stanby/cropstanby/index"
 import TradeStanby from "./pages/stanby/tradestanby/index"
 import Payment from "./pages/trade/kakaopay/index"
 import NotFoundPage from "./pages/notfound/index"
+import TestPage from "../src/pages/test"
 
 
 
@@ -83,6 +84,8 @@ export default function Router (){
       <Route path='/trade/redirect' element={<Payment />} />
       {/* 잘못된 경로화면*/}
       <Route path='*' element={<NotFoundPage />} />
+
+      <Route path='/test' element={<TestPage />} />
 
     </Routes>
   )
