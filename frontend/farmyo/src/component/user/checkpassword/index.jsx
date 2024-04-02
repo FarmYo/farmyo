@@ -193,7 +193,7 @@ const checkPassword = () => {
 
   return(
     <div>
-    <img src={Back} alt="" style={{ width:20}} onClick={goBack}/>
+    <img class="mt-8 ml-4" src={Back} alt="" style={{ width:30 }} onClick={goBack}/>
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 main">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm mb-0">
         <img
