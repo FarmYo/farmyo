@@ -78,3 +78,6 @@ spring:
           starttls.enable: true
   openAPI:
     serviceKey: ENC(nXjJih1FS+sHcpW4XwDjHHPzKatWDkcgU/ntbVePC75gtXui+qMV+C/yCNGFI3vHKXQowSZ9Rqaj9zwGJxBT2746Y4MY/3F5BKn8Cekwlq2yup+YVqzbgqwThNAFps0yYVLJX/qvqp436o1EApkI0g==)
+
+  blockChain:
+    privateKey: ENC(1EuXCxrCo0Fud0ylW33/TgMiEjv7iK/GTQ9r3WML2X95Q77VFmjHneIl6NLvLbQb8WUqLMuZ0x2na80bj2743cGf3jkZWeJ9YELuVMveflk=)
