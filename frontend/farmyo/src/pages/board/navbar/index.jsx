@@ -14,6 +14,8 @@ export default function BoardNav(){
     return classes.filter(Boolean).join(' ')
   }
 
+  const [searchName, setSearchName] = useState("")
+
   const [selectedItem, setSelectedItem] = useState('전체');
   const [selected,setSelected] = useState(null) // 팝니다클릭 or 삽니다클릭
 
@@ -31,6 +33,11 @@ export default function BoardNav(){
     }
   }, [location])
 
+  useEffect(() => {
+    const { value, search } = location.state || { value: '전체', search: '' }
+    setSelectedItem(value || '전체')
+    setSearchName(search || '')
+  }, [location])
 
   return(
     <div>
@@ -55,7 +62,7 @@ export default function BoardNav(){
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items className="absolute left-0 z-10 mt-2 w-28 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <Menu.Items className="absolute left-0 z-10 mt-2 w-20 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
             <div className="py-1">
               {['전체','농산물', '제목', '작성자'].map((item) => (
                 <Menu.Item key={item}>
@@ -77,7 +84,13 @@ export default function BoardNav(){
         </Transition>
       </Menu>
       <div style={{ position:'relative' }}>
-        <input type="text" className="input w-44" style={{ border:'3px solid #2E8B57',backgroundColor: 'transparent'}} />
+        <input 
+          value={searchName}
+          onChange={(event) => setSearchName(event.target.value)}
+          type="text" className="input w-44" style={{ border:'3px solid #2E8B57',backgroundColor: 'transparent'}}
+          disabled={selectedItem === "전체"}
+          placeholder={selectedItem === "전체" ? "조건 선택 후 검색 가능" : ""}
+        />
         <img src={Search} alt="" style={{ position: 'absolute', right: '13px', top: '25%',width:25,height:25}} />
       </div>
     </div>
@@ -85,8 +98,17 @@ export default function BoardNav(){
         <h1 className='font-bold text-lg' style={{ color: selected === 0 ? 'black' : 'gray' }} onClick={()=>{handleClick(0)}}>팝니다</h1>
         <h1 className='font-bold text-lg' style={{ color: selected === 1 ? 'black' : 'gray' }} onClick={()=>{handleClick(1)}}>삽니다</h1>
     </div>
-      {selected === 0 && <SellBoardList />}
-      {selected === 1 && <BuyBoardList />} 
+    {selected === 0 && <SellBoardList value={selectedItem} search={searchName} />}
+    {selected === 1 && <BuyBoardList value={selectedItem} search={searchName} />}
+{/*   {selected === 0 && <SellBoardList value={"전체"} />}
+      {selected === 0 && selectedItem === "농산물" && searchName && <SellBoardList value={"농산물"} search={ searchName } />}
+      {selected === 0 && selectedItem === "제목" && searchName &&  <SellBoardList value={"제목"} search={ searchName } />}
+      {selected === 0 && selectedItem === "작성자" && searchName && <SellBoardList value={"작성자"} search={ searchName } />}
+
+      {selected === 1 && <BuyBoardList value={"전체"} />}
+      {selected === 1 && selectedItem === "농산물" && searchName && <BuyBoardList value={"농산물"} search={ searchName } />}
+      {selected === 1 && selectedItem === "제목" && searchName && <BuyBoardList value={"제목"} search={ searchName } />}
+      {selected === 1 && selectedItem === "작성자" && searchName && <BuyBoardList value={"작성자"} search={ searchName } />} */}
     </div>
   )                                                       
 }
