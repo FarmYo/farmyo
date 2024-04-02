@@ -314,9 +314,7 @@ export default function SellBoardList({ value, search }){
 
       {newBoardInfo.map((article,index) => (
       <div className="p-3 flex" key={index} onClick={() => navigate(`sell/${article.boardId}/detail`)}>
-        <img src={article.imgUrl} alt="작물이미지" className="w-32" />
-        {/* <div style={{backgroundColor:'#bbbbbb'}} className="w-32"></div> */}
-
+        <div className='w-32 h-28 overflow-hidden'><img src={article.imgUrl} alt="작물이미지"  className='w-full h-full object-contain'/></div>
         <div className="w-full ml-2">
           <h1 className="text-lg font-bold">{article.title}</h1>
           <h1 className="text-sm">{article.userNickname}</h1>
