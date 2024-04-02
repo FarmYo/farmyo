@@ -36,6 +36,13 @@ public enum ExceptionType {
     AWARDDETAILS_INVALID(HttpStatus.BAD_REQUEST, "C-008", "수상내역이 입력되지 않았습니다."),
     EVENTDATE_INVALID(HttpStatus.BAD_REQUEST, "C-009", "발생일이 입력되지 않았습니다."),
     TYPE_INVALID(HttpStatus.BAD_REQUEST, "C-010", "타입 값이 올바르지 않습니다."),
+    HARVEST_DATE_INVALID(HttpStatus.BAD_REQUEST, "C-011", "수확일이 심은 날보다 빠를 수 없습니다."),
+
+
+
+
+
+
 
 
 
