@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
@@ -35,6 +35,7 @@ export default function Room() {
       stompClient.current.subscribe(`/sub/chat/room/${chatId}`, function(message) {
         const newMessage = JSON.parse(message.body);
         setMessages(prevMessages => [...prevMessages, newMessage]);
+        console.log(messages)
       });
     });
 
@@ -58,7 +59,6 @@ export default function Room() {
         })
       );
       setTalk(''); // 메시지 전송 후 입력 필드 초기화
-      getMessage()
     }
   };
 
@@ -75,15 +75,29 @@ export default function Room() {
       console.log('채팅 데이터 받아오기 실패', err)
     })
   })
+
   useEffect(() => {
     getMessage()
   }, [])
 
+  // const cachMessage = useMemo(() => getMessage(), [chatData])
+  // const debouncedGetMessage = useMemo(() => debounce(getMessage, 500), []);
+  // useEffect(() => {
+  //   if (cachMessage) {
+  //     setChatData(cachMessage.dataBody.messageDetailDtoList);
+  //     setPartnerInfo(cachMessage.dataBody.chatDetailDto);
+  //   } else {
+  //     debouncedGetMessage();
+  //   }
+  // }, [cachMessage, chatData]);
+
+
+
   const [bubbleWidth, setBubbleWidth] = useState(null);
   useEffect(() => {
     if (textRef.current) {
-      const contentWidth = textRef.current.offsetWidth;
-      setBubbleWidth(contentWidth + 20);
+      const contentWidth = textRef.current.offsetWidth + 20;
+      setBubbleWidth(contentWidth);
     }
   }, []);
 
@@ -138,7 +152,7 @@ export default function Room() {
       {Number(chat?.userId) === Number(myId) ?  
         (
           <div className='flex p-3 justify-end'>
-          <div style={{width:`${bubbleWidth}px`,height:40,backgroundColor:'#8FBC8F'}} className='rounded-3xl ml-3 flex justify-center items-center'>
+          <div style={{width:`${bubbleWidth}px`, height:40, backgroundColor:'#8FBC8F'}} className='rounded-3xl ml-3 flex justify-center items-center'>
             <div ref={textRef}>{chat.content}</div>
           </div>
         </div>
@@ -147,12 +161,35 @@ export default function Room() {
         <div key={index} className='flex p-3'>
         <img src={partnerInfo.userProfile} alt="" style={{ width:40,height:40 }}/>
         <div style={{width:`${bubbleWidth}px`,backgroundColor:'#D3D3D3'}} className='rounded-3xl ml-3 flex justify-center items-center'>
-          <div ref={textRef2}>{chat.content}</div>
+          <div ref={textRef}>{chat.content}</div>
         </div>
       </div>
       )
     }
     </div>))}
+
+      {messages.map((message, index) => (
+        <div key={index}>
+          {message.userId === myId ? (
+            <div className='flex p-3 justify-end'>
+              <div style={{ width: `calc(${bubbleWidth}px + 20px)`, height:40, backgroundColor:'#8FBC8F' }}> {/* Adjust width for padding */}
+                <div className='rounded-3xl ml-3 flex justify-center items-center'>
+                  <div ref={textRef}>{message.content}</div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div key={index} className='flex p-3'>
+              <img src={partnerInfo.userProfile} alt="" style={{ width: 40, height: 40 }} />
+              <div style={{ width: `calc(${bubbleWidth}px + 20px)`, backgroundColor:'#D3D3D3' }}> {/* Adjust width for padding */}
+                <div className='rounded-3xl ml-3 flex justify-center items-center'>
+                  <div ref={textRef}>{message.content}</div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
     
 
       {/* 채팅입력창 */}
