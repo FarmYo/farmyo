@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import api from '../../../api/api'
 import { useNavigate, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
+import Swal from 'sweetalert2';
 
 
 export default function PaymentRedirectPage() {
@@ -37,6 +38,12 @@ export default function PaymentRedirectPage() {
   //     navigate('/trade')
   //   })
   // }else{
+
+    if (!impSuccess) {
+      Swal.fire("결제가 실패했습니다.")
+      
+    }
+
     navigate(`/trade/buyer/${tradeId}`)
   // }
 
