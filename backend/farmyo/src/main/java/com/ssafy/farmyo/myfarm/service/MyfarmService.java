@@ -15,7 +15,7 @@ public interface MyfarmService {
     void updateFarm(int id, String content);
     void deleteFarm(int id);
     UpUserDto getUpUser(String loginId);
-    List<MyfarmListDto> getFarmList(String loginId);
+    List<MyfarmListDto> getFarmList(String loginId, int page, int size);
     MyfarmReqDto getFarm(int id);
 
 }
