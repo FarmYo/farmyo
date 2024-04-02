@@ -6,6 +6,7 @@ import { jwtDecode } from 'jwt-decode'
 
 export default function Trade() {
   const [selected,setSelected] = useState(null)
+  const abc = 1
   
 
   useEffect(()=>{

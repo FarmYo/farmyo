@@ -9,7 +9,7 @@ import api from '../../../api/api'
 import { jwtDecode } from 'jwt-decode'
 
 export default function OngoingTrade() {
-
+ 
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
@@ -144,7 +144,7 @@ export default function OngoingTrade() {
         <Menu as="div" className="relative inline-block text-left" >
         <div>
           <Menu.Button className="flex w-40 h-12 justify-between items-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50"
-          style={{ border: '2px solid #1B5E20', backgroundColor: 'transparent'}}
+          style={{ border: '2px solid #2E8B57', backgroundColor: 'transparent'}}
           onClick={()=>setIsOpen(!isOpen)}>
             <div className='pl-2'>{selectedItem}</div>
             <div className="flex items-center justify-center"><img src={isOpen ? Up : Dropdown} alt="" style={{

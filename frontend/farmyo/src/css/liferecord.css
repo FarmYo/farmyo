@@ -31,11 +31,6 @@
   z-index: 1;
 } 
 
-.timeline-middle {
-  border-left: 2px solid gray; /* 왼쪽에 2px 두께의 회색 선을 추가 */
-  height: 100%; /* 디브의 높이를 부모 요소의 높이만큼 설정 */
-  /* 필요에 따라 추가적인 스타일링을 여기에 추가할 수 있습니다. */
-}
 
 .timeline-end {
   border: 2px solid #bbbbbb;
