@@ -253,6 +253,10 @@ public class CropServiceImpl implements CropService {
                 throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
             }
         } else if (cropBlockchainResDto.getType() == 3) {
+            if (cropBlockchainResDto.getEventDate().isBefore(crop.getCropPlantingDate())) {
+                throw new CustomException(ExceptionType.HARVEST_DATE_INVALID);
+
+            }
             crop.updateCropHarvestDate(cropBlockchainResDto.getEventDate());
             try {
                 cropContractService.addHarvestInfo(BigInteger.valueOf(crop.getId()), eventDate);
