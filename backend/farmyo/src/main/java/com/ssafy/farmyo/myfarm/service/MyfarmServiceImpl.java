@@ -15,6 +15,8 @@ import com.ssafy.farmyo.user.repository.UserRepository;
 import jakarta.mail.Multipart;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -147,13 +149,13 @@ public class MyfarmServiceImpl implements MyfarmService {
 
     @Override
     @Transactional
-    public List<MyfarmListDto> getFarmList(String loginId) {
+    public List<MyfarmListDto> getFarmList(String loginId, int page, int size) {
         User user =  userRepository.findByLoginId(loginId).orElseThrow(() -> new CustomException(ExceptionType.USER_NOT_EXIST));
         if (user.getJob() != 0) {
             throw new CustomException(ExceptionType.USER_NOT_FARMER);
         }
 
-        List<Farm> farmList = myfarmRepository.findAllByUserId(user.getId());
+        Page<Farm> farmList = myfarmRepository.findAllByUserId(user.getId(), PageRequest.of(page, size));
         List<MyfarmListDto> resultList = new ArrayList<>();
 
         for (Farm farm : farmList) {
