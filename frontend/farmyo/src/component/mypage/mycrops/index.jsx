@@ -24,6 +24,7 @@ import CropStanby from "../../../image/component/cropstanby.gif"
 import Gallery from "../../../image/component/gallery.png"
 import Swal from "sweetalert2"
 import BeforeHarvest from '../../../image/component/beforeharvest.png'
+import Daegi from '../../../image/component/daegi.gif'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -474,6 +475,7 @@ export default function MyCrops(props) {
       "type": "function"
     }
   ]
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
   //접근할 계약 주소
   const contractAddress = '0xE8448EEB2629E3e96f96f8EBedc9Fd2faa6fe20c';
   //계약 객체 생성
@@ -481,6 +483,7 @@ export default function MyCrops(props) {
 
   //모든 정보 호출하여 데이터 가져와서 시간 순으로 정렬
   async function fetchData(cropPK) {
+    setIsLoading(true);
     try {
       const plantingInfo = await contract.methods.getPlantingInfos(cropPK).call();
       const usageInfos = await contract.methods.getUsageInfos(cropPK).call();
@@ -540,6 +543,8 @@ export default function MyCrops(props) {
     } catch (error) {
       console.error('Error fetching data:', error);
       throw error;
+    }finally {
+      setIsLoading(false); // 로딩 완료
     }
   }
 
@@ -779,7 +784,9 @@ export default function MyCrops(props) {
   // 생애기록 모달(블록체인)
   const LifeRecordOpenModal = () => {
     fetchData(cropId)
-    setLifeRecordOpen(true);
+    if (!isLoading) {
+    setLifeRecordOpen(true)
+    }
   };
 
   const LifeRecordCloseModal = () => {
@@ -895,7 +902,7 @@ export default function MyCrops(props) {
       </div>
       ))}
       
-      <div style={{ position: 'fixed', bottom: '200px', left: '50%', transform: 'translateX(-50%)' }}>
+      <div style={{ position: 'fixed', bottom: '130px', left: '50%', transform: 'translateX(-50%)' }}>
         <div className="join flex justify-center">
           {/* 이전 페이지 그룹으로 이동: 현재 페이지 그룹이 첫 번째 그룹보다 큰 경우에만 버튼 표시 */}
           {currentGroup > 1 && (
@@ -924,7 +931,7 @@ export default function MyCrops(props) {
       )}
   
       { !props.profileId && (
-      <div style={{ position: 'fixed', bottom: '200px', right: '15px'}}>
+      <div style={{ position: 'fixed', bottom: '130px', right: '15px'}}>
         <div style={{backgroundColor:'#1B5E20',borderRadius: '50%', width: '50px', height: '50px', position: 'relative' }}>
           <div style={{ position: 'absolute', top: '44%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontSize: '40px' }}
           onClick={onOpenModal}>
@@ -937,7 +944,7 @@ export default function MyCrops(props) {
       {/* ********모달모음************ */}
       {/* ******농산물 등록모달창***** */}
       <Modal open={open} onClose={onCloseModal} styles={styles}>
-        <div className="flex justify-center items-center pt-32">
+        <div className="flex justify-center items-center pt-12">
         <Menu as="div" className="relative inline-block text-left">
           <Menu.Button className="inline-flex w-full justify-center items-center gap-x-1.5 rounded-md
           bg-white px-12 py-3 text-xl text-gray-900 font-semibold
@@ -1011,7 +1018,7 @@ export default function MyCrops(props) {
       </Modal>
       {/* *******농산물정보보기모달(수확전)****** */}
       <Modal open={infoOpen} onClose={infoCloseModal} styles={styles}>
-        <div className="mt-28">
+        <div className="mt-16">
         <div className="px-8">
           <label for="price" class="block text-xl font-medium leading-6 text-gray-900">작물명</label>
           <div class="relative mt-2 rounded-md">
@@ -1055,16 +1062,15 @@ export default function MyCrops(props) {
       </Modal>
       {/* 농산물 생애기록보기(블록체인) 모달 */}
       <Modal open={lifeRecordOpen} onClose={LifeRecordCloseModal} styles={styles}>
-        {/* <div class="timeline">
-          <div class="event">
-            <div class="text-xl font-bold">2023-05-10</div>
-            <div class="event-circle"></div>
-            <div className="font-bold mt-5">심은날짜</div>    
-            <div>2022-10-2</div>
-            <div className="font-bold mt-5">재배지</div>    
-            <div>경상북도 고령군 대가야읍</div>
+       { isLoading ? (
+        <div className="flex flex-col items-center justify-center min-h-screen">
+          <div><img src={Daegi} alt="대기 이미지" style={{width:200}}/></div>
+          <div className="font-bold text-lg">
+            <h1>생애기록 불러오는중 ...</h1>
           </div>
-        </div> */}
+        </div>
+    
+       ) : (
         <ul class="timeline-vertical">
         {lifeCycleList.map((item, index) => {
           switch (item.infoType) {
@@ -1145,7 +1151,7 @@ export default function MyCrops(props) {
           
         })}
         </ul>
-
+      )}
       </Modal>
 
        {/* *******농산물정보보기모달(수확후)****** */} 
@@ -1295,7 +1301,7 @@ export default function MyCrops(props) {
 
       {/* ******생애기록추가모달******** */}
       <Modal open={addRecord} onClose={addRecordCloseModal} styles={styles}>
-      <div className="flex justify-center items-center pt-28">
+      <div className="flex justify-center items-center pt-16">
         <Menu as="div" className="relative inline-block text-left">
           <Menu.Button className="inline-flex w-full justify-center items-center gap-x-1.5 rounded-md
           bg-white px-12 py-3 text-xl text-gray-900 font-semibold
@@ -1354,7 +1360,7 @@ export default function MyCrops(props) {
           
           {/* 수확하기모달폼 */}      
           <Modal open={harvestOpen} onClose={harvestCloseModal} styles={styles}>
-            <div className="mt-28">
+            <div className="mt-12">
             <div className="px-8 mt-4">
               <label for="price" class="block text-xl font-medium leading-6 text-gray-900">작물명</label>
               <div class="relative mt-2 rounded-md">
