@@ -146,7 +146,7 @@ export default function Room() {
       
       {/* 대화말풍선 - 나 */}
       {/* 대화말풍선 - 상대방 */}
-      <div className="chat-container">
+      <div className="chat-container mb-20">
     {chatData?.map((chat, index) => (
       <div>
       {Number(chat?.userId) === Number(myId) ?  
@@ -190,7 +190,7 @@ export default function Room() {
           )}
         </div>
       ))}
-    
+      </div>
 
       {/* 채팅입력창 */}
       <div className='p-3 flex'  style={{ position: 'fixed', bottom: keyboardVisible ? '0vh' : 10, left: '0', width: '100%', padding: '10px', boxSizing: 'border-box,', backgroundColor:'#FFFFFF' }}>
@@ -200,7 +200,6 @@ export default function Room() {
         <div style={{backgroundColor:'#D3D3D3'}} className='rounded-3xl w-12 flex justify-center items-center ml-1'>
           <div><img onClick={() => sendMessage(talk)} src={Vector} alt="" style={{ width:20,height:20}}/></div>
         </div>
-      </div>
       </div>
     </div>
   )
