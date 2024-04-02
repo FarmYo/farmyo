@@ -22,7 +22,9 @@ export default function BuyBoardList(){
   const [price, setPrice] = useState(0)
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
-  const [cropCategory, setCropCategory] =useState([])
+  const [cropCategory, setCropCategory] = useState([])
+  const [selectedCrop, setSelectedCrop] = useState({ id: null, categoryName: '작물을 선택하세요' })
+  
 
   const makeArticle = (() => {
     if (cropId && title && content && quantity && price) {
@@ -131,7 +133,19 @@ export default function BuyBoardList(){
 
   useEffect(() => {
     BoardInfo()
-    setCropId(1)
+    setCropId(selectedCrop.id);
+  }, [])
+
+  useEffect(() => {
+    // 작물 카테고리 조회
+    api.get('crops/category')
+    .then((res)=>{
+      console.log(res.data.dataBody)
+      setCropCategory(res.data.dataBody)
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
   }, [])
 
   return(
@@ -169,7 +183,7 @@ export default function BuyBoardList(){
       <Menu as="div" className="relative inline-block text-left">
             <div>
               <Menu.Button className="inline-flex w-44 justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                작물명을 선택하세요
+                {selectedCrop.categoryName}
                 <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
               </Menu.Button>
             </div>
@@ -182,21 +196,24 @@ export default function BuyBoardList(){
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95"
             >
-            <Menu.Items className="absolute right-0 z-10 mt-2 w-30 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <Menu.Items className="absolute right-0 z-10 mt-2 w-30 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-auto max-h-60">
               <div className="py-1">
-                <Menu.Item>
+                {cropCategory.map((crop,index)=>(
+                <Menu.Item key={crop.id} onClick={() => setSelectedCrop({ id: crop.id, categoryName: crop.categoryName })}> 
                   {({ active }) => (
-                    <a
+                    <button
                       href="#"
                       className={classNames(
                         active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                        'block px-16 py-1 text-sm'
+                        'block px-12 py-2 text-xl'
+                        
                       )}
                     >
-                    감자
-                    </a>
+                      {crop.categoryName}
+                    </button>
                   )}
-                </Menu.Item>
+                  </Menu.Item>
+                 ))}
                 </div>
               </Menu.Items>
             </Transition>
