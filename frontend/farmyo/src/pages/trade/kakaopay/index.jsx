@@ -9,11 +9,11 @@ import Swal from 'sweetalert2';
 export default function PaymentRedirectPage() {
   const location = useLocation()
   const navigate = useNavigate()
-  const { tradeId,seller } = location.state
+  const { rsp } = location.state
   const params = queryString.parse(location.search);
   const impSuccess = params.imp_success === 'true';
-  // const tradeId = localStorage.getItem('tradeId')
-  // const seller =  localStorage.getItem('seller') 
+  const tradeId = localStorage.getItem('tradeId')
+  const seller =  localStorage.getItem('seller') 
 
 
 
@@ -42,6 +42,30 @@ export default function PaymentRedirectPage() {
     if (!impSuccess) {
       Swal.fire("결제가 실패했습니다.")
       
+    }
+    if(rsp === null) {
+      api.patch(`trades/deposit/${tradeId}`,{},{
+        params:{
+          depositName:seller
+        }
+      })
+      .then((res)=>{
+        console.log(res)
+        console.log("입금완료")
+        Swal.fire({
+          html: '<h1 style="font-weight: bold;">결제가 정상적으로 완료되었습니다</h1>',
+          icon: 'success',
+          showConfirmButton: false,
+        })
+        
+        navigate('/trade/redirect', { state: {  rsp } })
+        // navigate(`/trade/buyer/${tradeId}`)
+      })
+      .catch((err)=>{
+        console.log(err)
+        navigate('/trade')
+      })
+
     }
 
     navigate(`/trade/buyer/${tradeId}`)
