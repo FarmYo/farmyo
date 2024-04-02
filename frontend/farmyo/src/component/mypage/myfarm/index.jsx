@@ -9,6 +9,7 @@ import { jwtDecode } from 'jwt-decode';
 import api from "../../../api/api"
 import { useNavigate } from 'react-router-dom'
 import Slider from 'react-slick'
+import Swal from 'sweetalert2'
 
 export default function MyFarm(props) {
   const navigate = useNavigate()
@@ -69,13 +70,7 @@ export default function MyFarm(props) {
     navigate(`/mypage/myfarm/${farmId}`,{ state: { profileId: props.profileId } })
   }
 
-  
   const [open,setOpen] = useState(false)
-  const [photoOpen,setPhotoOpen] = useState(false)
-  const resigtercrops = ['전체','감자','딸기','오이']
-  const [selectCrop,setSelectCrop] = useState('전체')
-  const writeCropList = ['감자','딸기','오이']
-  const [writeCrop,setWriteCrop] = useState('작물명을 선택하세요')
 
   const onOpenModal = () => {
     setOpen(true);
@@ -85,21 +80,6 @@ export default function MyFarm(props) {
     setOpen(false);
   };
 
-  const photoOpenModal = () => {
-    setPhotoOpen(true);
-  };
-
-  const photoCloseModal = () => {
-    setPhotoOpen(false);
-  };
-
-  const handleSelectCrop = (e) => {
-    setSelectCrop(e)
-  }
-
-  const handleWriteCrop = (e) => {
-    setWriteCrop(e)
-  }
 
   const handleFileInputClick = () => {
     // 숨겨진 file input을 클릭
@@ -155,6 +135,11 @@ export default function MyFarm(props) {
     .then((res)=>{
       console.log(res)
       console.log('생성성공')
+      Swal.fire({
+        html: '<h1 style="font-weight: bold;">게시완료!</h1>',
+        icon: 'success',
+        showConfirmButton: false,
+      });
       onCloseModal()
       setFlag(!flag)
     })
@@ -166,47 +151,6 @@ export default function MyFarm(props) {
 
  return(
   <div style={{ position:'relative',height:'400px' }}>
-    <div className='flex justify-end mr-5'>
-     <Menu as="div" className="relative inline-block text-left">
-      <div>
-        <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-          {selectCrop}
-          <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
-        </Menu.Button>
-      </div>
-
-      <Transition
-        as={Fragment}
-        enter="transition ease-out duration-100"
-        enterFrom="transform opacity-0 scale-95"
-        enterTo="transform opacity-100 scale-100"
-        leave="transition ease-in duration-75"
-        leaveFrom="transform opacity-100 scale-100"
-        leaveTo="transform opacity-0 scale-95"
-      >
-        {/* 농부가 등록한 농작물이 보여지게 */}
-        <Menu.Items className="absolute right-0 z-10 mt-2 w-28 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="py-1">
-            {resigtercrops.map((crop)=>(
-            <Menu.Item key={crop} onClick={() => handleSelectCrop(crop)}>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'block px-4 py-2 text-sm'
-                  )}
-                >
-                {crop}
-                </a>
-              )}
-            </Menu.Item>
-            ))}
-          </div>
-        </Menu.Items>
-      </Transition>
-    </Menu>
-    </div>
     <div style={{
       display: 'grid',
       gridTemplateColumns: 'repeat(3, 1fr)', // 세 개의 컬럼으로 나눕니다.
@@ -243,51 +187,11 @@ export default function MyFarm(props) {
       </Slider>
 
 
-      <div className='flex justify-between'>
-      <div div>
-      <Menu as="div" className="relative inline-block text-left">
-      <div>
-        <Menu.Button className="inline-flex w-44 justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-          {writeCrop}
-          <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
-        </Menu.Button>
-      </div>
-      <Transition
-        as={Fragment}
-        enter="transition ease-out duration-100"
-        enterFrom="transform opacity-0 scale-95"
-        enterTo="transform opacity-100 scale-100"
-        leave="transition ease-in duration-75"
-        leaveFrom="transform opacity-100 scale-100"
-        leaveTo="transform opacity-0 scale-95"
-      >
-      <Menu.Items className="absolute right-0 z-10 mt-2 w-30 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-        <div className="py-1">
-          {writeCropList.map(crop=>(
-          <Menu.Item key={crop} onClick={() => handleWriteCrop(crop)}>
-            {({ active }) => (
-              <a
-                href="#"
-                className={classNames(
-                  active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                  'block px-16 py-1 text-sm'
-                )}
-              >
-                {crop}
-              </a>
-            )}
-          </Menu.Item>
-          ))}
-          </div>
-        </Menu.Items>
-      </Transition>
-    </Menu>
-    </div>
-                  
+    <div className='flex justify-end'>           
     {/* 마이팜게시물생성 사진불러오기 */}
     <div className='flex items-center justify-between'>
       <div className='flex' onClick={handleFileInputClick}>
-        <h1 className='font-bold'>+</h1>
+        <div className='font-bold flex items-center mr-3'>+사진불러오기</div>
         <img src={Gallery} alt="" style={{ width:40 }} className='mr-3'/>
       </div>
     </div>

@@ -40,7 +40,6 @@ public class CropServiceImpl implements CropService {
     @Transactional(rollbackFor = CustomException.class)
     public int addCrop(AddCropReqDto addCropReqDto, int farmerId) {
 
-        String basicUrl = "https://yeopbucket.s3.ap-northeast-2.amazonaws.com/%EC%A0%9C%EB%AA%A9%EC%9D%84-%EC%9E%85%EB%A0%A5%ED%95%B4%EC%A3%BC%EC%84%B8%EC%9A%94_-002_1711958597385.png";
 
 
         //해당 id의 파머가 있는지 확인
@@ -55,6 +54,7 @@ public class CropServiceImpl implements CropService {
                 .orElseThrow(() -> new CustomException(ExceptionType.CATEGORY_NOT_EXIST));
 
 
+        String basicUrl = "https://yeopbucket.s3.ap-northeast-2.amazonaws.com/%EC%A0%9C%EB%AA%A9%EC%9D%84-%EC%9E%85%EB%A0%A5%ED%95%B4%EC%A3%BC%EC%84%B8%EC%9A%94_-002_1711958597385.png";
         Crop crop = Crop.builder()
                 .farmer(farmer)
                 .cropCategory(cropCategory)
@@ -107,6 +107,8 @@ public class CropServiceImpl implements CropService {
     public void updateCropImgUrl(int cropId, MultipartFile cropImg, int userId) {
 
         Crop crop = cropRepository.findById(cropId).orElseThrow(() -> new CustomException(ExceptionType.CROP_NOT_EXIST));
+        String basicUrl = "https://yeopbucket.s3.ap-northeast-2.amazonaws.com/%EC%A0%9C%EB%AA%A9%EC%9D%84-%EC%9E%85%EB%A0%A5%ED%95%B4%EC%A3%BC%EC%84%B8%EC%9A%94_-002_1711958597385.png";
+
 
         if (!crop.getFarmer().getId().equals(userId)) {
             throw new CustomException(ExceptionType.CROP_NOT_OWNED_BY_FARMER);
@@ -114,7 +116,7 @@ public class CropServiceImpl implements CropService {
 
 
         String oldCropImgUrl = null;
-        if (crop.getCropCategory() != null) {
+        if (crop.getCropImgUrl() != null) {
             oldCropImgUrl = crop.getCropImgUrl();
 
         }
@@ -123,7 +125,9 @@ public class CropServiceImpl implements CropService {
         String cropImgUrl = awsS3Service.uploadFile(cropImg);
         crop.updateCropImgUrl(cropImgUrl);
         if (oldCropImgUrl != null) {
-            awsS3Service.deleteFileByUrl(oldCropImgUrl);
+            if (!oldCropImgUrl.equals(basicUrl)) {
+                awsS3Service.deleteFileByUrl(oldCropImgUrl);
+            }
         }
         
     }
