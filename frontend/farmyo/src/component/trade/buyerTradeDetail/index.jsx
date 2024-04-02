@@ -156,8 +156,8 @@ export default function BuyerTrade() {
     }else{
       console.log("handleKakaoPay 시작")
 
-      localStorage.setItem('tradeId', tradeId.toString());
-      localStorage.setItem('seller', info.seller);
+      // localStorage.setItem('tradeId', tradeId.toString());
+      // localStorage.setItem('seller', info.seller);
 
       const IMP = window.IMP; 
       // console.log(IMP)
@@ -171,17 +171,32 @@ export default function BuyerTrade() {
         name: "팜요", // 서비스명
         amount: info.tradePrice*info.tradeQuantity , // 결제 금액
         buyer_name: info.seller, // 판매자 이름
-        m_redirect_url: 'https://j10d209.p.ssafy.io/trade/redirect',
+        // m_redirect_url: 'https://j10d209.p.ssafy.io/trade/redirect',
       }, function(rsp) {
         console.log("결제응답:",rsp)
         if (rsp.success) {
-          Swal.fire({
-            html: '<h1 style="font-weight: bold;">결제가 정상적으로 완료되었습니다</h1>',
-            icon: 'success',
-            showConfirmButton: false,
+          api.patch(`trades/deposit/${tradeId}`,{},{
+            params:{
+              depositName:info.seller
+            }
           })
-          
-          navigate('/trade/redirect', { state: { tradeId: tradeId, seller: info.seller } })
+          .then((res)=>{
+            console.log(res)
+            console.log("입금완료")
+            Swal.fire({
+              html: '<h1 style="font-weight: bold;">결제가 정상적으로 완료되었습니다</h1>',
+              icon: 'success',
+              showConfirmButton: false,
+            })
+            
+            navigate('/trade/redirect', { state: { tradeId: tradeId, seller: info.seller, rsp } })
+            // navigate(`/trade/buyer/${tradeId}`)
+          })
+          .catch((err)=>{
+            console.log(err)
+            navigate('/trade')
+          })
+
           // 결제 성공 시 로직,
         } else {
           alert('결제실패');
