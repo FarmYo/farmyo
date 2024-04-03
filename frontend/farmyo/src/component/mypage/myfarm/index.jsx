@@ -10,6 +10,7 @@ import api from "../../../api/api"
 import { useNavigate } from 'react-router-dom'
 import Slider from 'react-slick'
 import Swal from 'sweetalert2'
+import "../../../css/slick.css"
 
 export default function MyFarm(props) {
   const navigate = useNavigate()
@@ -141,10 +142,11 @@ export default function MyFarm(props) {
         icon: 'success',
         showConfirmButton: false,
       });
-      selectImage([])
+     
       onCloseModal()
       setFlag(!flag)
       setFlag2(true)
+      selectImage([])
     })
     .catch((err)=>{
       console.log(err)
@@ -255,7 +257,7 @@ export default function MyFarm(props) {
       <Slider {...settings} className="sliderTwo mb-10">
         {selectImage.map((url, index) => (
           <div key={index}>
-            <img src={url} alt={`Preview ${index}`} style={{ width: "100%",height:'150px'}} />
+            <img src={url} alt={`Preview ${index}`} style={{ width: "100%",height:'150px'}}/>
           </div>
         ))}
       </Slider>
