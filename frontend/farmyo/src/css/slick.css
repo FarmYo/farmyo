@@ -23,10 +23,13 @@
 }
 
 .sliderTwo .slick-slide > div {
-  height: auto; /* 높이 변경 */
+  height: 150px; /* 수정된 높이 */
+  width: 100px; /* 추가된 너비 */
+  margin: auto; /* 중앙 정렬을 위해 추가 */
 }
 
 .sliderTwo .slick-slide img {
   width: 100%;
+  height: 100%;
   object-fit: contain;
 }
