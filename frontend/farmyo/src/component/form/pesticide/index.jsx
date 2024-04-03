@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import "react-responsive-modal/styles.css"
 import { Modal } from "react-responsive-modal"
 import CropStanby from "../../../image/component/cropstanby.gif"
+import Swal from 'sweetalert2'
 
 export default function Pesticide( { cropId, onRegister }){
   const navigate = useNavigate()
@@ -61,6 +62,11 @@ export default function Pesticide( { cropId, onRegister }){
     .then((res) => {
       console.log('농약입력정보 블록체인보내기성공', res);
       stanbyCloseModal()
+      Swal.fire({
+        html: '<h1 style="font-weight: bold;">생애기록저장성공!</h1>',
+        icon: 'success',
+        showConfirmButton: false,
+      });
       onRegister();
     })
     .catch((err) => {
