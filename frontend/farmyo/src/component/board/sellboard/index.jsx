@@ -94,6 +94,8 @@ export default function SellBoardList({ value, search }) {
     api
       .get(`boards?type=0&page=${page}&size=${size}`)
       .then((res) => {
+        console.log(res);
+        console.log("dkdkdk");
         if (res.data.dataBody.length < size) {
           setHaveMore(false);
           setBoardInfo((prevBoardInfo) => [...prevBoardInfo, ...res.data.dataBody]);
@@ -333,32 +335,29 @@ export default function SellBoardList({ value, search }) {
   return (
     <div style={{ height: "420px", position: "relative" }}>
       {/* 팝니다 게시글 목록 */}
-
-      <div className="pb-12">
-        {newBoardInfo.map((article, index) => (
-          <div className="p-3 flex" key={index} onClick={() => navigate(`sell/${article.boardId}/detail`)}>
-            <div className="w-32 h-28 overflow-hidden">
-              <img src={article.imgUrl} alt="작물이미지" className="w-full h-full object-contain" />
-            </div>
-            <div className="w-full ml-2">
-              <h1 className="text-lg font-bold">{article.title}</h1>
-              <h1 className="text-sm">{article.userNickname}</h1>
+      {newBoardInfo.map((article, index) => (
+        <div className="p-3 flex" key={index} onClick={() => navigate(`sell/${article.boardId}/detail`)}>
+          <div className="w-32 h-28 overflow-hidden">
+            <img src={article.imgUrl} alt="작물이미지" className="w-full h-full object-cover" />
+          </div>
+          <div className="w-full ml-2">
+            <h1 className="text-lg font-bold">{article.title}</h1>
+            <h1 className="text-sm">{article.userNickname}</h1>
+            <h1 style={{ color: "#1B5E20" }} className="font-bold">
+              {article.quantity}kg
+            </h1>
+            <div className="flex justify-between">
               <h1 style={{ color: "#1B5E20" }} className="font-bold">
-                {article.quantity}kg
+                {article.price}원/kg
               </h1>
-              <div className="flex justify-between">
-                <h1 style={{ color: "#1B5E20" }} className="font-bold">
-                  {article.price}원/kg
-                </h1>
-                <img src={Chatting} alt="" style={{ width: 30 }} />
-              </div>
+              <img src={Chatting} alt="" style={{ width: 30 }} />
             </div>
           </div>
-        ))}
-        {/* {haveMore && <div className="trigger"></div>} */}
-        <div ref={obsRef}>
-          <br />
         </div>
+      ))}
+      {/* {haveMore && <div className="trigger"></div>} */}
+      <div ref={obsRef}>
+        <br />
       </div>
       <div style={{ position: "fixed", bottom: "130px", right: "15px" }}>
         {im === 0 && (
@@ -391,9 +390,9 @@ export default function SellBoardList({ value, search }) {
       {/* 팝니다게시글생성모달 */}
       <Modal open={sellOpen} onClose={sellCloseModal} styles={styles}>
         <div className="mt-10">
-          <Slider {...settings} className="sliderOne">
+          <Slider {...settings} className="sliderTwo">
             {fileUrl?.map((img, index) => (
-              <div key={index} style={{ height: 240 }}>
+              <div key={index} style={{ width: "100%", height: "150px" }}>
                 <img src={img} alt={`slide-${index}`} />
               </div>
             ))}
