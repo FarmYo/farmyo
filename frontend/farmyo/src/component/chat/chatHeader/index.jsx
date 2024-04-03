@@ -2,11 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Back from "../../../image/component/leftarrow.png";
 import Form from "../../../pages/chat/form"
+import { jwtDecode } from "jwt-decode";
 
 export default function ChatHeader({partnerInfo}) {
 
     const navigate = useNavigate();
-
+    const im = jwtDecode(localStorage.getItem('access')).userJob
     const [showForm, setShowForm] = useState(false);
     const [buttonText, setButtonText] = useState("거래하기");
     const [buttonBgcolor, setButtonBgcolor] = useState("#1B5E20");
@@ -41,7 +42,7 @@ export default function ChatHeader({partnerInfo}) {
                 <div className="text-lg flex items-center font-bold ml-5">{partnerInfo.userNickname}</div>
                 </div>
                 {/* 아래거래하기버튼은 판매자만보이게 */}
-                <div className="flex items-center">
+                { im === 1 && (<div className="flex items-center">
                 <button className="btn" style={{ backgroundColor: buttonBgcolor }}>
                     <div
                     className="font-bold text-md"
@@ -51,10 +52,10 @@ export default function ChatHeader({partnerInfo}) {
                     {buttonText}
                     </div>
                 </button>
-                </div>
+                </div>)}
             </div>
             {/* 거래하기눌렀을때 입력폼- 판매게시판에서 만든 채팅은 작물명X,구매게시판에서 만든채팅은 작물명O*/}
-            {showForm && <Form onFormSubmit={handleFormSubmit} onCloseForm={closeForm} />}
+            { im === 1 && showForm && <Form onFormSubmit={handleFormSubmit} onCloseForm={closeForm} />}
         </div>
     ); 
 }
