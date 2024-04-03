@@ -166,16 +166,6 @@ export default function Room() {
 
 
 
-  const [bubbleWidth, setBubbleWidth] = useState(null);
-  useEffect(() => {
-    if (textRef.current) {
-      const contentWidth = textRef.current.offsetWidth + 20;
-      setBubbleWidth(contentWidth);
-    }
-  }, []);
-
-
-
   useEffect(() => {
     messageEndRef.current.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -203,8 +193,9 @@ export default function Room() {
         <div style={{ height: "60px"}}></div>
       </div>
       <div ref={messageEndRef}></div>
-
-
+    </div>
+  </div>
+</div>
       <div>
         {/* 채팅입력창 */}
         <MessageInput stompClient={stompClient} chatId={chatId} />
