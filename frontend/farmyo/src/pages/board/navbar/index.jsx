@@ -1,12 +1,9 @@
-import { Menu, Transition } from '@headlessui/react'
-import { Fragment } from 'react'
-import Dropdown from '../../../image/component/dropdown.png'
-import Up from '../../../image/component/up.png'
-import Search from '../../../image/component/search.png'
 import { useState,useEffect } from 'react'
 import SellBoardList from '../../../component/board/sellboard'
 import BuyBoardList from '../../../component/board/buyboard'
 import { useLocation } from 'react-router-dom'
+import Headerbar from '../../../component/common/headerbar/index.jsx'
+import ToggleButtons from '../../../component/board/toggleButton/index.jsx'
 
 export default function BoardNav(){
   const location = useLocation()
@@ -19,9 +16,7 @@ export default function BoardNav(){
   const [selectedItem, setSelectedItem] = useState('전체');
   const [selected,setSelected] = useState(null) // 팝니다클릭 or 삽니다클릭
 
-  const handleClick = (index) => {
-    setSelected(index)
-  }
+
 
   useEffect(()=>{
     // url의 상태확인하고 selected상태 설정
@@ -105,10 +100,18 @@ export default function BoardNav(){
       {selected === 0 && selectedItem === "제목" && searchName &&  <SellBoardList value={"제목"} search={ searchName } />}
       {selected === 0 && selectedItem === "작성자" && searchName && <SellBoardList value={"작성자"} search={ searchName } />}
 
-      {selected === 1 && <BuyBoardList value={"전체"} />}
-      {selected === 1 && selectedItem === "농산물" && searchName && <BuyBoardList value={"농산물"} search={ searchName } />}
-      {selected === 1 && selectedItem === "제목" && searchName && <BuyBoardList value={"제목"} search={ searchName } />}
-      {selected === 1 && selectedItem === "작성자" && searchName && <BuyBoardList value={"작성자"} search={ searchName } />} */}
+
+      {/* 헤더 */}
+      <Headerbar title={"팜&삼"}></Headerbar>
+
+      {/* 셀렉트 박스 */}
+      <ToggleButtons selected={selected} setSelected={setSelected} selectedItem={selectedItem} setSelectedItem={setSelectedItem} searchName={searchName} setSearchName={setSearchName} />
+
+      {/* 게시물 리스트 */}
+      <div style={{ paddingTop: '192px'}}>
+        {selected === 0 && <SellBoardList value={selectedItem} search={searchName} />}
+        {selected === 1 && <BuyBoardList value={selectedItem} search={searchName} />}
+      </div>    
     </div>
   )                                                       
 }
