@@ -262,14 +262,11 @@ useEffect(() => {
 }, [])
 
 // 작물정보로 가기
-const goCropDetail = () =>{
-  navigate(`/board/crop`)
+const goCropDetail = () => {
+  navigate(`/board/cropinfo/${boardInfo.cropId}`, {
+    state: { boardId: boardInfo.id } // 상태 정보를 포함하는 객체
+  }); // 여기에 닫는 소괄호를 추가했습니다.
 }
-
-
-
-
-
 
 
   return(
@@ -292,15 +289,18 @@ const goCropDetail = () =>{
         </Slider>
         )}
       </div>
-      <div className="p-5 flex justify-between">
+      <div className="p-5 flex justify-between mt-5 border-b-2 border-gray-200">
         <div>
           <h1 className='font-bold text-xl'>{ boardInfo.title }</h1>
           <h1 className='text-md'
           onClick={()=>navigate(`/mypage/seller/${boardInfo.userLoginId}`)}>{boardInfo.userNickname}</h1>
         </div>
         <div>
-          <button className="btn flex w-32 justify-around" style={{ backgroundColor: '#2E8B57'}}> 
-            <div className="font-bold text-md" style={{ color:'white' }}>작물정보</div>
+          <button className="btn flex w-32 justify-around" 
+          style={{ backgroundColor: '#2E8B57'}}
+          onClick={goCropDetail}> 
+            <div className="font-bold text-md" style={{ color:'white' }}
+            >작물정보</div>
           </button>
         </div>
         {/* 아래의 메뉴바는 본인만 보이게 */}

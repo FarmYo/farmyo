@@ -95,8 +95,8 @@ export default function BoardNav(){
       </div>
     </div>
     <div className='flex justify-around border-b-2 border-t-2 border-gray-300 p-2' style={{height:50}} >
-        <h1 className='font-bold text-lg' style={{ color: selected === 0 ? 'black' : 'gray' }} onClick={()=>{handleClick(0)}}>팝니다</h1>
-        <h1 className='font-bold text-lg' style={{ color: selected === 1 ? 'black' : 'gray' }} onClick={()=>{handleClick(1)}}>삽니다</h1>
+        <div className='flex-grow text-center font-bold text-lg' style={{ color: selected === 0 ? 'black' : 'gray' }} onClick={()=>{handleClick(0)}}>팝니다</div>
+        <div className='flex-grow text-center font-bold text-lg' style={{ color: selected === 1 ? 'black' : 'gray' }} onClick={()=>{handleClick(1)}}>삽니다</div>
     </div>
     {selected === 0 && <SellBoardList value={selectedItem} search={searchName} />}
     {selected === 1 && <BuyBoardList value={selectedItem} search={searchName} />}
