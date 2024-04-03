@@ -80,6 +80,7 @@ export default function Room() {
   const preventRef = useRef(true);
   const [haveMore, setHaveMore] = useState(true)
   const size = 60
+  const [startFlag, setStartFlag] = useState(true)
   const [flag,setFlag] = useState(0)
   const obsHandler = ((entries) => { //옵저버 콜백함수
     const target = entries[0]
@@ -106,21 +107,12 @@ export default function Room() {
   useEffect(() => {
     setTimeout(() => {
           messageEndRef.current.scrollIntoView();
-    }, 500);
+    }, 1000);
   },[]);
 
 
   let scrollBefore
   let scrollHeightBefore
-  let scrollHeightAfter
-
-  useEffect(() => {
-    if (chatData) {
-      
-      scrollHeightAfter = obsRef.current.scrollHeight;
-      obsRef.current.scrollTop = scrollBefore + (scrollHeightAfter - scrollBefore)
-    }
-  },[chatData])
   const getMessage = async () => {
     try {
       scrollBefore = obsRef.current.scrollTop;
@@ -130,14 +122,19 @@ export default function Room() {
       console.log("채팅 데이터 받아오기");
       setPartnerInfo(res.data.dataBody.chatDetailDto);
       setChatData([...res.data.dataBody.messageDetailDtoList, ...chatData]);
-      
-      setTimeout(() => {
-        const scrollHeightAfter = obsRef.current.scrollHeight;
-        // 스크롤 위치를 조정하여 사용자가 이전에 보던 위치를 유지하도록 합니다.
-        obsRef.current.scrollTop = scrollBefore + (scrollHeightAfter - scrollHeightBefore);
-        console.log()
-      }, 5000); // setTimeout은 필요에 따라 조정할 수 있습니다.t
-      
+      if(startFlag){
+        setStartFlag(false)
+      } else {
+
+        setTimeout(() => {
+  
+          const scrollHeightAfter = obsRef.current.scrollHeight;
+          // 스크롤 위치를 조정하여 사용자가 이전에 보던 위치를 유지하도록 합니다.
+          obsRef.current.scrollTop = scrollBefore + (scrollHeightAfter - scrollHeightBefore);
+          console.log()
+        }, 1000); // setTimeout은 필요에 따라 조정할 수 있습니다.t
+        
+      }
       if(res.data.dataBody.messageDetailDtoList.length<size) {
         preventRef.current=false
         setHaveMore(false)
