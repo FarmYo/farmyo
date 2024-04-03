@@ -47,22 +47,24 @@ export default function PaymentRedirectPage() {
       .then((res)=>{
         console.log(res)
         console.log("입금완료")
-        Swal.fire({
-          html: '<h1 style="font-weight: bold;">결제가 정상적으로 완료되었습니다</h1>',
-          icon: 'success',
-          showConfirmButton: false,
-        })
+        // Swal.fire({
+        //   html: '<h1 style="font-weight: bold;">결제가 정상적으로 완료되었습니다</h1>',
+        //   icon: 'success',
+        //   showConfirmButton: false,
+        // })
         
         navigate(`/trade/buyer/${tradeId}`)
-
-        // navigate(`/trade/buyer/${tradeId}`)
       })
       .catch((err)=>{
         console.log(err)
         navigate('/trade')
       })
-      Swal.fire("결제 완료 페이지에서 대기하시면 페이지가 이동됩니다.")
-      
+      Swal.fire({
+        html: '<h1 style="font-weight: bold;">결제가 완료되었습니다!</h1>',
+        icon: 'success',
+        showConfirmButton: false,
+      });
+              
     }
     else{
       navigate(`/trade/buyer/${tradeId}`)
@@ -73,8 +75,14 @@ export default function PaymentRedirectPage() {
   },[])
 
   return (
-    <div className="w-full h-screen flex flex-col justify-center items-center relative">
-      <div>결제가 완료되었습니다</div>
+    // <div className="w-full h-screen flex flex-col justify-center items-center relative">
+    //   <div>결제완료</div>
+    // </div>
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <div className="font-bold text-lg">
+        <h1 className="text-center">결제가 완료되었습니다!</h1>
+        <h1 className="text-center">잠시만 기다려 주세요...</h1>
+      </div>
     </div>
   );
 }
