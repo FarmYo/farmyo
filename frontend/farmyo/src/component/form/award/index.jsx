@@ -72,7 +72,7 @@ export default function Award( { cropId, onRegister }){
           <div className="label">
             <span className="text-md">수상날짜</span>
           </div>
-          <input type="number" placeholder="yyyy-mm-dd 형식으로 입력" className="input input-bordered w-full max-w-xs"
+          <input type="text" placeholder="yyyy-mm-dd 형식으로 입력" className="input input-bordered w-full max-w-xs"
           onChange={(e)=>setEventDate(e.target.value)} />
           </label>
       </div>
