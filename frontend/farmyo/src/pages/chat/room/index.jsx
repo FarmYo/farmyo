@@ -172,28 +172,29 @@ export default function Room() {
   return (
     <div>
       {/* 채팅방 */}
-      <Headerbar title="채팅"></Headerbar>
-      <div className="m-14"></div>
-      
-      <ChatHeader partnerInfo={partnerInfo}></ChatHeader>
-      
-      {/* 대화말풍선 - 나 */}
-      {/* 대화말풍선 - 상대방 */}
-      <div ref={obsRef}><br/></div>
-
-      <div style={{ height: "60px"}}></div>
-      <div className="w-full top-100px h-screen">
-        {/* 이전 대화내용 불러오기 */}
-        {chatData &&
-          chatData.map((chat, index) => <ChatLogs key={index} chat={chat} partnerInfo={partnerInfo} />)}
-        {/* 실시간 채팅 내용 불러오기 */}
-        {messages &&
-          messages.map((messages, index) => <ChatLogs key={index} chat={messages} partnerInfo={partnerInfo} />)}
-        <div ref={messageEndRef} style={{ height: "60px"}}></div>
-      </div>
-      {/* <div ref={messageEndRef}></div> */}
-
-
+      <div style={{ marginBottom: "60px" }}>
+  {/* 채팅방 */}
+  <div style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000 }}>
+    <Headerbar title="채팅" />
+  </div>
+  <div style={{ position: "fixed", top: "60px", left: 0, right: 0, zIndex: 999 }}>
+    <ChatHeader partnerInfo={partnerInfo} />
+  </div>
+  <div style={{ paddingTop: "120px" }}>
+    {/* 대화말풍선 - 나 */}
+    {/* 대화말풍선 - 상대방 */}
+    <div ref={obsRef}><br/></div>
+    <div>
+      {/* 이전 대화내용 불러오기 */}
+      {chatData &&
+        chatData.map((chat, index) => <ChatLogs key={index} chat={chat} partnerInfo={partnerInfo} />)}
+      {/* 실시간 채팅 내용 불러오기 */}
+      {messages &&
+        messages.map((messages, index) => <ChatLogs key={index} chat={messages} partnerInfo={partnerInfo} />)}
+      <div ref={messageEndRef}></div>
+    </div>
+  </div>
+</div>
       <div>
         {/* 채팅입력창 */}
         <MessageInput stompClient={stompClient} chatId={chatId} />
