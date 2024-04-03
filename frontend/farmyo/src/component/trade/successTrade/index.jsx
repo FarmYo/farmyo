@@ -57,6 +57,7 @@ export default function SuccessTrade() {
           </div>
         </div>
       ))}
+      <div style={{ height: "77px" }}></div>
     </div>
   );
 }
