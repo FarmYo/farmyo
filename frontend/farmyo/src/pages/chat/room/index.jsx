@@ -175,7 +175,7 @@ export default function Room() {
       <Headerbar title="채팅"></Headerbar>
       <div className="m-14"></div>
       
-      <ChatHeader partnerInfo={partnerInfo}></ChatHeader>
+      { partnerInfo && (<ChatHeader partnerInfo={partnerInfo}></ChatHeader>)}
       
       {/* 대화말풍선 - 나 */}
       {/* 대화말풍선 - 상대방 */}

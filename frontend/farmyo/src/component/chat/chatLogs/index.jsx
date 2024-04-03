@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { jwtDecode } from 'jwt-decode';
 
 export default function ChatLogs(chat, partnerInfo) {
