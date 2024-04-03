@@ -156,8 +156,8 @@ export default function BuyerTrade() {
     }else{
       console.log("handleKakaoPay 시작")
 
-      // localStorage.setItem('tradeId', tradeId.toString());
-      // localStorage.setItem('seller', info.seller);
+      localStorage.setItem('tradeId', tradeId.toString());
+      localStorage.setItem('seller', info.seller);
 
       const IMP = window.IMP; 
       // console.log(IMP)
@@ -189,7 +189,7 @@ export default function BuyerTrade() {
               showConfirmButton: false,
             })
             
-            navigate('/trade/redirect', { state: { tradeId: tradeId, seller: info.seller, rsp } })
+            navigate('/trade/redirect', { state: {  rsp } })
             // navigate(`/trade/buyer/${tradeId}`)
           })
           .catch((err)=>{

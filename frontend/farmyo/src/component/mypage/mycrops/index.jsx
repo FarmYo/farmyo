@@ -698,11 +698,16 @@ export default function MyCrops(props) {
   
       console.log('작물등록성공');
       console.log(res);
-      
+      Swal.fire({
+        html: '<h1 style="font-weight: bold;">작물이 등록되었습니다</h1>',
+        icon: 'success',
+        showConfirmButton: false,
+      });
       setSelectedCrop({ id: null, categoryName: '작물을 선택하세요' });
       setCultivation('');
       setPlantingDate('');
       navigate('/mypage/seller',{ state: { selectedTabIndex: 1 } })
+
 
     } catch (err) {
       console.log(err);
@@ -818,6 +823,11 @@ export default function MyCrops(props) {
       console.log('수확정보 블록체인저장 성공')
       stanbyCloseModal()
       harvestCloseModal() // 수확모달닫기
+      Swal.fire({
+        html: '<h1 style="font-weight: bold;">수확성공!<br/>사진을 등록해주세요</h1>',
+        icon: 'success',
+        showConfirmButton: false,
+      });
       infoCloseModal()
       info2OpenModal()
 
@@ -947,10 +957,10 @@ export default function MyCrops(props) {
         <div className="flex justify-center items-center pt-12">
         <Menu as="div" className="relative inline-block text-left">
           <Menu.Button className="inline-flex w-full justify-center items-center gap-x-1.5 rounded-md
-          bg-white px-12 py-3 text-xl text-gray-900 font-semibold
+          bg-white px-12 py-2 text-xl text-gray-900 font-semibold
             ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
             {selectedCrop.categoryName}
-            <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
+            <ChevronDownIcon className="mr-1 h-2 w-5 text-gray-400" aria-hidden="true" />
           </Menu.Button>
   
           <Transition
@@ -963,8 +973,8 @@ export default function MyCrops(props) {
             leaveTo="transform opacity-0 scale-95"
           >
           <Menu.Items className="absolute right-0 z-10 w-full px-4 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-          style={{width:'16rem'}}>
-            <div className="py-1">
+          >
+            <div className="py-1 grid grid-cols-3 gap-4">
               {cropList.map((crop,index)=>(
               <Menu.Item key={crop.id} onClick={() => setSelectedCrop({ id: crop.id, categoryName: crop.categoryName })}> 
                 {({ active }) => (
@@ -972,7 +982,7 @@ export default function MyCrops(props) {
                     href="#"
                     className={classNames(
                       active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      'block px-12 py-2 text-xl'
+                      'block w-full px-1  text-left text-xl'
                       
                     )}
                   >
@@ -1002,7 +1012,7 @@ export default function MyCrops(props) {
             <DatePicker
               locale={ko}
               selected={plantingDate ? new Date(plantingDate) : null}
-              dateFormat="yyyy년 MM월 dd일"
+              dateFormat="yyyy-MM-dd"
               onChange={date => setPlantingDate(date.toISOString().slice(0, 10))}
               className="block h-12 w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               placeholderText="날짜를 선택하세요"
@@ -1048,7 +1058,7 @@ export default function MyCrops(props) {
         {/* 아래부분은 판매자만보이게 */}
         { (!props.profileId || props.profileId === loginId)  && (
         <div>
-          <div className="px-8 flex justify-end mt-3">
+          <div className="px-8 flex justify-end mt-3 mr-3">
             <p className="text-md font-bold" onClick={addRecordModal}>+생애기록 추가하기</p>
           </div>
           <div className="px-8 mt-10" onClick={harvestOpenModal}>
@@ -1385,7 +1395,7 @@ export default function MyCrops(props) {
                 <DatePicker
                 locale={ko}
                 selected={cropHarvestDate ? new Date(cropHarvestDate) : null}
-                dateFormat="yyyy년 MM월 dd일"
+                dateFormat="yyyy-MM-dd"
                 onChange={date => setCropHarvestDate(date.toISOString().slice(0, 10))}
                 className="block h-10 w-full rounded-md 
                  py-1.5 pl-7 pr-20
