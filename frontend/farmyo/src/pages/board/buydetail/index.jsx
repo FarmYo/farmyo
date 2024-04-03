@@ -23,7 +23,6 @@ export default function BuyDetail(){
 
   const navigate = useNavigate()
   const goList = (() => {
-    // navigate("/board",{state:{selected:1}})
     navigate(-1,{state:{selected:1}})
   })
 
@@ -160,8 +159,8 @@ useEffect(() => {
   return(
     <div>
       <div style={{height:50,backgroundColor:'#1B5E20'}}>
-        <div className="p-2 flex justify-between">
-          <img src={WBackArrow} alt="" style={{ width:30,height:30}} onClick={() => goList()}/>
+        <div className="p-2 flex justify-between" onClick={() => goList()}>
+          <img src={WBackArrow} alt="" style={{ width:30,height:30}}/>
         </div>
       </div>
 
@@ -236,7 +235,7 @@ useEffect(() => {
       </h1>
     </div>
 
-    <div style={{ position:'fixed',bottom:120,right:0,left:0}}>
+    <div style={{ position:'fixed',bottom:80,right:0,left:0}}>
       <div className='flex justify-between border-t-2 border-gray-300 p-3'>
         <div>
           <h1 className="font-bold">{boardInfo.price}원/kg</h1>
