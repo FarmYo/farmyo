@@ -227,27 +227,25 @@ export default function BuyBoardList({ value, search }) {
     <div style={{ height: "420px", position: "relative" }}>
       {/* <div style={{height:'420px',position:'relative',  paddingBottom: `${paddingBottom}px`}}></div> */}
       {/* 삽니다 게시글 목록 */}
-      <div className="pb-20">
-        {newBoardInfo.map((article, index) => (
-          <div className="p-3 flex" key={index} onClick={() => navigate(`buy/${article.boardId}/detail`)}>
-            <div className="w-full ml-2">
-              {article.cropCategory}
-              <h1 className="text-lg font-bold">{article.title}</h1>
-              <h1 className="text-sm">{article.userNickname}</h1>
+      {newBoardInfo.map((article, index) => (
+        <div className="p-3 flex" key={index} onClick={() => navigate(`buy/${article.boardId}/detail`)}>
+          <div className="w-full ml-2">
+            {article.cropCategory}
+            <h1 className="text-lg font-bold">{article.title}</h1>
+            <h1 className="text-sm">{article.userNickname}</h1>
+            <h1 style={{ color: "#1B5E20" }} className="font-bold">
+              {article.quantity}kg
+            </h1>
+            <div className="flex justify-between">
               <h1 style={{ color: "#1B5E20" }} className="font-bold">
-                {article.quantity}kg
+                {article.price}원/kg
               </h1>
-              <div className="flex justify-between">
-                <h1 style={{ color: "#1B5E20" }} className="font-bold">
-                  {article.price}원/kg
-                </h1>
-                <img src={Chatting} alt="" style={{ width: 30 }} />
-              </div>
+              <img src={Chatting} alt="" style={{ width: 30 }} />
             </div>
           </div>
-        ))}
-        <div ref={obsRef}></div>
-      </div>
+        </div>
+      ))}
+      <div ref={obsRef} style={{ height: "77px" }}></div>
 
       <div style={{ position: "fixed", bottom: "130px", right: "15px" }}>
         {im === 1 && (

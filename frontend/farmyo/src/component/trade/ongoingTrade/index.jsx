@@ -154,7 +154,7 @@ export default function OngoingTrade({ selectedItem, setSelectedItem }) {
           </div>
         </div>
       ))}
-      <div ref={obsRef}>
+      <div ref={obsRef} style={{ height: "77px" }}>
         <br />
       </div>
     </div>
