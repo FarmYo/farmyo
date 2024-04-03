@@ -9,7 +9,6 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@Builder
 public class ChatRoomListDto {
 
     private int chatId;
@@ -17,6 +16,9 @@ public class ChatRoomListDto {
     private String userProfile;
     private String recentMessage;
     private LocalDateTime recentMessageTime;
+
+    private Integer unreadCount;
+    private String boardTitle;
 
     public ChatRoomListDto(int chatId, String userNickname, String userProfile, String recentMessage, LocalDateTime recentMessageTime) {
         this.chatId = chatId;
