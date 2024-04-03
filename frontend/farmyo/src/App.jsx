@@ -58,7 +58,8 @@ function App() {
     '/stanby',
     '/stanby/crop',
     '/stanby/trade',
-    '/trade/redirect'
+    '/trade/redirect',
+    '/test',
   ];
   if (location.pathname === '/trade') {
     return false;
