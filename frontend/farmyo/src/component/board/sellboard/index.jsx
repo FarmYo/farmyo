@@ -9,6 +9,7 @@ import Chatting from "../../../image/component/chatting.png";
 import Slider from "react-slick";
 import Swal from "sweetalert2";
 import { jwtDecode } from "jwt-decode";
+import "../../../css/slick.css"
 
 export default function SellBoardList({ value, search }) {
   const im = jwtDecode(localStorage.getItem("access")).userJob;
@@ -395,9 +396,9 @@ export default function SellBoardList({ value, search }) {
       {/* 팝니다게시글생성모달 */}
       <Modal open={sellOpen} onClose={sellCloseModal} styles={styles}>
         <div className="mt-10">
-          <Slider {...settings} className="sliderTwo">
+          <Slider {...settings} className="sliderThree">
             {fileUrl?.map((img, index) => (
-              <div key={index} style={{ width: "100%", height: "150px" }}>
+              <div key={index}>
                 <img src={img} alt={`slide-${index}`} />
               </div>
             ))}

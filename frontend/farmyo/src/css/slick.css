@@ -15,21 +15,36 @@
   object-fit: cover;
 }
 
-/* 두 번째 슬라이더 스타일 */
+/* 두 번째 슬라이더 스타일 조정 */
 .sliderTwo .slick-slider,
 .sliderTwo .slick-list,
 .sliderTwo .slick-track {
-  height: auto; /* 높이 변경 */
+  height: auto;
 }
 
 .sliderTwo .slick-slide > div {
-  height: 150px; /* 수정된 높이 */
-  width: 100px; /* 추가된 너비 */
-  margin: auto; /* 중앙 정렬을 위해 추가 */
+  height: auto;
 }
+
 
 .sliderTwo .slick-slide img {
   width: 100%;
-  height: 100%;
+  object-fit: contain;
+}
+
+/* 3 번째 슬라이더 스타일 조정 */
+.sliderThree .slick-slider,
+.sliderThree .slick-list,
+.sliderThree .slick-track {
+  height: auto;
+}
+
+.sliderThree.slick-slide > div {
+  height: auto;
+}
+
+
+.sliderThree .slick-slide img {
+  width: 100%;
   object-fit: contain;
 }
