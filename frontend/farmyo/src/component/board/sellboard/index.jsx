@@ -356,7 +356,7 @@ export default function SellBoardList({ value, search }) {
         </div>
       ))}
       {/* {haveMore && <div className="trigger"></div>} */}
-      <div ref={obsRef}>
+      <div ref={obsRef} style={{ height: "77px" }}>
         <br />
       </div>
       <div style={{ position: "fixed", bottom: "130px", right: "15px" }}>
