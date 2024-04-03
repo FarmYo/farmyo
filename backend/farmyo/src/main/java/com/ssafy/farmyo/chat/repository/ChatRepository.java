@@ -56,5 +56,6 @@ public interface ChatRepository extends JpaRepository<Chat, Integer> {
     @Query("select new com.ssafy.farmyo.chat.dto.ChatDetailDto(u.nickname, u.profile) from User u join Chat c on u.id=c.seller.id where c.id=:chatId")
     Optional<ChatDetailDto> getChatDetailWhenBuyer(int chatId);
 
-
+    @Query("select c.board.boardTitle from Chat c where c.id=:chatId")
+    Optional<String> getBoardTitleById(int chatId);
 }

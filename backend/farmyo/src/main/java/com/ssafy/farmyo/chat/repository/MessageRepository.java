@@ -35,4 +35,5 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
     @Modifying
     @Query("update Message m set m.sellerRead=1 where m.chat.id=:chatId")
     void readSellerMessages(int chatId);
+
 }
