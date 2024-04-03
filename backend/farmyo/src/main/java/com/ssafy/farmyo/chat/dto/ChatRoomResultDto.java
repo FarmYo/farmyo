@@ -10,11 +10,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 public class ChatRoomResultDto {
-    private List<Integer> unreadCountList;
     private List<ChatRoomListDto> resultList;
-
-    public ChatRoomResultDto(List<Integer> unreadCountList, List<ChatRoomListDto> resultList) {
-        this.unreadCountList = unreadCountList;
+    public ChatRoomResultDto(List<ChatRoomListDto> resultList) {
         this.resultList = resultList;
     }
 }
