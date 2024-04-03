@@ -27,8 +27,7 @@ export default function SellDetail(){
 
   const navigate = useNavigate()
   const goList = (() => {
-    // navigate("/board",{state:{selected:0}})
-    navigate(-1,{state:{selected:0}})
+    navigate('/board')
   })
 
   const styles = {
@@ -262,12 +261,23 @@ useEffect(() => {
   getDetail()
 }, [])
 
+// 작물정보로 가기
+const goCropDetail = () =>{
+  navigate(`/board/crop`)
+}
+
+
+
+
+
+
+
   return(
     <div>
       <div>
         <div style={{height:50,backgroundColor:'#1B5E20'}}>
-          <div className="p-2 flex justify-between">
-            <img src={WBackArrow} alt="" style={{ width:30,height:30}} onClick={() => goList()}/>
+          <div className="p-2 flex justify-between"  onClick={() => goList()}>
+            <img src={WBackArrow} alt="" style={{ width:30,height:30}}/>
           </div>
         </div>
 
@@ -338,7 +348,7 @@ useEffect(() => {
       </h1>
     </div>
 
-    <div style={{ position:'fixed',bottom:120,right:0,left:0}}>
+    <div style={{bottom:100,right:0,left:0}}>
       <div className="p-3">
         {/* max : 총수량 value : 거래가능량 */}
         <progress className="progress custom-progress w-full h-3" value="50" max="100" style={{ color:'#1B5E20'}}></progress>
