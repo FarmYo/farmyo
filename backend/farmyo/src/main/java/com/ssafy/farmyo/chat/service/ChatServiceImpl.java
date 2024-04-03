@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -106,7 +107,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public MessageListDto getMessages(int chatId, Authentication authentication, int page, int size) {
+    public MessageListDto getMessages(int chatId, Authentication authentication, int page, int size, int msgId) {
 
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
@@ -114,7 +115,7 @@ public class ChatServiceImpl implements ChatService {
 
         MessageListDto messageListDto = new MessageListDto();
 
-        // MessageListDto 의 위에부분 채우기
+        // MessageListDto 의 위에부분 채우기 ( ChatDetailDto )
 
         // 사용자의 직업 가져오기   0 : 농부  1 : 일반인
         int job = customUserDetails.getJob();
@@ -127,10 +128,18 @@ public class ChatServiceImpl implements ChatService {
             messageListDto.setChatDetailDto(chatRepository.getChatDetailWhenBuyer(chatId).get());
         }
 
-        // MessageListDto 의 아랫부분 채우기
-        List<MessageDetailDto> allById = (List<MessageDetailDto>) messageRepository.findAllById(chatId, PageRequest.of(page, size));
-
-        messageListDto.setMessageDetailDtoList(allById);
+        // MessageListDto 의 아랫부분 채우기 ( MessageDetailDto )
+        if ( msgId == 0 ) {
+            // msgId 가 0 으로 왔다면 ( 가장 최근 개수 만큼 불러오기 )
+            List<MessageDetailDto> resultList = messageRepository.findAllById(chatId, PageRequest.of(page, size));
+            Collections.reverse(resultList);
+            messageListDto.setMessageDetailDtoList(resultList);
+        } else {
+            // msgId가 0이 아니라면 msgId 보다 작은 애들중에서 몇개 가져오기
+            List<MessageDetailDto> resultList = messageRepository.findAllById(chatId, msgId, PageRequest.of(page, size));
+            Collections.reverse(resultList);
+            messageListDto.setMessageDetailDtoList(resultList);
+        }
 
         return messageListDto;
     }

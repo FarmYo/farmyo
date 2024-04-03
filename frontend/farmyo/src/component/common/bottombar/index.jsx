@@ -42,7 +42,7 @@ export default function BottomBar() {
   
   return (
     <div>
-      <nav className="bg-white border-t-2 border-gray-300 w-full ">
+      <nav className=" fixed bottom-0 bg-white border-t-2 border-gray-300 w-full ">
         <div className='p-3'>
           <div className="flex justify-between">
             {menuItems.map(({ key, to, text, image }) => (

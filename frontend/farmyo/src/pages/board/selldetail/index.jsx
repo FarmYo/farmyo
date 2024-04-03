@@ -12,6 +12,7 @@ import Slider from "react-slick";
 import Gallery from '../../../image/component/gallery.png'
 import '../../../css/barchart.css'
 import { jwtDecode } from 'jwt-decode'
+import WBackArrow from "../../../image/component/trade/wbackarrow.png"
 
 
 function classNames(...classes) {
@@ -23,10 +24,10 @@ export default function SellDetail(){
   const boardId = Number(params.boardId)
   const [tradeQuantity,setTradeQuantity] = useState(0)
   const [boardInfo, setBoardInfo] =useState([])
+
   const navigate = useNavigate()
   const goList = (() => {
-    // navigate("/board",{state:{selected:0}})
-    navigate(-1,{state:{selected:0}})
+    navigate('/board')
   })
 
   const styles = {
@@ -260,13 +261,23 @@ useEffect(() => {
   getDetail()
 }, [])
 
+// 작물정보로 가기
+const goCropDetail = () => {
+  navigate(`/board/cropinfo/${boardInfo.cropId}`, {
+    state: { boardId: boardInfo.id } // 상태 정보를 포함하는 객체
+  }); // 여기에 닫는 소괄호를 추가했습니다.
+}
+
+
   return(
     <div>
-       {/* 팝니다 상세게시글사진 */}
-      {/* <div style={{height:240,backgroundColor:'#bbbbbb'}}> */}
       <div>
-        {/* 뒤로가기버튼 */}
-        <img src={Back} alt="" style={{ width:40,height:40 }} className="p-2" onClick={() => goList()}/>
+        <div style={{height:50,backgroundColor:'#1B5E20'}}>
+          <div className="p-2 flex justify-between"  onClick={() => goList()}>
+            <img src={WBackArrow} alt="" style={{ width:30,height:30}}/>
+          </div>
+        </div>
+
         {boardInfo.boardImgUrls && (
       <Slider {...settings}  
       className="sliderOne">
@@ -278,14 +289,18 @@ useEffect(() => {
         </Slider>
         )}
       </div>
-      <div className="p-5 flex justify-between">
+      <div className="p-5 flex justify-between mt-5 border-b-2 border-gray-200">
         <div>
-          <h1 className='font-bold text-lg'>{ boardInfo.title }</h1>
-          <h1 className=''>{boardInfo.userNickname}</h1>
+          <h1 className='font-bold text-xl'>{ boardInfo.title }</h1>
+          <h1 className='text-md'
+          onClick={()=>navigate(`/mypage/seller/${boardInfo.userLoginId}`)}>{boardInfo.userNickname}</h1>
         </div>
         <div>
-          <button className="btn flex w-32 justify-around" style={{ backgroundColor: '#2E8B57'}}> 
-            <div className="font-bold text-md" style={{ color:'white' }}>작물정보</div>
+          <button className="btn flex w-32 justify-around" 
+          style={{ backgroundColor: '#2E8B57'}}
+          onClick={goCropDetail}> 
+            <div className="font-bold text-md" style={{ color:'white' }}
+            >작물정보</div>
           </button>
         </div>
         {/* 아래의 메뉴바는 본인만 보이게 */}
@@ -324,21 +339,6 @@ useEffect(() => {
             
                 </Menu.Item>
               </div>
-              {/* <div className="py-1">
-                <Menu.Item className='flex'>
-                  {({ active }) => (
-                    <a
-                      href="#"
-                      className={classNames(
-                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                        'block px-4 py-2 text-sm'
-                      )} style={{color:'red'}}
-                    >
-                      <img src={Trash} alt="" style={{width:20}}/>삭제하기
-                    </a>
-                  )}
-                </Menu.Item>
-              </div> */}
             </Menu.Items>
           </Transition>
         </Menu>
@@ -348,7 +348,7 @@ useEffect(() => {
       </h1>
     </div>
 
-    <div style={{ position:'fixed',bottom:120,right:0,left:0}}>
+    <div style={{bottom:100,right:0,left:0}}>
       <div className="p-3">
         {/* max : 총수량 value : 거래가능량 */}
         <progress className="progress custom-progress w-full h-3" value="50" max="100" style={{ color:'#1B5E20'}}></progress>

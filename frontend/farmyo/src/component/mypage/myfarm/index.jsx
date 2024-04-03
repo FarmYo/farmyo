@@ -141,6 +141,7 @@ export default function MyFarm(props) {
         icon: 'success',
         showConfirmButton: false,
       });
+      selectImage([])
       onCloseModal()
       setFlag(!flag)
       setFlag2(true)

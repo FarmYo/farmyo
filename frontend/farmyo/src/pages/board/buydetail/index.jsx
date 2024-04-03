@@ -10,6 +10,7 @@ import api from '../../../api/api'
 // import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import Swal from 'sweetalert2'
 import { jwtDecode } from 'jwt-decode'
+import WBackArrow from "../../../image/component/trade/wbackarrow.png"
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -22,7 +23,6 @@ export default function BuyDetail(){
 
   const navigate = useNavigate()
   const goList = (() => {
-    // navigate("/board",{state:{selected:1}})
     navigate(-1,{state:{selected:1}})
   })
 
@@ -158,14 +158,21 @@ useEffect(() => {
 
   return(
     <div>
-      <div className="p-5 flex justify-between border-b-2 border-gray-300">
+      <div style={{height:50,backgroundColor:'#1B5E20'}}>
+        <div className="p-2 flex justify-between" onClick={() => goList()}>
+          <img src={WBackArrow} alt="" style={{ width:30,height:30}}/>
+        </div>
+      </div>
+
+
+      <div className="p-3 flex justify-between border-b-2 border-gray-300">
         <div className='flex'>
           <div className='flex items-center'>
-            <img src={Back} alt="" style={{ width:30,height:30 }} onClick={() => goList()}/>
+    
           </div>
           <div className='ml-4'>
-            <h1 className='font-bold text-lg'>{boardInfo.title}</h1>
-            <h1 className=''>{boardInfo.userNickname}</h1>
+            <h1 className='font-bold text-xl'>{boardInfo.title}</h1>
+            <h1 className='text-md'>{boardInfo.userNickname}</h1>
           </div>
         </div>      
         {/* 아래의 메뉴바(수정,삭제)는 본인만 보이게 */}
@@ -228,7 +235,7 @@ useEffect(() => {
       </h1>
     </div>
 
-    <div style={{ position:'fixed',bottom:120,right:0,left:0}}>
+    <div style={{ position:'fixed',bottom:80,right:0,left:0}}>
       <div className='flex justify-between border-t-2 border-gray-300 p-3'>
         <div>
           <h1 className="font-bold">{boardInfo.price}원/kg</h1>
