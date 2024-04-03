@@ -3,6 +3,7 @@ import { jwtDecode } from 'jwt-decode'
 import api from '../../api/api'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Headerbar from '../../component/common/headerbar'
 
 export default function Chatting(){
   const navigate = useNavigate()
@@ -26,9 +27,9 @@ useEffect(() => {
 
   return(
     <div>
-      <div style={{height:50,backgroundColor:'#1B5E20'}} className="p-2 flex items-center mb-3">
-        <h1 className="text-xl font-bold" style={{color:"white"}}>채팅</h1>
-      </div>
+      <Headerbar title="채팅"></Headerbar>
+      <div className="m-14"></div>
+      
       {/* 채팅목록나옴 */}
       {chattingData.map((chat) => (
         <div onClick={() => {navigate(`/chat/${chat.chatId}`)}} key={chat.chatId} className='p-3 flex border-b-2 border-gray-100'>
