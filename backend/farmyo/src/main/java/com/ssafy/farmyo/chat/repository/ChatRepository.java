@@ -50,12 +50,15 @@ public interface ChatRepository extends JpaRepository<Chat, Integer> {
     )
     List<ChatRoomListDto> getChatRoomListWhenBuyer(int userId);
 
-    @Query("select new com.ssafy.farmyo.chat.dto.ChatDetailDto(u.nickname, u.profile) from User u join Chat c on u.id=c.buyer.id where c.id=:chatId")
+    @Query("select new com.ssafy.farmyo.chat.dto.ChatDetailDto(u.loginId, u.nickname, u.profile) from User u join Chat c on u.id=c.buyer.id where c.id=:chatId")
     Optional<ChatDetailDto> getChatDetailWhenSeller(int chatId);
 
-    @Query("select new com.ssafy.farmyo.chat.dto.ChatDetailDto(u.nickname, u.profile) from User u join Chat c on u.id=c.seller.id where c.id=:chatId")
+    @Query("select new com.ssafy.farmyo.chat.dto.ChatDetailDto(u.loginId, u.nickname, u.profile) from User u join Chat c on u.id=c.seller.id where c.id=:chatId")
     Optional<ChatDetailDto> getChatDetailWhenBuyer(int chatId);
 
     @Query("select c.board.boardTitle from Chat c where c.id=:chatId")
     Optional<String> getBoardTitleById(int chatId);
+
+    @Query("select c.board.id from Chat c where c.id=:chatId")
+    Optional<Integer> getBoardIdById(int chatId);
 }
