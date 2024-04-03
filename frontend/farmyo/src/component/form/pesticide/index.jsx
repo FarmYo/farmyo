@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import "react-responsive-modal/styles.css"
 import { Modal } from "react-responsive-modal"
 import CropStanby from "../../../image/component/cropstanby.gif"
+import Swal from 'sweetalert2'
 
 export default function Pesticide( { cropId, onRegister }){
   const navigate = useNavigate()
@@ -61,6 +62,11 @@ export default function Pesticide( { cropId, onRegister }){
     .then((res) => {
       console.log('농약입력정보 블록체인보내기성공', res);
       stanbyCloseModal()
+      Swal.fire({
+        html: '<h1 style="font-weight: bold;">생애기록저장성공!</h1>',
+        icon: 'success',
+        showConfirmButton: false,
+      });
       onRegister();
     })
     .catch((err) => {
@@ -77,7 +83,7 @@ export default function Pesticide( { cropId, onRegister }){
           <div className="label">
             <span className="text-md">사용날짜</span>
           </div>
-          <input type="number" placeholder="yyyy-mm-dd 형식으로입력" className="input input-bordered w-full max-w-xs" 
+          <input type="text" placeholder="yyyy-mm-dd 형식으로입력" className="input input-bordered w-full max-w-xs" 
           onChange={(e)=>setEventDate(e.target.value)}/>
           </label>
           <label className="form-control w-full max-w-xs">

@@ -18,6 +18,7 @@ export default function PaymentRedirectPage() {
 
 
   useEffect(()=>{
+
     if (impSuccess) {
       api.patch(`trades/deposit/${tradeId}`,{},{
         params:{
@@ -49,6 +50,7 @@ export default function PaymentRedirectPage() {
   },[])
 
   return (
+
     <div className="flex flex-col items-center justify-center min-h-screen">
       <div className="font-bold text-lg">
         <img src={Loading} alt="" style={{width:200}}/>

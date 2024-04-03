@@ -27,7 +27,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "develop",
+    "git-widget-placeholder": "FE/kakao",
     "kotlin-language-version-configured": "true",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
@@ -49,6 +49,7 @@
       <workItem from="1712039165053" duration="26000" />
       <workItem from="1712066124193" duration="11000" />
       <workItem from="1712068082857" duration="12000" />
+      <workItem from="1712080522002" duration="171000" />
     </task>
     <servers />
   </component>
