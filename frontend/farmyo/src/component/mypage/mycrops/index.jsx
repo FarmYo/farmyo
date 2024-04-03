@@ -823,6 +823,11 @@ export default function MyCrops(props) {
       console.log('수확정보 블록체인저장 성공')
       stanbyCloseModal()
       harvestCloseModal() // 수확모달닫기
+      Swal.fire({
+        html: '<h1 style="font-weight: bold;">수확성공!<br/>사진을 등록해주세요</h1>',
+        icon: 'success',
+        showConfirmButton: false,
+      });
       infoCloseModal()
       info2OpenModal()
 
@@ -952,10 +957,10 @@ export default function MyCrops(props) {
         <div className="flex justify-center items-center pt-12">
         <Menu as="div" className="relative inline-block text-left">
           <Menu.Button className="inline-flex w-full justify-center items-center gap-x-1.5 rounded-md
-          bg-white px-12 py-3 text-xl text-gray-900 font-semibold
+          bg-white px-12 py-2 text-xl text-gray-900 font-semibold
             ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
             {selectedCrop.categoryName}
-            <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
+            <ChevronDownIcon className="mr-1 h-2 w-5 text-gray-400" aria-hidden="true" />
           </Menu.Button>
   
           <Transition
@@ -968,8 +973,8 @@ export default function MyCrops(props) {
             leaveTo="transform opacity-0 scale-95"
           >
           <Menu.Items className="absolute right-0 z-10 w-full px-4 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-          style={{width:'16rem'}}>
-            <div className="py-1">
+          >
+            <div className="py-1 grid grid-cols-3 gap-4">
               {cropList.map((crop,index)=>(
               <Menu.Item key={crop.id} onClick={() => setSelectedCrop({ id: crop.id, categoryName: crop.categoryName })}> 
                 {({ active }) => (
@@ -977,7 +982,7 @@ export default function MyCrops(props) {
                     href="#"
                     className={classNames(
                       active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      'block px-12 py-2 text-xl'
+                      'block w-full px-1  text-left text-xl'
                       
                     )}
                   >
