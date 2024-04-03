@@ -4,7 +4,7 @@ import api from '../../../api/api'
 import { useNavigate, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import Swal from 'sweetalert2';
-
+import Loading from "../../../image/component/loading.gif"
 
 export default function PaymentRedirectPage() {
   const location = useLocation()
@@ -18,25 +18,6 @@ export default function PaymentRedirectPage() {
 
 
   useEffect(()=>{
-    // if (!location.state) {
-    //   return;s
-    // }
-  //   if (impSuccess) {
-  //   api.patch(`trades/deposit/${tradeId}`,{},{
-  //     params:{
-  //       depositName:seller
-  //     }
-  //   })
-  //   .then((res)=>{
-  //     console.log(res)
-  //     console.log("입금완료")
-  //     navigate(`/trade/buyer/${tradeId}`)
-  //   })
-  //   .catch((err)=>{
-  //     console.log(err)
-  //     navigate('/trade')
-  //   })
-  // }else{
 
     if (impSuccess) {
       api.patch(`trades/deposit/${tradeId}`,{},{
@@ -47,12 +28,6 @@ export default function PaymentRedirectPage() {
       .then((res)=>{
         console.log(res)
         console.log("입금완료")
-        // Swal.fire({
-        //   html: '<h1 style="font-weight: bold;">결제가 정상적으로 완료되었습니다</h1>',
-        //   icon: 'success',
-        //   showConfirmButton: false,
-        // })
-        
         navigate(`/trade/buyer/${tradeId}`)
       })
       .catch((err)=>{
@@ -75,11 +50,10 @@ export default function PaymentRedirectPage() {
   },[])
 
   return (
-    // <div className="w-full h-screen flex flex-col justify-center items-center relative">
-    //   <div>결제완료</div>
-    // </div>
+
     <div className="flex flex-col items-center justify-center min-h-screen">
       <div className="font-bold text-lg">
+        <img src={Loading} alt="" style={{width:200}}/>
         <h1 className="text-center">결제가 완료되었습니다!</h1>
         <h1 className="text-center">잠시만 기다려 주세요...</h1>
       </div>
