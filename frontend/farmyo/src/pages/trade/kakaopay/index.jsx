@@ -4,7 +4,8 @@ import api from '../../../api/api'
 import { useNavigate, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import Swal from 'sweetalert2';
-import Loading from "../../../image/component/loading.gif"
+import TradeStanby from "../../../image/component/tradestanby.gif"
+
 
 export default function PaymentRedirectPage() {
   const location = useLocation()
@@ -35,7 +36,7 @@ export default function PaymentRedirectPage() {
         navigate('/trade')
       })
       Swal.fire({
-        html: '<h1 style="font-weight: bold;">결제가 완료되었습니다!</h1>',
+        html: '<h1 style="font-weight: bold;">결제성공!</h1>',
         icon: 'success',
         showConfirmButton: false,
       });
@@ -52,8 +53,8 @@ export default function PaymentRedirectPage() {
   return (
 
     <div className="flex flex-col items-center justify-center min-h-screen">
+      <div><img src={TradeStanby} alt="" style={{width:200}}/></div>
       <div className="font-bold text-lg">
-        <img src={Loading} alt="" style={{width:200}}/>
         <h1 className="text-center">결제가 완료되었습니다!</h1>
         <h1 className="text-center">잠시만 기다려 주세요...</h1>
       </div>

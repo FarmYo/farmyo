@@ -88,6 +88,8 @@ export default function SellBoardList({ value, search }){
   const getBoard = (() => {
     api.get(`boards?type=0&page=${page}&size=${size}`)
     .then((res) => {
+      console.log(res)
+      console.log('dkdkdk')
       if (res.data.dataBody.length < size) {
         setHaveMore(false)
         setBoardInfo(prevBoardInfo => [...prevBoardInfo, ...res.data.dataBody]);
@@ -314,7 +316,7 @@ export default function SellBoardList({ value, search }){
 
       {newBoardInfo.map((article,index) => (
       <div className="p-3 flex" key={index} onClick={() => navigate(`sell/${article.boardId}/detail`)}>
-        <div className='w-32 h-28 overflow-hidden'><img src={article.imgUrl} alt="작물이미지"  className='w-full h-full object-contain'/></div>
+        <div className='w-32 h-28 overflow-hidden'><img src={article.imgUrl} alt="작물이미지"  className='w-full h-full object-cover'/></div>
         <div className="w-full ml-2">
           <h1 className="text-lg font-bold">{article.title}</h1>
           <h1 className="text-sm">{article.userNickname}</h1>
@@ -338,17 +340,24 @@ export default function SellBoardList({ value, search }){
         )}
       </div>
       
+      {/* <div className='pt-16'>
+      <Slider {...settings} className="sliderTwo mb-10">
+        {selectImage.map((url, index) => (
+          <div key={index}>
+            <img src={url} alt={`Preview ${index}`} style={{ width: "100%",height:'150px'}} />
+          </div>
+        ))}
+      </Slider> */}
+
       {/* 팝니다게시글생성모달 */}
       <Modal open={sellOpen} onClose={sellCloseModal} styles={styles}>
         <div className="mt-10">
-
-      <Slider {...settings}  
-      className="sliderOne">
-          {fileUrl?.map((img, index) => (
-            <div key={index}  style={{height:240}}>
-              <img src={img} alt={`slide-${index}`}/>
-            </div>
-          ))}
+        <Slider {...settings} className="sliderTwo">
+            {fileUrl?.map((img, index) => (
+              <div key={index}  style={{ width: "100%",height:'150px'}}>
+                <img src={img} alt={`slide-${index}`}/>
+              </div>
+            ))}
         </Slider>
 
           <div className='flex justify-between mt-4'>

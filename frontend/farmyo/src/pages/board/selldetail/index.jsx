@@ -12,6 +12,7 @@ import Slider from "react-slick";
 import Gallery from '../../../image/component/gallery.png'
 import '../../../css/barchart.css'
 import { jwtDecode } from 'jwt-decode'
+import WBackArrow from "../../../image/component/trade/wbackarrow.png"
 
 
 function classNames(...classes) {
@@ -23,6 +24,7 @@ export default function SellDetail(){
   const boardId = Number(params.boardId)
   const [tradeQuantity,setTradeQuantity] = useState(0)
   const [boardInfo, setBoardInfo] =useState([])
+
   const navigate = useNavigate()
   const goList = (() => {
     // navigate("/board",{state:{selected:0}})
@@ -262,11 +264,13 @@ useEffect(() => {
 
   return(
     <div>
-       {/* 팝니다 상세게시글사진 */}
-      {/* <div style={{height:240,backgroundColor:'#bbbbbb'}}> */}
       <div>
-        {/* 뒤로가기버튼 */}
-        <img src={Back} alt="" style={{ width:40,height:40 }} className="p-2" onClick={() => goList()}/>
+        <div style={{height:50,backgroundColor:'#1B5E20'}}>
+          <div className="p-2 flex justify-between">
+            <img src={WBackArrow} alt="" style={{ width:30,height:30}} onClick={() => goList()}/>
+          </div>
+        </div>
+
         {boardInfo.boardImgUrls && (
       <Slider {...settings}  
       className="sliderOne">
@@ -280,8 +284,9 @@ useEffect(() => {
       </div>
       <div className="p-5 flex justify-between">
         <div>
-          <h1 className='font-bold text-lg'>{ boardInfo.title }</h1>
-          <h1 className=''>{boardInfo.userNickname}</h1>
+          <h1 className='font-bold text-xl'>{ boardInfo.title }</h1>
+          <h1 className='text-md'
+          onClick={()=>navigate(`/mypage/seller/${boardInfo.userLoginId}`)}>{boardInfo.userNickname}</h1>
         </div>
         <div>
           <button className="btn flex w-32 justify-around" style={{ backgroundColor: '#2E8B57'}}> 
@@ -324,21 +329,6 @@ useEffect(() => {
             
                 </Menu.Item>
               </div>
-              {/* <div className="py-1">
-                <Menu.Item className='flex'>
-                  {({ active }) => (
-                    <a
-                      href="#"
-                      className={classNames(
-                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                        'block px-4 py-2 text-sm'
-                      )} style={{color:'red'}}
-                    >
-                      <img src={Trash} alt="" style={{width:20}}/>삭제하기
-                    </a>
-                  )}
-                </Menu.Item>
-              </div> */}
             </Menu.Items>
           </Transition>
         </Menu>
