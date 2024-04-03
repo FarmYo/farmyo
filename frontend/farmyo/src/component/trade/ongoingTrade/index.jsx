@@ -99,10 +99,10 @@ export default function OngoingTrade({ selectedItem, setSelectedItem }) {
 
   // 상태에 따른 표시 문자열과 tradeStatus 매핑
   const statusMapping = {
-    전체: null, // '전체'를 선택한 경우 모든 항목을 표시
+    "전체": null, // '전체'를 선택한 경우 모든 항목을 표시
     "입금 대기중": 0,
     "입금 완료": 1,
-    배송중: 2,
+    "배송중": 2,
   };
 
   // 전체,입금대기중,입금완료,거래중 필터링
