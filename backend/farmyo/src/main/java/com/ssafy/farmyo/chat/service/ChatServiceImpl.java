@@ -123,9 +123,16 @@ public class ChatServiceImpl implements ChatService {
         // 만약 해당 사람이 판매자면
         if (job == 0) {
             // 상대방의 닉네임과
-            messageListDto.setChatDetailDto(chatRepository.getChatDetailWhenSeller(chatId).get());
+            ChatDetailDto chatDetailDto = chatRepository.getChatDetailWhenSeller(chatId).get();
+            chatDetailDto.setBoardId(chatRepository.getBoardIdById(chatId).get());
+
+            messageListDto.setChatDetailDto(chatDetailDto);
+
         } else {
-            messageListDto.setChatDetailDto(chatRepository.getChatDetailWhenBuyer(chatId).get());
+            ChatDetailDto chatDetailDto = chatRepository.getChatDetailWhenBuyer(chatId).get();
+            chatDetailDto.setBoardId(chatRepository.getBoardIdById(chatId).get());
+
+            messageListDto.setChatDetailDto(chatDetailDto);
         }
 
         // MessageListDto 의 아랫부분 채우기 ( MessageDetailDto )
