@@ -34,36 +34,37 @@ function App() {
       /^\/mypage\/myfarm\/\d+$/,
     ];
 
-    const definedRoutes = [
-      "/",
-      "/login",
-      "/password",
-      "/signup",
-      "/signup/first",
-      "/signup/second",
-      "/signup/third",
-      "/signup/business",
-      "/trade",
-      "/trade/seller/:tradeId",
-      "/trade/buyer/:tradeId",
-      "/mypage/seller",
-      "/mypage/buyer",
-      "/mypage/seller/:id",
-      "/mypage/myfarm/:farmId",
-      "/board",
-      "/board/sell/:boardId/detail",
-      "/board/buy/:boardId/detail",
-      "/mypage/edit",
-      "/chat",
-      "/chat/:chatId",
-      "/stanby",
-      "/stanby/crop",
-      "/stanby/trade",
-      "/trade/redirect",
-    ];
-    if (location.pathname === "/trade") {
-      return false;
-    }
+  const definedRoutes = [
+    '/',
+    '/login',
+    '/password',
+    '/signup',
+    '/signup/first',
+    '/signup/second',
+    '/signup/third',
+    '/signup/business',
+    '/trade',
+    '/trade/seller/:tradeId',
+    '/trade/buyer/:tradeId',
+    '/mypage/seller',
+    '/mypage/buyer',
+    '/mypage/seller/:id',
+    '/mypage/myfarm/:farmId',
+    '/board',
+    '/board/sell/:boardId/detail',
+    '/board/buy/:boardId/detail',
+    '/mypage/edit',
+    '/chat',
+    '/chat/:chatId',
+    '/stanby',
+    '/stanby/crop',
+    '/stanby/trade',
+    '/trade/redirect',
+    '/test',
+  ];
+  if (location.pathname === '/trade') {
+    return false;
+  }
 
     // 정의된 경로를 확인할 때 사용할 정규 표현식으로 변환하는 함수
     const convertPathToRegex = (path) => {
