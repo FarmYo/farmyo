@@ -1,36 +1,40 @@
-import React, { useState,useEffect } from 'react'
-import OngoingTrade from './ongoingTrade';
-import SuccessTrade from './successTrade';
-import api from '../../api/api'
-import { jwtDecode } from 'jwt-decode'
+import React, { useState, useEffect } from "react";
+import OngoingTrade from "./ongoingTrade";
+import SuccessTrade from "./successTrade";
+import Headerbar from "../../component/common/headerbar/index.jsx";
+import TablSelect from "../../component/trade/tabSelect/index.jsx";
 
 export default function Trade() {
-  const [selected,setSelected] = useState(null)
-  const abc = 1
-  
+  const [selected, setSelected] = useState(null);
+  const [selectedItem, setSelectedItem] = useState("전체");
+  const abc = 1;
 
-  useEffect(()=>{
-    setSelected(0)
-  },[])
-  
+  useEffect(() => {
+    setSelected(0);
+  }, []);
+
   const handleClick = (index) => {
-    setSelected(index)
-  }
-  
-  return(
+    setSelected(index);
+  };
+
+  return (
     <div>
-      <div style={{height:50,backgroundColor:'#1B5E20'}}>
-        <div className="p-2">
-          <h1 className="text-xl font-bold" style={{color:"white"}}>거래</h1>
-        </div>
-      </div>
-      <div className='flex justify-around border-b-2 p-2 border-gray-300' style={{height:60}}>
-        <div className='flex justify-center items-center'><h1 className='font-bold text-lg' style={{ color: selected === 0 ? 'black' : 'gray' }} onClick={()=>{handleClick(0)}}>진행중인 거래</h1></div>
-        <div className='flex justify-center items-center'><h1 className='font-bold text-lg' style={{ color: selected === 1 ? 'black' : 'gray' }} onClick={()=>{handleClick(1)}}>완료된 거래</h1></div>
-      </div>
+      {/* 헤더 */}
+      <Headerbar title={"거래"}></Headerbar>
+      <div className="m-10"></div>
+
+      {/* 탭 선택 */}
+      <TablSelect
+        selected={selected}
+        setSelected={setSelected}
+        handleClick={handleClick}
+        selectedItem={selectedItem}
+        setSelectedItem={setSelectedItem}
+      ></TablSelect>
+
       {/* 선택된 컴포넌트 조건부 렌더링 */}
-      {selected === 0 && <OngoingTrade />}
+      {selected === 0 && <OngoingTrade selectedItem={selectedItem} setSelectedItem={setSelectedItem} />}
       {selected === 1 && <SuccessTrade />}
     </div>
-  )
+  );
 }
