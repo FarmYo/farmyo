@@ -15,6 +15,7 @@ export default function Chatting(){
     .then((res) => {
       console.log('채팅방 목록 불러오기 성공', res)
       setChattingData(res.data.dataBody.resultList)
+
     })
     .catch((err) => {
       console.log('채팅방 목록 불러오기 실패', err)
