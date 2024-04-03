@@ -79,7 +79,7 @@ export default function Room() {
   const obsRef = useRef(null)
   const preventRef = useRef(true);
   const [haveMore, setHaveMore] = useState(true)
-  const size = 30
+  const size = 60
   const [flag,setFlag] = useState(0)
   const obsHandler = ((entries) => { //옵저버 콜백함수
     const target = entries[0]
@@ -98,15 +98,46 @@ export default function Room() {
     return () => {observer.disconnect()}
   }, [])
 
+
+  useEffect(() => {
+    messageEndRef.current.scrollIntoView();
+  }, [messages]);
+
+  useEffect(() => {
+    setTimeout(() => {
+          messageEndRef.current.scrollIntoView();
+    }, 500);
+  },[]);
+
+
+  let scrollBefore
+  let scrollHeightBefore
+  let scrollHeightAfter
+
+  useEffect(() => {
+    if (chatData) {
+      
+      scrollHeightAfter = obsRef.current.scrollHeight;
+      obsRef.current.scrollTop = scrollBefore + (scrollHeightAfter - scrollBefore)
+    }
+  },[chatData])
   const getMessage = async () => {
     try {
+      scrollBefore = obsRef.current.scrollTop;
+      scrollHeightBefore = obsRef.current.scrollHeight;
       
       const res = await api.get(`chats/message/${chatId}?page=0&size=${size}&msgId=${msgId}`);
       console.log("채팅 데이터 받아오기");
       setPartnerInfo(res.data.dataBody.chatDetailDto);
       setChatData([...res.data.dataBody.messageDetailDtoList, ...chatData]);
-      console.log("확인",res.data.dataBody.messageDetailDtoList)
-      console.log(haveMore)
+      
+      setTimeout(() => {
+        const scrollHeightAfter = obsRef.current.scrollHeight;
+        // 스크롤 위치를 조정하여 사용자가 이전에 보던 위치를 유지하도록 합니다.
+        obsRef.current.scrollTop = scrollBefore + (scrollHeightAfter - scrollHeightBefore);
+        console.log()
+      }, 5000); // setTimeout은 필요에 따라 조정할 수 있습니다.t
+      
       if(res.data.dataBody.messageDetailDtoList.length<size) {
         preventRef.current=false
         setHaveMore(false)
@@ -135,16 +166,7 @@ export default function Room() {
     }
   }, [flag]);
 
-  // const cachMessage = useMemo(() => getMessage(), [chatData])
-  // const debouncedGetMessage = useMemo(() => debounce(getMessage, 500), []);
-  // useEffect(() => {
-  //   if (cachMessage) {
-  //     setChatData(cachMessage.dataBody.messageDetailDtoList);
-  //     setPartnerInfo(cachMessage.dataBody.chatDetailDto);
-  //   } else {
-  //     debouncedGetMessage();
-  //   }
-  // }, [cachMessage, chatData]);
+
 
   const [bubbleWidth, setBubbleWidth] = useState(null);
   useEffect(() => {
