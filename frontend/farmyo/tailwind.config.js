@@ -4,7 +4,11 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      spacing: {
+        '50px': '50px', // 커스텀 스페이싱 추가
+      },
+    },
   },
   plugins: [require("daisyui")],
 }
