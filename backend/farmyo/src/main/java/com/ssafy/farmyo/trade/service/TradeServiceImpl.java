@@ -239,6 +239,7 @@ public class TradeServiceImpl implements TradeService {
         Wallet wallet = buyer.getWallet();
         String walletAddress = wallet.getWalletAddress();
         int tradePrice = trade.getTradePrice();
+        int tradeQuantity = trade.getTradeQuantity();
         BigInteger buyerId = BigInteger.valueOf(buyer.getId());
 
         // 입금 테이블 생성
@@ -257,7 +258,7 @@ public class TradeServiceImpl implements TradeService {
 
         // 블록체인 민팅(입금한 만큼)
         try {
-            tradeContractService.adminMint(walletAddress, BigInteger.valueOf(tradePrice), buyerId);
+            tradeContractService.adminMint(walletAddress, BigInteger.valueOf(tradePrice*tradeQuantity), buyerId);
         } catch (Exception e) {
             System.out.println("e = " + e);
             throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
@@ -304,7 +305,7 @@ public class TradeServiceImpl implements TradeService {
         trade.updateStatus(3);
         // 블록체인 토큰 구매자한테서 판매자한테로 이동
         try {
-            tradeContractService.adminTransfer(trade.getSeller().getWallet().getWalletAddress(), trade.getBuyer().getWallet().getWalletAddress(), BigInteger.valueOf(trade.getTradePrice()), BigInteger.valueOf(trade.getBuyer().getId()), BigInteger.valueOf(trade.getSeller().getId()));
+            tradeContractService.adminTransfer( trade.getBuyer().getWallet().getWalletAddress(),trade.getSeller().getWallet().getWalletAddress(), BigInteger.valueOf(trade.getTradePrice()*trade.getTradeQuantity()), BigInteger.valueOf(trade.getBuyer().getId()), BigInteger.valueOf(trade.getSeller().getId()));
         } catch (Exception e) {
             System.out.println("e = " + e);
             throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
