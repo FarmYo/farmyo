@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -130,10 +131,14 @@ public class ChatServiceImpl implements ChatService {
         // MessageListDto 의 아랫부분 채우기 ( MessageDetailDto )
         if ( msgId == 0 ) {
             // msgId 가 0 으로 왔다면 ( 가장 최근 개수 만큼 불러오기 )
-            messageListDto.setMessageDetailDtoList(messageRepository.findAllById(chatId, PageRequest.of(page, size)));
+            List<MessageDetailDto> resultList = messageRepository.findAllById(chatId, PageRequest.of(page, size));
+            Collections.reverse(resultList);
+            messageListDto.setMessageDetailDtoList(resultList);
         } else {
             // msgId가 0이 아니라면 msgId 보다 작은 애들중에서 몇개 가져오기
-            messageListDto.setMessageDetailDtoList(messageRepository.findAllById(chatId, msgId, PageRequest.of(page, size)));
+            List<MessageDetailDto> resultList = messageRepository.findAllById(chatId, msgId, PageRequest.of(page, size));
+            Collections.reverse(resultList);
+            messageListDto.setMessageDetailDtoList(resultList);
         }
 
         return messageListDto;
