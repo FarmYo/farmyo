@@ -165,16 +165,6 @@ export default function Room() {
 
 
 
-  const [bubbleWidth, setBubbleWidth] = useState(null);
-  useEffect(() => {
-    if (textRef.current) {
-      const contentWidth = textRef.current.offsetWidth + 20;
-      setBubbleWidth(contentWidth);
-    }
-  }, []);
-
-
-
   useEffect(() => {
     messageEndRef.current.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -199,9 +189,9 @@ export default function Room() {
         {/* 실시간 채팅 내용 불러오기 */}
         {messages &&
           messages.map((messages, index) => <ChatLogs key={index} chat={messages} partnerInfo={partnerInfo} />)}
-        <div style={{ height: "60px"}}></div>
+        <div ref={messageEndRef} style={{ height: "60px"}}></div>
       </div>
-      <div ref={messageEndRef}></div>
+      {/* <div ref={messageEndRef}></div> */}
 
 
       <div>
