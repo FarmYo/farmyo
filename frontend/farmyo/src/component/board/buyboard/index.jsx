@@ -24,8 +24,7 @@ export default function BuyBoardList({ value, search }){
   const [content, setContent] = useState("")
   const [cropCategory, setCropCategory] = useState([])
   const [selectedCrop, setSelectedCrop] = useState({ id: null, categoryName: '작물을 선택하세요' })
-  
-  //무한스크롤
+
     // 무한스크롤 부분
     const [page, setPage] = useState(0)
     const obsRef = useRef(null)
@@ -76,6 +75,29 @@ export default function BuyBoardList({ value, search }){
 
 
   const [newBoardInfo, setNewBoardInfo] = useState([])
+
+  // const [paddingBottom, setPaddingBottom] = useState(0);
+
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const scrollTop = window.scrollY || document.documentElement.scrollTop;
+  //     const scrollHeight =
+  //       document.documentElement.scrollHeight - document.documentElement.clientHeight;
+
+  //     if (scrollTop === scrollHeight) {
+  //       // 스크롤이 가장 아래로 내려갔을 때
+  //       setPaddingBottom(100); // 원하는 패딩 값으로 설정
+  //     } else {
+  //       setPaddingBottom(0);
+  //     }
+  //   };
+
+  //   window.addEventListener('scroll', handleScroll);
+
+  //   return () => {
+  //     window.removeEventListener('scroll', handleScroll);
+  //   };
+  // }, []);
 
   useEffect(() => {
     const filteredList = boardInfo.filter((article) => {
@@ -204,11 +226,9 @@ export default function BuyBoardList({ value, search }){
   }, [])
 
   return(
-    
-
     <div style={{height:'420px',position:'relative'}}>
+      {/* <div style={{height:'420px',position:'relative',  paddingBottom: `${paddingBottom}px`}}></div> */}
       {/* 삽니다 게시글 목록 */}
-
       {newBoardInfo.map((article,index) => (
         <div className="p-3 flex" key={index} onClick={() => navigate(`buy/${article.boardId}/detail`)}>
 
