@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Headerbar from '../../component/common/headerbar'
 
-export default function Chatting(){
+export default function Chatting({}){
   const navigate = useNavigate()
   // const isAuthed = useTokenCheck();
   const [chattingData, setChattingData] = useState([])
@@ -47,14 +47,14 @@ useEffect(() => {
           </div>
       
           <div className="flex flex-col justify-between h-full">
-            <div className="flex justify-center items-center" style={{height: '24px', minWidth: '24px', width: '24px'}}>
+            <div className="text-xs text-center">{chat.boardTitle}</div>
+            <div className="flex justify-center items-center mt-2" style={{height: '24px', minWidth: '24px', width: '24px'}}>
               {chat.unreadCount > 0 && (
                 <div className="flex items-center justify-center" style={{backgroundColor: 'red', borderRadius: '50%', color: 'white', width: '100%', height: '100%'}}>
                   <div>{chat.unreadCount}</div>
                 </div>
               )}
             </div>
-            <div className="text-xs text-center mt-auto">{chat.boardTitle}</div>
           </div>
 
         </div>

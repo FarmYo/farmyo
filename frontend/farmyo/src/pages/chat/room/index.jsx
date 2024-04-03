@@ -73,6 +73,7 @@ export default function Room() {
     }
   };
 
+
   const [partnerInfo, setPartnerInfo] = useState([]);
   const [chatData, setChatData] = useState([]);
   const [msgId, setMsgId] = useState(0);
@@ -120,7 +121,7 @@ export default function Room() {
       
       const res = await api.get(`chats/message/${chatId}?page=0&size=${size}&msgId=${msgId}`);
       console.log("채팅 데이터 받아오기");
-      setPartnerInfo(res.data.dataBody.chatDetailDto);
+      setPartnerInfo(prev => res.data.dataBody.chatDetailDto);
       setChatData([...res.data.dataBody.messageDetailDtoList, ...chatData]);
       if(startFlag){
         setStartFlag(false)
@@ -185,7 +186,7 @@ export default function Room() {
       <Headerbar title="채팅"></Headerbar>
       <div className="m-14"></div>
       
-      <ChatHeader partnerInfo={partnerInfo}></ChatHeader>
+      <ChatHeader/>
       
       {/* 대화말풍선 - 나 */}
       {/* 대화말풍선 - 상대방 */}
