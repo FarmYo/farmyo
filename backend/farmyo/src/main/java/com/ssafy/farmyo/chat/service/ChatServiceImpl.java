@@ -81,7 +81,6 @@ public class ChatServiceImpl implements ChatService {
         }
 
         List<ChatRoomListDto> resultList;
-        List<Integer> unreadCount = new ArrayList<>();
 
         // 농부이면
         if(user.getJob() == 0) {
@@ -89,19 +88,20 @@ public class ChatServiceImpl implements ChatService {
 
             // getChatRoomListWhenSeller 쿼리가 너무 복잡해서 추가하기보다 새로 쿼리 날리는 방식으로 추가함
             for(ChatRoomListDto c : resultList) {
-                unreadCount.add(messageRepository.getSellerUnreadMessageCount(c.getChatId()));
+                c.setBoardTitle(chatRepository.getBoardTitleById(c.getChatId()).get());
+                c.setUnreadCount(messageRepository.getSellerUnreadMessageCount(c.getChatId()));
             }
         }
         // 상인이면
         else {
             resultList = chatRepository.getChatRoomListWhenBuyer(user.getId());
+
             for(ChatRoomListDto c : resultList) {
-                unreadCount.add(messageRepository.getBuyerUnreadMessageCount(c.getChatId()));
+                c.setBoardTitle(chatRepository.getBoardTitleById(c.getChatId()).get());
+                c.setUnreadCount(messageRepository.getBuyerUnreadMessageCount(c.getChatId()));
             }
         }
-
         chatRoomResultDto.setResultList(resultList);
-        chatRoomResultDto.setUnreadCountList(unreadCount);
 
         return chatRoomResultDto;
     }
