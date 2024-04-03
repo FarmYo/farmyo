@@ -4,54 +4,57 @@ import api from '../../../api/api'
 import { useNavigate, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import Swal from 'sweetalert2';
-
+import Loading from "../../../image/component/loading.gif"
 
 export default function PaymentRedirectPage() {
   const location = useLocation()
   const navigate = useNavigate()
-  const { tradeId,seller } = location.state
-  const params = queryString.parse(location.search);
-  const impSuccess = params.imp_success === 'true';
-  // const tradeId = localStorage.getItem('tradeId')
-  // const seller =  localStorage.getItem('seller') 
+  const queryParams = new URLSearchParams(location.search);
+  const impSuccess = queryParams.get('imp_success');
+  const tradeId = localStorage.getItem('tradeId')
+  const seller =  localStorage.getItem('seller') 
 
 
 
 
   useEffect(()=>{
-    // if (!location.state) {
-    //   return;s
-    // }
-  //   if (impSuccess) {
-  //   api.patch(`trades/deposit/${tradeId}`,{},{
-  //     params:{
-  //       depositName:seller
-  //     }
-  //   })
-  //   .then((res)=>{
-  //     console.log(res)
-  //     console.log("입금완료")
-  //     navigate(`/trade/buyer/${tradeId}`)
-  //   })
-  //   .catch((err)=>{
-  //     console.log(err)
-  //     navigate('/trade')
-  //   })
-  // }else{
-
-    if (!impSuccess) {
-      Swal.fire("결제가 실패했습니다.")
-      
+    if (impSuccess) {
+      api.patch(`trades/deposit/${tradeId}`,{},{
+        params:{
+          depositName:seller
+        }
+      })
+      .then((res)=>{
+        console.log(res)
+        console.log("입금완료")
+        navigate(`/trade/buyer/${tradeId}`)
+      })
+      .catch((err)=>{
+        console.log(err)
+        navigate('/trade')
+      })
+      Swal.fire({
+        html: '<h1 style="font-weight: bold;">결제가 완료되었습니다!</h1>',
+        icon: 'success',
+        showConfirmButton: false,
+      });
+              
+    }
+    else{
+      navigate(`/trade/buyer/${tradeId}`)
     }
 
-    navigate(`/trade/buyer/${tradeId}`)
   // }
 
-  },[location,navigate])
+  },[])
 
   return (
-    <div className="w-full h-screen flex flex-col justify-center items-center relative">
-      <div>결제가 완료되었습니다</div>
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <div className="font-bold text-lg">
+        <img src={Loading} alt="" style={{width:200}}/>
+        <h1 className="text-center">결제가 완료되었습니다!</h1>
+        <h1 className="text-center">잠시만 기다려 주세요...</h1>
+      </div>
     </div>
   );
 }
