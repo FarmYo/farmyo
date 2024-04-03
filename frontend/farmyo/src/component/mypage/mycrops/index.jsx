@@ -823,6 +823,11 @@ export default function MyCrops(props) {
       console.log('수확정보 블록체인저장 성공')
       stanbyCloseModal()
       harvestCloseModal() // 수확모달닫기
+      Swal.fire({
+        html: '<h1 style="font-weight: bold;">수확성공!<br/>사진을 등록해주세요</h1>',
+        icon: 'success',
+        showConfirmButton: false,
+      });
       infoCloseModal()
       info2OpenModal()
 
