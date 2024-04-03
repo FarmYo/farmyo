@@ -65,22 +65,68 @@ export default function Room() {
 
   const [partnerInfo, setPartnerInfo] = useState([]);
   const [chatData, setChatData] = useState([]);
-  const getMessage = () => {
-    api
-      .get(`chats/message/${chatId}`)
-      .then((res) => {
-        console.log("채팅 데이터 받아오기");
-        setPartnerInfo(res.data.dataBody.chatDetailDto);
-        setChatData(res.data.dataBody.messageDetailDtoList);
-      })
-      .catch((err) => {
-        console.log("채팅 데이터 받아오기 실패", err);
-      });
+  const [msgId, setMsgId] = useState(0);
+  const obsRef = useRef(null)
+  const preventRef = useRef(true);
+  const [haveMore, setHaveMore] = useState(true)
+  const size = 30
+  const [flag,setFlag] = useState(0)
+  const obsHandler = ((entries) => { //옵저버 콜백함수
+    const target = entries[0]
+    if(haveMore && target.isIntersecting && chatData && preventRef.current) {//옵저버 중복 실행 방지
+      preventRef.current=false
+      setFlag(prev => prev+1) //페이지 값 증가
+    }
+  })
+
+  useEffect(() => {//옵저버 생성
+    const observer = new IntersectionObserver(obsHandler, {threshold : 0.5})
+    if(obsRef.current) observer.observe(obsRef.current)
+    if(!haveMore) {
+      observer.disconnect()
+    }
+    return () => {observer.disconnect()}
+  }, [])
+
+
+
+
+  const getMessage = async () => {
+    try {
+      
+      const res = await api.get(`chats/message/${chatId}?page=0&size=${size}&msgId=${msgId}`);
+      console.log("채팅 데이터 받아오기");
+      setPartnerInfo(res.data.dataBody.chatDetailDto);
+      setChatData([...res.data.dataBody.messageDetailDtoList, ...chatData]);
+      console.log("확인",res.data.dataBody.messageDetailDtoList)
+      console.log(haveMore)
+      if(res.data.dataBody.messageDetailDtoList.length<size) {
+        preventRef.current=false
+        setHaveMore(false)
+        console.log("끝")
+      } else {
+        preventRef.current =true
+      }
+    } catch (err) {
+      console.log("채팅 데이터 받아오기 실패", err);
+    }
   };
 
+
   useEffect(() => {
-    getMessage();
-  }, []);
+    if(chatData.length>0 && haveMore && preventRef.current){
+      console.log(chatData)
+      setMsgId(chatData[0].messageId)
+    }
+  },[chatData])
+
+
+  useEffect(() => {
+    if(preventRef){
+
+      getMessage();
+    }
+  }, [flag]);
 
   // const cachMessage = useMemo(() => getMessage(), [chatData])
   // const debouncedGetMessage = useMemo(() => debounce(getMessage, 500), []);
@@ -158,8 +204,10 @@ export default function Room() {
       {/* 대화말풍선 - 나 */}
       {/* 대화말풍선 - 상대방 */}
       <div className="chat-container mb-20">
+      <div ref={obsRef}><br/></div>
+
         {chatData?.map((chat, index) => (
-          <div>
+          <div key={index}>
             {Number(chat?.userId) === Number(myId) ? (
               <div className="flex p-3 justify-end">
                 <div

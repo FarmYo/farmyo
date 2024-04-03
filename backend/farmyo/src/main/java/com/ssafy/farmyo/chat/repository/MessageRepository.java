@@ -16,10 +16,10 @@ import java.util.Optional;
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Integer> {
 
-    @Query("SELECT new com.ssafy.farmyo.chat.dto.MessageDetailDto(m.id, m.userId, m.content, m.createdAt) from Message m WHERE m.chat.id=:chatId ORDER BY m.createdAt DESC")
+    @Query("SELECT new com.ssafy.farmyo.chat.dto.MessageDetailDto(m.id, m.userId, m.content, m.createdAt) from Message m WHERE m.chat.id=:chatId ORDER BY m.createdAt desc")
     List<MessageDetailDto> findAllById(int chatId, Pageable pageable);
 
-    @Query("SELECT new com.ssafy.farmyo.chat.dto.MessageDetailDto(m.id, m.userId, m.content, m.createdAt) from Message m WHERE m.chat.id=:chatId AND m.id < :msgId ORDER BY m.createdAt DESC")
+    @Query("SELECT new com.ssafy.farmyo.chat.dto.MessageDetailDto(m.id, m.userId, m.content, m.createdAt) from Message m WHERE m.chat.id=:chatId AND m.id < :msgId ORDER BY m.createdAt desc")
     List<MessageDetailDto> findAllById(int chatId, int msgId, Pageable pageable);
 
     @Query("select count(*) from Message m where m.chat.id=:chatId and m.sellerRead=0")
