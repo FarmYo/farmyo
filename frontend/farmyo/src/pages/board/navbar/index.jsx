@@ -1,4 +1,4 @@
-import { useState,useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import SellBoardList from '../../../component/board/sellboard'
 import BuyBoardList from '../../../component/board/buyboard'
 import { useLocation } from 'react-router-dom'
@@ -32,6 +32,7 @@ export default function BoardNav(){
     const { value, search } = location.state || { value: '전체', search: '' }
     setSelectedItem(value || '전체')
     setSearchName(search || '')
+    console.log(selectedItem, searchName)
   }, [location])
 
   return(

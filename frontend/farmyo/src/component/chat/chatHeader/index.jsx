@@ -1,18 +1,24 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Back from "../../../image/component/leftarrow.png";
+
 import { jwtDecode } from "jwt-decode"
 import Ex from "../../../image/component/ex.png"
 import api from "../../../api/api"
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 
+
+
+
 export default function ChatHeader() {
     const param = useParams()
     const chatId = param.chatId
     const navigate = useNavigate();
+
     const userJob = jwtDecode(localStorage.getItem("access")).userJob;
     const loginId = jwtDecode(localStorage.getItem("access")).loginId;
+
     const [showForm, setShowForm] = useState(false);
     const [buttonText, setButtonText] = useState("거래하기");
     const [buttonBgcolor, setButtonBgcolor] = useState("#1B5E20");
@@ -86,14 +92,12 @@ export default function ChatHeader() {
        })
 
 
-
-
-
       },[])
 
 
     return (
         <div className="fixed top-50px  w-full z-50 bg-white">
+
         <div style={{ height: 80 }} className="p-2 border-b-2 border-gray-100 flex justify-between">
             <div className="flex">
             <div className="flex items-center" onClick={goBack}>
@@ -179,6 +183,7 @@ export default function ChatHeader() {
           </div>    
         </div>
         )}
+
         </div>
     ); 
 }
