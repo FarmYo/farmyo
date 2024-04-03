@@ -25,6 +25,18 @@ export default function Room() {
   const [keyboardVisible, setKeyboardVisible] = useState(false);
   const stompClient = useRef(null);
   const messageEndRef = useRef(null);
+  const checkRead = () => {
+    api.get(`chats/message/${chatId}`)
+    .then(res => console.log("성공"))
+    .catch(err => console.error(err))
+  }
+
+  useEffect(() => {
+    checkRead()
+    return () => {
+      checkRead()
+    }
+  }, [])
 
   useEffect(() => {
     const socket = new SockJS("https://j10d209.p.ssafy.io/api/ws/chat");
