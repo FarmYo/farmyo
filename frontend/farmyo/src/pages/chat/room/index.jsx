@@ -26,7 +26,7 @@ export default function Room() {
   const stompClient = useRef(null);
   const messageEndRef = useRef(null);
   const checkRead = () => {
-    api.get(`chats/message/${chatId}`)
+    api.put(`chats/message/${chatId}`)
     .then(res => console.log("성공"))
     .catch(err => console.error(err))
   }
