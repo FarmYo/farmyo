@@ -8,11 +8,11 @@ export default function Mainpage() {
   const [search, setSearch] = useState("")
   const moveBoard = ((event) => {
     event.preventDefault();
-    navigate('/test', { state: { value:"농산물", search } });
+    navigate('/board', { state: { value:"농산물", search } });
   })
 
   return(
-  <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 logo space-y-10">
+  <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-4 logo space-y-10">
     <div className="mx-auto w-full max-w-sm mb-0">
       <img
         className="mx-auto h-auto w-auto"
