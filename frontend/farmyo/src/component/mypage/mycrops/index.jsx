@@ -596,7 +596,7 @@ export default function MyCrops(props) {
   const [flag,setFlag] = useState(false)
 
   useEffect(()=>{
-    setSelected('구분')
+    setSelected('농약사용')
     // 작물 리스트 조회
     if (!props.profileId) {
       api.get(`crops/list/${loginId}`)

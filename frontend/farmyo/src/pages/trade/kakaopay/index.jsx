@@ -46,8 +46,6 @@ export default function PaymentRedirectPage() {
       navigate(`/trade/buyer/${tradeId}`)
     }
 
-  // }
-
   },[])
 
   return (
