@@ -44,7 +44,7 @@ public class CropContractService {
 
         EthGasPrice ethGasPrice = web3j.ethGasPrice().send();
         BigInteger gasPrice = ethGasPrice.getGasPrice();
-        BigInteger higherGasPrice = gasPrice.multiply(BigInteger.valueOf(2));
+        BigInteger higherGasPrice = gasPrice.multiply(BigInteger.valueOf(5));
 
         TransactionReceiptProcessor receiptProcessor = new PollingTransactionReceiptProcessor(
                 web3j,

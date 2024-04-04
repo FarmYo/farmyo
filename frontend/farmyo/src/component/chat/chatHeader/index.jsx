@@ -24,7 +24,7 @@ export default function ChatHeader() {
     const [buttonBgcolor, setButtonBgcolor] = useState("#1B5E20");
     const [harvestCrops,setHarvestCrops] = useState([])
     const [cropId,setCropId] = useState(null)
-    const [partnerInfo,setPartnerInfo] = useState(null)
+    const [partnerInfo,setPartnerInfo] = useState([])
     const [tradePrice,setTradePrice] = useState(null)
     const [tradeQuantity,setTradeQuantity] = useState(null)
     const [selectCrop,setSelectCrop] = useState(null)
@@ -52,7 +52,7 @@ export default function ChatHeader() {
           cropId:cropId,
           boardId:partnerInfo.boardId,
           tradePrice,
-          tradePrice,
+          tradeQuantity,
           tradeStatus:0
         })
         .then((res)=>{
@@ -103,7 +103,7 @@ export default function ChatHeader() {
             <div className="flex items-center" onClick={goBack}>
                 <img src={Back} alt="" style={{ width: 25, height: 25 }} />
             </div>
-            {/* <div className="text-lg flex items-center font-bold ml-5">{Info.userNickname}</div> */}
+            <div className="text-lg flex items-center font-bold ml-5">{partnerInfo.userNickname}</div>
             </div>
             {/* 아래거래하기버튼은 판매자만보이게 */}
             <div className="flex items-center">
