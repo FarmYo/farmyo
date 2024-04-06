@@ -7,7 +7,7 @@ import "../../../css/trade.css";
 import api from '../../../api/api'
 import BackArrow from '../../../image/component/trade/backarrow.png'
 import { useNavigate } from "react-router-dom";
-import { N } from "ethers";
+
 
 
 
