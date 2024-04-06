@@ -40,7 +40,7 @@ export default function SellerTrade() {
 
   //택배회사목록 조회
   useEffect(() => {
-    api.get("ship")
+    api.get("ships")
     .then((res) => {
       setCompanyList(res.data.dataBody)
     })
