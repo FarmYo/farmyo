@@ -211,7 +211,7 @@ export default function BuyerTrade() {
       api.patch(`trades/final/${tradeId}`)
       .then((res)=>{
         // console.log(res)
-        console.log('구매확정완료')
+        console.log('구매확정완료',res)
         Swal.fire({
           html: '<h1 style="font-weight: bold;">구매확정되었습니다</h1>',
           icon: 'success',
@@ -235,7 +235,8 @@ export default function BuyerTrade() {
   return(
     <div>
       <div>
-        <div className="p-3 flex justify-between border-b-2 border-gray-100 h-20">
+        <div className="p-3 flex justify-between border-b-2 border-gray-100 h-20"
+         >
           <div className='flex'>
             <div className='flex items-center mr-5'
             onClick={goTradeList}><img src={Backarrow} alt="" style={{ width:30,height:30}}/></div>
@@ -292,7 +293,8 @@ export default function BuyerTrade() {
         {/* 조건부렌더링하기 입금대기중이면나오는거*/} 
         { info.tradeStatus === 0 && (
           <div className="pt-1 flex justify-between space-x-2">
-            <div className='flex-grow' onClick={deleteTrade}><button className="btn w-full">거래취소</button></div>
+            <div className='flex-grow' onClick={deleteTrade}><button className="btn w-full"
+            style={{background:'red',color:'white'}}>거래취소</button></div>
             <div className='flex-grow' 
               onClick={handleKakaoPay}>
               <button className="btn w-full" style={{backgroundColor:'#1B5E20',color:'white'}}>

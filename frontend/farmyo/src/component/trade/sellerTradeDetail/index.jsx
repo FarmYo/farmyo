@@ -152,18 +152,26 @@ export default function SellerTrade() {
       }}
     >
       <div className="modal-content">
-      <div className="mt-2">
-        <input
-          id="deliverycompany"
-          name="deliverycompany"
-          type="text"
-          autoComplete="text"
-          required
-          className="inputstyle block h-10 rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-          placeholder="택배사"
-          onChange={(e)=>setCompany(e.target.value)}
-        />
+      <div className="mt-2 w-full">        
+        <form>
+          <select id="deliverycompany" class="
+            text-gray-900 text-md rounded-md 
+            block w-full p-2.5"
+            style={{border: '3px solid #1B5E20'}}
+            onChange={(e) => setCompany(e.target.value)}>
+            <option selected>택배사를 선택하세요</option>
+            <option value="CJ대한통운">CJ대한통운</option>
+            <option value="한진택배">한진택배</option>
+            <option value="로젠택배">로젠택배</option>
+            <option value="롯데택배">롯데택배</option>
+            <option value="우체국택배">우체국택배</option>
+            <option value="경동택배">경동택배</option>
+            <option value="GS25편의점택배">GS25편의점택배</option>
+            <option value="CU편의점택배">CU편의점택배</option>
+          </select>
+        </form>
       </div>
+      
       <div className="mt-4 flex justify-center ">
         <input
           id="deliverynumber"
@@ -173,6 +181,7 @@ export default function SellerTrade() {
           required
           className="inputstyle block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
           placeholder="송장번호"
+          style={{border: '3px solid #1B5E20'}}
           onChange={(e)=>setNumber(e.target.value)}
         />
       </div>
