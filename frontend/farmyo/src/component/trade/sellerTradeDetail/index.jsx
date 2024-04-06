@@ -7,7 +7,6 @@ import "../../../css/trade.css";
 import api from '../../../api/api'
 import BackArrow from '../../../image/component/trade/backarrow.png'
 import { useNavigate } from "react-router-dom";
-import { N } from "ethers";
 
 
 
@@ -40,7 +39,7 @@ export default function SellerTrade() {
 
   //택배회사목록 조회
   useEffect(() => {
-    api.get("ship")
+    api.get("ships")
     .then((res) => {
       setCompanyList(res.data.dataBody)
     })
