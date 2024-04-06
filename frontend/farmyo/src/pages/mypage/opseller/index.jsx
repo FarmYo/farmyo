@@ -8,8 +8,11 @@ import Mycrops from '../../../component/mypage/mycrops'
 import ArticleList from '../../../component/mypage/articlelist'
 import { jwtDecode } from 'jwt-decode'
 import api from '../../../api/api'
+import { useNavigate } from 'react-router-dom'
+import WhiteBackArrow from '../../../image/component/trade/wbackarrow.png'
 
 export default function OpponentSeller (){
+  const navigate = useNavigate()
   const loginJob = jwtDecode( localStorage.getItem("access") ).userJob
   const [selected,setSelected] = useState(null)
   const [love,setLove] = useState(false) // 즐겨찾기 여부
@@ -116,14 +119,18 @@ export default function OpponentSeller (){
     }
   };
   
+  const goBack = () =>{
+    navigate(-1)
+  }
   
 
 
   return(
     <div>
       <div style={{height:50,backgroundColor:'#1B5E20'}}>
-        <div className="p-2 flex justify-between">
-          <h1 className="text-xl font-bold" style={{color:"white"}}>{profileNickname}님의 페이지</h1>
+        <div className="p-2 flex" onClick={goBack}>
+          <div className='flex items-center mr-3'><img src={WhiteBackArrow} alt="" style={{ width:30,height:30}}/></div>
+          <div><h1 className="text-xl font-bold" style={{color:"white"}}>{profileNickname}님의 페이지</h1></div>
         </div>
       </div>
       <div className='flex border-b-2 border-gray-300' style={{height:140}}>

@@ -60,7 +60,7 @@ export default function Articlelist(props) {
                   ? `/board/sell/${article.boardId}/detail` 
                   : `/board/buy/${article.boardId}/detail`
               )}>
-                <td className="font-bold pl-8 text-lg">{article.title}</td>
+                <td className="font-bold pl-3 text-lg">{article.title}</td>
                 <td>{article.createdAt.split('T')[0]}</td>
               </tr>
             ))}
