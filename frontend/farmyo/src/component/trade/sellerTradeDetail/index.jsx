@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 
 
+
 export default function SellerTrade() {
   const navigate = useNavigate()
   const params = useParams()
@@ -19,6 +20,7 @@ export default function SellerTrade() {
   const [info,setInfo] = useState([])
   const [company,setCompany] = useState(null)
   const [number,setNumber] = useState(null)
+  const [companyList, setCompanyList] = useState([])
 
 
   const onOpenModal = () => {
@@ -35,6 +37,18 @@ export default function SellerTrade() {
       confirmButtonColor: '#1B5E20',
     });
   };
+
+  //택배회사목록 조회
+  useEffect(() => {
+    api.get("ships")
+    .then((res) => {
+      setCompanyList(res.data.dataBody)
+    })
+    .catch((err)=> {
+      console.error(err)
+    })
+  }, [])
+
 
   // 상세거래내역 조회
   useEffect(()=>{
