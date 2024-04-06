@@ -47,7 +47,7 @@ export default function SellerTrade() {
     .catch((err)=> {
       console.error(err)
     })
-  })
+  }, [])
 
 
   // 상세거래내역 조회
