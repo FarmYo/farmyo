@@ -7,6 +7,7 @@ import "../../../css/trade.css";
 import api from '../../../api/api'
 import BackArrow from '../../../image/component/trade/backarrow.png'
 import { useNavigate } from "react-router-dom";
+import { N } from "ethers";
 
 
 
@@ -19,6 +20,7 @@ export default function SellerTrade() {
   const [info,setInfo] = useState([])
   const [company,setCompany] = useState(null)
   const [number,setNumber] = useState(null)
+  const [companyList, setCompanyList] = useState([])
 
 
   const onOpenModal = () => {
@@ -35,6 +37,18 @@ export default function SellerTrade() {
       confirmButtonColor: '#1B5E20',
     });
   };
+
+  //택배회사목록 조회
+  useEffect(() => {
+    api.get("ship")
+    .then((res) => {
+      setCompanyList(res.data.dataBody)
+    })
+    .catch((err)=> {
+      console.error(err)
+    })
+  })
+
 
   // 상세거래내역 조회
   useEffect(()=>{
