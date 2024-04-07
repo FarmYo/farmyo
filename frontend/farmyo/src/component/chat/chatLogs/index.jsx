@@ -10,7 +10,7 @@ export default function ChatLogs(chat, partnerInfo) {
 
     useEffect(() => {
         if (messagesEndRef.current) {
-        messagesEndRef.current.scrollIntoView();
+        messagesEndRef?.current?.scrollIntoView();
         }
     });
 

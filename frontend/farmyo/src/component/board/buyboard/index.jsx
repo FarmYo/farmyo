@@ -228,7 +228,7 @@ export default function BuyBoardList({ value, search }) {
       {/* <div style={{height:'420px',position:'relative',  paddingBottom: `${paddingBottom}px`}}></div> */}
       {/* 삽니다 게시글 목록 */}
       {newBoardInfo.map((article, index) => (
-        <div className="p-3 flex" key={index} onClick={() => navigate(`buy/${article.boardId}/detail`)}>
+        <div className="p-3 flex border-b-2 border-gray-150" key={index} onClick={() => navigate(`buy/${article.boardId}/detail`)}>
           <div className="w-full ml-2">
             {article.cropCategory}
             <h1 className="text-lg font-bold">{article.title}</h1>
