@@ -41,6 +41,7 @@ export default function SellerTrade() {
   useEffect(() => {
     api.get("ships")
     .then((res) => {
+      console.log('택배회사조회',res)
       setCompanyList(res.data.dataBody)
     })
     .catch((err)=> {
@@ -165,18 +166,21 @@ export default function SellerTrade() {
       }}
     >
       <div className="modal-content">
-      <div className="mt-2">
-        <input
-          id="deliverycompany"
-          name="deliverycompany"
-          type="text"
-          autoComplete="text"
-          required
-          className="inputstyle block h-10 rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
-          placeholder="택배사"
-          onChange={(e)=>setCompany(e.target.value)}
-        />
+      <div className="mt-2 w-full">        
+        <form>
+          <select id="deliverycompany" class="
+            text-gray-900 text-md rounded-md 
+            block w-full p-2.5"
+            style={{border: '3px solid #1B5E20'}}
+            onChange={(e) => setCompany(e.target.value)}>
+          <option value="">택배사를 선택하세요</option>
+            {companyList.map((company) => (
+              <option key={company.id} value={company.shipName}>{company.shipName}</option>
+            ))}
+          </select>
+        </form>
       </div>
+      
       <div className="mt-4 flex justify-center ">
         <input
           id="deliverynumber"
@@ -186,6 +190,7 @@ export default function SellerTrade() {
           required
           className="inputstyle block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-950 sm:text-sm sm:leading-6 pl-3"
           placeholder="송장번호"
+          style={{border: '3px solid #1B5E20'}}
           onChange={(e)=>setNumber(e.target.value)}
         />
       </div>

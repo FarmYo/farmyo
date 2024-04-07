@@ -711,6 +711,7 @@ export default function MyCrops(props) {
 
     } catch (err) {
       console.log(err);
+      alert('작물등록실패')
     }
   };
   
@@ -834,6 +835,8 @@ export default function MyCrops(props) {
     })
     .catch((err)=>{
       console.log(err)
+      stanbyCloseModal()
+      alert('수확실패')
     })
   }
 
