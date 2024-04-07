@@ -349,13 +349,13 @@ const goCropDetail = () => {
     </div>
 
     <div className='fixed bottom-89px w-full'>
-      <div className="p-3">
-        {/* max : 총수량 value : 거래가능량 */}
+      {/* max : 총수량 value : 거래가능량 */}
+      {/* <div className="p-3">
         <progress className="progress custom-progress w-full h-3" value="50" max="100" style={{ color:'#1B5E20'}}></progress>
-        <div className="text-sm">거래가능량 : { boardInfo.quantity }kg</div>
-      </div>
+      </div> */}
       <div className='flex justify-between border-t-2 border-gray-300 p-3'>
         <div>
+          <div className="text-sm">거래가능량 : { boardInfo.quantity }kg</div>
           <h1 className="font-bold">{boardInfo.price}원/kg</h1>
           {/* <h1 className="font-bold">50kg</h1> */}
         </div>
