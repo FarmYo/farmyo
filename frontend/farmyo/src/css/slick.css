@@ -48,3 +48,8 @@
   width: 100%;
   object-fit: contain;
 }
+
+/* 슬라이더 컴포넌트의 NEXT 버튼 숨기기 */
+.slick-next {
+  display: none !important;
+}
