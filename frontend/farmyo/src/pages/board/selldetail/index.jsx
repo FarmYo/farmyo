@@ -348,7 +348,7 @@ const goCropDetail = () => {
       </h1>
     </div>
 
-    <div style={{bottom:100,right:0,left:0}}>
+    <div className='fixed bottom-89px w-full'>
       <div className="p-3">
         {/* max : 총수량 value : 거래가능량 */}
         <progress className="progress custom-progress w-full h-3" value="50" max="100" style={{ color:'#1B5E20'}}></progress>
