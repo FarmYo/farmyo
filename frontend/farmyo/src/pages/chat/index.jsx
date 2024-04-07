@@ -38,7 +38,7 @@ useEffect(() => {
         style={{height: '80px'}}>
           <div className='flex'>
             <div>
-              <img src={chat.userProfile} alt="" style={{width: 60,height:60}}/>
+              <img src={chat.userProfile} alt="" style={{width: 60,height:60}} className='rounded-lg'/>
             </div>
             <div className='ml-3'>
               <h1 className='font-bold'>{chat.userNickname}</h1>
