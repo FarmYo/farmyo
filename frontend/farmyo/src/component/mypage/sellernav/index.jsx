@@ -69,7 +69,7 @@ export default function MypageNavbar() {
       </div>
       <div className='flex justify-between border-b-2 border-gray-300' style={{height:140}}>
         <div className='p-5 pt-7'>
-          <img src={userInfo.profile} alt="" style={{ height:80,width:80}}/>
+          <img src={userInfo.profile} alt="" style={{ height:80,width:80}} className='rounded-full'/>
         </div>
         <div className='p-7 pl-0'>
         <h1 className='font-bold'>{userInfo?.nickname}</h1>
