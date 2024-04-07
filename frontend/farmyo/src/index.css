@@ -22,3 +22,12 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.screen-box{
+	-ms-overflow-style:none !important; /* IE and Edge */
+  scrollbar-width:none !important; /* Firefox */
+}
+
+.screen-box::-webkit-scrollbar {
+	display:none !important; /* Chrome , Safari , Opera */
+}
