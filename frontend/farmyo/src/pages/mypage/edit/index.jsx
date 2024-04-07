@@ -269,7 +269,7 @@ export default function MypageEdit(){
         <div className="flex justify-center">
           <input type="file" accept="image" capture="camera" hidden id="img"/>
           {/* 아래 img랑 연결해놓기 */}
-          {userInfo.profile && (<img src={profileImg} alt="" style={{ width:80 }}  htmlFor="img"/>)}
+          {userInfo.profile && (<img src={profileImg} alt="" style={{ width:80, height:80 }}  htmlFor="img" className='rounded-full'/>)}
         </div>
         {/* 사진 눌러서 선택하는 거 아니면 이걸로 하기 */}
         <label style={{ backgroundColor:'#bbbbbb'}} className="mx-auto btn rounded-md w-1/2 mt-2" htmlFor="profileImg">
