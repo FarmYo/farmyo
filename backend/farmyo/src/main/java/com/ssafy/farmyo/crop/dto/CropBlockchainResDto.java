@@ -15,8 +15,12 @@ public class CropBlockchainResDto {
     private String pesticideName;
     private String pesticideType;
     //타입 2일 때 들어올 변수들
-    private String contestName;
-    private String awardDetails;
+    private String certName;
+    private String certCorp;
+    //타입 3일 때 들어올 변수들
+    private String inspectName;
+    private String inspectResult;
+    private String inspectCorp;
 
 
 }

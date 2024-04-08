@@ -7,8 +7,8 @@ import Swal from 'sweetalert2'
 
 export default function Award( { cropId, onRegister }){
   const navigate = useNavigate()
-  const [contestName,setContestName] = useState(null) // 대회명
-  const [awardDetails,setAwardDetails] = useState(null) // 수상내역
+  const [certName,setCertName] = useState(null) // 대회명
+  const [certCorp,setCertCorp] = useState(null) // 수상내역
   const [eventDate,setEventDate] = useState(null) // 수상날짜
   const [stanbyModal,setStanbyModal] = useState(false)
 
@@ -37,12 +37,12 @@ export default function Award( { cropId, onRegister }){
     api.post(`crops/${cropId}`,{
       type:2,
       eventDate: eventDate,
-      contestName:contestName,
-      awardDetails:awardDetails
+      certName:certName,
+      certCorp:certCorp
     })
     .then((res)=>{
       console.log(res)
-      console.log('대회수상 블록체인보내기성공')
+      console.log('인증정보 블록체인보내기성공')
       stanbyCloseModal()
       Swal.fire({
         html: '<h1 style="font-weight: bold;">생애기록저장성공!</h1>',
@@ -62,21 +62,21 @@ export default function Award( { cropId, onRegister }){
         <div className="p-6">
           <label className="form-control w-full max-w-xs">
           <div className="label">
-            <span className="text-md">대회명</span>
+            <span className="text-md">인증내역</span>
           </div>
-          <input type="text" placeholder="대회명을 입력해주세요" className="input input-bordered w-full max-w-xs" 
-          onChange={(e)=>setContestName(e.target.value)}/>
+          <input type="text" placeholder="인증 내역을 입력해주세요" className="input input-bordered w-full max-w-xs" 
+          onChange={(e)=>setCertName(e.target.value)}/>
           </label>
           <label className="form-control w-full max-w-xs">
           <div className="label">
-            <span className="text-md">수상내역</span>
+            <span className="text-md">인증기관</span>
           </div>
-          <input type="text" placeholder="수상내역을 입력해주세요" className="input input-bordered w-full max-w-xs" 
-          onChange={(e)=>setAwardDetails(e.target.value)}/>
+          <input type="text" placeholder="인증기관을 입력해주세요" className="input input-bordered w-full max-w-xs" 
+          onChange={(e)=>setCertCorp(e.target.value)}/>
           </label>
           <label className="form-control w-full max-w-xs">
           <div className="label">
-            <span className="text-md">수상날짜</span>
+            <span className="text-md">인증날짜</span>
           </div>
           <input type="text" placeholder="yyyy-mm-dd 형식으로 입력" className="input input-bordered w-full max-w-xs"
           onChange={(e)=>setEventDate(e.target.value)} />
