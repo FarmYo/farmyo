@@ -627,7 +627,7 @@ export default function CropInfo(){
         <div className="flex flex-col items-center justify-center min-h-screen">
           <div><img src={Daegi} alt="대기 이미지" style={{width:200}}/></div>
           <div className="font-bold text-lg">
-            <h1>생애기록 불러오는중 ...</h1>
+            <h1>블록체인의 생애기록 불러오는중 ...</h1>
           </div>
         </div>
     
@@ -671,7 +671,7 @@ export default function CropInfo(){
                 </li>
               )
 
-            // 대회 기록일 때
+            // 인증 기록일 때
             case 2:
               return (
                 <li>
@@ -681,17 +681,38 @@ export default function CropInfo(){
                     </div>
                     <div className="timeline-end timeline-box space-y-2">
                       <time className="font-mono italic font-bold">{item.eventDate}</time>
-                      <div className="text-lg font-black">수상 정보</div>
-                      <div>대회 이름 : {item.pesticicontestNamedeName} </div>
-                      <div>수상내역 : {item.awardDetails}</div>
+                      <div className="text-lg font-black">인증 정보</div>
+                      <div>인증 내역 : {item.CertName} </div>
+                      <div>인증 기관 : {item.CertCorp}</div>
                     </div>
                   </div>
                 </li>
 
               )
 
-              //수확날
+              //검사 정보 일 때
               case 3:
+                return (
+                  <li>
+                    <div className="flex" style={{borderLeft: "2px solid #1B5E20"}} >
+                      <div class="timeline-middle">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg>
+                      </div>
+                      <div className="timeline-end timeline-box space-y-2">
+                        <time className="font-mono italic font-bold">{item.eventDate}</time>
+                        <div className="text-lg font-black">검사 정보</div>
+                        <div>검사 종류 : {item.inspectName} </div>
+                        <div>검사 결과 : {item.inspectResult} </div>
+                        <div>검사 기관 : {item.inspectCorp}</div>
+                      </div>
+                    </div>
+                  </li>
+  
+                )
+
+
+              //수확날
+              case 4:
                 return (
                   <li>
                     <div className="flex" style={{borderLeft: "2px solid #1B5E20"}} >

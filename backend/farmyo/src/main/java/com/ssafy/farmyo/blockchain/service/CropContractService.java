@@ -36,7 +36,7 @@ public class CropContractService {
     @PostConstruct
     public void init() throws IOException {
         String rpcUrl = "https://rpc2.sepolia.org";
-        String contractAddress = "0xE8448EEB2629E3e96f96f8EBedc9Fd2faa6fe20c";
+        String contractAddress = "0x78F397fC1d5CcA8a8a7Af2Fc869F561DBa4B56ED";
         long chainId = 11155111;
 
         this.web3j = Web3j.build(new HttpService(rpcUrl)); // url과 web3j을 통해 해당 코인네트워크 접속
@@ -44,7 +44,7 @@ public class CropContractService {
 
         EthGasPrice ethGasPrice = web3j.ethGasPrice().send();
         BigInteger gasPrice = ethGasPrice.getGasPrice();
-        BigInteger higherGasPrice = gasPrice.multiply(BigInteger.valueOf(5));
+        BigInteger higherGasPrice = gasPrice.multiply(BigInteger.valueOf(10));
 
         TransactionReceiptProcessor receiptProcessor = new PollingTransactionReceiptProcessor(
                 web3j,
@@ -96,8 +96,13 @@ public class CropContractService {
         return cropContract.addUsageInfo(cropPK, pesticideName, pesticideType, eventDate).send();
     }
 
-    public TransactionReceipt addContestInfo(BigInteger cropPK, String contestName, String awardDetails, BigInteger eventDate) throws Exception {
-        return cropContract.addContestInfo(cropPK, contestName, awardDetails, eventDate).send();
+    public TransactionReceipt addCertInfo(BigInteger cropPK, String certName, String certCorp, BigInteger eventDate) throws Exception {
+        return cropContract.addCertInfo(cropPK, certName, certCorp, eventDate).send();
+    }
+
+    public TransactionReceipt addInspectInfo(BigInteger cropPK, String inspectName, String inspectResult, String inspectCorp, BigInteger
+            eventDate) throws Exception {
+        return cropContract.addInspectInfo(cropPK, inspectName, inspectResult, inspectCorp, eventDate).send();
     }
 
     public TransactionReceipt addHarvestInfo(BigInteger cropPK, BigInteger eventDate) throws Exception {
