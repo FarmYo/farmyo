@@ -11,7 +11,6 @@ import { useNavigate } from "react-router-dom";
 
 
 
-
 export default function SellerTrade() {
   const navigate = useNavigate()
   const params = useParams()
