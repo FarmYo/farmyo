@@ -68,12 +68,12 @@ export default function MyCrops(props) {
         },
         {
           "internalType": "string",
-          "name": "_contestName",
+          "name": "_certName",
           "type": "string"
         },
         {
           "internalType": "string",
-          "name": "_awardDetails",
+          "name": "_certCorp",
           "type": "string"
         },
         {
@@ -82,7 +82,7 @@ export default function MyCrops(props) {
           "type": "uint256"
         }
       ],
-      "name": "addContestInfo",
+      "name": "addCertInfo",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -101,6 +101,39 @@ export default function MyCrops(props) {
         }
       ],
       "name": "addHarvestInfo",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_cropPK",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "_inspectName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_inspectResult",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_inspectCorp",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_eventDate",
+          "type": "uint256"
+        }
+      ],
+      "name": "addInspectInfo",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -179,7 +212,7 @@ export default function MyCrops(props) {
           "type": "uint256"
         }
       ],
-      "name": "contestInfos",
+      "name": "certInfos",
       "outputs": [
         {
           "internalType": "uint8",
@@ -188,12 +221,12 @@ export default function MyCrops(props) {
         },
         {
           "internalType": "string",
-          "name": "contestName",
+          "name": "CertName",
           "type": "string"
         },
         {
           "internalType": "string",
-          "name": "awardDetails",
+          "name": "CertCorp",
           "type": "string"
         },
         {
@@ -213,7 +246,7 @@ export default function MyCrops(props) {
           "type": "uint256"
         }
       ],
-      "name": "getContestInfos",
+      "name": "getCertInfos",
       "outputs": [
         {
           "components": [
@@ -224,12 +257,12 @@ export default function MyCrops(props) {
             },
             {
               "internalType": "string",
-              "name": "contestName",
+              "name": "CertName",
               "type": "string"
             },
             {
               "internalType": "string",
-              "name": "awardDetails",
+              "name": "CertCorp",
               "type": "string"
             },
             {
@@ -238,7 +271,7 @@ export default function MyCrops(props) {
               "type": "uint256"
             }
           ],
-          "internalType": "struct CropData.ContestInfo[]",
+          "internalType": "struct CropData.CertInfo[]",
           "name": "",
           "type": "tuple[]"
         }
@@ -270,6 +303,52 @@ export default function MyCrops(props) {
             }
           ],
           "internalType": "struct CropData.HarvestInfo[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_cropPK",
+          "type": "uint256"
+        }
+      ],
+      "name": "getInsepctInfos",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint8",
+              "name": "infoType",
+              "type": "uint8"
+            },
+            {
+              "internalType": "string",
+              "name": "inspectName",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "inspectResult",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "inspectCorp",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "eventDate",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct CropData.InspectInfo[]",
           "name": "",
           "type": "tuple[]"
         }
@@ -389,6 +468,50 @@ export default function MyCrops(props) {
       "type": "function"
     },
     {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "inspectInfos",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "infoType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "string",
+          "name": "inspectName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "inspectResult",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "inspectCorp",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "eventDate",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "inputs": [],
       "name": "owner",
       "outputs": [
@@ -477,7 +600,7 @@ export default function MyCrops(props) {
   ]
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
   //접근할 계약 주소
-  const contractAddress = '0xE8448EEB2629E3e96f96f8EBedc9Fd2faa6fe20c';
+  const contractAddress = '0x78F397fC1d5CcA8a8a7Af2Fc869F561DBa4B56ED';
   //계약 객체 생성
   const contract = new web3.eth.Contract(contractABI, contractAddress);
 
@@ -487,7 +610,8 @@ export default function MyCrops(props) {
     try {
       const plantingInfo = await contract.methods.getPlantingInfos(cropPK).call();
       const usageInfos = await contract.methods.getUsageInfos(cropPK).call();
-      const contestInfos = await contract.methods.getContestInfos(cropPK).call();
+      const certInfos = await contract.methods.getCertInfos(cropPK).call();
+      const insepctInfos = await contract.methods.getInsepctInfos(cropPK).call();
       const harvestInfos = await contract.methods.getHarvestInfos(cropPK).call();
 
       let allInfos = [];
@@ -512,8 +636,8 @@ export default function MyCrops(props) {
         }
       });
 
-      // 작물 대회 정보 추가
-      contestInfos.forEach(info => {
+      // 작물 인증 정보 추가
+      certInfos.forEach(info => {
         if (info.eventDate !== undefined) {
           allInfos.push({
             ...info,
@@ -522,6 +646,21 @@ export default function MyCrops(props) {
           });
         }
       });
+
+
+      // 작물 검사 정보 추가
+      insepctInfos.forEach(info => {
+        if (info.eventDate !== undefined) {
+          allInfos.push({
+            ...info,
+            infoType: Number(info.infoType),
+            eventDate: Number(info.eventDate)
+          });
+        }
+      });
+
+
+
 
       // 작물 수확 정보 추가 (배열일 경우 각 항목을 처리)
       harvestInfos.forEach(info => {
@@ -1079,7 +1218,7 @@ export default function MyCrops(props) {
         <div className="flex flex-col items-center justify-center min-h-screen">
           <div><img src={Daegi} alt="대기 이미지" style={{width:200}}/></div>
           <div className="font-bold text-lg">
-            <h1>생애기록 불러오는중 ...</h1>
+            <h1>블록체인의 생애기록 불러오는중 ...</h1>
           </div>
         </div>
     
@@ -1123,7 +1262,7 @@ export default function MyCrops(props) {
                 </li>
               )
 
-            // 대회 기록일 때
+            // 인증 기록일 때
             case 2:
               return (
                 <li>
@@ -1133,17 +1272,36 @@ export default function MyCrops(props) {
                     </div>
                     <div className="timeline-end timeline-box space-y-2">
                       <time className="font-mono italic font-bold">{item.eventDate}</time>
-                      <div className="text-lg font-black">수상 정보</div>
-                      <div>대회 이름 : {item.pesticicontestNamedeName} </div>
-                      <div>수상내역 : {item.awardDetails}</div>
+                      <div className="text-lg font-black">인증 정보</div>
+                      <div>인증 내역 : {item.CertName} </div>
+                      <div>인증 기관 : {item.CertCorp}</div>
                     </div>
                   </div>
                 </li>
 
               )
 
-              //수확날
+              //검사 정보 일 때
               case 3:
+                return (
+                  <li>
+                    <div className="flex" style={{borderLeft: "2px solid #1B5E20"}} >
+                      <div class="timeline-middle">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg>
+                      </div>
+                      <div className="timeline-end timeline-box space-y-2">
+                        <time className="font-mono italic font-bold">{item.eventDate}</time>
+                        <div className="text-lg font-black">검사 정보</div>
+                        <div>검사 종류{item.inspectName} </div>
+                        <div>검사 결과 : {item.inspectResult} </div>
+                        <div>검사 기관 : {item.inspectCorp}</div>
+                      </div>
+                    </div>
+                  </li>
+  
+                )
+              //수확날
+              case 4:
                 return (
                   <li>
                     <div className="flex" style={{borderLeft: "2px solid #1B5E20"}} >
