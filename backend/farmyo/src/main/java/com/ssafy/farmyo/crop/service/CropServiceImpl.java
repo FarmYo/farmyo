@@ -247,18 +247,33 @@ public class CropServiceImpl implements CropService {
                 throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
             }
         } else if (cropBlockchainResDto.getType() == 2) {
-            if (cropBlockchainResDto.getContestName() == null || cropBlockchainResDto.getContestName().isEmpty()) {
-                throw new CustomException(ExceptionType.ContestName_INVALID);
+            if (cropBlockchainResDto.getCertName() == null || cropBlockchainResDto.getCertName().isEmpty()) {
+                throw new CustomException(ExceptionType.CERTNAME_INVALID);
             }
-            if (cropBlockchainResDto.getAwardDetails() == null || cropBlockchainResDto.getAwardDetails().isEmpty()) {
-                throw new CustomException(ExceptionType.AWARDDETAILS_INVALID);
+            if (cropBlockchainResDto.getCertCorp() == null || cropBlockchainResDto.getCertCorp().isEmpty()) {
+                throw new CustomException(ExceptionType.CERTCORP_INVALID);
             }
             try {
-                cropContractService.addCertInfo(BigInteger.valueOf(crop.getId()), cropBlockchainResDto.getContestName(), cropBlockchainResDto.getAwardDetails(), eventDate);
+                cropContractService.addCertInfo(BigInteger.valueOf(crop.getId()), cropBlockchainResDto.getCertName(), cropBlockchainResDto.getCertCorp(), eventDate);
             } catch (Exception e) {
                 throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
             }
         } else if (cropBlockchainResDto.getType() == 3) {
+            if (cropBlockchainResDto.getInspectName() == null || cropBlockchainResDto.getInspectName().isEmpty()) {
+                throw new CustomException(ExceptionType.INSPECTNAME_INVALID);
+            }
+            if (cropBlockchainResDto.getInspectResult() == null || cropBlockchainResDto.getInspectResult().isEmpty()) {
+                throw new CustomException(ExceptionType.INSPECTRESULT_INVALID);
+            }
+            if (cropBlockchainResDto.getInspectCorp() == null || cropBlockchainResDto.getInspectCorp().isEmpty()) {
+                throw new CustomException(ExceptionType.INSPECTCORP_INVALID);
+            }
+            try {
+                cropContractService.addInspectInfo(BigInteger.valueOf(crop.getId()), cropBlockchainResDto.getInspectName(), cropBlockchainResDto.getInspectResult(),cropBlockchainResDto.getInspectCorp() ,eventDate);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
+            }
 
         } else if (cropBlockchainResDto.getType() == 4) {
 
