@@ -368,7 +368,7 @@ export default function SellBoardList({ value, search }) {
             <div
               style={{
                 position: "absolute",
-                top: "40%",
+                top: "45%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
                 color: "white",
@@ -479,7 +479,7 @@ export default function SellBoardList({ value, search }) {
               </div>
             </div>
           </div>
-
+          <div className='flex justify-end mt-3 text-sm' style={{color:'red'}}>.HEIF확장자업로드불가</div>
           <label htmlFor="price" className="block text-md leading-6 mt-4 text-gray-900">
             수량
           </label>
