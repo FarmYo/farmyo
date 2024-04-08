@@ -47,7 +47,7 @@ public class TradeContractService {
 
         EthGasPrice ethGasPrice = web3j.ethGasPrice().send();
         BigInteger gasPrice = ethGasPrice.getGasPrice();
-        BigInteger higherGasPrice = gasPrice.multiply(BigInteger.valueOf(5));
+        BigInteger higherGasPrice = gasPrice.multiply(BigInteger.valueOf(10));
 
         TransactionReceiptProcessor receiptProcessor = new PollingTransactionReceiptProcessor(
                 web3j,
@@ -80,12 +80,12 @@ public class TradeContractService {
 
                     @Override
                     public BigInteger getGasLimit(String contractFunc) {
-                        return BigInteger.valueOf(3000000); // 예제 가스 한도
+                        return BigInteger.valueOf(10000000); // 예제 가스 한도
                     }
 
                     @Override
                     public BigInteger getGasLimit() {
-                        return BigInteger.valueOf(3000000); // 예제 가스 한도
+                        return BigInteger.valueOf(10000000); // 예제 가스 한도
                     }
                 }
         );
