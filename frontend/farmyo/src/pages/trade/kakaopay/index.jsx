@@ -54,7 +54,7 @@ export default function PaymentRedirectPage() {
       <div><img src={TradeStanby} alt="" style={{width:200}}/></div>
       <div className="font-bold text-lg">
         <h1 className="text-center">결제가 완료되었습니다!</h1>
-        <h1 className="text-center">잠시만 기다려 주세요...</h1>
+        <h1 className="text-center">블록체인에 거래 내역을 저장하고 있습니다.잠시만 기다려 주세요...</h1>
       </div>
     </div>
   );
