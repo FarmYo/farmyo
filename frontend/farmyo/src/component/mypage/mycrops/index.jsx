@@ -13,7 +13,7 @@ import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import ko from 'date-fns/locale/ko'
 import Pesticide from '../../form/pesticide'
-import Award from '../../form/award'
+import Award from '../../form/cert'
 import '../../../css/liferecord.css'
 import api from "../../../api/api"
 import '../../../css/pagenation.css'
@@ -25,6 +25,7 @@ import Gallery from "../../../image/component/gallery.png"
 import Swal from "sweetalert2"
 import BeforeHarvest from '../../../image/component/beforeharvest.png'
 import Daegi from '../../../image/component/daegi.gif'
+import Inspect from "../../form/inspect"
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -955,7 +956,7 @@ export default function MyCrops(props) {
     // 대기 모달오픈
     stanbyOpenModal()
     api.post(`crops/${cropId}`,{
-      type:3,
+      type:4,
       eventDate:cropHarvestDate
     })
     .then((res)=>{
@@ -1292,7 +1293,7 @@ export default function MyCrops(props) {
                       <div className="timeline-end timeline-box space-y-2">
                         <time className="font-mono italic font-bold">{item.eventDate}</time>
                         <div className="text-lg font-black">검사 정보</div>
-                        <div>검사 종류{item.inspectName} </div>
+                        <div>검사 종류 : {item.inspectName} </div>
                         <div>검사 결과 : {item.inspectResult} </div>
                         <div>검사 기관 : {item.inspectCorp}</div>
                       </div>
@@ -1506,7 +1507,7 @@ export default function MyCrops(props) {
                   </a>
                 )}
                 </Menu.Item>
-                <Menu.Item onClick={()=>setSelected('지역대회수상')}>
+                <Menu.Item onClick={()=>setSelected('인증정보')}>
                   {({ active }) => (
                     <a
                       href="#"
@@ -1515,7 +1516,20 @@ export default function MyCrops(props) {
                         'block px-10 py-2 text-lg'
                       )}
                     >
-                      지역대회수상
+                      인증정보
+                    </a>
+                  )}
+                </Menu.Item>
+                <Menu.Item onClick={()=>setSelected('검사정보')}>
+                  {({ active }) => (
+                    <a
+                      href="#"
+                      className={classNames(
+                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                        'block px-10 py-2 text-lg'
+                      )}
+                    >
+                      검사정보
                     </a>
                   )}
                 </Menu.Item>
@@ -1526,7 +1540,8 @@ export default function MyCrops(props) {
           </div>
           {/* 추가모달폼 */}
           { selected ==='농약사용' && <Pesticide cropId={cropId} onRegister={addRecordCloseModal}/>}
-          { selected ==='지역대회수상' && <Award  cropId={cropId} onRegister={addRecordCloseModal}/>}
+          { selected ==='인증정보' && <Award  cropId={cropId} onRegister={addRecordCloseModal}/>}
+          { selected ==='검사정보' && <Inspect cropId={cropId} onRegister={addRecordCloseModal}/>}
           </Modal>
           
           {/* 수확하기모달폼 */}      

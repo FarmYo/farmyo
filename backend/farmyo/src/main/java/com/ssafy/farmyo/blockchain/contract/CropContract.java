@@ -111,7 +111,7 @@ public class CropContract extends Contract {
     }
 
     public RemoteFunctionCall<TransactionReceipt> addInspectInfo(BigInteger _cropPK, String _inspectName, String _inspectResult, String _inspectCorp, BigInteger _eventDate) {
-        final Function function = new Function(
+        final Function function = new Function  (
                 FUNC_ADDINSPECTINFO, 
                 Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Uint256(_cropPK), 
                 new org.web3j.abi.datatypes.Utf8String(_inspectName), 
