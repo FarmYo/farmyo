@@ -627,7 +627,7 @@ export default function CropInfo(){
         <div className="flex flex-col items-center justify-center min-h-screen">
           <div><img src={Daegi} alt="대기 이미지" style={{width:200}}/></div>
           <div className="font-bold text-lg">
-            <h1>생애기록 불러오는중 ...</h1>
+            <h1>블록체인의 생애기록 불러오는중 ...</h1>
           </div>
         </div>
     
