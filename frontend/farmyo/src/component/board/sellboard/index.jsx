@@ -336,21 +336,19 @@ export default function SellBoardList({ value, search }) {
   return (
     <div style={{ height: "420px", position: "relative" }}>
       {/* 팝니다 게시글 목록 */}
-
-
       {newBoardInfo.map((article,index) => (
-      <div className="p-3 flex" key={index} onClick={() => navigate(`sell/${article.boardId}/detail`)}>
-        <div className='w-32 h-28 overflow-hidden'><img src={article.imgUrl} alt="작물이미지"  className='w-full h-full object-cover'/></div>
-        <div className="w-full ml-2">
-          <h1 className="text-lg font-bold">{article.title}</h1>
-          <h1 className="text-sm">{article.userNickname}</h1>
-          <h1 style={{ color:'#1B5E20' }} className="font-bold">{article.quantity}kg</h1>
-          <div className='flex justify-between'>
-            <h1 style={{ color:'#1B5E20' }} className="font-bold">{article.price}원/kg</h1>
-            <img src={Chatting} alt="" style={{width:30}}/> 
-          </div>     
+        <div className="p-3 flex border-b-2 border-gray-150" key={index} onClick={() => navigate(`sell/${article.boardId}/detail`)}>
+          <div className='w-32 h-28 overflow-hidden'><img src={article.imgUrl} alt="작물이미지"  className='w-full h-full object-cover rounded-lg'/></div>
+          <div className="w-full ml-2">
+            <h1 className="text-lg font-bold">{article.title}</h1>
+            <h1 className="text-sm">{article.userNickname}</h1>
+            <h1 style={{ color:'#1B5E20' }} className="font-bold">{article.quantity}kg</h1>
+            <div className='flex justify-between'>
+              <h1 style={{ color:'#1B5E20' }} className="font-bold">{article.price}원/kg</h1>
+              <img src={Chatting} alt="" style={{width:30}}/> 
+            </div>     
+          </div>
         </div>
-      </div>
       ))}
       {/* {haveMore && <div className="trigger"></div>} */}
       <div ref={obsRef} style={{ height: "77px" }}>
