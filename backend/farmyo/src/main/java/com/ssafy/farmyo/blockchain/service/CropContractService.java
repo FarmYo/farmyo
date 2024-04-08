@@ -96,8 +96,8 @@ public class CropContractService {
         return cropContract.addUsageInfo(cropPK, pesticideName, pesticideType, eventDate).send();
     }
 
-    public TransactionReceipt addContestInfo(BigInteger cropPK, String contestName, String awardDetails, BigInteger eventDate) throws Exception {
-        return cropContract.addContestInfo(cropPK, contestName, awardDetails, eventDate).send();
+    public TransactionReceipt addCertInfo(BigInteger cropPK, String certName, String certCorp, BigInteger eventDate) throws Exception {
+        return cropContract.addCertInfo(cropPK, certName, certCorp, eventDate).send();
     }
 
     public TransactionReceipt addHarvestInfo(BigInteger cropPK, BigInteger eventDate) throws Exception {

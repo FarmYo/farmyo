@@ -254,11 +254,13 @@ public class CropServiceImpl implements CropService {
                 throw new CustomException(ExceptionType.AWARDDETAILS_INVALID);
             }
             try {
-                cropContractService.addContestInfo(BigInteger.valueOf(crop.getId()), cropBlockchainResDto.getContestName(), cropBlockchainResDto.getAwardDetails(), eventDate);
+                cropContractService.addCertInfo(BigInteger.valueOf(crop.getId()), cropBlockchainResDto.getContestName(), cropBlockchainResDto.getAwardDetails(), eventDate);
             } catch (Exception e) {
                 throw new CustomException(ExceptionType.BLOCKCHAIN_FAILED_TO_CREATE);
             }
         } else if (cropBlockchainResDto.getType() == 3) {
+
+        } else if (cropBlockchainResDto.getType() == 4) {
 
             crop.updateCropHarvestDate(cropBlockchainResDto.getEventDate());
             try {
