@@ -130,13 +130,13 @@ export default function OpponentSeller (){
       <div style={{height:50,backgroundColor:'#1B5E20'}}>
         <div className="p-2 flex" onClick={goBack}>
           <div className='flex items-center mr-3'><img src={WhiteBackArrow} alt="" style={{ width:30,height:30}}/></div>
-          <div><h1 className="text-xl font-bold" style={{color:"white"}}>{profileNickname}님의 페이지</h1></div>
+          <div><h1 className="text-xl font-bold" style={{color:"white"}}>{profileNickname}님의 마이팜</h1></div>
         </div>
       </div>
       <div className='flex border-b-2 border-gray-300' style={{height:140}}>
         <div className='p-5 pt-7'>
           {/* <img src={Me} alt="" style={{ height:80,width:80}}/> */}
-          <img src={profileUrl} alt="" style={{ height:80,width:80}}/>
+          <img src={profileUrl} alt="" style={{ height:80,width:80}} className='rounded-full'/>
         </div>
         <div className='p-7 pl-3'>
           <h1 className='font-bold'>{profileNickname}</h1>
