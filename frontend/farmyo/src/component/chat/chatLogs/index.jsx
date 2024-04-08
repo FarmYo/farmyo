@@ -10,7 +10,7 @@ export default function ChatLogs(chat, partnerInfo) {
 
     useEffect(() => {
         if (messagesEndRef.current) {
-        messagesEndRef.current.scrollIntoView();
+        messagesEndRef?.current?.scrollIntoView();
         }
     });
 
@@ -21,7 +21,7 @@ export default function ChatLogs(chat, partnerInfo) {
                 <p className="bg-green-100 text-sm rounded-lg px-3 py-2 my-1" >{`${chat.chat.content}`}</p>
             ) : (
                 <div className="flex items-center max-w-full">
-                    <img src={chat.partnerInfo.userProfile} alt="" className="w-10 h-10" />
+                    <img src={chat.partnerInfo.userProfile} alt="" className="w-10 h-10 rounded-full" />
                     <div className="max-w-full ml-2">
                         <p className="bg-gray-200 text-sm rounded-lg px-3 my-1 py-2 max-w-full break-words" >{`${chat.chat.content}`}</p>
                     </div>
