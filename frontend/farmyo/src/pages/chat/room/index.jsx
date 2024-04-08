@@ -101,12 +101,12 @@ export default function Room() {
 
 
   useEffect(() => {
-    messageEndRef.current.scrollIntoView();
+    messageEndRef?.current?.scrollIntoView();
   }, [messages]);
 
   useEffect(() => {
     setTimeout(() => {
-          messageEndRef.current.scrollIntoView();
+          messageEndRef?.current?.scrollIntoView();
     }, 1000);
   },[]);
 
@@ -166,7 +166,7 @@ export default function Room() {
 
 
   useEffect(() => {
-    messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    messageEndRef?.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   return (
