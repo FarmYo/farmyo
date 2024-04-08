@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate, Link } from "react-router-dom";
 import api from "../../../api/api"
 import Swal from 'sweetalert2';
-import Logo from '../../../image/component/user/logo.png';
+import HighLogo from '../../../image/component/user/highlogo.png';
 import '../../../css/signup.css'
 import { jwtDecode } from 'jwt-decode';
 // import { useCookies } from 'react-cookie';
@@ -70,8 +70,9 @@ export default function LoginInput() {
     <div className="sm:mx-auto sm:w-full sm:max-w-sm mb-0">
       <img
         className="mx-auto h-auto w-auto"
-        src={Logo}
+        src={HighLogo}
         alt="FarmYo"
+        style={{width:150}}
       />
     </div>
 

@@ -292,10 +292,10 @@ export default function BuyerTrade() {
         </div>
         {/* 조건부렌더링하기 입금대기중이면나오는거*/} 
         { info.tradeStatus === 0 && (
-          <div className="pt-1 flex justify-between space-x-2">
-            <div className='flex-grow' onClick={deleteTrade}><button className="btn w-full"
+          <div className="pt-1  grid grid-cols-2 gap-1">
+            <div className='flex-1' onClick={deleteTrade}><button className="btn w-full"
             style={{background:'red',color:'white'}}>거래취소</button></div>
-            <div className='flex-grow' 
+            <div className='flex-1' 
               onClick={handleKakaoPay}>
               <button className="btn w-full" style={{backgroundColor:'#1B5E20',color:'white'}}>
               결제</button>
