@@ -235,7 +235,7 @@ useEffect(() => {
       </h1>
     </div>
 
-    <div style={{ position:'fixed',bottom:80,right:0,left:0}}>
+    <div className="fixed bottom-89px w-full">
       <div className='flex justify-between border-t-2 border-gray-300 p-3'>
         <div>
           <h1 className="font-bold">{boardInfo.price}원/kg</h1>

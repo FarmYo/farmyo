@@ -271,91 +271,96 @@ const goCropDetail = () => {
 
   return(
     <div>
-      <div>
-        <div style={{height:50,backgroundColor:'#1B5E20'}}>
-          <div className="p-2 flex justify-between"  onClick={() => goList()}>
-            <img src={WBackArrow} alt="" style={{ width:30,height:30}}/>
-          </div>
+      {/* 상단바 */}
+      <div style={{height:50,backgroundColor:'#1B5E20'}}>
+        <div className="p-2 flex justify-between"  onClick={() => goList()}>
+          <img src={WBackArrow} alt="" style={{ width:30,height:30}}/>
         </div>
+      </div>
 
-        {boardInfo.boardImgUrls && (
-      <Slider {...settings}  
-      className="sliderOne">
-          {boardInfo.boardImgUrls.map((img, index) => (
-            <div key={index}  style={{height:240}}>
-              <img src={img} alt={`slide-${index}`}/>
+      {/* 내용 */}
+      <div style={{ overflowY: 'scroll', height: 'calc(100vh - 158.6px)', paddingBottom: '158.6px'}}>
+        {/* 이미지 캐로셀 */}
+          {boardInfo.boardImgUrls && (
+            <Slider {...settings} className="sliderOne">
+              {boardInfo.boardImgUrls.map((img, index) => (
+                <div key={index}  style={{height:240}}>
+                  <img src={img} alt={`slide-${index}`}/>
+                </div>
+              ))}
+            </Slider>
+          )}
+
+          {/* 제목 및 작물 정보 */}
+          <div className="p-5 flex justify-between mt-5 border-b-2 border-gray-200">
+            <div>
+              <h1 className='font-bold text-xl'>{ boardInfo.title }</h1>
+              <h1 className='text-md'
+              onClick={()=>navigate(`/mypage/seller/${boardInfo.userLoginId}`)}>{boardInfo.userNickname}</h1>
             </div>
-          ))}
-        </Slider>
-        )}
-      </div>
-      <div className="p-5 flex justify-between mt-5 border-b-2 border-gray-200">
-        <div>
-          <h1 className='font-bold text-xl'>{ boardInfo.title }</h1>
-          <h1 className='text-md'
-          onClick={()=>navigate(`/mypage/seller/${boardInfo.userLoginId}`)}>{boardInfo.userNickname}</h1>
-        </div>
-        <div>
-          <button className="btn flex w-32 justify-around" 
-          style={{ backgroundColor: '#2E8B57'}}
-          onClick={goCropDetail}> 
-            <div className="font-bold text-md" style={{ color:'white' }}
-            >작물정보</div>
-          </button>
-        </div>
-        {/* 아래의 메뉴바는 본인만 보이게 */}
-        {boardInfo.userId === myId && (<Menu as="div" className="relative text-left flex justify-center items-center">
-          <div>
-            <Menu.Button className="inline-flex w-full items-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-              <img src={Three} alt="" className="w-1"/>
-            </Menu.Button>
-          </div>
-
-          <Transition
-            as={Fragment}
-            enter="transition ease-out duration-100"
-            enterFrom="transform opacity-0 scale-95"
-            enterTo="transform opacity-100 scale-100"
-            leave="transition ease-in duration-75"
-            leaveFrom="transform opacity-100 scale-100"
-            leaveTo="transform opacity-0 scale-95"
-          >
-          <Menu.Items className="absolute top-full right-0 z-10 mt-2 w-28 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-              <div className="py-1">
-                <Menu.Item className="flex">
-                  {({ active }) => (
-                    <a
-                      href="#"
-                      className={classNames(
-                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                        'block px-4 py-2 text-sm'
-                      )}
-                      onClick={() => sellOpenModal()}
-                    >
-                      <img src={Edit} alt="수정하기 버튼" style={{width:20}}/>수정하기
-                    </a>
-                  
-                  )}
-            
-                </Menu.Item>
+            <div>
+              <button className="btn flex w-32 justify-around" 
+              style={{ backgroundColor: '#2E8B57'}}
+              onClick={goCropDetail}> 
+                <div className="font-bold text-md" style={{ color:'white' }}
+                >작물정보</div>
+              </button>
+            </div>
+            {/* 아래의 메뉴바는 본인만 보이게 */}
+            {boardInfo.userId === myId && (<Menu as="div" className="relative text-left flex justify-center items-center">
+              <div>
+                <Menu.Button className="inline-flex w-full items-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                  <img src={Three} alt="" className="w-1"/>
+                </Menu.Button>
               </div>
-            </Menu.Items>
-          </Transition>
-        </Menu>)}
-    </div>
-    <div className="p-2 pl-5">
-      <h1>{boardInfo.content}
-      </h1>
-    </div>
 
-    <div style={{bottom:100,right:0,left:0}}>
-      <div className="p-3">
-        {/* max : 총수량 value : 거래가능량 */}
-        <progress className="progress custom-progress w-full h-3" value="50" max="100" style={{ color:'#1B5E20'}}></progress>
-        <div className="text-sm">거래가능량 : { boardInfo.quantity }kg</div>
+              <Transition
+                as={Fragment}
+                enter="transition ease-out duration-100"
+                enterFrom="transform opacity-0 scale-95"
+                enterTo="transform opacity-100 scale-100"
+                leave="transition ease-in duration-75"
+                leaveFrom="transform opacity-100 scale-100"
+                leaveTo="transform opacity-0 scale-95"
+              >
+              <Menu.Items className="absolute top-full right-0 z-10 mt-2 w-28 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <div className="py-1">
+                    <Menu.Item className="flex">
+                      {({ active }) => (
+                        <a
+                          href="#"
+                          className={classNames(
+                            active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                            'block px-4 py-2 text-sm'
+                          )}
+                          onClick={() => sellOpenModal()}
+                        >
+                          <img src={Edit} alt="수정하기 버튼" style={{width:20}}/>수정하기
+                        </a>
+                      
+                      )}
+                
+                    </Menu.Item>
+                  </div>
+                </Menu.Items>
+              </Transition>
+            </Menu>)}
+        </div>
+
+        {/* 본문 */}
+        <div className="p-2 pl-5">
+          <h1>{boardInfo.content}</h1>
+        </div>
       </div>
-      <div className='flex justify-between border-t-2 border-gray-300 p-3'>
+    
+    <div className='fixed bottom-89px w-full'>
+      {/* max : 총수량 value : 거래가능량 */}
+      {/* <div className="p-3">
+        <progress className="progress custom-progress w-full h-3" value="50" max="100" style={{ color:'#1B5E20'}}></progress>
+      </div> */}
+      <div className='flex justify-between border-t-2 border-gray-300 p-3 bg-white'>
         <div>
+          <div className="text-sm">거래가능량 : { boardInfo.quantity }kg</div>
           <h1 className="font-bold">{boardInfo.price}원/kg</h1>
           {/* <h1 className="font-bold">50kg</h1> */}
         </div>
