@@ -270,6 +270,7 @@ export default function MyFarm(props) {
         <div className='font-bold flex items-center mr-3'>+사진불러오기</div>
         <img src={Gallery} alt="" style={{ width:40 }} className='mr-3'/>
       </div>
+   
     </div>
     <input
         type="file"
@@ -278,8 +279,8 @@ export default function MyFarm(props) {
         multiple
         onChange={handleFileChange}
       />
-
       </div>
+      <div className='flex justify-end mr-5 mt-3 text-sm' style={{color:'red'}}>.HEIF확장자업로드불가</div>
       <textarea className="textarea w-full h-28 textarea-bordered mt-10" 
       placeholder="내용을 입력하세요"
       onChange={(e)=>setContent(e.target.value)}></textarea>    
