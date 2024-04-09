@@ -200,6 +200,7 @@ export default function BuyerTrade() {
           // 결제 성공 시 로직,
         } else {
           alert('결제실패');
+          navigate('/trade')
           // 결제 실패 시 로직,
         }
       });
