@@ -612,7 +612,7 @@ export default function MyCrops(props) {
       const plantingInfo = await contract.methods.getPlantingInfos(cropPK).call();
       const usageInfos = await contract.methods.getUsageInfos(cropPK).call();
       const certInfos = await contract.methods.getCertInfos(cropPK).call();
-      const insepctInfos = await contract.methods.getInsepctInfos(cropPK).call();
+      const inspectInfos = await contract.methods.inspectInfos(cropPK).call();
       const harvestInfos = await contract.methods.getHarvestInfos(cropPK).call();
 
       let allInfos = [];
@@ -650,7 +650,7 @@ export default function MyCrops(props) {
 
 
       // 작물 검사 정보 추가
-      insepctInfos.forEach(info => {
+      inspectInfos.forEach(info => {
         if (info.eventDate !== undefined) {
           allInfos.push({
             ...info,
