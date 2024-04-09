@@ -852,6 +852,7 @@ export default function MyCrops(props) {
     } catch (err) {
       console.log(err);
       alert('작물등록실패')
+      navigate('/mypage/seller',{ state: { selectedTabIndex: 1 } })
     }
   };
   
