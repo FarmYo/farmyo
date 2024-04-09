@@ -617,19 +617,13 @@ export default function CropInfo(){
       "type": "function"
     }
   ]
-  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
-  //접근할 계약 주소
-  const contractAddress = '0x78F397fC1d5CcA8a8a7Af2Fc869F561DBa4B56ED';
-  //계약 객체 생성
-  const contract = new web3.eth.Contract(contractABI, contractAddress);
-
-  //모든 정보 호출하여 데이터 가져와서 시간 순으로 정렬
   async function fetchData(cropPK) {
     setIsLoading(true);
     try {
       const plantingInfo = await contract.methods.getPlantingInfos(cropPK).call();
       const usageInfos = await contract.methods.getUsageInfos(cropPK).call();
-      const contestInfos = await contract.methods.getContestInfos(cropPK).call();
+      const certInfos = await contract.methods.getCertInfos(cropPK).call();
+      const inspectInfos = await contract.methods.getInspectInfos(cropPK).call();
       const harvestInfos = await contract.methods.getHarvestInfos(cropPK).call();
 
       let allInfos = [];
@@ -654,8 +648,8 @@ export default function CropInfo(){
         }
       });
 
-      // 작물 대회 정보 추가
-      contestInfos.forEach(info => {
+      // 작물 인증 정보 추가
+      certInfos.forEach(info => {
         if (info.eventDate !== undefined) {
           allInfos.push({
             ...info,
@@ -664,6 +658,21 @@ export default function CropInfo(){
           });
         }
       });
+
+
+      // 작물 검사 정보 추가
+      inspectInfos.forEach(info => {
+        if (info.eventDate !== undefined) {
+          allInfos.push({
+            ...info,
+            infoType: Number(info.infoType),
+            eventDate: Number(info.eventDate)
+          });
+        }
+      });
+
+
+
 
       // 작물 수확 정보 추가 (배열일 경우 각 항목을 처리)
       harvestInfos.forEach(info => {
