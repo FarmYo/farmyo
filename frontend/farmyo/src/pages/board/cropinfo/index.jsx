@@ -617,6 +617,14 @@ export default function CropInfo(){
       "type": "function"
     }
   ]
+
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
+  //접근할 계약 주소
+  const contractAddress = '0x78F397fC1d5CcA8a8a7Af2Fc869F561DBa4B56ED';
+  //계약 객체 생성
+  const contract = new web3.eth.Contract(contractABI, contractAddress);
+
+  
   async function fetchData(cropPK) {
     setIsLoading(true);
     try {
