@@ -617,21 +617,20 @@ export default function CropInfo(){
       "type": "function"
     }
   ]
-
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
   //접근할 계약 주소
   const contractAddress = '0x78F397fC1d5CcA8a8a7Af2Fc869F561DBa4B56ED';
   //계약 객체 생성
   const contract = new web3.eth.Contract(contractABI, contractAddress);
 
-  
+  //모든 정보 호출하여 데이터 가져와서 시간 순으로 정렬
   async function fetchData(cropPK) {
     setIsLoading(true);
     try {
       const plantingInfo = await contract.methods.getPlantingInfos(cropPK).call();
       const usageInfos = await contract.methods.getUsageInfos(cropPK).call();
       const certInfos = await contract.methods.getCertInfos(cropPK).call();
-      const inspectInfos = await contract.methods.getInspectInfos(cropPK).call();
+      const inspectInfos = await contract.methods.getInsepctInfos(cropPK).call();
       const harvestInfos = await contract.methods.getHarvestInfos(cropPK).call();
 
       let allInfos = [];
@@ -655,6 +654,7 @@ export default function CropInfo(){
           });
         }
       });
+
 
       // 작물 인증 정보 추가
       certInfos.forEach(info => {
@@ -696,6 +696,10 @@ export default function CropInfo(){
       // eventDate를 기준으로 정렬
       const sortedInfos = allInfos.sort((a, b) => a.eventDate - b.eventDate);
       setLifeCycleList(sortedInfos)
+      console.log(sortedInfos)
+      console.log(harvestInfos)
+      console.log(inspectInfos)
+      console.log(certInfos)
       console.log(lifeCycleList)
 
       return sortedInfos;
