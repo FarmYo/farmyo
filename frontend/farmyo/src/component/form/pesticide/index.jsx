@@ -71,6 +71,8 @@ export default function Pesticide( { cropId, onRegister }){
     })
     .catch((err) => {
       console.log(err)
+      stanbyCloseModal()
+      alert('생애기록저장 실패')
     });
   };
 
