@@ -87,12 +87,12 @@ export default function CropInfo(){
         },
         {
           "internalType": "string",
-          "name": "_contestName",
+          "name": "_certName",
           "type": "string"
         },
         {
           "internalType": "string",
-          "name": "_awardDetails",
+          "name": "_certCorp",
           "type": "string"
         },
         {
@@ -101,7 +101,7 @@ export default function CropInfo(){
           "type": "uint256"
         }
       ],
-      "name": "addContestInfo",
+      "name": "addCertInfo",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -120,6 +120,39 @@ export default function CropInfo(){
         }
       ],
       "name": "addHarvestInfo",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_cropPK",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "_inspectName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_inspectResult",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_inspectCorp",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_eventDate",
+          "type": "uint256"
+        }
+      ],
+      "name": "addInspectInfo",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -198,7 +231,7 @@ export default function CropInfo(){
           "type": "uint256"
         }
       ],
-      "name": "contestInfos",
+      "name": "certInfos",
       "outputs": [
         {
           "internalType": "uint8",
@@ -207,12 +240,12 @@ export default function CropInfo(){
         },
         {
           "internalType": "string",
-          "name": "contestName",
+          "name": "CertName",
           "type": "string"
         },
         {
           "internalType": "string",
-          "name": "awardDetails",
+          "name": "CertCorp",
           "type": "string"
         },
         {
@@ -232,7 +265,7 @@ export default function CropInfo(){
           "type": "uint256"
         }
       ],
-      "name": "getContestInfos",
+      "name": "getCertInfos",
       "outputs": [
         {
           "components": [
@@ -243,12 +276,12 @@ export default function CropInfo(){
             },
             {
               "internalType": "string",
-              "name": "contestName",
+              "name": "CertName",
               "type": "string"
             },
             {
               "internalType": "string",
-              "name": "awardDetails",
+              "name": "CertCorp",
               "type": "string"
             },
             {
@@ -257,7 +290,7 @@ export default function CropInfo(){
               "type": "uint256"
             }
           ],
-          "internalType": "struct CropData.ContestInfo[]",
+          "internalType": "struct CropData.CertInfo[]",
           "name": "",
           "type": "tuple[]"
         }
@@ -289,6 +322,52 @@ export default function CropInfo(){
             }
           ],
           "internalType": "struct CropData.HarvestInfo[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_cropPK",
+          "type": "uint256"
+        }
+      ],
+      "name": "getInsepctInfos",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint8",
+              "name": "infoType",
+              "type": "uint8"
+            },
+            {
+              "internalType": "string",
+              "name": "inspectName",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "inspectResult",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "inspectCorp",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "eventDate",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct CropData.InspectInfo[]",
           "name": "",
           "type": "tuple[]"
         }
@@ -408,6 +487,50 @@ export default function CropInfo(){
       "type": "function"
     },
     {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "inspectInfos",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "infoType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "string",
+          "name": "inspectName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "inspectResult",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "inspectCorp",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "eventDate",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "inputs": [],
       "name": "owner",
       "outputs": [
@@ -496,7 +619,7 @@ export default function CropInfo(){
   ]
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
   //접근할 계약 주소
-  const contractAddress = '0xE8448EEB2629E3e96f96f8EBedc9Fd2faa6fe20c';
+  const contractAddress = '0x78F397fC1d5CcA8a8a7Af2Fc869F561DBa4B56ED';
   //계약 객체 생성
   const contract = new web3.eth.Contract(contractABI, contractAddress);
 
