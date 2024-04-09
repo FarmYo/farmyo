@@ -612,7 +612,7 @@ export default function MyCrops(props) {
       const plantingInfo = await contract.methods.getPlantingInfos(cropPK).call();
       const usageInfos = await contract.methods.getUsageInfos(cropPK).call();
       const certInfos = await contract.methods.getCertInfos(cropPK).call();
-      const inspectInfos = await contract.methods.inspectInfos(cropPK).call();
+      const inspectInfos = await contract.methods.getInsepctInfos(cropPK).call();
       const harvestInfos = await contract.methods.getHarvestInfos(cropPK).call();
 
       let allInfos = [];
