@@ -40,15 +40,15 @@
 | :---------------------------------------------------------: | :--------------------------------------------------------: |
 | <img src="assets/img/lee.webp" width="150" height="150"> | <img src="assets/img/jang.png" width="150" height="150"> |
 |         [@minimimin](https://github.com/minimimin)          |        [@wkdtpwjd19](https://github.com/wkdtpwjd19)        |
-|                       User Chat Board Cross </br>끝나지 않는 프론트 ㅠㅠ                        |                        Trade Cross                         |
+|                       메인페이지 & 회원 & 게시판 & 채팅  </br> 발표자                     |                       프로젝트 구조 구성 </br> 거래 & 작물 & 마이팜                         |
 
 ### Backend
 
 |                       김준엽                        |                        권현준                         |                       오승현                       |                      조현제                      |
 | :-------------------------------------------------------: | :---------------------------------------------------------: | :--------------------------------------------------------: | :--------------------------------------------------------: |
-| <img src="assets/img/kim" width="150" height="150"> | <img src="assets/img/kwon.jpeg" width="150" height="150"> | <img src="assets/img/oh.jpg" width="150" height="150"> | <img src="assets/img/jo.jpg" width="150" height="150"> |
+| <img src="assets/img/kim.png" width="150" height="150"> | <img src="assets/img/kwon.jpeg" width="150" height="150"> | <img src="assets/img/oh.jpg" width="150" height="150"> | <img src="assets/img/jo.jpg" width="150" height="150"> |
 |      [@junyeop1322](https://github.com/junyeop1322)       |       [@Kwonhyunjun](https://github.com/Kwonhyunjun)        |           [@timber3](https://github.com/timber3)           |           [@zziru95](https://github.com/zziru95)           |
-|                        팀장 <br/> 거래 & 마이팜 API <br/> 이미지 업로드 & 조회(AWS S3)            |                           서기 <br/> 회원 API (with JWT)  <br/> 스프링 시큐리티                           |                 인프라  </br> 채팅 API (stomp)                  |                    블록체인 (Solidity, FE, BE) <br/> 엔티티 설계 <br/> 게시물 & 작물 API                  |
+|                        팀장 <br/> 거래 & 마이팜 API <br/> 이미지 업로드 & 조회(AWS S3)            |                           서기 <br/> 회원 API (with JWT)  <br/> 스프링 시큐리티                           |                 인프라 구축  </br> 실시간 채팅 구현                   |                    블록체인 (Solidity, FE, BE) <br/> 엔티티 설계 <br/> 게시물 & 작물 API                  |
 
 </br>
 
@@ -128,12 +128,22 @@
 </br>
 
 ## 🥦 서비스 화면
-<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
-    <div>
-        <h2 style="margin: 0;">로그인 및 회원가입</h3>
-        <img src="assets/gif/signup.gif" alt="회원가입" style="margin-top: 20px;">
-    <div>
-    
+### 로그인 및 회원가입
 
-    
-</div>
+![회원가입](assets/gif/signup.gif)
+
+### 작물등록
+
+![작물등록](assets/gif/crop.gif)
+
+### 마이팜 및 즐겨찾기
+
+![마이팜](assets/gif/myfarm.gif)
+
+### 거래
+
+![거래](assets/gif/trade.gif)
+
+### 채팅 거래
+
+![채팅거래](assets/gif/chat.gif)
