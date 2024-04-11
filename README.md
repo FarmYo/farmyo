@@ -40,7 +40,7 @@
 | :---------------------------------------------------------: | :--------------------------------------------------------: |
 | <img src="assets/img/lee.webp" width="150" height="150"> | <img src="assets/img/jang.png" width="150" height="150"> |
 |         [@minimimin](https://github.com/minimimin)          |        [@wkdtpwjd19](https://github.com/wkdtpwjd19)        |
-|                       메인페이지 & 회원 & 게시판 & 채팅  </br> 발표자                     |                       프로젝트 구조 구성 </br> 거래 & 작물 & 마이팜                         |
+|                       메인페이지 & 회원 & 게시판 & 채팅 </br> 발표자                     |                       프로젝트 구조 구성 </br> 거래 & 작물 & 마이팜                         |
 
 ### Backend
 
@@ -48,7 +48,7 @@
 | :-------------------------------------------------------: | :---------------------------------------------------------: | :--------------------------------------------------------: | :--------------------------------------------------------: |
 | <img src="assets/img/kim.png" width="150" height="150"> | <img src="assets/img/kwon.jpeg" width="150" height="150"> | <img src="assets/img/oh.jpg" width="150" height="150"> | <img src="assets/img/jo.jpg" width="150" height="150"> |
 |      [@junyeop1322](https://github.com/junyeop1322)       |       [@Kwonhyunjun](https://github.com/Kwonhyunjun)        |           [@timber3](https://github.com/timber3)           |           [@zziru95](https://github.com/zziru95)           |
-|                        팀장 <br/> 거래 & 마이팜 API <br/> 이미지 업로드 & 조회(AWS S3)            |                           서기 <br/> 회원 API (with JWT)  <br/> 스프링 시큐리티                           |                 인프라 구축  </br> 실시간 채팅 구현                   |                    블록체인 (Solidity, FE, BE) <br/> 엔티티 설계 <br/> 게시물 & 작물 API                  |
+|                        팀장 <br/> 거래 & 마이팜 API <br/> 이미지 업로드 & 조회(AWS S3)            |                           서기 </br> 회원 API (with JWT)  <br/> 스프링 시큐리티                           |                 인프라 구축  </br> 실시간 채팅 구현                   |                    블록체인 (Solidity, FE, BE) <br/> 엔티티 설계 <br/> 게시물 & 작물 API                  |
 
 </br>
 
