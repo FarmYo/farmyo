@@ -44,11 +44,11 @@
 
 ### Backend
 
-|                       김준엽(팀장)                        |                        권현준(서기)                         |                       오승현(인프라)                       |                      조현제(블록체인)                      |
+|                       김준엽                        |                        권현준                         |                       오승현                       |                      조현제                      |
 | :-------------------------------------------------------: | :---------------------------------------------------------: | :--------------------------------------------------------: | :--------------------------------------------------------: |
 | <img src="assets/img/kim" width="150" height="150"> | <img src="assets/img/kwon.jpeg" width="150" height="150"> | <img src="assets/img/oh.jpg" width="150" height="150"> | <img src="assets/img/jo.jpg" width="150" height="150"> |
 |      [@junyeop1322](https://github.com/junyeop1322)       |       [@Kwonhyunjun](https://github.com/Kwonhyunjun)        |           [@timber3](https://github.com/timber3)           |           [@zziru95](https://github.com/zziru95)           |
-|                        보스형 팀장                        |                           안농~!                            |                 인프라 구축 </br>채팅구현                  |                    모든 블록은 나에게로                    |
+|                        팀장 <br/> 거래 & 마이팜 API <br/> 이미지 업로드 & 조회(AWS S3)            |                           서기 <br/> 회원 API (with JWT)  <br/> 스프링 시큐리티                           |                 인프라  </br> 채팅 API (stomp)                  |                    블록체인 (Solidity, FE, BE) <br/> 엔티티 설계 <br/> 게시물 & 작물 API                  |
 
 </br>
 
@@ -97,28 +97,24 @@
 </br>
 
 ## 🥔 ERD
-
-(추후 수정)
 <img src="assets/img/erd.png">
 
 </br>
 
 ## 🍠 서비스 아키텍처
-
-(추후 수정)
-<img src="assets/img/architecture.png">
+<img src="assets/img/farmyo_Architecture.png">
 
 </br>
 
 ## 🥒 주요 기능
 
-### 농산물 기록
+### 농산물 블록체인 기록
 
 - 생산과정을 블록체인에 담아 투명성과 안전성이 보장된 농산물 생산 과정 기록
-- 생산 시작 날짜, 농약을 뿌린 날짜, 수확 날짜, 농약 정보, 온도, 습도 등을 블록체인에 기록
-- 구매자는 농사 경력이 아닌 생산 과정을 통해 구매할 농산물을 선택함
+- 파종일, 농약 정보 및 사용일, 수확일, 수상정보, 인증 및 검사 정보 등을 블록체인에 기록
+- 구매자는 농사 경력이 아닌 블록체인에 저장된 생애 정보를 통해 구매할 농산물을 선택함
 
-### 거래
+### 스마트 컨트랙트 & 블록체인 기록 
 
 - 판매자와 구매자가 거래를 결정했을때 구매자가 먼저 입금을 하면 판매자가 농산물을 배송함
 - 온라인 거래 시 구매자의 안전 거래를 보장해 줌
@@ -132,5 +128,12 @@
 </br>
 
 ## 🥦 서비스 화면
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
+    <div>
+        <h2 style="margin: 0;">로그인 및 회원가입</h3>
+        <img src="assets/gif/signup.gif" alt="회원가입" style="margin-top: 20px;">
+    <div>
+    
 
-(개발 끝나고 시연 GIF로 추가)
+    
+</div>
