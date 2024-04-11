@@ -48,7 +48,7 @@
 | :-------------------------------------------------------: | :---------------------------------------------------------: | :--------------------------------------------------------: | :--------------------------------------------------------: |
 | <img src="assets/img/kim.png" width="150" height="150"> | <img src="assets/img/kwon.jpeg" width="150" height="150"> | <img src="assets/img/oh.jpg" width="150" height="150"> | <img src="assets/img/jo.jpg" width="150" height="150"> |
 |      [@junyeop1322](https://github.com/junyeop1322)       |       [@Kwonhyunjun](https://github.com/Kwonhyunjun)        |           [@timber3](https://github.com/timber3)           |           [@zziru95](https://github.com/zziru95)           |
-|                        팀장 <br/> 거래, 마이팜 <br/> 이미지 업로드, 조회(AWS S3)            |                           서기 <br/> 회원 API (with JWT)  <br/> 스프링 시큐리티                           |                 인프라 구축  <br/> 실시간 채팅 구현                   |                    블록체인 (Solidity, FE, BE) <br/> 엔티티 설계 <br/> 게시물 & 작물 API                  |
+|                        팀장 <br/> 거래, 마이팜 <br/> 이미지 업로드, 조회<br/>(AWS S3)            |                           서기 <br/> 회원 API <br/> (with JWT)  <br/> 스프링 시큐리티                           |                 인프라 구축  <br/> 실시간 채팅 구현                   |                    블록체인 <br/>(Solidity, FE, BE) <br/> 엔티티 설계 <br/> 게시물 & 작물 API                  |
 
 </br>
 
