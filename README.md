@@ -39,7 +39,7 @@
 |                           이정민                            |                           장세정                           |
 | :---------------------------------------------------------: | :--------------------------------------------------------: |
 | <img src="assets/img/lee.webp" width="150" height="150"> | <img src="assets/img/jang.png" width="150" height="150"> |
-|         [@minimimin](https://github.com/minimimin)          |        [@wkdtpwjd19](https://github.com/wkdtpwjd19)        |
+|         [@minimimin](https://github.com/minimimin)          |        [@wkdtpwjd](https://github.com/wkdtpwjd)        |
 |                       메인페이지, 회원 <br/> 게시판, 채팅 <br/> 발표자                     |                       프로젝트 구조 구성 <br/> 거래, 작물, 마이팜                         |
 
 ### Backend
