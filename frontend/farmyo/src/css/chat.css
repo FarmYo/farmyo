@@ -1,0 +1,5 @@
+.chat-container {
+  max-height: 100%;
+  overflow-y: auto; /* 스크롤이 필요한 경우만 스크롤 나타남 */
+  scrollbar-width: none; /* for Firefox */
+}

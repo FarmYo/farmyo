@@ -1,0 +1,134 @@
+/* 공통 회원가입 */
+.main {
+  margin-top: 25%;
+}
+
+.main2 {
+  margin-top: 55%;
+}
+
+.logo {
+  margin-top: 37%;
+}
+
+.text {
+  font-size: x-large;
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.warningmessage {
+  color: red;
+  font-size: smaller;
+  padding-left: 2%;
+}
+
+.successmessage {
+  color: green;
+  font-size: smaller;
+  padding-left: 2%;
+}
+
+.buttonmain {
+  margin: auto;
+  background-color: #F8FCF9;
+  border: #2E8B57 solid 1px;
+  padding: 6vw 10vw;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: 600;
+  /* 호버시 애니메이션 효과 */
+  /* transition: all 0.3s ease-in-out; */
+}
+
+.buttonmain:hover {
+  background-color: #2E8B57; /* hover 시 배경색 변경 */
+}
+
+.checkbutton {
+  margin-top: auto;
+  padding-left: 2.5%;
+  padding-right: 2.5%;
+  height: 40px;
+  width: 100%;
+  font-size: 0.8rem;
+  margin-left: 0.75rem;
+  border: #81C784 solid 1px;
+  border-radius: 5px;
+  background-color: #1B5E20;
+  color : white;
+  font-weight: 600;
+}
+
+.fixed-bottom {
+  position: fixed;
+  bottom: 0;
+  /* bottom: 0; 바닥에 붙여놓기(지금은 하단네브바있어서) */
+  width: 100%;
+  text-align: center; /* 버튼을 중앙에 배치하려면 */
+}
+
+.finishbutton {
+  width: 100%;
+  height: 70px;
+  font-size: x-large;
+  border: #1B5E20 solid 1px;
+  background-color: #1B5E20;
+  color : white;
+}
+
+.closeButton {
+  position: absolute;
+  right: 10px; /* 오른쪽 끝에서 10px 간격으로 조정 */
+  top: 10px;
+}
+
+/* 사업자 등록 */
+
+
+
+/* 이번 */
+.buttonmain2 {
+  display: flex; /* flexbox 레이아웃 적용 */
+  width: 100%; /* 전체 너비 */
+  justify-content: center; /* 가운데 정렬 */
+  border-radius: 5px; /* 모서리 둥글림 */
+  padding: 12px 16px; /* 패딩 설정 */
+  margin-top: 12px; /* 상단 여백 */
+  font-size: 0.875rem; /* 글자 크기 */
+  font-weight: bold; /* 굵은 글씨체 */
+  line-height: 1.5; /* 라인 높이 */
+  color: #fff; /* 흰색 글자색 */
+  background-color: #00C783; /* 초록 배경색 */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25); /* 그림자 효과 */
+  transition: background-color 0.3s ease-in-out; /* hover 효과 transition */
+}
+
+.buttonmain2:hover {
+  background-color: #00A767; /* hover 시 배경색 변경 */
+}
+
+.buttonmain2:focus-visible {
+  outline: 2px solid #00D18F; /* focus 시 윤곽선 스타일 */
+  outline-offset: 2px; /* 윤곽선 여백 */
+}
+
+.customModal {
+  max-width: 100%;
+  max-height: 100vh; /* 화면 높이에 맞춰 설정 */ 
+  width: 90%; 
+  position: fixed;
+  top: 30%;
+  left: 0;
+  border-radius: 5%;
+  /* overflow-y: auto; 세로 스크롤이 필요시 생기도록 */
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column; /* 세로 방향 정렬 */
+  align-items: center; /* 가로 중앙 정렬 */
+  justify-content: center; /* 세로 중앙 정렬 */
+  min-height: 200px; /* 최소 높이 */
+}
