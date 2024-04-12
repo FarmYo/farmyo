@@ -1,0 +1,37 @@
+/* /* .timeline {
+  position: relative;
+  padding-left: 50px; /* 선과 동그라미가 이벤트 내용에 겹치지 않도록 충분한 공간 확보 */
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20px; /* 선을 적절한 위치로 조정 */
+  height: 100%;
+  width: 2px; /* 선의 두께 */
+  background: #333; /* 선의 색상 */
+}
+
+.event {
+  position: relative;
+  margin-bottom: 20px; /* 이벤트 간격 조정 */
+  
+}
+
+.event-circle {
+  position: absolute;
+  top: 50%; /* 중앙 정렬을 위해 top을 50%로 설정 */
+  left: -14%; /* 선의 중앙에 오도록 left를 50%로 설정 */
+  width: 15px; /* 동그라미 크기 */
+  height: 15px; /* 동그라미 크기 */
+  margin-top: -10px; /* 동그라미 높이의 절반값 */
+  margin-left: -10px; /* 동그라미 너비의 절반값 */
+  background: #134F2C; /* 동그라미 내부 색상 */
+  border-radius: 50%; /* 동그라미 모양 */
+  z-index: 1;
+} 
+
+
+.timeline-end {
+  border: 2px solid #bbbbbb;
+}

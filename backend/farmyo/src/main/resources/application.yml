@@ -1,0 +1,83 @@
+server:
+  servlet:
+    context-path: '/api'
+
+spring:
+  # database
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ENC(cea2CRLrJp9s4h+qmGMGvzyVDxgbhj8AiOYaKKm44bJKN0VCOmMivD/JkVegNQE+sogvQVuDyg9FINmCdQ4fkHM+xzR3Mm5BPacoLY8ZCVHTU779wkqX/sNO4JdHl/zl+mHOpblkSm/kh0+VZp+wt9H9t3ixfcgP)
+    username: ENC(wQizRoyOr2aNgbgU6TsdGA==)
+    password: ENC(ySIkbHXT3WrPI0iFMuATcGL/cYT30gSl)
+
+  # jpa
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: Asia/Seoul
+        format_sql: true
+        show_sql: true
+    open-in-view: false
+
+  # JWT secret key
+  jwt:
+    secret: ENC(Ma6wBcbnJ2Al1vgLcuT+Ku0SCOthE2YIn5IlAI/tWdlHZRN7F5fUc384vU8nv3541VjG0eaM6yFtyD8hQgXyGBNHaSfSZj/A8SrH/Wht8YI=)
+
+  #Redis
+  data:
+    redis:
+      host: ENC(XVDRASgwuk00feBvY/Ta1gwgJ+n7IbCyhjpj0ykJEe4=)
+      port: ENC(mHAvIKkcjL19aJn3d6+jgw==)
+      password: ENC(7ReurrhfXLRM+oOUeAE1UA==)
+
+  # S3
+  cloud:
+    aws:
+      credentials:
+        access-key: ENC(5fJM3mO9pjNQmAOxvMhOjcFsH79SSDXhLh+Vqf0B46w=)
+        secret-key: ENC(9fQX5kWvhRYP9rNPmK41e2Csxl/vun1wgkQsR5IoSHWcJalUMDiuLAQ56IdbSuEL0LzetCpXRXw=)
+      s3:
+        bucket: yeopbucket
+      region:
+        static: ap-northeast-2
+      stack:
+        auto: false
+
+  # 파일 용량 제한 10mb
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 30MB
+
+  # mail smtp
+  mail:
+    # 서버 주소
+    host: ENC(DWOUPuLZaNaQZcwbmX+T1yybqlhL+0Tb)
+    # 메일 인증 서버 포트 (587, 465 존재, SSL은 465)
+    port: ENC(CPQPCJglURpCHBpUlw9wPQ==)
+    # 아이디
+    username: ENC(FpltocIfkt9/iEWX65eCf1ZazPgNoVUpXRV9GfblfW4=)
+    # 비밀번호
+    password: ENC(ddmZzSaqYPvaeQy2ks840q5Y+6YZJyLM)
+    properties:
+      # 메일 디버그 모드 설정 (전송 과정 로그 출력)
+      debug: true
+      mail:
+        smtp:
+          # SMTP 인증 활성화 (활성시 로그인 때 계정 정보 필요)
+          auth: true
+          ssl:
+            # SSL 보안 설정 (전송 과정 데이터 암호화 제공)
+            enable: true
+            # 신뢰할 수 있는 SMTP 서버 호스트 지정
+            trust: ENC(drFX7+EasQdiMjHhaWGChiVc/KNFIJOM)
+          # STARTTLS 연결을 활성화 (평문 통신 채널에서 암호화 통신 채널로 업그레이드)
+          starttls.enable: true
+  openAPI:
+    serviceKey: ENC(nXjJih1FS+sHcpW4XwDjHHPzKatWDkcgU/ntbVePC75gtXui+qMV+C/yCNGFI3vHKXQowSZ9Rqaj9zwGJxBT2746Y4MY/3F5BKn8Cekwlq2yup+YVqzbgqwThNAFps0yYVLJX/qvqp436o1EApkI0g==)
+
+  blockChain:
+    privateKey: ENC(1EuXCxrCo0Fud0ylW33/TgMiEjv7iK/GTQ9r3WML2X95Q77VFmjHneIl6NLvLbQb8WUqLMuZ0x2na80bj2743cGf3jkZWeJ9YELuVMveflk=)
